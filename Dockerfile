@@ -27,4 +27,4 @@ RUN python manage.py db init \
 	&& python manage.py db upgrade \
 	&& sqlite3 em.sqlite ".read seed.sql"
 
-CMD flask run
+CMD flask run --host=0.0.0.0 --port=$PORT

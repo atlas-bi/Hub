@@ -32,8 +32,8 @@ class Config:
 
     DEBUG = False
     TESTING = False
-    SECRET_KEY = b"16bytestring"
-    IV_KEY = b"16bytestring"
+    SECRET_KEY = b"This is a key123"
+    IV_KEY = b"This is an IV456"
 
     """
         LDAP Connection used for user authentication
@@ -89,10 +89,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "sqlite:///../em.sqlite"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        "max_overflow": 100,  # how many spare connections we can use?
-        "pool_size": 5,  # how many queries will run symultaniously?
-    }
+    # SQLALCHEMY_ENGINE_OPTIONS = {
+    #     "max_overflow": 100,  # how many spare connections we can use?
+    #     "pool_size": 5,  # how many queries will run symultaniously?
+    # }
 
     """
         scheduler settings
