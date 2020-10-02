@@ -23,7 +23,6 @@
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
-
 class Config:
     """
         all configuration set here. For dev there are overrides below.
