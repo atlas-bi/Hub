@@ -1,0 +1,37 @@
+{#
+    Extract Management 2.0
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+{% extends "layout.html.j2" %}
+{% block head %}
+	<meta http-equiv="refresh" content="4;url=/login" />
+{% endblock %}
+
+{% block css %}
+	{% assets "css_logout" %}
+		<link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+	{% endassets %}
+{% endblock %}
+
+{% block body_auth %}
+	<div class="logout">
+		<div class="logout-cntr">
+			<h1 class="logout-message">Bye.</h1>
+			<a class="logout-link" href="/login">log in</a>
+			<div class="logout-copy">&#169; <script>document.write(new Date().getFullYear())</script> Riverside Healthcare</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+<div class="em-inputTtl">Connection Name</div>
+{% if smb_dest|length ==0 %}
+	<span class="em-error">There are no connections set up. <a class="em-link" href="/connection">Set up a connection first.</a></span>
+{% else %}
+	<select class="em-input" name="task-destination-smb">
+		<option disabled {% if not t %} selected="selected" {% endif %}>Choose one</option>
+		{% for s in smb_dest %}
+			<option value="{{ s.id }}" {% if t and t.smb_id == s.id %}selected{% endif %}>{{ s.name }}</option>
+		{% endfor %}
+	</select>
+
+	{% if org %}
+	<script>
+		
+	 var em = document.querySelector('input[name="completionEmailRecip"]');
+	 if (em.value ==""){
+	 	em.value = "{{org.primary_contact_email}}";
+	}</script>
+
+	{% endif %}
+{% endif %}

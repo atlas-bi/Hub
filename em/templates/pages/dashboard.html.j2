@@ -1,0 +1,80 @@
+{#
+    Extract Management 2.0
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#}
+{% extends "layout.html.j2" %}
+{% block css %}
+	{% assets "css_dashboard" %}
+		<link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+	{% endassets %}
+{% endblock %}
+
+{% block js %}
+	{% assets "js_dashboard" %}
+		<script type="text/javascript" src="{{ ASSET_URL }}" ></script>
+	{% endassets %}
+{% endblock %}
+
+{% block body %}
+	<h1 class="em-title">Dashboard</h1>
+	<div class="dash-gauge">
+		<div class="em-ajaxContent" data-src="/dash/errorGauge"><div class="loader"><img src="/static/img/loader.gif"></div></div>
+		<div class="em-ajaxContent" data-src="/dash/runGauge"><div class="loader"><img src="/static/img/loader.gif"></div></div>
+	</div>
+
+	<div class="em-drop" data-toggle="clps" data-target="#dash-errored-tasks">Errored Tasks<svg class="em-dropIcon" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg></div>
+	<div class="clps" id="dash-errored-tasks">
+		<div class="em-dropBody">
+			<div class="em-tools">
+				<a class="em-link" href="/dash/errored/run">Run all now</a>
+				<a class="em-link" href="/dash/errored/schedule">Schedule all now</a>
+			</div>
+			<div class="em-ajaxTable" data-src="/dash/errored"><div class="loader"><img src="/static/img/loader.gif"></div></div>
+		</div>
+	</div>
+
+	<div class="em-drop" data-toggle="clps" data-target="#dash-active-tasks">Active Tasks<svg class="em-dropIcon" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg></div>
+	<div class="clps" id="dash-active-tasks">
+		<div class="em-dropBody">
+			<div class="em-ajaxTable" data-src="/dash/active"><div class="loader"><img src="/static/img/loader.gif"></div></div>
+		</div>
+	</div>
+
+	<div class="em-drop" data-toggle="clps" data-target="#dash-scheduled-tasks">Scheduled Tasks<svg class="em-dropIcon" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg></div>
+	<div class="clps" id="dash-scheduled-tasks">
+		<div class="em-dropBody">
+			<div class="em-tools">
+				<a class="em-link" href="/dash/scheduled/run">Run all now</a>
+				<a class="em-link" href="/dash/scheduled/reschedule">Reschedule all</a>
+				<a class="em-link" href="/dash/scheduled/disable">Disable all</a>	
+			</div>
+			<div class="em-ajaxTable" data-src="/dash/scheduled"><div class="loader"><img src="/static/img/loader.gif"></div></div>
+		</div>
+	</div>
+
+	<div class="em-drop" data-toggle="clps" data-target="#dash-orphaned-tasks">Orphaned Jobs<svg class="em-dropIcon" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg></div>
+	<div class="clps" id="dash-orphaned-tasks">
+		<div class="em-dropBody">
+			<div class="em-tools">
+				<a class="em-link" href="/dash/orphans/delete">Remove all</a>
+			</div>
+			<div class="em-ajaxTable" data-src="/dash/orphans"><div class="loader"><img src="/static/img/loader.gif"></div></div>
+		</div>
+	</div>
+
+	<h2 class="em-title">Log</h2>
+	<div class="em-ajaxTable" data-src="/dash/log"><div class="loader-typing"><img src="/static/img/typing.gif"></div></div>
+{% endblock %}

@@ -1,0 +1,11 @@
+<div class="em-inputTtl">Connection Name</div>
+{% if sftp_source|length ==0 %}
+	<span class="em-error">There are no connections set up. <a class="em-link" href="/connection">Set up a connection first.</a></span>
+{% else %}
+	<select class="em-input" name="task-source-sftp">
+		<option disabled {% if not t %} selected="selected" {% endif %}>Choose one</option>
+		{% for s in sftp_source %}
+			<option value="{{ s.id }}" {% if t and t.source_sftp_id == s.id %}selected{% endif %}>{{ s.name }}</option>
+		{% endfor %}
+	</select>
+{% endif %}

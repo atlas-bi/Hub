@@ -1,0 +1,12 @@
+<div class="em-inputTtl">Connection Name</div>
+
+{% if ftp_processing|length ==0 %}
+	<span class="em-error">There are no connections set up. <a class="em-link" href="/connection">Set up a connection first.</a></span>
+{% else %}
+	<select class="em-input" name="task-processing-ftp">
+		<option disabled {% if not t %} selected="selected" {% endif %}>Choose one</option>
+		{% for s in ftp_processing %}
+			<option value="{{ s.id }}" {% if t and t.processing_ftp_id == s.id %}selected{% endif %}>{{ s.name }}</option>
+		{% endfor %}
+	</select>
+{% endif %}
