@@ -238,12 +238,16 @@ def project_edit_post(my_id):
                 form["project_cron_sdate"], "%Y-%m-%d %H:%M"
             )
             me.cron_start_date = date
+        else:
+            me.cron_start_date = None
 
         if form["project_cron_edate"]:
             date = datetime.datetime.strptime(
                 form["project_cron_edate"], "%Y-%m-%d %H:%M"
             )
             me.cron_end_date = date
+        else:
+            me.cron_end_date = None
     else:
         me.cron = 0
     # intv
@@ -258,12 +262,17 @@ def project_edit_post(my_id):
                 form["project_intv_sdate"], "%Y-%m-%d %H:%M"
             )
             me.intv_start_date = date
+        else:
+            me.intv_start_date = None
+
 
         if form["project_intv_edate"]:
             date = datetime.datetime.strptime(
                 form["project_intv_edate"], "%Y-%m-%d %H:%M"
             )
             me.intv_end_date = date
+        else:
+            me.intv_end_date = None
     else:
         me.intv = 0
 
