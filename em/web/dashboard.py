@@ -95,7 +95,7 @@ def dash_run_gauge():
         """
         select count(1)
         from task_log t 
-        where status_date > now() - date('now','-72 hours')
+        where status_date > date('now','-72 hours') 
         and task_id is not null and job_id is not null
         and message = 'Completed task.'
         and status_id = 8 -- runner
