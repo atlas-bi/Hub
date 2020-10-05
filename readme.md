@@ -24,7 +24,7 @@ Extract Management 2.0 is a task scheduling tool intended to be used with gettin
 
 The app is designed to be able to run tasks at any time/ on any schedule.
 
-> :point_right: **[Live Demo](https://extract-management.herokuapp.com)**
+> :point_right: **[Live Demo](https://extract-management.herokuapp.com) - free hosting.. allow 30 seconds to start up app.**
 
 ## Run Extract Management 2.0 Docker Image
 
