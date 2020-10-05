@@ -60,6 +60,30 @@ def project_mine():
     )
 
 
+@app.route("/project/user/<this_user_id>")
+@ldap.login_required
+@ldap.group_required(["Analytics"])
+def project_user(this_user_id):
+    """ main view of users projects """
+    me = (
+        Project.query.join(User, Project.owner_id == User.id)
+        .filter(User.id == this_user_id)
+        .all()
+    )
+
+    my_user = User.query.filter_by(id=this_user_id).first()
+
+    if len(me) < 1:
+        return redirect(url_for("project_new"))
+    return render_template(
+        "pages/project/all.html.j2",
+        projects=me,
+        title=my_user.full_name + "'s Projects",
+        mine=my_user.full_name,
+        user_id=this_user_id,
+    )
+
+
 @app.route("/project/<my_type>/list")
 # @ldap.login_required
 # @ldap.group_required(["Analytics"])
@@ -73,6 +97,12 @@ def project_all_list(my_type="all"):
 
     if my_type == "all":
         projects = Project.query.join(User, Project.owner_id == User.id).all()
+    elif my_type.isdigit():
+        projects = (
+            Project.query.join(User, Project.owner_id == User.id)
+            .filter(User.id == int(my_type))
+            .all()
+        )
     else:
         projects = (
             Project.query.join(User, Project.owner_id == User.id)
@@ -100,7 +130,15 @@ def project_all_list(my_type="all"):
                 + '">'
                 + project.name
                 + "</a>",
-                "Owner": project.project_owner.full_name,
+                "Owner": (
+                    "<a href='project/user/"
+                    + str(project.owner_id)
+                    + "' class='em-link'>"
+                    + project.project_owner.full_name
+                    + "</a>"
+                    if project.project_owner
+                    else "N/A"
+                ),
                 "Last Active": datetime.datetime.strftime(
                     project.task.order_by(Task.last_run).first().last_run,
                     "%a, %b %-d, %Y %H:%M:%S",
@@ -264,7 +302,6 @@ def project_edit_post(my_id):
             me.intv_start_date = date
         else:
             me.intv_start_date = None
-
 
         if form["project_intv_edate"]:
             date = datetime.datetime.strptime(

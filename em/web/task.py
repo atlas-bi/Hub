@@ -169,6 +169,29 @@ def task_mine():
     )
 
 
+@app.route("/task/user/<my_user_id>")
+@ldap.login_required
+@ldap.group_required(["Analytics"])
+def task_user(my_user_id):
+    """ view for must my tasks """
+    me = (
+        Task.query.join(Project)
+        .join(User, User.id == Project.owner_id)
+        .filter(User.id == my_user_id)
+        .all()
+    )
+    my_user = User.query.filter_by(id=my_user_id).first()
+
+    if len(me) < 1:
+        return redirect(url_for("project"))
+    return render_template(
+        "pages/task/all.html.j2",
+        mine=my_user.full_name,
+        title="My Tasks",
+        user_id=my_user_id,
+    )
+
+
 @app.route("/task/<my_type>/list")
 # @ldap.login_required
 # @ldap.group_required(["Analytics"])
@@ -182,6 +205,13 @@ def task_list(my_type):
 
     if my_type == "all":
         tasks = Task.query.all()
+    elif my_type.isdigit():
+        tasks = (
+            Task.query.join(Project)
+            .join(User, User.id == Project.owner_id)
+            .filter(User.id == int(my_type))
+            .all()
+        )
     else:
         tasks = (
             Task.query.join(Project)

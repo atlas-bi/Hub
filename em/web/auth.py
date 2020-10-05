@@ -29,7 +29,7 @@ from ..model.auth import Login
 @app.before_request
 def before_request():
     """ checks and reloads auth before each request """
-    #if "user_id" in session:
+    # if "user_id" in session:
     g.user = []  # ldap.get_object_details(user=session["user_id"], dn_only=False)
     g.user_id = "1234"  # g.user["employeeID"][0].decode("utf-8")
     g.user_full_name = "Boss Man"  # g.user["name"][0].decode("utf-8")

@@ -13,6 +13,6 @@
 {% endblock %}
 
 {% block body %}
-	<h1>All Tasks {% if mine %} - {{mine}}{% endif %}</h1>
-	<div class="em-ajaxTable" data-src="/task/{% if mine %}mine{% else %}all{% endif %}/list"><div class="loader"><img src="/static/img/loader.gif"></div></div>
+	<h1 class="em-title">All Tasks {% if mine %} - {{mine}}{% endif %}{% if user_id %} (<a class="em-titleGrey" href="/task/user/{{user_id}}">See Tasks</a>){% endif %}</h1>
+	<div class="em-ajaxTable" data-src="/task/{% if user_id %}{{user_id}}{% elif mine %}mine{% else %}all{% endif %}/list"><div class="loader"><img src="/static/img/loader.gif"></div></div>
 {% endblock %}

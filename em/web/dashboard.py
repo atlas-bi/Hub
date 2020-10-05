@@ -217,7 +217,11 @@ def dash_errored():
                     else "Project Deleted"
                 ),
                 "Owner": (
-                    task.project.project_owner.full_name
+                    "<a href='project/user/"
+                    + str(task.project.owner_id)
+                    + "' class='em-link'>"
+                    + task.project.project_owner.full_name
+                    + "</a>"
                     if task.project and task.project.project_owner
                     else "N/A"
                 ),
@@ -257,9 +261,13 @@ def dash_errored():
                 if task.project
                 else "N/A",
                 "Owner": (
-                    task.project.project_owner.full_name
+                    "<a href='project/user/"
+                    + str(task.project.owner_id)
+                    + "' class='em-link'>"
+                    + task.project.project_owner.full_name
+                    + "</a>"
                     if task.project and task.project.project_owner
-                    else ""
+                    else "N/A"
                 ),
                 "Last Active": task.last_run or "Never",
                 "Action": "Error: Task must be <a class='em-link' href='/task/"
@@ -402,7 +410,15 @@ def dash_scheduled():
                 + '">'
                 + task.project.name
                 + "</a>",
-                "Owner": task.project.project_owner.full_name,
+                "Owner": (
+                    "<a href='project/user/"
+                    + str(task.project.owner_id)
+                    + "' class='em-link'>"
+                    + task.project.project_owner.full_name
+                    + "</a>"
+                    if task.project and task.project.project_owner
+                    else "N/A"
+                ),
                 "Last Active": datetime.datetime.strftime(
                     task.last_run, "%a, %b %-d, %Y %H:%M:%S",
                 )
@@ -590,12 +606,14 @@ def dash_log():
                 if log.task and log.task.project
                 else "N/A",
                 "Owner": (
-                    log.task.project.project_owner.full_name
-                    if log.task and log.task.project
+                    "<a href='project/user/"
+                    + str(log.task.project.owner_id)
+                    + "' class='em-link'>"
+                    + log.task.project.project_owner.full_name
+                    + "</a>"
+                    if log.task and log.task.project and log.task.project.project_owner
                     else "N/A"
-                )
-                if log.task
-                else "N/A",
+                ),
                 "Status Date": datetime.datetime.strftime(
                     log.status_date, "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
@@ -690,7 +708,15 @@ def dash_active():
                 + '">'
                 + task.project.name
                 + "</a>",
-                "Owner": task.project.project_owner.full_name,
+                "Owner": (
+                    "<a href='project/user/"
+                    + str(task.project.owner_id)
+                    + "' class='em-link'>"
+                    + task.project.project_owner.full_name
+                    + "</a>"
+                    if task.project and task.project.project_owner
+                    else "N/A"
+                ),
                 "Last Active": datetime.datetime.strftime(
                     task.last_run, "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
