@@ -32,16 +32,16 @@ from ..scripts.runner import Runner
 
 
 @app.route("/")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash():
     """ main dashboard route """
     return render_template("pages/dashboard.html.j2", title="Dashboard")
 
 
 @app.route("/dash/errorGauge")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_error_gauge():
     """ home page gauge of errored task % """
     success = db.session.execute(
@@ -87,8 +87,8 @@ def dash_error_gauge():
 
 
 @app.route("/dash/runGauge")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_run_gauge():
     """ homepage guage of all tasks run """
     runs = db.session.execute(
@@ -113,8 +113,8 @@ def dash_run_gauge():
 
 
 @app.route("/dash/orphans")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_orphans():
     """ ajax table of orphaned jobs """
     page = request.args.get("p", default=1, type=int)
@@ -163,8 +163,8 @@ def dash_orphans():
 
 
 @app.route("/dash/orphans/delete")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_orphans_delete():
     """ dash action to delete orphaned jobs """
     for j in app.apscheduler.get_jobs():
@@ -175,8 +175,8 @@ def dash_orphans_delete():
 
 
 @app.route("/dash/errored")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_errored():
     """ dash table of errored jobs """
     page = request.args.get("p", default=1, type=int)
@@ -288,8 +288,8 @@ def dash_errored():
 
 
 @app.route("/dash/errored/run")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_errored_run():
     """ dash action to run all error tasks """
     tasks = Task.query.filter_by(status_id=2).all()
@@ -332,8 +332,8 @@ def dash_errored_run():
 
 
 @app.route("/dash/errored/schedule")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_errored_schedule():
     """ dash action to reschedul all errored jobs """
 
@@ -357,8 +357,8 @@ def dash_errored_schedule():
 
 
 @app.route("/dash/scheduled")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_scheduled():
     """ dash table of all scheduled tasks """
     page = request.args.get("p", default=1, type=int)
@@ -461,8 +461,8 @@ def dash_scheduled():
 
 
 @app.route("/dash/scheduled/run")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_scheduled_run():
     """ dash action to run all scheduled jobs now """
     log = logging.getLogger()
@@ -508,8 +508,8 @@ def dash_scheduled_run():
 
 
 @app.route("/dash/scheduled/reschedule")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_scheduled_reschedule():
     """ dash action to reschedule all scheduled tasks """
     ids = []
@@ -528,8 +528,8 @@ def dash_scheduled_reschedule():
 
 
 @app.route("/dash/scheduled/disable")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_scheduled_disable():
     """ dash action to disable all scheduled jobs """
     ids = []
@@ -553,8 +553,8 @@ def dash_scheduled_disable():
 
 
 @app.route("/dash/log")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_log():
     """ dash get current log table """
     page = request.args.get("p", default=1, type=int)
@@ -644,8 +644,8 @@ def dash_log():
 
 
 @app.route("/dash/active")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_active():
     """ dash get table of active tasks """
     page = request.args.get("p", default=1, type=int)

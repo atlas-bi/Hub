@@ -29,11 +29,11 @@ from ..model.auth import Login
 @app.before_request
 def before_request():
     """ checks and reloads auth before each request """
-    if "user_id" in session:
-        g.user = [] #ldap.get_object_details(user=session["user_id"], dn_only=False)
-        g.user_id = '1' #g.user["employeeID"][0].decode("utf-8")
-        g.user_full_name = 'Default' #g.user["name"][0].decode("utf-8")
-        g.ldap_groups = [] #ldap.get_user_groups(user=session["user_id"])
+    #if "user_id" in session:
+    g.user = []  # ldap.get_object_details(user=session["user_id"], dn_only=False)
+    g.user_id = "1"  # g.user["employeeID"][0].decode("utf-8")
+    g.user_full_name = "Default"  # g.user["name"][0].decode("utf-8")
+    g.ldap_groups = []  # ldap.get_user_groups(user=session["user_id"])
 
 
 # login page
@@ -56,10 +56,10 @@ def login():
 
         session["user_id"] = request.form["user"].lower()
 
-        g.user = [] #ldap.get_object_details(user=session["user_id"], dn_only=False)
-        g.user_id = '1' #g.user["employeeID"][0].decode("utf-8")
-        g.user_full_name = 'Default' #g.user["name"][0].decode("utf-8")
-        g.ldap_groups = [] #ldap.get_user_groups(user=session["user_id"])
+        g.user = ldap.get_object_details(user=session["user_id"], dn_only=False)
+        g.user_id = g.user["employeeID"][0].decode("utf-8")
+        g.user_full_name = g.user["name"][0].decode("utf-8")
+        g.ldap_groups = ldap.get_user_groups(user=session["user_id"])
 
         executor.submit(log_login, g.user_full_name, 1)
         return redirect("/")

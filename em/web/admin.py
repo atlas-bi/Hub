@@ -28,8 +28,8 @@ from ..scripts.error_print import full_stack
 
 
 @app.route("/admin")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin():
     """ admin home page """
     message = request.args.get("message")
@@ -40,8 +40,8 @@ def admin():
 
 
 @app.route("/admin/emptyScheduler")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_empty_scheduler():
     """ remove all jobs from scheduler """
     for job in app.apscheduler.get_jobs():
@@ -57,8 +57,8 @@ def admin_empty_scheduler():
 
 
 @app.route("/admin/resetTasks")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_reset_tasks():
     """ admin button to reset all tasks to complete """
     Task.query.update({Task.status_id: 4}, synchronize_session=False)
@@ -75,8 +75,8 @@ def admin_reset_tasks():
 
 
 @app.route("/admin/clearlog")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_clear_log():
     """ admin button to clear logs """
     TaskLog.query.delete()
@@ -90,8 +90,8 @@ def admin_clear_log():
 
 
 @app.route("/admin/pauseJobs")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_pause_jobs():
     """ used to stop all jobs from running """
     try:
@@ -117,8 +117,8 @@ def admin_pause_jobs():
 
 
 @app.route("/admin/resumeJobs")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_resume_jobs():
     """ used to stop all jobs from running """
     try:
@@ -147,8 +147,8 @@ def admin_resume_jobs():
 
 
 @app.route("/admin/stopJobs")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_stop_jobs():
     """ used to stop all jobs from running """
     try:
@@ -181,8 +181,8 @@ def admin_stop_jobs():
 
 
 @app.route("/admin/killJobs")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_kill_jobs():
     """ used to stop all jobs from running """
     try:
@@ -210,8 +210,8 @@ def admin_kill_jobs():
 
 
 @app.route("/admin/user/tasklog")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_user_task_log():
     """ log of all user events """
 
@@ -287,8 +287,8 @@ def admin_user_task_log():
 
 
 @app.route("/admin/user/loginlog")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def admin_user_login_log():
     """ log of all user events """
 

@@ -36,8 +36,8 @@ from ..scripts.crypto import em_encrypt
 
 
 @app.route("/connection")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection():
     """ list of all destinations """
     connections = Connection.query.order_by(Connection.name).all()
@@ -53,8 +53,8 @@ def connection():
 
 
 @app.route("/connection/<my_id>", methods=["POST", "GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_edit(my_id):
     """ used to view or edit an existing destination """
     my_connection = Connection.query.filter_by(id=my_id).first()
@@ -266,8 +266,8 @@ def connection_edit(my_id):
 
 
 @app.route("/connection/<my_id>/task")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_task(my_id):
     """ get table of tasks associated with the connection """
     page = request.args.get("p", default=1, type=int)
@@ -650,40 +650,40 @@ def connection_task(my_id):
 
 
 @app.route("/connection/sftp")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_sftp():
     """ return html page for adding a sftp conncetion """
     return render_template("pages/connection/sftp.html.j2")
 
 
 @app.route("/connection/smb")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_smb():
     """ return html page for adding a smb conncetion """
     return render_template("pages/connection/smb.html.j2")
 
 
 @app.route("/connection/database")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_database():
     """ return html page for adding a smb conncetion """
     return render_template("pages/connection/database.html.j2")
 
 
 @app.route("/connection/ftp")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_ftp():
     """ return html page for adding a smb conncetion """
     return render_template("pages/connection/ftp.html.j2")
 
 
 @app.route("/connection/new", methods=["POST", "GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_new():
     """ adding a new destination """
     if request.method == "POST":
@@ -868,8 +868,8 @@ def connection_new():
 
 
 @app.route("/connection/remove/<my_id>", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove(my_id):
     """ remove a destination """
     ConnectionSftp.query.filter_by(connection_id=my_id).delete()
@@ -889,8 +889,8 @@ def connection_remove(my_id):
 
 
 @app.route("/connection/<conn_id>/removeSftp/<my_id>", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_sftp(conn_id, my_id):
     ConnectionSftp.query.filter_by(connection_id=conn_id, id=my_id).delete()
     db.session.commit()
@@ -904,8 +904,8 @@ def connection_remove_sftp(conn_id, my_id):
 
 
 @app.route("/connection/<conn_id>/removeSmb/<my_id>", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_smb(conn_id, my_id):
     ConnectionSmb.query.filter_by(connection_id=conn_id, id=my_id).delete()
     db.session.commit()
@@ -919,8 +919,8 @@ def connection_remove_smb(conn_id, my_id):
 
 
 @app.route("/connection/<conn_id>/removeFtp/<my_id>", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_ftp(conn_id, my_id):
     ConnectionFtp.query.filter_by(connection_id=conn_id, id=my_id).delete()
     db.session.commit()
@@ -934,8 +934,8 @@ def connection_remove_ftp(conn_id, my_id):
 
 
 @app.route("/connection/<conn_id>/removeDatabase/<my_id>", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_database(conn_id, my_id):
     ConnectionDatabase.query.filter_by(connection_id=conn_id, id=my_id).delete()
     db.session.commit()

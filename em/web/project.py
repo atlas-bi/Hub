@@ -28,8 +28,8 @@ from .task import add_task_to_engine
 
 
 @app.route("/project")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project():
     """ main view of all projects """
     me = Project.query.order_by(Project.name).all()
@@ -39,8 +39,8 @@ def project():
 
 
 @app.route("/project/mine")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_mine():
     """ main view of just my projects """
 
@@ -61,8 +61,8 @@ def project_mine():
 
 
 @app.route("/project/<my_type>/list")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_all_list(my_type="all"):
     """ return a table of projects """
     page = request.args.get("p", default=1, type=int)
@@ -158,8 +158,8 @@ def project_all_list(my_type="all"):
 
 
 @app.route("/project/<my_id>", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_get(my_id):
     """ return details for a specific project """
     me = Project.query.filter_by(id=my_id).first()
@@ -171,8 +171,8 @@ def project_get(my_id):
 
 
 @app.route("/project/<my_id>/edit", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_edit_get(my_id):
     """ return project editor """
     me = Project.query.filter_by(id=my_id).first()
@@ -186,8 +186,8 @@ def project_edit_get(my_id):
 
 
 @app.route("/project/<my_id>/edit", methods=["POST"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_edit_post(my_id):
     """ save project edits """
     me = Project.query.filter_by(id=my_id).first()
@@ -297,8 +297,8 @@ def project_edit_post(my_id):
 
 
 @app.route("/project/new", methods=["GET"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 @cache.cached(timeout=120)
 def project_new_form():
     """ retrun page to create a new project """
@@ -310,8 +310,8 @@ def project_new_form():
 
 
 @app.route("/project/new", methods=["POST"])
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_new():
     """ create a new project """
     cache.clear()
@@ -408,8 +408,8 @@ def project_new():
 
 
 @app.route("/project/<my_id>/remove")
-#@ldap.login_required
-#@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_remove(my_id):
     """ remove a project """
     cache.clear()
