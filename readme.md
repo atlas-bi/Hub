@@ -24,6 +24,38 @@ Extract Management 2.0 is a task scheduling tool intended to be used with gettin
 
 The app is designed to be able to run tasks at any time/ on any schedule.
 
+> :point_right: **[Live Demo](https://extract-management.herokuapp.com)**
+
+## Run Extract Management 2.0 Docker Image
+
+> :point_right: **[Extract Management Docker Image with Docker](https://hub.docker.com/r/christopherpickering/extract_management)**
+
+### Running in [Docker Sandbox](https://labs.play-with-docker.com/)
+
+1. Click "start"
+2. Click "Settings" > 1 Manager and 1 Worker
+3. Click on the Manager instance. Atlas is large and doesn't run in the worker.
+4. Paste in ```docker run -i -t -p 5001:5001 -e PORT=5001  -u 0 christopherpickering/extract_management:latest
+```
+5. Wait about 1-2 mins for app to download and startup. Output will say ```Now listening on: http://[::]:5001``` when ready.
+6. Click "Open Port" and type ```5001```
+7. App will open in new tab. The URL should be valid for 3-4 hrs.
+
+### Running Locally from Dockerhub
+App can be run locally with our public docker image -
+```sh
+docker run -i -t -p 5001:5001 -e PORT=5001  -u 0 christopherpickering/extract_management:latest
+
+```
+
+### Building Your Own Image
+
+```sh
+# clone repository
+docker build  --tag em .
+docker run -i -t -p 5001:5001 -e PORT=5001  -u 0 em:latest
+# web app will be running @ http://localhost:5001
+```
 
 ## Run Extract Management 2.0 in Development Mode
 
