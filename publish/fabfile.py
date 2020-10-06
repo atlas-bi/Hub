@@ -219,7 +219,7 @@ def publish(conn):
 
     # check if online
     conn.run("curl " + server_name)
-    print("publish to rhbiwa01 is complete.")
+    print("publish to "+server_name+" is complete.")
 
     print(
         """emergency restarts
