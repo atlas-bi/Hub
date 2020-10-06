@@ -116,6 +116,13 @@ h2, h3, h4, h5 {
     cursor: pointer
 }
 
+@media (min-width: 1940px) {
+    .em-addElement {
+        font-size: 96%;
+    }
+
+}
+
 .em-addElement svg {
     padding-right: 20px;
     height: 25px;

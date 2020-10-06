@@ -114,6 +114,7 @@ def project_all_list(my_type="all"):
         "Name",
         "Owner",
         "Last Active",
+        "Next Run",
         "Active Tasks",
         "Running Tasks",
         "Errored Tasks",
@@ -121,6 +122,9 @@ def project_all_list(my_type="all"):
 
     me = [{"head": str(head)}]
     table = []
+
+    all_jobs = app.apscheduler.get_jobs()
+
 
     [
         table.append(
@@ -146,6 +150,49 @@ def project_all_list(my_type="all"):
                 if project.task.order_by(Task.last_run).first()
                 and project.task.order_by(Task.last_run).first().last_run is not None
                 else "Never",
+                 "last_active": str(
+                    project.task.order_by(Task.last_run).first().last_run
+                )
+                if project.task.order_by(Task.last_run).first()
+                and project.task.order_by(Task.last_run).first().last_run is not None
+                else "Never",
+                "Next Run": datetime.datetime.strftime(
+                    min(
+                        [
+                            job.next_run_time
+                            for job in all_jobs
+                            if str(job.args[0])
+                            in [str(task.id) for task in project.task]
+                            and job.next_run_time is not None
+                        ]
+                    ),
+                    "%a, %b %-d, %Y %H:%M:%S",
+                )
+                if [
+                    job.next_run_time
+                    for job in all_jobs
+                    if str(job.args[0]) in [str(task.id) for task in project.task]
+                    and job.next_run_time is not None
+                ]
+                else "N/A",
+                "next_run": str(
+                    min(
+                        [
+                            job.next_run_time
+                            for job in all_jobs
+                            if str(job.args[0])
+                            in [str(task.id) for task in project.task]
+                            and job.next_run_time is not None
+                        ]
+                    )
+                )
+                if [
+                    job.next_run_time
+                    for job in all_jobs
+                    if str(job.args[0]) in [str(task.id) for task in project.task]
+                    and job.next_run_time is not None
+                ]
+                else "none",
                 "Active Tasks": project.task.filter_by(enabled=1).count(),
                 "Running Tasks": project.task.filter_by(status_id=1).count(),
                 "Errored Tasks": (
@@ -154,7 +201,7 @@ def project_all_list(my_type="all"):
                         Task.id.notin_(
                             [
                                 job.args[0]
-                                for job in app.apscheduler.get_jobs()
+                                for job in all_jobs
                                 if job.next_run_time is not None
                             ]
                         )
@@ -168,7 +215,7 @@ def project_all_list(my_type="all"):
                     Task.id.notin_(
                         [
                             job.args[0]
-                            for job in app.apscheduler.get_jobs()
+                            for job in all_jobs
                             if job.next_run_time is not None
                         ]
                     )
@@ -183,9 +230,20 @@ def project_all_list(my_type="all"):
     ]
 
     table = (
-        sorted(table, key=lambda k: k[split_sort[0]])
+        sorted(
+            table,
+            key=lambda k: k[split_sort[0]]
+            .replace("Next Run", "next_run")
+            .replace("Last Active", "last_active"),
+        )
         if split_sort[1] == "desc"
-        else sorted(table, key=lambda k: k[split_sort[0]], reverse=True)
+        else sorted(
+            table,
+            key=lambda k: k[split_sort[0]]
+            .replace("Next Run", "next_run")
+            .replace("Last Active", "last_active"),
+            reverse=True,
+        )
     )
     [me.append(s) for s in table[page * 10 : page * 10 + 10]]
 

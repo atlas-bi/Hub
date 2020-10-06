@@ -23,6 +23,7 @@ from flask import g, redirect, url_for, render_template, request, session
 from em import app, ldap, executor, db
 import em.messages as messages
 from ..model.auth import Login
+from ..model.model import User
 
 
 # validate user
@@ -82,3 +83,10 @@ def log_login(name, type_id):
     me = Login(username=name, type_id=type_id)
     db.session.add(me)
     db.session.commit()
+
+    # if user does not exist, save their data
+    me = User.query.filter_by(user_id=g.user_id).first()
+    if len(me) < 1:
+        me = User(user_id=g.user_id, full_name=g.user_full_name)
+        db.session.add(me)
+        db.session.commit()

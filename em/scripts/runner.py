@@ -517,6 +517,34 @@ class Runner:
         self.file_name, self.file_path = File(self.task, self.data).save()
 
     def __store_file(self):
+        
+         # only store if there are no errors.
+        error_logs = (
+            TaskLog.query.filter_by(
+                task_id=self.task.id, job_id=self.task.last_run_job_id, error=1
+            )
+            .order_by(TaskLog.status_date)
+            .all()
+        )
+
+        if len(error_logs) > 0:
+            logging.error(
+                "Runner: Files not stored because of run error: Task: %s, with run: %s\n%s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
+                str(full_stack()),
+            )
+            log = TaskLog(
+                task_id=self.task.id,
+                error=1,
+                job_id=self.hash,
+                status_id=8,
+                message="Files not stored because of run error.",
+            )
+            db.session.add(log)
+            db.session.commit()
+            return False
+
 
         logging.info(
             "Runner: Storing file: Task: %s, with run: %s",
@@ -562,6 +590,8 @@ class Runner:
             self.file_name,
             self.file_path,
         ).save()
+
+        return True
 
     def __clean_up(self):
 

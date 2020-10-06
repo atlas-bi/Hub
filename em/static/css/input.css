@@ -179,7 +179,7 @@ select.em-input option {
     appearance: none;
     -webkit-tap-highlight-color: transparent;
     color: #fff;
-    font-size: 17px;
+    font-size: 14px;
     text-align: center;
     font-weight: 700;
     font-family: HelveticaNeue-Medium, "Helvetica Neue Medium", HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -195,6 +195,11 @@ select.em-input option {
     margin-bottom: 10px;
     letter-spacing: 1px
 }
+@media (min-width: 1940px) {
+    .em-submit {
+        font-size: 17px;
+    }
+}
 
 .em-submit:hover {
     background-color: rgb(7, 137, 146);
@@ -203,19 +208,26 @@ select.em-input option {
 
 .em-drop, .em-dropLight {
     display: block;
-    min-height: 44px;
-    padding: 11px;
-    font-size: 17px;
+    min-height: 33px;
+    padding: 5px 11px;
+    font-size: 14px;    
     letter-spacing: 1px;
     background-color: rgba(9, 174, 187, .5);
     transition: background-color .4s ease-out;
     border-radius: 3px;
-    margin: 5px 0;
+    margin: 2.5px 0;
     cursor: pointer;
     box-sizing: border-box;
     text-transform: capitalize;
 }
-
+@media (min-width: 1940px) {
+    .em-drop, .em-dropLight {
+        font-size: 17px;
+        margin: 5px 0;
+        padding: 11px;
+        min-height: 44px;
+    }
+}
 .em-drop:hover {
     background-color: rgb(9, 174, 187);
 }

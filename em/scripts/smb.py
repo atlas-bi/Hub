@@ -122,6 +122,27 @@ class Smb:
                 str(self.share_name),
                 str(self.file_path),
             )
+            try:
+                self.conn.getAttributes(self.share_name, self.file_path)
+
+            except:
+                logging.error(
+                    "SMB: Dir does not exist: %s, path: %s\n%s",
+                    str(self.share_name),
+                    str(self.file_path),
+                    str(full_stack()),
+                )
+                log = TaskLog(
+                    task_id=self.task.id,
+                    status_id=10,  # 10 = SMB Error
+                    message="Cannot list directory - does not yet exist. "
+                    + self.share_name
+                    + " "
+                    + self.file_path,
+                )
+                db.session.add(log)
+                db.session.commit()
+                return []
 
             my_list = self.conn.listPath(
                 self.share_name, self.file_path, search=65591, timeout=30, pattern="*"
