@@ -152,12 +152,22 @@ class File:
                         )  # txt or other
                         else csv.writer(myfile)
                     )
-                    wrtr.writerows(data)
+                    for row in data:
+                        new_row = [
+                            (x.strip('"').strip("'") if isinstance(x, str) else x)
+                            for x in row
+                        ]
+                        wrtr.writerow(new_row)
 
                 # if xlxs (3)
                 elif self.task.destination_file_type_id == 3:
                     wrtr = csv.writer(myfile, dialect="excel")
-                    wrtr.writerows(data)
+                    for row in data:
+                        new_row = [
+                            (x.strip('"').strip("'") if isinstance(x, str) else x)
+                            for x in row
+                        ]
+                        wrtr.writerow(new_row)
 
                 else:
                     myfile.write(str(data))

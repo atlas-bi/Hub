@@ -35,7 +35,7 @@
 		<h2>Maybe try <a class="em-titleGrey" href="/project">all projects</a>?</h2>
 	{% else %}
 		<h1 class="em-title">{{ p.name }} </h1>
-		<h2 class="em-subTitle">Owned by {{ p.project_owner.full_name }}</h2>
+		<h2 class="em-subTitle">Owned by <a href="/project/user/{{p.project_owner.id}}" class="em-link">{{ p.project_owner.full_name }}</a></h2>
 
 		{% include "pages/project/nav.html.j2" %}
 

@@ -37,7 +37,7 @@
 	    <span class="em-gridValue">{% if t.project %}<a class="em-link" href="/project/{{t.project.id}}">{{ t.project.name }}</a>{% else %}Orphan :'({%endif %}</span>
 	    {% if t.project %}
 	    	<span class="em-gridName">Owner</span>
-	    	<span class="em-gridValue">{{ t.project.project_owner.full_name }}</span>
+	    	<span class="em-gridValue"><a href="/project/user/{{t.project.owner_id}}" class="em-link">{{ t.project.project_owner.full_name }}</a></span>
 	    {%endif%}
 	</div>
 	<h2>Data Source</h2>
