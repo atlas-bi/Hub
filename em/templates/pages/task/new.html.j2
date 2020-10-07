@@ -31,7 +31,7 @@
 				File2Email
 			-->
 			<select class="em-input" name="sourceType" required>
-				<option disabled selected>Choose one</option>
+				<option selected>Choose one</option>
 				{% for s in source_type %}
 					<option value="{{ s.id }}" {%if s.id == t.source_type_id %} selected {%endif%}>{{ s.name }}</option>
 				{% endfor %}

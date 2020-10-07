@@ -41,7 +41,8 @@ values
   ('Database'),
   ('Network File (SMB Connection)'),
   ('File (SFTP Connection)'),
-  ('File (FTP Connection)');
+  ('File (FTP Connection)'),
+  ('Python Script');
 
 -------------------------------
 

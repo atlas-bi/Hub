@@ -744,8 +744,9 @@ def task_new(my_id):
                 form["processingCode"] if "processingCode" in form else ""
             )
 
-    tme.file_type_id = form["fileType"]
-    tme.destination_file_type_id = form["fileType"]
+    tme.destination_file_type_id = (
+        form["fileType"] if str(form["fileType"]) != "none" else None
+    )
     tme.destination_file_name = form["destinationFileName"]
 
     tme.destination_create_zip = (

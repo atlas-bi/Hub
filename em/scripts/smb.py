@@ -126,12 +126,12 @@ class Smb:
                 self.conn.getAttributes(self.share_name, self.file_path)
 
             except:
-                logging.error(
-                    "SMB: Dir does not exist: %s, path: %s\n%s",
-                    str(self.share_name),
-                    str(self.file_path),
-                    str(full_stack()),
-                )
+                # logging.error(
+                #     "SMB: Dir does not exist: %s, path: %s\n%s",
+                #     str(self.share_name),
+                #     str(self.file_path),
+                #     str(full_stack()),
+                # )
                 log = TaskLog(
                     task_id=self.task.id,
                     status_id=10,  # 10 = SMB Error

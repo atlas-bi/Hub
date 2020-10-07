@@ -68,6 +68,7 @@ class PyProcesser:
         # self.env_path = self.base_path + self.env_name
         self.env_path = "/home/venv/" + self.env_name
 
+    def run(self):
         self.__build_env()
         self.__pip_install()
         self.__run_script()

@@ -74,6 +74,9 @@ class Runner:
         tasks = Task.query.filter_by(id=task_id).all()
 
         for task in tasks:
+            self.data = None
+            self.file_path = ""
+            self.file_name = ""
             print("starting task " + str(task.id))
             logging.info(
                 "Runner: Starting task: %s, with run: %s",
@@ -225,6 +228,7 @@ class Runner:
 
         try:
             if my_file != "" and self.task.processing_type_id > 0:
+                Path(processing_script_name).parent.mkdir(parents=True, exist_ok=True)
                 with open(processing_script_name, "w") as text_file:
                     text_file.write(my_file)
                 log = TaskLog(
@@ -255,9 +259,17 @@ class Runner:
             db.session.commit()
 
         # run processing script
-        output = PyProcesser(self.task, processing_script_name, self.file_path,)
+        output = PyProcesser(self.task, processing_script_name, self.file_path,).run()
         # allow processer to rename file
         if output != "":
+            log = TaskLog(
+                task_id=self.task.id,
+                job_id=self.hash,
+                status_id=8,
+                message="Processing script output:\n" + output,
+            )
+            db.session.add(log)
+            db.session.commit()
             self.file_name = output
 
     def __get_source(self):
@@ -509,16 +521,18 @@ class Runner:
             files are kept in /em/em/temp/<extract name>
 
         """
-        logging.info(
-            "Runner: Building File: Task: %s, with run: %s",
-            str(self.task.id),
-            str(self.task.last_run_job_id),
-        )
-        self.file_name, self.file_path = File(self.task, self.data).save()
+        if self.data:
+            logging.info(
+                "Runner: Building File: Task: %s, with run: %s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
+            )
+            self.file_name, self.file_path = File(self.task, self.data).save()
 
     def __store_file(self):
-        
-         # only store if there are no errors.
+        if self.task.source_type_id == 5:
+            return False
+        # only store if there are no errors.
         error_logs = (
             TaskLog.query.filter_by(
                 task_id=self.task.id, job_id=self.task.last_run_job_id, error=1
@@ -527,7 +541,7 @@ class Runner:
             .all()
         )
 
-        if len(error_logs) > 0:
+        if len(error_logs) > 0 and self.file_name != "" and self.file_path != "":
             logging.error(
                 "Runner: Files not stored because of run error: Task: %s, with run: %s\n%s",
                 str(self.task.id),
@@ -544,7 +558,6 @@ class Runner:
             db.session.add(log)
             db.session.commit()
             return False
-
 
         logging.info(
             "Runner: Storing file: Task: %s, with run: %s",
