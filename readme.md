@@ -76,7 +76,8 @@ To enable shared folders with a VirtualBox host: https://wiki.alpinelinux.org/wi
 
 We do not use virtual environments in Alpine, but install packages globally as Alpine is a one use disposable setup.
 
-
+In the network settings > advanced enable port forwarding from a host port (2222 for example) to guest port 22. Then you can access the box through ssh: <user>@localhost:2000
+	
 #### Running Alpine in a Virtual Box Machine
 
 After install of Alpine, add a new user for ssh connections.
@@ -88,6 +89,20 @@ After ssh, change user back to root to be able to access/edit files
 
 ```sh
 su - root
+```
+
+#### Enable zsh & oh-my-zsh shell (makes shell easier to use)
+
+```sh
+apk add --no-cache curl git nano zsh
+git config --global http.sslVerify false
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# if curl does not succeed, try wget.
+sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# edit settings
+nano /etc/passwd
+# edit first line with "ash" to be "zsh"
 ```
 
 ##### Mount Local file system
@@ -107,19 +122,6 @@ alias my_mnt="mount -t vboxsf rmc /mnt/outside"
 # then when loging into alpine run the command or just run "my_mnt" after ssh'ing into the machine.
 ```
 
-#### Enable zsh & oh-my-zsh shell (makes shell easier to use)
-
-```sh
-apk add --no-cache curl git nano zsh
-git config --global http.sslVerify false
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# if curl does not succeed, try wget.
-sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# edit settings
-nano /etc/passwd
-# edit first line with "ash" to be "zsh"
-```
 #### Adding alias
 ```sh
 nano ~/.zshrc
