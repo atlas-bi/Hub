@@ -273,6 +273,13 @@
 				{% endwith %}
 				<div class="em-grid">
 			{% endif %}
+
+			{% if t.processing_command %}
+				</div>
+				<span class="em-gridName">Processing Command</span>
+				<div class="em-code">{{ t.processing_command }}</div>
+				<div class="em-grid">
+			{% endif %}
 			</div>
 
 		{% endif %}
