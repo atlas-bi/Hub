@@ -108,7 +108,9 @@ values
   ('FTP'),
   ('Py Processer'),
   ('Git/Web Code'),
-  ('Date Parser');
+  ('Date Parser'),
+  ('Cmd Runner'),
+  ('System');
 
 /*
   org specific and not required for app to run.
