@@ -34,8 +34,8 @@ from .date_parsing import DateParsing
 
 class File:
     """
-        files are created in the drive /em/temp/ from any data sent.
-        file name and full file path+name are returned.
+    files are created in the drive /em/temp/ from any data sent.
+    file name and full file path+name are returned.
     """
 
     # pylint: disable=too-few-public-methods
@@ -120,7 +120,9 @@ class File:
 
         self.file_path = self.base_path + self.file_name
 
-        Path(self.base_path,).mkdir(parents=True, exist_ok=True)
+        Path(
+            self.base_path,
+        ).mkdir(parents=True, exist_ok=True)
 
         try:
 

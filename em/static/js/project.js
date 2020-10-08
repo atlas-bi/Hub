@@ -684,7 +684,7 @@
             p.querySelector('.task-sourceSmb').style.display = 'none';
             p.querySelector('.task-sourceSftp').style.display = 'none';
             p.querySelector('.task-sourceFtp').style.display = 'none';
-
+            p.querySelector('.task-query-location').style.display = 'none';
 
             if (t.value == 1) {
                 p.querySelector('.task-sourceDatabase').style.removeProperty('display');
@@ -695,6 +695,7 @@
                 p.querySelector('.task-sourceSftp').style.removeProperty('display');
             } else if (t.value == 4) {
                 p.querySelector('.task-sourceFtp').style.removeProperty('display');
+            } else if (t.value == 5) {
             }
         } else if (e.target.closest('select[name="sourceQueryType"]')) {
             t = e.target.closest('select[name="sourceQueryType"]');
@@ -730,6 +731,7 @@
             p.querySelector('.task-processingSftp').style.display = 'none';
             p.querySelector('.task-processingUrl').style.display = 'none';
             p.querySelector('.task-processingCode').style.display = 'none';
+            p.querySelector('.task-processingCommand').style.removeProperty('display');
 
             if (t.value == 1) {
                 p.querySelector('.task-processingSmb').style.removeProperty('display');
@@ -743,6 +745,7 @@
                 p.querySelector('.task-processingUrl').style.removeProperty('display');
             } else if (t.value == 6) {
                 p.querySelector('.task-processingCode').style.removeProperty('display');
+                p.querySelector('.task-processingCommand').style.display = 'none';
             }
         } else if (e.target.closest('select[name="fileType"]')) {
             t = e.target.closest('select[name="fileType"]');

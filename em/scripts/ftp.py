@@ -29,9 +29,9 @@ from .crypto import em_decrypt
 
 class Ftp:
     """
-        function takes a file name and source file path
-        and will upload the file to the fpt location
-        specified in the task settings.
+    function takes a file name and source file path
+    and will upload the file to the fpt location
+    specified in the task settings.
     """
 
     # pylint: disable=too-few-public-methods

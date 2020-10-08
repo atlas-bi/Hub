@@ -27,6 +27,7 @@ import os
 import re
 from em import app, db
 from .error_print import full_stack
+from .cmd import Cmd
 from ..model.model import (
     TaskLog,
     Task,
@@ -36,9 +37,9 @@ from ..model.model import (
 class PyProcesser:
 
     """
-        create env
-        run script in env
-        remove env
+    create env
+    run script in env
+    remove env
     """
 
     # pylint: disable=too-few-public-methods
@@ -50,8 +51,7 @@ class PyProcesser:
         self.output = ""
 
         self.env_name = self.task.last_run_job_id + "_env"
-
-        self.base_path = (
+        self.job_path = (
             str(Path(__file__).parent.parent)
             + "/temp/"
             + self.task.project.name.replace(" ", "_")
@@ -59,14 +59,14 @@ class PyProcesser:
             + self.task.name.replace(" ", "_")
             + "/"
             + self.task.last_run_job_id
-            + "/venv/"
         )
+        self.base_path = self.job_path + "/venv/"
 
-        # Path(self.base_path).mkdir(parents=True, exist_ok=True)
-        Path("/home/venv/").mkdir(exist_ok=True)
+        Path(self.base_path).mkdir(parents=True, exist_ok=True)
+        # Path("/home/venv/").mkdir(exist_ok=True)
 
-        # self.env_path = self.base_path + self.env_name
-        self.env_path = "/home/venv/" + self.env_name
+        self.env_path = self.base_path + self.env_name
+        # self.env_path = "/home/venv/" + self.env_name
 
     def run(self):
         self.__build_env()
@@ -83,11 +83,12 @@ class PyProcesser:
             str(self.task.last_run_job_id),
         )
 
-        self.__cmd_runner(
+        output = Cmd(
+            self.task,
             "virtualenv " + self.env_path,
             "Environment  " + self.env_path + " created.",
             "Failed to create environment  " + self.env_path,
-        )
+        ).run()
 
     def __pip_install(self):
 
@@ -109,22 +110,33 @@ class PyProcesser:
         )
 
         imports = []
-        for line in open(self.script):
 
-            imports.append(re.findall(r"(?<=^import)\s+[^\.][^\s]+?\s+?$", line))
-            imports.append(re.findall(r"(?<=^from)\s+[^\.].+?(?=import)", line))
-            imports.append(re.findall(r"(?<=^import)\s+[^\.][^\s]+?(?=\s)", line))
+        # find all scripts in dir
+        paths = list(Path(self.job_path).rglob("*.py"))
+
+        for file in paths:
+            for line in open(file):
+
+                imports.append(re.findall(r"(?<=^import)\s+[^\.][^\s]+?\s+?$", line))
+                imports.append(re.findall(r"(?<=^from)\s+[^\.].+?(?=import)", line))
+                imports.append(re.findall(r"(?<=^import)\s+[^\.][^\s]+?(?=\s)", line))
 
         # clean list
         imports = [x[0].strip() for x in imports if x != []]
 
+        # remove any relative imports
+        names = [file.stem for file in paths]
+
+        imports = list(set(imports) - set(names))
+
         # remove preinstalled packages from imports
         cmd = self.env_path + "/bin/python -c \"help('modules')\""
-        x = self.__cmd_runner(
+        x = Cmd(
+            self.task,
             cmd,
             "Python packages loaded.",
             "Failed to get preloaded packages: " + "\n" + cmd,
-        )
+        ).run()
 
         x = x.split(
             "Please wait a moment while I gather a list of all available modules..."
@@ -144,7 +156,8 @@ class PyProcesser:
         # try to install
         if len(imports) > 0:
             cmd = self.env_path + "/bin/pip install " + " ".join(imports)
-            self.__cmd_runner(
+            output = Cmd(
+                self.task,
                 cmd,
                 "Imports succesfully installed: "
                 + " ".join(imports)
@@ -152,7 +165,7 @@ class PyProcesser:
                 + "\n"
                 + cmd,
                 "Failed to install imports with command: " + "\n" + cmd,
-            )
+            ).run()
 
     def __run_script(self):
         logging.info(
@@ -166,55 +179,10 @@ class PyProcesser:
             + self.script
             + (" " + self.input_path if self.input_path is not None else "")
         )
-        self.output = self.__cmd_runner(
-            cmd, "Script successfully run.", "Failed run script: " + "\n" + cmd
-        )
 
-    def __cmd_runner(self, cmd, success_msg, error_msg):
-
-        try:
-            out = os.popen(cmd + " 2>&1").read()
-            if "Error" in out:
-                log = TaskLog(
-                    task_id=self.task.id,
-                    job_id=self.task.last_run_job_id,
-                    status_id=14,  # 14 = py processing
-                    error=1,
-                    message=error_msg + ("\n" if out != "" else "") + out,
-                )
-                db.session.add(log)
-                db.session.commit()
-            else:
-                log = TaskLog(
-                    task_id=self.task.id,
-                    job_id=self.task.last_run_job_id,
-                    status_id=14,  # 14 = py processing
-                    message=success_msg,
-                )
-                db.session.add(log)
-                db.session.commit()
-            return out
-
-        # pylint: disable=bare-except
-        except:
-            logging.error(
-                "PyProcesser: Running Failed: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.task.last_run_job_id),
-                str(full_stack()),
-            )
-
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.task.last_run_job_id,
-                status_id=14,  # 14 = py processing
-                error=1,
-                message=error_msg
-                + ("\n" if out != "" else "")
-                + "\n"
-                + str(full_stack()),
-            )
-
-            db.session.add(log)
-            db.session.commit()
-            return ""
+        self.output = Cmd(
+            self.task,
+            cmd,
+            "Script successfully run.",
+            "Failed run script: " + "\n" + cmd,
+        ).run()

@@ -29,9 +29,9 @@ from .error_print import full_stack
 
 class Sftp:
     """
-        function takes a file name and source file path
-        and will upload the file to the sfpt location
-        specified in the task settings.
+    function takes a file name and source file path
+    and will upload the file to the sfpt location
+    specified in the task settings.
     """
 
     # pylint: disable=too-few-public-methods

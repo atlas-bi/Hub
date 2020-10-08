@@ -328,6 +328,17 @@ We must only have 1 worker. It seems that with gevent we have the most success. 
 --workers 1
 --timeout 999
 
+### Server Settings
+
+Allow the webapp to resetart the web service daemon without a password
+
+```sh
+sudo visudo
+
+# add this line to the end.. assuming the webapp usergroup is "webapp"
+%webapp ALL=NOPASSWD: /bin/systemctl daemon-reload
+%webapp ALL=NOPASSWD: /bin/systemctl restart *
+```
 
 ## Credits
 

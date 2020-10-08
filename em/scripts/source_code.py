@@ -74,6 +74,7 @@ class SourceCode:
                         self.url,
                     )
                     time.sleep(5)
+                    session = requests.session()
                     page = session.get(app.config["GIT_URL"], verify=False)
                     soup = BeautifulSoup(page.text, "html.parser")
                     page = session.post(
@@ -93,7 +94,11 @@ class SourceCode:
 
                 assert "Sign in · GitLab" not in page.text
                 return self.cleanup(
-                    page.text,
+                    (
+                        page.text
+                        if not page.text.startswith("<!DOCTYPE")
+                        else "Visit URL to view code"
+                    ),
                     ("mssql" if self.task.source_database_id == 2 else None),
                     self.task.query_params,
                     self.task.project.global_params,

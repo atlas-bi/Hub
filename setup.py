@@ -54,5 +54,6 @@ setup(
         "rcssmin",
         "virtualenv",
         "python-dateutil",
+        "psutil",
     ],
 )

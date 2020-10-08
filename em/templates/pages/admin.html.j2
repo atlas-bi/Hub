@@ -42,15 +42,29 @@
 	  {% endif %}
 	{% endwith %}
 
+	<h2 class="em-title">App Tasks</h2>
 	<div class="em-tools">
 		<a href="/admin/clearlog">Clear all logs</a>
 		<a href="/admin/resetTasks">Reset all tasks to completed</a>
-		<a href="/admin/emptyScheduler">Empty Scheduler</a>
+	</div>
+
+	<h2 class="em-title">Scheduler Tasks</h2>
+	<div class="em-tools">
+		<a href="/admin/emptyScheduler" onclick="return confirm('Are you sure? Go to Dash > Error > Reschedule all to restart.')">Empty Scheduler</a>
 		<a href="/admin/pauseJobs">Pause All Jobs</a>
 		<a href="/admin/resumeJobs">Resume Enabled Jobs</a>
-		<a href="/admin/stopJobs">Gracefully Stop Scheduler</a>
-		<a href="/admin/killJobs">Kill Scheduler</a>
+		<a href="/admin/stopJobs" onclick="return confirm('Are you sure? Click Restart Web Service to start again.')">Gracefully Stop Scheduler</a>
+		<a href="/admin/killJobs" onclick="return confirm('Are you sure? Click Restart Web Service to start again.')">Kill Scheduler</a>
 	</div>
+	<h2 class="em-title">Server Tasks</h2>
+	<div class="em-tools">
+	
+		<a href="/admin/reloadDaemon">Reload Web Service</a>
+		<a href="/admin/restartDaemon">Restart Web Service</a>
+		<a href="/admin/whoami">Whoami</a>
+	</div>
+
+
 	<h2>User Task History</h2>
 	<div class="em-ajaxTable" data-src="/admin/user/tasklog"><div class="loader-typing"><img src="/static/img/typing.gif"></div></div>
 

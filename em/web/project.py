@@ -125,7 +125,6 @@ def project_all_list(my_type="all"):
 
     all_jobs = app.apscheduler.get_jobs()
 
-
     [
         table.append(
             {
@@ -150,7 +149,7 @@ def project_all_list(my_type="all"):
                 if project.task.order_by(Task.last_run).first()
                 and project.task.order_by(Task.last_run).first().last_run is not None
                 else "Never",
-                 "last_active": str(
+                "last_active": str(
                     project.task.order_by(Task.last_run).first().last_run
                 )
                 if project.task.order_by(Task.last_run).first()

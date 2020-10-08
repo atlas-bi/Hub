@@ -131,7 +131,10 @@ def year(none):
 @app.template_filter("datetime_format")
 def datetime_format(my_date):
     """ formats date string """
-    return datetime.datetime.strftime(my_date, "%a, %b %-d, %Y %H:%M:%S.%f",)
+    return datetime.datetime.strftime(
+        my_date,
+        "%a, %b %-d, %Y %H:%M:%S.%f",
+    )
 
 
 @app.template_filter("decrypt")

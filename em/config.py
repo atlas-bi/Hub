@@ -26,7 +26,7 @@ from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
 class Config:
     """
-        all configuration set here. For dev there are overrides below.
+    all configuration set here. For dev there are overrides below.
     """
 
     # pylint: disable=too-few-public-methods
@@ -35,6 +35,13 @@ class Config:
     TESTING = False
     SECRET_KEY = b"This is a key123"
     IV_KEY = b"This is an IV456"
+
+    """ 
+        minimum space needed to run tasks
+    """
+    MIN_DISK_SPACE = 1 * 1024 * 1024 * 1024
+    MIN_FREE_MEM_PERC = 10
+    MIN_FREE_CPU_PERC = 10
 
     """
         LDAP Connection used for user authentication
@@ -114,6 +121,7 @@ class Config:
         "coalesce": True,
         "max_instances": 50,
         "replace_existing": True,
+        "misfire_grace_time": 30,
     }
 
     SCHEDULER_API_ENABLED = True
@@ -123,7 +131,7 @@ class Config:
 
 class DevConfig(Config):
     """
-        Configuration overides for development
+    Configuration overides for development
     """
 
     # pylint: disable=too-few-public-methods

@@ -49,7 +49,7 @@ from .model.model import TaskLog, Task
 
 def event_log():
     """
-        each type of event has a trigger assigned to a callback function
+    each type of event has a trigger assigned to a callback function
     """
 
     def job_missed(event):
@@ -77,7 +77,8 @@ def event_log():
                 error=1,
                 message="Job missed. Scheduled for: "
                 + datetime.datetime.strftime(
-                    event.scheduled_run_time, "%a, %b %-d, %Y %H:%M:%S",
+                    event.scheduled_run_time,
+                    "%a, %b %-d, %Y %H:%M:%S",
                 )
                 + ". Missed by : "
                 + str(ex_time),
@@ -113,7 +114,8 @@ def event_log():
                 error=1,
                 message="Job error. Scheduled for: "
                 + datetime.datetime.strftime(
-                    event.scheduled_run_time, "%a, %b %-d, %Y %H:%M:%S",
+                    event.scheduled_run_time,
+                    "%a, %b %-d, %Y %H:%M:%S",
                 )
                 + ". Execution time: "
                 + str(ex_time)
@@ -179,7 +181,8 @@ def event_log():
             message=(
                 "Job added. Scheduled for: "
                 + datetime.datetime.strftime(
-                    job.next_run_time, "%a, %b %-d, %Y %H:%M:%S",
+                    job.next_run_time,
+                    "%a, %b %-d, %Y %H:%M:%S",
                 )
                 if job.next_run_time
                 else "Job could not be scheduled. Verify project has currect and valid schedule."

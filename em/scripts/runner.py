@@ -25,20 +25,24 @@ import hashlib
 import logging
 import os
 import time
+import re
 import sqlite3
 from pathlib import Path
 import shutil
 import psycopg2
+import urllib.parse
 import pyodbc
 from jinja2 import Environment, PackageLoader, select_autoescape
-from em import db
+from em import app, db
 from .crypto import em_decrypt
+from .cmd import Cmd
 from .ftp import Ftp
 from .file import File
 from .py_processer import PyProcesser
 from .sftp import Sftp
 from .smb import Smb
 from .smtp import Smtp
+from .my_system import Monitor
 from .date_parsing import DateParsing
 from .error_print import full_stack
 from ..model.model import (
@@ -60,7 +64,7 @@ env.filters["datetime_format"] = datetime_format
 
 class Runner:
     """
-        several methods..
+    several methods..
     """
 
     # pylint: disable=too-few-public-methods
@@ -74,6 +78,7 @@ class Runner:
         tasks = Task.query.filter_by(id=task_id).all()
 
         for task in tasks:
+
             self.data = None
             self.file_path = ""
             self.file_name = ""
@@ -96,6 +101,13 @@ class Runner:
             db.session.commit()
 
             self.task = task
+
+            if Monitor(self.task).check_all():
+                # skip running task if system is overloaded
+                task.status_id = 2
+                task.last_run = datetime.datetime.now()
+                db.session.commit()
+                continue
 
             self.temp_path = (
                 str(Path(__file__).parent.parent)
@@ -178,7 +190,11 @@ class Runner:
             ).string_to_date()
 
             my_file = (
-                Smb(self.task, self.task.processing_smb_conn, source_path=file_name,)
+                Smb(
+                    self.task,
+                    self.task.processing_smb_conn,
+                    source_path=file_name,
+                )
                 .read()
                 .decode()
             )
@@ -206,10 +222,73 @@ class Runner:
             my_file = Ftp(
                 self.task, self.task.processing_ftp_conn, None, file_name, None
             ).read()
+
         elif self.task.processing_type_id == 4 and self.task.processing_git is not None:
-            my_file = SourceCode(self.task, self.task.processing_git).gitlab()
+
+            # if a dir is specified then download all files
+            if self.task.processing_command is not None:
+                url = (
+                    re.sub(
+                        r"(https?://)(.+?)",
+                        r"\1<username>:<password>@\2",
+                        self.task.processing_git,
+                        flags=re.IGNORECASE,
+                    )
+                    .replace(
+                        "<username>", urllib.parse.quote(app.config["GIT_USERNAME"])
+                    )
+                    .replace(
+                        "<password>", urllib.parse.quote(app.config["GIT_PASSWORD"])
+                    )
+                )
+
+                cmd = (
+                    "git clone -q --depth 1 --recurse-submodules --shallow-submodules "
+                    + url
+                    + " "
+                    + self.temp_path
+                )
+
+                output = Cmd(
+                    self.task,
+                    cmd,
+                    "Repo cloned.",
+                    "Failed to clone repo:" + self.task.processing_git,
+                ).run()
+
+                processing_script_name = self.temp_path + (
+                    self.task.processing_command
+                    if self.task.processing_command is not None
+                    else ""
+                )
+
+            # otherwise get py file
+            else:
+                my_file = SourceCode(self.task, self.task.processing_git).gitlab()
+
         elif self.task.processing_type_id == 5 and self.task.processing_url is not None:
-            my_file = SourceCode(self.task, self.task.processing_url).web()
+            if self.task.processing_command is not None:
+                cmd = (
+                    "git clone -q --depth 1 --recurse-submodules --shallow-submodules "
+                    + self.task.processing_url
+                    + " "
+                    + self.temp_path
+                )
+
+                output = Cmd(
+                    self.task,
+                    cmd,
+                    "Repo cloned",
+                    "Failed to clone repo:" + self.task.processing_git,
+                ).run()
+
+                processing_script_name = self.temp_path + (
+                    self.task.processing_command
+                    if self.task.processing_command is not None
+                    else ""
+                )
+            else:
+                my_file = SourceCode(self.task, self.task.processing_url).web()
         elif (
             self.task.processing_type_id == 6 and self.task.processing_code is not None
         ):
@@ -259,9 +338,14 @@ class Runner:
             db.session.commit()
 
         # run processing script
-        output = PyProcesser(self.task, processing_script_name, self.file_path,).run()
+        output = PyProcesser(
+            self.task,
+            processing_script_name,
+            self.file_path,
+        ).run()
+
         # allow processer to rename file
-        if output != "":
+        if output and output != "":
             log = TaskLog(
                 task_id=self.task.id,
                 job_id=self.hash,
@@ -308,17 +392,26 @@ class Runner:
                     with open(self.temp_path + self.hash + ".sqlite", "a") as database:
                         if self.task.source_query_type_id == 2:  # smb
                             database.write(
-                                Smb(self.task, self.task.query_smb_conn,)
+                                Smb(
+                                    self.task,
+                                    self.task.query_smb_conn,
+                                )
                                 .read()
                                 .decode()
                             )
                         elif self.task.source_query_type_id == 6:  # ftp
                             database.write(
-                                Ftp(self.task, self.task.query_ftp_conn,).read()
+                                Ftp(
+                                    self.task,
+                                    self.task.query_ftp_conn,
+                                ).read()
                             )
                         elif self.task.source_query_type_id == 5:  # sftp
                             database.write(
-                                Sftp(self.task, self.task.query_stp_conn,).read()
+                                Sftp(
+                                    self.task,
+                                    self.task.query_stp_conn,
+                                ).read()
                             )
 
                     conn = sqlite3.connect(self.temp_path + self.hash + ".sqlite")
@@ -380,7 +473,8 @@ class Runner:
                     )
 
                     csv_reader = csv.reader(
-                        my_file.splitlines(), delimiter=my_delimiter,
+                        my_file.splitlines(),
+                        delimiter=my_delimiter,
                     )
 
                     x = []
@@ -416,7 +510,8 @@ class Runner:
                     )
 
                     csv_reader = csv.reader(
-                        my_file.splitlines(), delimiter=my_delimiter,
+                        my_file.splitlines(),
+                        delimiter=my_delimiter,
                     )
 
                     x = []
@@ -452,7 +547,8 @@ class Runner:
                     )
 
                     csv_reader = csv.reader(
-                        my_file.splitlines(), delimiter=my_delimiter,
+                        my_file.splitlines(),
+                        delimiter=my_delimiter,
                     )
 
                     x = []
@@ -502,7 +598,10 @@ class Runner:
 
         elif self.task.source_query_type_id == 2:
             query = SourceCode(self.task, None).cleanup(
-                Smb(self.task, source_path=self.task.source_query_file,)
+                Smb(
+                    self.task,
+                    source_path=self.task.source_query_file,
+                )
                 .read()
                 .decode(),
                 ("mssql" if self.task.source_database_id == 2 else None),
@@ -515,10 +614,10 @@ class Runner:
     def __build_file(self):
 
         """
-            file will be built locally then dumped onto a file server.
-            webserver is not used for long-term storage.
+        file will be built locally then dumped onto a file server.
+        webserver is not used for long-term storage.
 
-            files are kept in /em/em/temp/<extract name>
+        files are kept in /em/em/temp/<extract name>
 
         """
         if self.data:
@@ -691,7 +790,12 @@ class Runner:
                 + self.task.last_run_job_id
                 + " "
                 + date,
-                template.render(task=self.task, success=1, date=date, logs=logs,),
+                template.render(
+                    task=self.task,
+                    success=1,
+                    date=date,
+                    logs=logs,
+                ),
                 attachment,
                 None,
             )
@@ -730,7 +834,12 @@ class Runner:
                     + self.task.last_run_job_id
                     + " "
                     + date,
-                    template.render(task=self.task, success=0, date=date, logs=logs,),
+                    template.render(
+                        task=self.task,
+                        success=0,
+                        date=date,
+                        logs=logs,
+                    ),
                     None,
                     None,
                 )

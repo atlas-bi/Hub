@@ -30,7 +30,7 @@ from em import db
 @dataclass
 class LoginType(db.Model):
     """
-        lookup table of user login types
+    lookup table of user login types
     """
 
     __tablename__ = "login_type"
@@ -45,7 +45,7 @@ class LoginType(db.Model):
 @dataclass
 class Login(db.Model):
     """
-        table should contain all login attempts
+    table should contain all login attempts
     """
 
     __tablename__ = "login"

@@ -219,26 +219,26 @@ def publish(conn):
 
     # check if online
     conn.run("curl " + server_name)
-    print("publish to "+server_name+" is complete.")
+    print("publish to " + server_name + " is complete.")
 
     print(
-"""emergency restarts
+        """emergency restarts
 
 # nginx logs
 sudo tail -F /var/log/nginx/error.log
 # guniforn logs
 sudo journalctl -u gunicorn
 sudo systemctl restart """
-+ site_name
-+ "-"
-+ my_hash
-+ """.service
+        + site_name
+        + "-"
+        + my_hash
+        + """.service
 sudo systemctl daemon-reload
 sudo systemctl restart gunicorn.socket """
-+ site_name
-+ "-"
-+ my_hash
-+ """.service
+        + site_name
+        + "-"
+        + my_hash
+        + """.service
 sudo nginx -t && sudo systemctl restart nginx
 
 Finally, don't forget to login and reschedule tasks!

@@ -498,7 +498,8 @@ def project_task_log_all(my_id):
                     else ""
                 ),
                 "Status Date": datetime.datetime.strftime(
-                    log.status_date, "%a, %b %-d, %Y %H:%M:%S.%f",
+                    log.status_date,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log.status_date
                 else "None",
@@ -561,7 +562,7 @@ def task_new(my_id):
     # create tasks
     form = request.form
 
-    tme = Task(name=form["name"])
+    tme = Task(name=form["name"].strip())
     tme.project_id = my_id
 
     whoami = User.query.filter_by(user_id=g.user_id).first()
@@ -743,6 +744,11 @@ def task_new(my_id):
             tme.processing_code = (
                 form["processingCode"] if "processingCode" in form else ""
             )
+        tme.processing_command = (
+            form["processingCommand"] if "processingCommand" in form else None
+        )
+    else:
+        tme.processing_type_id = None
 
     tme.destination_file_type_id = (
         form["fileType"] if str(form["fileType"]) != "none" else None
@@ -928,7 +934,7 @@ def run_all_project_tasks(my_id):
         app.apscheduler.add_job(
             func=Runner,
             trigger="date",
-            run_date=datetime.datetime.today(),
+            run_date=datetime.datetime.now(),
             args=[
                 str(task.id),
                 #   str(job.project.id) + "-" + str(job.id) + "-" + hash.hexdigest()[:10],
@@ -1179,7 +1185,7 @@ def task_edit_post(my_id):
 
     tme = Task.query.filter_by(id=my_id).first()
 
-    tme.name = form["name"]
+    tme.name = form["name"].strip()
     tme.updater_id = whoami.id
     # source options
     if "sourceType" in form:
@@ -1355,8 +1361,16 @@ def task_edit_post(my_id):
             tme.processing_code = (
                 form["processingCode"] if "processingCode" in form else ""
             )
+        tme.processing_command = (
+            form["processingCommand"] if "processingCommand" in form else None
+        )
+    else:
+        tme.processing_type_id = None
 
-    tme.destination_file_type_id = form["fileType"]
+    tme.destination_file_type_id = (
+        form["fileType"] if str(form["fileType"]) != "none" else None
+    )
+
     tme.destination_file_name = form["destinationFileName"]
 
     tme.destination_create_zip = (
@@ -1601,7 +1615,8 @@ def task_log(my_id):
         table.append(
             {
                 "Status Date": datetime.datetime.strftime(
-                    log.status_date, "%a, %b %-d, %Y %H:%M:%S.%f",
+                    log.status_date,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log.status_date
                 else "None",
@@ -1658,7 +1673,10 @@ def get_task_run(my_id, run_id):
             run = min(run or job.next_run_time, job.next_run_time)
     if task:
         return render_template(
-            "pages/task/runDetails.html.j2", run=run_id, t=task, title=run_id,
+            "pages/task/runDetails.html.j2",
+            run=run_id,
+            t=task,
+            title=run_id,
         )
 
     return render_template("pages/task/runDetails.html.j2", invalid=True, title="Error")
@@ -1850,7 +1868,11 @@ def get_task_file_send_sftp(my_id, run_id, file_id):
 
     # save file
     Sftp(
-        task, task.destination_sftp_conn, 1, file_id, temp.name,  # is full path
+        task,
+        task.destination_sftp_conn,
+        1,
+        file_id,
+        temp.name,  # is full path
     ).save()
     os.remove(temp.name)
 
@@ -1892,7 +1914,13 @@ def get_task_file_send_ftp(my_id, run_id, file_id):
         )
 
     # save file
-    Ftp(task, task.destination_ftp_conn, 1, file_id, temp.name,).save()  # is full path
+    Ftp(
+        task,
+        task.destination_ftp_conn,
+        1,
+        file_id,
+        temp.name,
+    ).save()  # is full path
     os.remove(temp.name)
 
     return redirect(url_for("get_task", my_id=my_id))
@@ -1933,7 +1961,13 @@ def get_task_file_send_smb(my_id, run_id, file_id):
         )
 
     # save file
-    Smb(task, task.destination_smb_conn, 1, file_id, temp.name,).save()  # is full path
+    Smb(
+        task,
+        task.destination_smb_conn,
+        1,
+        file_id,
+        temp.name,
+    ).save()  # is full path
     os.remove(temp.name)
 
     return redirect(url_for("get_task", my_id=my_id))
@@ -1978,7 +2012,12 @@ def get_task_file_send_email(my_id, run_id, file_id):
         task,
         task.email_completion_recipients,
         "(Manual Send) Project: " + task.project.name + " / Task: " + task.name,
-        template.render(task=task, success=1, date=date, logs=[],),
+        template.render(
+            task=task,
+            success=1,
+            date=date,
+            logs=[],
+        ),
         temp.name,
         file_id,
     )
@@ -2046,7 +2085,8 @@ def get_task_run_log(my_id, run_id):
         table.append(
             {
                 "Status Date": datetime.datetime.strftime(
-                    log.status_date, "%a, %b %-d, %Y %H:%M:%S.%f",
+                    log.status_date,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log.status_date
                 else "None",

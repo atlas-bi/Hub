@@ -152,7 +152,7 @@
 		<!--
 			query source
 		-->
-		<section class="task-query-location" {% if not t or t.source_type_id == 3 or t.source_type_id == 2 %}style="display:none;"{%endif%}>
+		<section class="task-query-location" {% if not t or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 %}style="display:none;"{%endif%}>
 
 			<!--
 				GIT (requires password in settings)
@@ -323,7 +323,7 @@
 					{% endif %}
 				</div>
 			</section>
-		</section>
+
 			<!-- GIT -->
 			<section class="task-processingGit" {% if not t or t.processing_type_id != 4 %}style="display:none;"{%endif%}>
 				<div class="em-inputTtl">GIT Code URL (login configured by Admin)</div>
@@ -339,6 +339,11 @@
 			<section class="task-processingCode"  {% if not t or t.processing_type_id != 6 %}style="display:none;"{%endif%}>
 				<div class="em-inputTtl">Source Code</div>
 				<textarea class="em-input" name="processingCode" autocomplete="off" rows="1"/>{{t.processing_code or ''}}</textarea>
+			</section>
+
+			<section class="task-processingCommand" {% if t  and t.processing_type_id == 6 %}style="display:none;"{%endif%}>
+				<div class="em-inputTtl">Command To Execute (ex: main.py) Required if a project directory was specified.</div>
+				<input class="em-input" name="processingCommand" autocomplete="off" value="{{t.processing_command or ''}}" />
 			</section>
 
 		</section>

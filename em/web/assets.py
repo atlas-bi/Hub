@@ -54,7 +54,10 @@ assets.register("css_admin", css)
 
 
 js = Bundle(
-    "./js/table.js", "./js/ajax.js", filters="jsmin", output="js/project.min.js",
+    "./js/table.js",
+    "./js/ajax.js",
+    filters="jsmin",
+    output="js/project.min.js",
 )
 assets.register("js_admin", js)
 

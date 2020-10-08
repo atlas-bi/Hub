@@ -28,7 +28,7 @@ from em import db
 class User(db.Model):
 
     """
-        Table containing any user-specific information
+    Table containing any user-specific information
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -67,7 +67,7 @@ class User(db.Model):
 class Project(db.Model):
 
     """
-        Table containing project details
+    Table containing project details
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -153,7 +153,7 @@ class Project(db.Model):
 @dataclass
 class TaskSourceType(db.Model):
     """
-        Lookup table of task source types
+    Lookup table of task source types
     """
 
     __tablename__ = "task_source_type"
@@ -168,7 +168,7 @@ class TaskSourceType(db.Model):
 @dataclass
 class TaskSourceQueryType(db.Model):
     """
-        Lookup table of task query source types
+    Lookup table of task query source types
     """
 
     __tablename__ = "task_source_query_type"
@@ -183,7 +183,7 @@ class TaskSourceQueryType(db.Model):
 @dataclass
 class TaskProcessingType(db.Model):
     """
-        Lookup table of task query source types
+    Lookup table of task query source types
     """
 
     __tablename__ = "task_processing_type"
@@ -198,9 +198,9 @@ class TaskProcessingType(db.Model):
 @dataclass
 class TaskStatus(db.Model):
     """
-        Lookup table of task status types
+    Lookup table of task status types
 
-        This table can link back to a task status, or a task log status
+    This table can link back to a task status, or a task log status
     """
 
     __tablename__ = "task_status"
@@ -228,7 +228,7 @@ class TaskStatus(db.Model):
 @dataclass
 class Connection(db.Model):
     """
-        Table containing all destination information
+    Table containing all destination information
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -278,7 +278,7 @@ class Connection(db.Model):
 @dataclass
 class ConnectionSftp(db.Model):
     """
-        Table conntaining sftp connection strings
+    Table conntaining sftp connection strings
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -328,7 +328,7 @@ class ConnectionSftp(db.Model):
 @dataclass
 class ConnectionFtp(db.Model):
     """
-        Table conntaining sftp connection strings
+    Table conntaining sftp connection strings
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -373,7 +373,7 @@ class ConnectionFtp(db.Model):
 @dataclass
 class ConnectionSmb(db.Model):
     """
-        Table conntaining sftp connection strings
+    Table conntaining sftp connection strings
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -421,7 +421,7 @@ class ConnectionSmb(db.Model):
 @dataclass
 class ConnectionDatabaseType(db.Model):
     """
-        Lookup table of task source database types
+    Lookup table of task source database types
     """
 
     __tablename__ = "connection_database_type"
@@ -436,7 +436,7 @@ class ConnectionDatabaseType(db.Model):
 @dataclass
 class ConnectionDatabase(db.Model):
     """
-        List of task source databases and connection strings
+    List of task source databases and connection strings
     """
 
     __tablename__ = "connection_database"
@@ -463,7 +463,7 @@ class ConnectionDatabase(db.Model):
 @dataclass
 class TaskDestinationFileType(db.Model):
     """
-        Lookup table of task destination file types
+    Lookup table of task destination file types
 
     """
 
@@ -481,7 +481,7 @@ class TaskDestinationFileType(db.Model):
 @dataclass
 class Task(db.Model):
     """
-        Table containing task details
+    Table containing task details
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -544,6 +544,7 @@ class Task(db.Model):
     processing_code: str
     processing_url: str
     processing_git: str
+    processing_command: str
 
     # destination
     destination_file_delimiter: str
@@ -680,6 +681,8 @@ class Task(db.Model):
     processing_url = db.Column(db.String(1000), nullable=True)
     processing_git = db.Column(db.String(1000), nullable=True)
 
+    processing_command = db.Column(db.String(1000), nullable=True)
+
     """ destination """
 
     # destination file
@@ -743,7 +746,7 @@ class Task(db.Model):
 class TaskLog(db.Model):
 
     """
-        Table containing job run history
+    Table containing job run history
     """
 
     # pylint: disable=too-many-instance-attributes

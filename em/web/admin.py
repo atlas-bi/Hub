@@ -20,16 +20,18 @@
 """
 
 import datetime
+from pathlib import Path
 from flask import request, render_template, redirect, url_for, g, flash, jsonify
 from em import app, ldap, db
 from ..model.model import TaskLog, Task
 from ..model.auth import Login
 from ..scripts.error_print import full_stack
+from ..scripts.cmd import Cmd
 
 
 @app.route("/admin")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin():
     """ admin home page """
     message = request.args.get("message")
@@ -40,15 +42,16 @@ def admin():
 
 
 @app.route("/admin/emptyScheduler")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_empty_scheduler():
     """ remove all jobs from scheduler """
     for job in app.apscheduler.get_jobs():
         job.remove()
 
     log = TaskLog(
-        status_id=7, message=g.user_full_name + ": All jobs removed from scheduler.",
+        status_id=7,
+        message=g.user_full_name + ": All jobs removed from scheduler.",
     )
     db.session.add(log)
     db.session.commit()
@@ -57,8 +60,8 @@ def admin_empty_scheduler():
 
 
 @app.route("/admin/resetTasks")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_reset_tasks():
     """ admin button to reset all tasks to complete """
     Task.query.update({Task.status_id: 4}, synchronize_session=False)
@@ -74,9 +77,81 @@ def admin_reset_tasks():
     return redirect(url_for("admin", message="Tasks reset!"))
 
 
+@app.route("/admin/whoami")
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
+def admin_whoami():
+    """ admin button to whoami on server """
+    cmd = "/bin/whoami"
+    output = Cmd(None, cmd, "Whoami run.", "whomai failed: " + cmd).shell()
+
+    log = TaskLog(status_id=7, message=g.user_full_name + ": Whoami?: " + cmd)
+    db.session.add(log)
+    db.session.commit()
+
+    return redirect(url_for("admin", message="Whomai?: " + output))
+
+
+@app.route("/admin/reloadDaemon")
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
+def admin_reload_daemon():
+    """ admin button to reload web service """
+
+    cmd = "/bin/sudo /bin/systemctl daemon-reload"
+
+    output = Cmd(
+        None, cmd, "Web Service Reloaded.", "Failed to reload web service: " + cmd
+    ).shell()
+
+    log = TaskLog(
+        status_id=7, message=g.user_full_name + ": Web Service Reloaded: " + cmd
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    return redirect(
+        url_for(
+            "admin",
+            message="Web Service Reload: "
+            + (output or "Success" if output != "" else "Success"),
+        )
+    )
+
+
+@app.route("/admin/restartDaemon")
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
+def admin_restart_daemon():
+    """ admin button to restart web service """
+    cmd = (
+        "/bin/sudo /bin/systemctl restart "
+        + str(Path(__file__).parent.parent.parent.parts[-1])
+        + ".service"
+    )
+
+    output = Cmd(
+        None, cmd, "Web Service Restarted.", "Failed to restart web service: " + cmd
+    ).shell()
+
+    log = TaskLog(
+        status_id=7, message=g.user_full_name + ": Web Service Restarted: " + cmd
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    return redirect(
+        url_for(
+            "admin",
+            message="Web Service Restart: "
+            + (output or "Success" if output != "" else "Success"),
+        )
+    )
+
+
 @app.route("/admin/clearlog")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_clear_log():
     """ admin button to clear logs """
     TaskLog.query.delete()
@@ -90,8 +165,8 @@ def admin_clear_log():
 
 
 @app.route("/admin/pauseJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_pause_jobs():
     """ used to stop all jobs from running """
     try:
@@ -117,8 +192,8 @@ def admin_pause_jobs():
 
 
 @app.route("/admin/resumeJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_resume_jobs():
     """ used to stop all jobs from running """
     try:
@@ -147,14 +222,15 @@ def admin_resume_jobs():
 
 
 @app.route("/admin/stopJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_stop_jobs():
     """ used to stop all jobs from running """
     try:
         app.apscheduler.shutdown()
         log = TaskLog(
-            status_id=7, message=g.user_full_name + ": Scheduler gracefully shutdown.",
+            status_id=7,
+            message=g.user_full_name + ": Scheduler gracefully shutdown.",
         )
         db.session.add(log)
         db.session.commit()
@@ -181,8 +257,8 @@ def admin_stop_jobs():
 
 
 @app.route("/admin/killJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_kill_jobs():
     """ used to stop all jobs from running """
     try:
@@ -210,13 +286,13 @@ def admin_kill_jobs():
 
 
 @app.route("/admin/user/tasklog")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_user_task_log():
     """ log of all user events """
 
     page = request.args.get("p", default=1, type=int)
-    sort = request.args.get("s", default="Status Date.desc", type=str)
+    sort = request.args.get("s", default="Status Date.asc", type=str)
     split_sort = sort.split(".")
 
     page -= 1
@@ -254,7 +330,8 @@ def admin_user_task_log():
                 if log.task
                 else "N/A",
                 "Status Date": datetime.datetime.strftime(
-                    log.status_date, "%a, %b %-d, %Y %H:%M:%S.%f",
+                    log.status_date,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log.status_date
                 else "None",
@@ -287,8 +364,8 @@ def admin_user_task_log():
 
 
 @app.route("/admin/user/loginlog")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+#@ldap.login_required
+#@ldap.group_required(["Analytics"])
 def admin_user_login_log():
     """ log of all user events """
 
@@ -310,7 +387,8 @@ def admin_user_login_log():
             {
                 "User": log.username,
                 "Login Date": datetime.datetime.strftime(
-                    log.login_date, "%a, %b %-d, %Y %H:%M:%S.%f",
+                    log.login_date,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log.login_date
                 else "None",

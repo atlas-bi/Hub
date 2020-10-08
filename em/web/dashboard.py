@@ -420,7 +420,8 @@ def dash_scheduled():
                     else "N/A"
                 ),
                 "Last Active": datetime.datetime.strftime(
-                    task.last_run, "%a, %b %-d, %Y %H:%M:%S",
+                    task.last_run,
+                    "%a, %b %-d, %Y %H:%M:%S",
                 )
                 if task.last_run
                 else "Never",
@@ -615,7 +616,8 @@ def dash_log():
                     else "N/A"
                 ),
                 "Status Date": datetime.datetime.strftime(
-                    log.status_date, "%a, %b %-d, %Y %H:%M:%S.%f",
+                    log.status_date,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log.status_date
                 else "None",
@@ -718,7 +720,8 @@ def dash_active():
                     else "N/A"
                 ),
                 "Last Active": datetime.datetime.strftime(
-                    task.last_run, "%a, %b %-d, %Y %H:%M:%S.%f",
+                    task.last_run,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if task.last_run
                 else "Never",

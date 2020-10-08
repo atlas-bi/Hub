@@ -32,7 +32,7 @@ from .error_print import full_stack
 
 class Smtp:
     """
-        used to send emails. pass in recips, subject, message and any attachments
+    used to send emails. pass in recips, subject, message and any attachments
     """
 
     # pylint: disable=too-few-public-methods

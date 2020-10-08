@@ -33,8 +33,8 @@ from .error_print import full_stack
 
 class Smb:
     """
-        smb.read = returns contents of a network file
-        smb.save = save contents of local file to network file
+    smb.read = returns contents of a network file
+    smb.save = save contents of local file to network file
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -132,16 +132,16 @@ class Smb:
                 #     str(self.file_path),
                 #     str(full_stack()),
                 # )
-                log = TaskLog(
-                    task_id=self.task.id,
-                    status_id=10,  # 10 = SMB Error
-                    message="Cannot list directory - does not yet exist. "
-                    + self.share_name
-                    + " "
-                    + self.file_path,
-                )
-                db.session.add(log)
-                db.session.commit()
+                # log = TaskLog(
+                #     task_id=self.task.id,
+                #     status_id=10,  # 10 = SMB Error
+                #     message="Cannot list directory - does not yet exist. "
+                #     + self.share_name
+                #     + " "
+                #     + self.file_path,
+                # )
+                # db.session.add(log)
+                # db.session.commit()
                 return []
 
             my_list = self.conn.listPath(

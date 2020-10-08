@@ -52,26 +52,26 @@ class DateParsing:
     def string_to_date(self):
 
         """
-            list of delta options
+        list of delta options
 
-            %f Microsecond as a decimal number, zero-padded on the left. 000000, 000001, …, 999999
+        %f Microsecond as a decimal number, zero-padded on the left. 000000, 000001, …, 999999
 
-            %S Second as a zero-padded decimal number. 00, 01, …, 59
+        %S Second as a zero-padded decimal number. 00, 01, …, 59
 
-            %M Minute as a zero-padded decimal number. 00, 01, …, 59
+        %M Minute as a zero-padded decimal number. 00, 01, …, 59
 
-            %H Hour (24-hour clock) as a zero-padded decimal number. 00, 01, …, 23
-            %I Hour (12-hour clock) as a zero-padded decimal number. 01, 02, …, 12
+        %H Hour (24-hour clock) as a zero-padded decimal number. 00, 01, …, 23
+        %I Hour (12-hour clock) as a zero-padded decimal number. 01, 02, …, 12
 
-            %a Sun, Mon, …, Sat (en_US);
-            %A Sunday, Monday, …, Saturday (en_US);
-            %w Weekday as a decimal number, where 0 is Sunday and 6 is Saturday. 0, 1, …, 6
-            %d Day of the month as a zero-padded decimal number. 01, 02, …, 31
+        %a Sun, Mon, …, Sat (en_US);
+        %A Sunday, Monday, …, Saturday (en_US);
+        %w Weekday as a decimal number, where 0 is Sunday and 6 is Saturday. 0, 1, …, 6
+        %d Day of the month as a zero-padded decimal number. 01, 02, …, 31
 
-            %U Week number of the year (Sunday as the first day) as a zero padded decimal number.
-                00, 01,..53
-            %W Week number of the year (Monday as the first day of the week) as a decimal number.
-                0, 01,..53
+        %U Week number of the year (Sunday as the first day) as a zero padded decimal number.
+            00, 01,..53
+        %W Week number of the year (Monday as the first day of the week) as a decimal number.
+            0, 01,..53
 
         """
 
@@ -134,7 +134,9 @@ class DateParsing:
 
             # clean up poor formatting in string // for linux
             self.my_string = re.sub(
-                r"%(?=[^a-zA-Z])", "", re.sub(r"%$", "", self.my_string),
+                r"%(?=[^a-zA-Z])",
+                "",
+                re.sub(r"%$", "", self.my_string),
             )
 
             self.my_string = (datetime.datetime.now() + my_delta).strftime(

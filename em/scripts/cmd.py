@@ -22,6 +22,7 @@
 
 import logging
 import os
+import subprocess
 from em import app, db
 from .error_print import full_stack
 from ..model.model import (
@@ -32,6 +33,7 @@ from ..model.model import (
 
 class Cmd:
     """ system command runner """
+
     # pylint: disable=too-few-public-methods
     def __init__(self, task, cmd, success_msg, error_msg):
         self.task = task
@@ -39,26 +41,32 @@ class Cmd:
         self.success_msg = success_msg
         self.error_msg = error_msg
 
-
-    def run(self):
+    def shell(self):
         """ function to run command and log output """
+        out = ""
         try:
-            out = os.popen(self.cmd + " 2>&1").read()
+            out = subprocess.check_output(self.cmd + " 2>&1", shell=True)
+            out = out.decode("utf-8")
+
             if "Error" in out:
                 log = TaskLog(
-                    task_id=self.task.id,
-                    job_id=self.task.last_run_job_id,
-                    status_id=14,  # 14 = py processing
+                    task_id=(self.task.id if self.task is not None else None),
+                    job_id=(
+                        self.task.last_run_job_id if self.task is not None else None
+                    ),
+                    status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
                     error=1,
-                    message=self.error_msg + ("\n" if out != "" else "") + out,
+                    message=self.error_msg + ("\n" if out != "" else None) + out,
                 )
                 db.session.add(log)
                 db.session.commit()
             else:
                 log = TaskLog(
-                    task_id=self.task.id,
-                    job_id=self.task.last_run_job_id,
-                    status_id=14,  # 14 = py processing
+                    task_id=(self.task.id if self.task is not None else None),
+                    job_id=(
+                        self.task.last_run_job_id if self.task is not None else None
+                    ),
+                    status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
                     message=self.success_msg,
                 )
                 db.session.add(log)
@@ -68,16 +76,70 @@ class Cmd:
         # pylint: disable=bare-except
         except:
             logging.error(
-                "PyProcesser: Running Failed: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.task.last_run_job_id),
+                "Cmd: Running Failed: Task: %s, with run: %s\n%s",
+                str(self.task.id if self.task is not None else None),
+                str(self.task.last_run_job_id if self.task is not None else None),
                 str(full_stack()),
             )
 
             log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.task.last_run_job_id,
-                status_id=14,  # 14 = py processing
+                task_id=(self.task.id if self.task is not None else None),
+                job_id=(self.task.last_run_job_id if self.task is not None else None),
+                status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
+                error=1,
+                message=self.error_msg
+                + ("\n" if out != "" else "")
+                + "\n"
+                + str(full_stack()),
+            )
+
+            db.session.add(log)
+            db.session.commit()
+            return "Failed"
+
+    def run(self):
+        """ function to run command and log output """
+        try:
+            out = os.popen(self.cmd + " 2>&1").read()
+
+            if "Error" in out:
+                log = TaskLog(
+                    task_id=(self.task.id if self.task is not None else None),
+                    job_id=(
+                        self.task.last_run_job_id if self.task is not None else None
+                    ),
+                    status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
+                    error=1,
+                    message=self.error_msg + ("\n" if out != "" else None) + out,
+                )
+                db.session.add(log)
+                db.session.commit()
+            else:
+                log = TaskLog(
+                    task_id=(self.task.id if self.task is not None else None),
+                    job_id=(
+                        self.task.last_run_job_id if self.task is not None else None
+                    ),
+                    status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
+                    message=self.success_msg,
+                )
+                db.session.add(log)
+                db.session.commit()
+            return out
+
+        # pylint: disable=bare-except
+        except:
+            logging.error(
+                "Cmd: Running Failed: Task: %s, with run: %s\n%s",
+                str(self.task.id if self.task is not None else None),
+                str(self.task.last_run_job_id if self.task is not None else None),
+                str(full_stack()),
+            )
+
+            log = TaskLog(
+                task_id=(self.task.id if self.task is not None else None),
+                job_id=(self.task.last_run_job_id if self.task is not None else None),
+                status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
                 error=1,
                 message=self.error_msg
                 + ("\n" if out != "" else "")
