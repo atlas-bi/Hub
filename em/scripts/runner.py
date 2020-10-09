@@ -357,9 +357,10 @@ class Runner:
             self.file_name = output
 
     def __get_source(self):
+        # pylint: disable=inconsistent-return-statements
         # pylint: disable=too-many-branches
         # pylint: disable=too-many-statements
-        # pylint: disable=inconsistent-return-statements
+        
         try:
             logging.info(
                 "Runner: Getting Source: Task: %s, with run: %s",
@@ -420,15 +421,17 @@ class Runner:
 
                 cur.execute(query)
 
-                head = []
+                self.head = []
                 if self.task.source_query_include_header:
-                    head = [i[0] for i in cur.description] if cur.description else []
+                    self.head = (
+                        [i[0] for i in cur.description] if cur.description else []
+                    )
 
                 x = cur.fetchall()
 
                 if self.task.source_query_include_header and cur.description != []:
                     # add header to data
-                    x.insert(0, tuple(head))
+                    x.insert(0, tuple(self.head))
 
                 cur.close()
                 conn.close()
@@ -778,6 +781,30 @@ class Runner:
                 and self.file_path is not None
             ):
                 attachment = self.file_path
+
+            # check attachement file size if the task
+            # should not send blank files
+            if (
+                self.task.email_completion_dont_send_empty_file == 1
+                and attachment
+                # if query and data is blank, or other types and file is 0
+                and (
+                    (
+                        len(self.data) - (1 if self.head != [] else 0) == 0
+                        and self.task.source_type_id == 1
+                    )
+                    or os.path.getsize(attachment) == 0
+                )
+            ):
+                log = TaskLog(
+                    task_id=self.task.id,
+                    job_id=self.task.last_run_job_id,
+                    status_id=8,
+                    message="Not sending completion email, file is emtpy.",
+                )
+                db.session.add(log)
+                db.session.commit()
+                return
 
             Smtp(
                 self.task,

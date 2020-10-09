@@ -273,6 +273,18 @@
                 ipt.value = 1;
                 // add required attr on inputs
             }
+        } else if (e.target.closest('.task_dont_send_empty')) {
+            i = e.target.closest('.task_dont_send_empty');
+            ipt = d.querySelector('input[name="task_dont_send_empty"]');
+            if (i.getAttribute("checked") == "checked") {
+                i.removeAttribute('checked');
+                ipt.value = 0;
+                // remove required attr on inputs
+            } else {
+                i.setAttribute('checked', 'checked');
+                ipt.value = 1;
+                // add required attr on inputs
+            }
         }  else if (e.target.closest('.task_include_query_headers')) {
             i = e.target.closest('.task_include_query_headers');
             ipt = d.querySelector('input[name="task_include_query_headers"]');

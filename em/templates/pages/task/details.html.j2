@@ -366,6 +366,11 @@
 			<span class="em-gridName">Attach output file to email?</span>
 			<span class="em-gridValue">{% if t.email_completion_file == 1 %}Yes{% else %}No{% endif %}</span>
 
+			{% if t.email_completion_file == 1 %}
+				<span class="em-gridName">Send if attachment is empty?</span>
+				<span class="em-gridValue">{% if t.email_completion_dont_send_empty_file == 1 %}No{% else %}Yes{% endif %}</span>
+			{% endif %}
+
 			<span class="em-gridName">Include log information?</span>
 			<span class="em-gridValue">{% if t.email_completion_log == 1 %}Yes{% else %}No{% endif %}</span>
 

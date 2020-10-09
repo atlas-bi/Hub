@@ -581,6 +581,15 @@
 				</label>Attach output file to email?</div>
 				<input type="hidden" name="task_send_output" value='{% if t and t.email_completion_file == 1 %}1{% else %}0{% endif %}'/>
 
+				<!--
+					don't send email if file is empty?
+				-->
+				<div><label class='checkbox-container'>
+					<input type="checkbox" class="task_dont_send_empty" {% if t and t.email_completion_dont_send_empty_file == 1 %} checked="checked"{%endif %}/>
+					<span class="checkmark"></span>
+				</label>Dont email if file is emtpy?</div>
+				<input type="hidden" name="task_dont_send_empty" value='{% if t and t.email_completion_dont_send_empty_file == 1 %}1{% else %}0{% endif %}'/>
+
 				<!-- 
 					Send an error email?
 				-->
