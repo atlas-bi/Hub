@@ -93,7 +93,7 @@ class Smtp:
                 str(self.task.last_run_job_id),
             )
             mail_server = smtplib.SMTP(
-                app.config["SMTP_SERVER"], app.config["SMTP_PORT"]
+                app.config["SMTP_SERVER"], app.config["SMTP_PORT"], timeout=180
             )
             mail_server.ehlo()
             mail_server.sendmail(

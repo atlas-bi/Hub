@@ -20,6 +20,7 @@
 """
 
 import logging
+import time
 from ftplib import FTP
 from em import app, db
 from .error_print import full_stack
@@ -53,11 +54,30 @@ class Ftp:
                 str(self.task.id),
                 str(self.task.last_run_job_id),
             )
-            self.conn = FTP(self.connection.address)
-            self.conn.login(
-                user=(self.connection.username or ""),
-                passwd=(em_decrypt(self.connection.password) or ""),
-            )
+
+            # there is no timeout in paramiko so...
+            # continue to attemp to login during time limit
+            # if we are getting timeout exceptions
+            timeout = time.time() + 60 * 3  #  2 mins from now
+            while True:
+                try:
+                    self.conn = FTP(self.connection.address)
+                    self.conn.login(
+                        user=(self.connection.username or ""),
+                        passwd=(em_decrypt(self.connection.password) or ""),
+                    )
+                    break
+                except ftplib.error_reply as e:
+                    # pylint: disable=no-else-continue
+                    if time.time() <= timeout:
+                        time.sleep(10)  # wait 10 sec before retrying
+                        continue
+                    elif time.time() > timeout:
+                        # pylint: disable=raise-missing-from
+                        raise ValueError("SFTP Connection timeout.")
+
+                    else:
+                        raise e
 
         # pylint: disable=bare-except
         except:

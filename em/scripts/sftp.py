@@ -20,6 +20,7 @@
 """
 
 import logging
+import time
 import paramiko
 from em import app, db
 from ..model.model import Task, TaskLog
@@ -54,14 +55,35 @@ class Sftp:
                 str(self.task.id),
                 str(self.task.last_run_job_id),
             )
-            self.transport = paramiko.Transport(
-                self.connection.address + ":" + str((self.connection.port or 22))
-            )
-            self.transport.connect(
-                username=self.connection.username,
-                password=em_decrypt(self.connection.password),
-            )
-            self.conn = paramiko.SFTPClient.from_transport(self.transport)
+
+            # there is no timeout in paramiko so...
+            # continue to attemp to login during time limit
+            # if we are getting timeout exceptions
+            timeout = time.time() + 60 * 3  #  2 mins from now
+            while True:
+                try:
+                    self.transport = paramiko.Transport(
+                        self.connection.address
+                        + ":"
+                        + str((self.connection.port or 22))
+                    )
+                    self.transport.connect(
+                        username=self.connection.username,
+                        password=em_decrypt(self.connection.password),
+                    )
+                    self.conn = paramiko.SFTPClient.from_transport(self.transport)
+                    break
+                except paramiko.ssh_exception.AuthenticationException as e:
+                    # pylint: disable=no-else-continue
+                    if str(e) == "Authentication timeout." and time.time() <= timeout:
+                        time.sleep(10)  # wait 10 sec before retrying
+                        continue
+                    elif time.time() > timeout:
+                        # pylint: disable=raise-missing-from
+                        raise ValueError("SFTP Connection timeout.")
+
+                    else:
+                        raise e
 
         # pylint: disable=bare-except
         except:

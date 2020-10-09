@@ -22,6 +22,7 @@
 import re
 import urllib
 import logging
+import time
 from pathlib import Path
 from smb.SMBConnection import SMBConnection
 from em import app, db
@@ -81,20 +82,41 @@ class Smb:
             )
 
     def __connect(self):
+
         try:
             logging.info(
                 "SMB: Connecting: Task: %s, with run: %s",
                 str(self.task.id),
                 str(self.task.last_run_job_id),
             )
-            self.conn = SMBConnection(
-                self.username,
-                em_decrypt(self.password),
-                "EM2.0 Webapp",
-                self.server_name,
-                use_ntlm_v2=True,
-            )
-            assert self.conn.connect(self.server_ip, 139)
+
+            # there is no timeout in paramiko so...
+            # continue to attemp to login during time limit
+            # if we are getting timeout exceptions
+            timeout = time.time() + 60 * 3  #  2 mins from now
+            while True:
+                try:
+                    self.conn = SMBConnection(
+                        self.username,
+                        em_decrypt(self.password),
+                        "EM2.0 Webapp",
+                        self.server_name,
+                        use_ntlm_v2=True,
+                    )
+                    assert self.conn.connect(
+                        self.server_ip, 139
+                    )  # true = connected, false = no connection
+                    break
+                except AssertionError as e:
+                    # pylint: disable=no-else-continue
+                    if time.time() <= timeout:
+                        time.sleep(10)  # wait 10 sec before retrying
+                        continue
+                    elif time.time() > timeout:
+                        # pylint: disable=raise-missing-from
+                        raise ValueError("SMB Connection failed after timeout.")
+                    else:
+                        raise e
 
         # pylint: disable=bare-except
         except:
@@ -132,6 +154,7 @@ class Smb:
                 str(self.share_name),
                 str(self.file_path),
             )
+
             try:
                 self.conn.getAttributes(self.share_name, self.file_path)
 
