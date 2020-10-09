@@ -479,6 +479,21 @@ class TaskDestinationFileType(db.Model):
 
 
 @dataclass
+class QuoteLevel(db.Model):
+    """
+    Lookup table for python quote levels
+    """
+
+    __tablename__ = "quote_level"
+    id: int
+    name: str
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    name = db.Column(db.String(120), nullable=False)
+    task = db.relationship("Task", backref="destination_file_quote_level", lazy=True)
+
+
+@dataclass
 class Task(db.Model):
     """
     Table containing task details
@@ -550,6 +565,7 @@ class Task(db.Model):
     destination_file_delimiter: str
     destination_file_name: str
     destination_ignore_delimiter: int
+    destination_quote_level_id: int
 
     destination_create_zip: int
     destination_zip_name: str
@@ -571,6 +587,7 @@ class Task(db.Model):
     email_completion: int
     email_completion_log: int
     email_completion_file: int
+    email_completion_dont_send_empty_file: int
     email_completion_recipients: str
     email_completion_message: str
 
@@ -719,6 +736,10 @@ class Task(db.Model):
         db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True
     )
 
+    destination_quote_level_id = db.Column(
+        db.Integer, db.ForeignKey(QuoteLevel.id), nullable=True
+    )
+
     """ email """
     # completion email
     email_completion = db.Column(db.Integer, nullable=True)
@@ -726,6 +747,7 @@ class Task(db.Model):
     email_completion_file = db.Column(db.Integer, nullable=True)
     email_completion_recipients = db.Column(db.String(1000), nullable=True)
     email_completion_message = db.Column(db.String(8000), nullable=True)
+    email_completion_dont_send_empty_file = db.Column(db.Integer, nullable=True)
 
     # error eamil
     email_error = db.Column(db.Integer, nullable=True)

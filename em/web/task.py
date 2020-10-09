@@ -34,6 +34,7 @@ from ..model.model import (
     TaskSourceType,
     TaskSourceQueryType,
     Project,
+    QuoteLevel,
     TaskLog,
     Connection,
     ConnectionSftp,
@@ -545,6 +546,7 @@ def task_new(my_id):
         processing_type = TaskProcessingType.query.order_by(
             TaskProcessingType.name
         ).all()
+        quote_level = QuoteLevel.query.order_by(QuoteLevel.id).all()
 
         return render_template(
             "pages/task/new.html.j2",
@@ -552,6 +554,7 @@ def task_new(my_id):
             source_type=source_type,
             source_query_type=source_query_type,
             processing_type=processing_type,
+            quote_level=quote_level,
             source=source,
             conn=conn,
             title="New Task",
@@ -749,6 +752,8 @@ def task_new(my_id):
         )
     else:
         tme.processing_type_id = None
+
+    tme.destination_quote_level_id = form["quoteLevel"] if "quoteLevel" in form else 3
 
     tme.destination_file_type_id = (
         form["fileType"] if str(form["fileType"]) != "none" else None
@@ -1098,6 +1103,8 @@ def task_edit_get(my_id):
             else ""
         )
 
+        quote_level = QuoteLevel.query.order_by(QuoteLevel.id).all()
+
         return render_template(
             "pages/task/new.html.j2",
             t=me,
@@ -1121,6 +1128,7 @@ def task_edit_get(my_id):
             smb_processing=smb_processing,
             database_source=database_source,
             file_type=file_type,
+            quote_level=quote_level,
         )
 
     return render_template("pages/task/details.html.j2", invalid=True, title="Error")
@@ -1370,6 +1378,8 @@ def task_edit_post(my_id):
     tme.destination_file_type_id = (
         form["fileType"] if str(form["fileType"]) != "none" else None
     )
+
+    tme.destination_quote_level_id = form["quoteLevel"] if "quoteLevel" in form else 3
 
     tme.destination_file_name = form["destinationFileName"]
 

@@ -57,6 +57,26 @@ class File:
             + "/"
         )
 
+    def __quote_level(self):
+        """ sets quote level based on task values """
+
+        task_level = (
+            self.task.destination_quote_level_id
+            if self.task.destination_quote_level_id is not None
+            and self.task.destination_quote_level_id > 0
+            and self.task.destination_quote_level_id <= 4
+            else 3
+        )
+
+        quote_levels = {
+            1: 2,  # "csv.QUOTE_NONE",
+            2: 1,  # "csv.QUOTE_ALL",
+            3: 0,  # "csv.QUOTE_MINIMAL",
+            4: 3,  # "csv.QUOTE_NONNUMERIC",
+        }
+
+        return quote_levels[task_level]
+
     def save(self):
         # pylint: disable=missing-function-docstring
         # pylint: disable=too-many-branches
@@ -144,7 +164,9 @@ class File:
                 ):
                     wrtr = (
                         csv.writer(
-                            myfile, delimiter=self.task.destination_file_delimiter
+                            myfile,
+                            delimiter=self.task.destination_file_delimiter,
+                            quoting=self.__quote_level(),
                         )
                         if self.task.destination_file_delimiter is not None
                         and len(self.task.destination_file_delimiter) > 0
@@ -152,7 +174,10 @@ class File:
                             self.task.destination_file_type_id == 2
                             or self.task.destination_file_type_id == 4
                         )  # txt or other
-                        else csv.writer(myfile)
+                        else csv.writer(
+                            myfile,
+                            quoting=self.__quote_level(),
+                        )
                     )
                     for row in data:
                         new_row = [
@@ -163,7 +188,11 @@ class File:
 
                 # if xlxs (3)
                 elif self.task.destination_file_type_id == 3:
-                    wrtr = csv.writer(myfile, dialect="excel")
+                    wrtr = csv.writer(
+                        myfile,
+                        dialect="excel",
+                        quoting=self.__quote_level(),
+                    )
                     for row in data:
                         new_row = [
                             (x.strip('"').strip("'") if isinstance(x, str) else x)

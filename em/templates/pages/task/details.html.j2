@@ -294,6 +294,10 @@
 			<span class="em-gridValue">{{ t.file_type.name  or 'None speficied.'}}</span>
 			<span class="em-gridName">File Delimeter</span>
 			<span class="em-gridValue">{% if t.destination_ignore_delimiter == 1 %}Ignored{% else %}"{{ t.destination_file_delimiter or ',' }}"{% endif %}</span>
+			{% if t.destination_quote_level_id %}
+			<span class="em-gridName">Quote Level</span>
+			<span class="em-gridValue">{{ t.destination_file_quote_level.name  or 'None speficied.'}}</span>
+			{% endif %}
 			{% if t.destination_create_zip == 1 %}
 				<span class="em-gridName">Save into a ZIP archive?</span>
 				<span class="em-gridValue">Yes</span>

@@ -36,6 +36,16 @@ values
 -------------------------------
 
 insert into
+  quote_level ('name')
+values
+  ('Quote None'),
+  ('Quote All'),
+  ('Quote Minimal (default)'),
+  ('Quote Non-numeric');
+ 
+-------------------------------
+
+insert into
   task_source_type ('name')
 values
   ('Database'),

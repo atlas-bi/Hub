@@ -664,7 +664,7 @@ class Runner:
             str(self.task.last_run_job_id),
         )
         # send to sftp
-        if self.task.destination_sftp == 1:
+        if self.task.destination_sftp == 1 and self.task.destination_sftp_conn:
 
             Sftp(
                 self.task,
@@ -675,7 +675,7 @@ class Runner:
             ).save()
 
         # send to ftp
-        if self.task.destination_ftp == 1:
+        if self.task.destination_ftp == 1 and self.task.destination_ftp_conn:
             Ftp(
                 self.task,
                 self.task.destination_ftp_conn,
@@ -685,7 +685,7 @@ class Runner:
             ).save()
 
         # save to smb
-        if self.task.destination_smb == 1:
+        if self.task.destination_smb == 1 and self.task.destination_smb_conn:
             Smb(
                 self.task,
                 self.task.destination_smb_conn,

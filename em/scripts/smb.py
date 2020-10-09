@@ -63,12 +63,22 @@ class Smb:
                 + self.file_name
             )
         else:
-            self.share_name = self.connection.share_name.strip("/").strip("\\")
-            self.username = self.connection.username
-            self.password = self.connection.password
-            self.server_ip = self.connection.server_ip
-            self.server_name = self.connection.server_name
-            self.dest_path = self.connection.path + "/" + self.file_name
+            self.share_name = (
+                self.connection.share_name.strip("/").strip("\\")
+                if self.connection
+                else "Error"
+            )
+            self.username = self.connection.username if self.connection else "Error"
+            self.password = self.connection.password if self.connection else "Error"
+            self.server_ip = self.connection.server_ip if self.connection else "Error"
+            self.server_name = (
+                self.connection.server_name if self.connection else "Error"
+            )
+            self.dest_path = (
+                (self.connection.path + "/" + self.file_name)
+                if self.connection
+                else "Error"
+            )
 
     def __connect(self):
         try:
