@@ -249,6 +249,12 @@ class Connection(db.Model):
     primary_contact = db.Column(db.String(400), nullable=True)
     primary_contact_email = db.Column(db.String(120), nullable=True)
     primary_contact_phone = db.Column(db.String(120), nullable=True)
+    ssh = db.relationship(
+        "ConnectionSsh",
+        backref="connection",
+        lazy=True,
+        foreign_keys="ConnectionSsh.connection_id",
+    )
     sftp = db.relationship(
         "ConnectionSftp",
         backref="connection",
@@ -322,6 +328,38 @@ class ConnectionSftp(db.Model):
         backref="processing_sftp_conn",
         lazy=True,
         foreign_keys="Task.processing_sftp_id",
+    )
+
+
+@dataclass
+class ConnectionSsh(db.Model):
+    """
+    Table conntaining sftp connection strings
+    """
+
+    # pylint: disable=too-many-instance-attributes
+
+    __tablename__ = "connection_ssh"
+    id: int
+    connection_id: int
+    name: str
+    address: str
+    port: int
+    username: str
+    password: str
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    connection_id = db.Column(db.Integer, db.ForeignKey(Connection.id), nullable=False)
+    name = db.Column(db.String(500), nullable=False)
+    address = db.Column(db.String(500), nullable=False)
+    port = db.Column(db.Integer, nullable=True)
+    username = db.Column(db.String(120), nullable=False)
+    password = db.Column(db.Text, nullable=False)
+    task_source = db.relationship(
+        "Task",
+        backref="source_ssh_conn",
+        lazy=True,
+        foreign_keys="Task.source_ssh_id",
     )
 
 
@@ -548,6 +586,8 @@ class Task(db.Model):
     source_sftp_ignore_delimiter: int
     source_sftp_id: int
 
+    source_ssh_id: int
+
     # processing
     processing_type_id: int
     processing_smb_id: int
@@ -671,6 +711,10 @@ class Task(db.Model):
     # source database
     source_database_id = db.Column(
         db.Integer, db.ForeignKey(ConnectionDatabase.id), nullable=True
+    )
+
+    source_ssh_id = db.Column(
+        db.Integer, db.ForeignKey(ConnectionSsh.id), nullable=True
     )
 
     """ processing script source """

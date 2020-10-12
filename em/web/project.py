@@ -43,7 +43,6 @@ def project():
 # @ldap.group_required(["Analytics"])
 def project_mine():
     """ main view of just my projects """
-
     me = (
         Project.query.join(User, Project.owner_id == User.id)
         .filter_by(user_id=g.user_id)
@@ -61,8 +60,8 @@ def project_mine():
 
 
 @app.route("/project/user/<this_user_id>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_user(this_user_id):
     """ main view of users projects """
     me = (
@@ -299,7 +298,7 @@ def project_edit_post(my_id):
 
     form = request.form
 
-    me.name = form["project_name"]
+    me.name = form["project_name"].strip()
     me.description = form["project_desc"]
     me.updater_id = updater.id
     me.global_params = form["globalParams" if "globalParams" in form else ""]
@@ -343,6 +342,7 @@ def project_edit_post(my_id):
             me.cron_end_date = date
         else:
             me.cron_end_date = None
+
     else:
         me.cron = 0
     # intv
@@ -366,7 +366,7 @@ def project_edit_post(my_id):
             )
             me.intv_end_date = date
         else:
-            me.intv_end_date = None
+            me.intv_end_date
     else:
         me.intv = 0
 
@@ -420,7 +420,7 @@ def project_new():
     cache.clear()
     form = request.form
 
-    project_name = form["project_name"]
+    project_name = form["project_name"].strip()
     project_desc = form["project_desc"]
     project_params = form["globalParams"] if "globalParams" in form else ""
 

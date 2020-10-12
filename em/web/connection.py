@@ -27,6 +27,7 @@ from ..model.model import (
     ConnectionSftp,
     ConnectionFtp,
     ConnectionSmb,
+    ConnectionSsh,
     ConnectionDatabase,
     ConnectionDatabaseType,
     Task,
@@ -116,6 +117,49 @@ def connection_edit(my_id):
             + my_connection.name
             + " "
             + str(sftp.connection_id)
+            + " "
+            + sftp.name
+            + ")",
+        )
+        db.session.add(log)
+        db.session.commit()
+
+    # update ssh
+    ssh_list = [
+        k.split("ssh")[1].split("-")[0]
+        for k, v in form.items()
+        if k.startswith("ssh") and "name" in k
+    ]
+    for x in ssh_list:
+        # try to get first, else create.
+        if ConnectionSsh.query.filter_by(connection_id=my_id, id=x).count():
+            ssh = ConnectionSsh.query.filter_by(connection_id=my_id, id=x).first()
+        else:
+            ssh = ConnectionSsh(connection_id=my_connection.id)
+            db.session.add(ssh)
+
+        ssh.connection_id = my_connection.id
+        ssh.name = form["ssh" + x + "-name"]
+        ssh.address = form["ssh" + x + "-addr"]
+        ssh.port = (
+            form["ssh" + x + "-port"] or 22
+            if form["ssh" + x + "-port"] != "None"
+            else 22
+        )
+        ssh.username = form["ssh" + x + "-user"]
+        ssh.password = em_encrypt(form["ssh" + x + "-pass"])
+
+        db.session.commit()
+
+        log = TaskLog(
+            status_id=7,
+            message=g.user_full_name
+            + ": Connection Sftp edited. ("
+            + str(my_connection.id)
+            + " "
+            + my_connection.name
+            + " "
+            + str(ssh.connection_id)
             + " "
             + sftp.name
             + ")",
@@ -353,6 +397,31 @@ def connection_task(my_id):
                 Connection,
                 Connection.id == ConnectionSftp.connection_id
                 and Connection.id == my_id,
+            )
+            .all()
+        )
+    ]
+
+    # ssh
+    [
+        task_list.append(
+            {
+                "id": task.id,
+                "name": task.name,
+                "project_id": task.project_id,
+                "project_name": task.project.name,
+                "connection_name": task.source_ssh_conn.name,
+                "enabled": task.enabled,
+                "last_run": task.last_run,
+                "status_name": (task.status.name if task.status else "N/A"),
+                "status_id": (task.status.id if task.status else "N/A"),
+            }
+        )
+        for task in (
+            Task.query.join(ConnectionSsh, ConnectionSsh.id == Task.source_ssh_id)
+            .join(
+                Connection,
+                Connection.id == ConnectionSsh.connection_id and Connection.id == my_id,
             )
             .all()
         )
@@ -665,6 +734,14 @@ def connection_smb():
     return render_template("pages/connection/smb.html.j2")
 
 
+@app.route("/connection/ssh")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def connection_ssh():
+    """ return html page for adding a smb conncetion """
+    return render_template("pages/connection/ssh.html.j2")
+
+
 @app.route("/connection/database")
 # @ldap.login_required
 # @ldap.group_required(["Analytics"])
@@ -735,6 +812,41 @@ def connection_new():
                     + str(sftp.id)
                     + " "
                     + sftp.name
+                    + ")",
+                )
+                db.session.add(log)
+                db.session.commit()
+        # get number of ssh
+        ssh_list = [
+            k.split("ssh")[1].split("-")[0]
+            for k, v in form.items()
+            if k.startswith("ssh") and "name" in k
+        ]
+
+        for x in ssh_list:
+            if "ssh" + x + "-name" in form and form["ssh" + x + "-name"] != "":
+                ssh = ConnectionSsh(
+                    connection_id=me.id,
+                    name=form["ssh" + x + "-name"],
+                    address=form["ssh" + x + "-addr"],
+                    path=form["ssh" + x + "-path"],
+                    username=form["ssh" + x + "-user"],
+                    password=em_encrypt(form["ssh" + x + "-pass"]),
+                )
+                db.session.add(ssh)
+                db.session.commit()
+
+                log = TaskLog(
+                    status_id=7,
+                    message=g.user_full_name
+                    + ": Connection SSH added. ("
+                    + str(me.id)
+                    + " "
+                    + me.name
+                    + " "
+                    + str(ssh.id)
+                    + " "
+                    + ssh.name
                     + ")",
                 )
                 db.session.add(log)
@@ -897,6 +1009,21 @@ def connection_remove_sftp(conn_id, my_id):
     log = TaskLog(
         status_id=7,
         message=g.user_full_name + ": Connection Sftp removed. (" + str(my_id) + ")",
+    )
+    db.session.add(log)
+    db.session.commit()
+    return redirect(url_for("connection_edit", my_id=conn_id))
+
+
+@app.route("/connection/<conn_id>/removeSsh/<my_id>", methods=["GET"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def connection_remove_ssh(conn_id, my_id):
+    ConnectionSsh.query.filter_by(connection_id=conn_id, id=my_id).delete()
+    db.session.commit()
+    log = TaskLog(
+        status_id=7,
+        message=g.user_full_name + ": Connection Ssh removed. (" + str(my_id) + ")",
     )
     db.session.add(log)
     db.session.commit()

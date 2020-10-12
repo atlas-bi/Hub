@@ -209,7 +209,7 @@ select.em-input option {
 .em-drop, .em-dropLight {
     display: block;
     min-height: 33px;
-    padding: 5px 11px;
+    padding: 8px 11px;
     font-size: 14px;    
     letter-spacing: 1px;
     background-color: rgba(9, 174, 187, .5);

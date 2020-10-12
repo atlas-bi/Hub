@@ -42,7 +42,7 @@ values
   ('Quote All'),
   ('Quote Minimal (default)'),
   ('Quote Non-numeric');
- 
+
 -------------------------------
 
 insert into
@@ -52,7 +52,8 @@ values
   ('Network File (SMB Connection)'),
   ('File (SFTP Connection)'),
   ('File (FTP Connection)'),
-  ('Python Script');
+  ('Python Script'),
+  ('SSH Command');
 
 -------------------------------
 
@@ -120,7 +121,8 @@ values
   ('Git/Web Code'),
   ('Date Parser'),
   ('Cmd Runner'),
-  ('System');
+  ('System'),
+  ('SSH');
 
 /*
   org specific and not required for app to run.

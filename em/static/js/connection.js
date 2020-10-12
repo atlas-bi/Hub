@@ -103,6 +103,30 @@
                     }));
                 }
             };
+        } else if (e.target.closest('#connections-addSsh')) {
+            t = e.target.closest('#connections-addSsh');
+            //get teamplate
+            q = new XMLHttpRequest();
+            q.open('get', '/connection/ssh', true);
+            q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            q.setRequestHeader('Ajax', 'True');
+            q.send();
+
+            q.onload = function() {
+         
+                if (d.querySelectorAll('.em-drop[data-ssh]').length > 0) {
+                    ssh = d.querySelectorAll('.em-drop[data-ssh]')[d.querySelectorAll('.em-drop[data-ssh]').length - 1].getAttribute('data-ssh');
+                    ssh++;
+                } else {
+                    ssh = 1;
+                }
+                document.getElementById('em-elementGroupSsh').insertAdjacentHTML('beforeend', q.responseText.replace(/ssh1/gm, 'ssh' + ssh).replace(/data-ssh="1"/gm, 'data-ssh="' + ssh + '"'));
+                if (t.closest('.clps-o')) {
+                    t.closest('.clps-o').dispatchEvent(new Event('change', {
+                        bubbles: true
+                    }));
+                }
+            };
         } 
         else if (e.target.closest('#connections-addFtp')) {
             t = e.target.closest('#connections-addFtp');

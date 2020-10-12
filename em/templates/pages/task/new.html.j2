@@ -147,6 +147,28 @@
 					{% endif %}
 				</div>
 			</section>
+
+			<!--
+				if SSH
+			-->
+
+			<section class="task-sourceSsh" {% if not t or t.source_type_id != 6 %}style="display:none;"{%endif%}>
+				<div class="em-inputTtl">Organization</div>
+				<select class="em-input" name="ssh_source" data-ssh="task-ssh-source-connection">
+					<option {% if not t or not t.source_ssh_conn or not t.source_ssh_conn.connection.id %}selected="selected" {% endif %} value="none">Choose one</option>
+					{% for s in conn %}
+						<option value="{{ s.id }}" {% if t.source_ssh_conn and t.source_ssh_conn.connection.id  == s.id %}selected{% endif %} >{{ s.name }}</option>
+					{% endfor %}
+				</select>
+				<div class="task-ssh-source-connection">
+					{% if t and t.source_ssh_id %}
+					{% include "pages/task/source/ssh_source.html.j2" %}
+					{% endif %}
+				</div>
+				<div class="em-inputTtl">Note: SSH Commands must be single line string. Commands can be separated with ";", for example: "sum=25;echo $sum"</div>
+			</section>
+
+
 		</section>
 
 		<!--
@@ -323,7 +345,7 @@
 					{% endif %}
 				</div>
 			</section>
-
+				
 			<!-- GIT -->
 			<section class="task-processingGit" {% if not t or t.processing_type_id != 4 %}style="display:none;"{%endif%}>
 				<div class="em-inputTtl">GIT Code URL (login configured by Admin)</div>
@@ -370,12 +392,12 @@
 
 					<div class="em-inputTtl">File Type</div>
 
-						<select class="em-input" name="fileType">
-							<option {% if not t or not t.sftp or not t.sftp.destination.id %}selected="selected" {% endif %} value="none">Choose one</option>
-							{% for s in file_type %}
-								<option value="{{ s.id }}" {% if t.file_type and t.file_type.id  == s.id %}selected{% endif %} >{{ s.name }}</option>
-							{% endfor %}
-						</select>
+					<select class="em-input" name="fileType">
+						<option {% if not t or not t.sftp or not t.sftp.destination.id %}selected="selected" {% endif %} value="none">Choose one</option>
+						{% for s in file_type %}
+							<option value="{{ s.id }}" {% if t.file_type and t.file_type.id  == s.id %}selected{% endif %} >{{ s.name }}</option>
+						{% endfor %}
+					</select>
 
 
 					<div class="em-inputTtl tooltip">File Name (if filetype is other include file extension in name) (%d/%m/%Y %H:%M:%S all <a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank" class="em-link">python date/time variables</a> allowed)<span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span></div>
@@ -398,7 +420,7 @@
 							<option value="{{ s.id }}" {% if t.destination_file_quote_level and t.destination_file_quote_level.id  == s.id %}selected{% elif not t.destination_file_quote_level and s.id == 3 %}selected{% endif %} >{{ s.name }}</option>
 						{% endfor %}
 					</select>
-					
+
 					<div class="em-checkbox"><label class='checkbox-container'>
 
 					<input type="checkbox" class="task_create_zip" {% if t and t.destination_create_zip == 1 %} checked="checked"{%endif %}/>
@@ -587,7 +609,7 @@
 				<div><label class='checkbox-container'>
 					<input type="checkbox" class="task_dont_send_empty" {% if t and t.email_completion_dont_send_empty_file == 1 %} checked="checked"{%endif %}/>
 					<span class="checkmark"></span>
-				</label>Dont email if file is emtpy?</div>
+				</label>Don't email if file is empty?</div>
 				<input type="hidden" name="task_dont_send_empty" value='{% if t and t.email_completion_dont_send_empty_file == 1 %}1{% else %}0{% endif %}'/>
 
 				<!-- 

@@ -56,7 +56,7 @@ def dash_error_gauge():
                 select count(1) error from (
                     select 1
                     from task_log t 
-                    where status_date > date('now','-72 hours')
+                    where status_date > now() - interval '72 hour' 
                     and task_id is not null and job_id is not null
                     and error=1
                     group by task_id
@@ -65,7 +65,7 @@ def dash_error_gauge():
             , (
                 select count(1) success
                 from task_log t 
-                where status_date > date('now','-72 hours') 
+                where status_date > now() - interval '72 hour' 
                 and task_id is not null and job_id is not null
                 and message = 'Completed task.'
                 and status_id = 8 -- runner
@@ -95,7 +95,7 @@ def dash_run_gauge():
         """
         select count(1)
         from task_log t 
-        where status_date > date('now','-72 hours') 
+        where status_date > now() - interval '72 hour' 
         and task_id is not null and job_id is not null
         and message = 'Completed task.'
         and status_id = 8 -- runner

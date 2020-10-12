@@ -93,6 +93,7 @@ class SourceCode:
                         break
 
                 assert "Sign in · GitLab" not in page.text
+
                 return self.cleanup(
                     (
                         page.text

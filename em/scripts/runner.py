@@ -37,6 +37,7 @@ from em import app, db
 from .crypto import em_decrypt
 from .cmd import Cmd
 from .ftp import Ftp
+from .ssh import Ssh
 from .file import File
 from .py_processer import PyProcesser
 from .sftp import Sftp
@@ -360,7 +361,7 @@ class Runner:
         # pylint: disable=inconsistent-return-statements
         # pylint: disable=too-many-branches
         # pylint: disable=too-many-statements
-        
+
         try:
             logging.info(
                 "Runner: Getting Source: Task: %s, with run: %s",
@@ -561,6 +562,12 @@ class Runner:
                     self.data = x
 
                 return True
+            elif self.task.source_type_id == 6:  # ssh command
+                query = self.__get_query() or "error"
+                if query == "error":
+                    return query
+
+                my_file = Ssh(self.task, self.task.source_ssh_conn, query).run()
 
         # pylint: disable=bare-except
         except:
@@ -632,7 +639,7 @@ class Runner:
             self.file_name, self.file_path = File(self.task, self.data).save()
 
     def __store_file(self):
-        if self.task.source_type_id == 5:
+        if self.task.source_type_id in [5, 6]:
             return False
         # only store if there are no errors.
         error_logs = (
@@ -712,7 +719,8 @@ class Runner:
 
         # remove file
         try:
-            shutil.rmtree(self.temp_path)
+            if Path(self.temp_path).exists():
+                shutil.rmtree(self.temp_path)
 
         # pylint: disable=bare-except
         except:

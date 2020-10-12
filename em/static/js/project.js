@@ -496,7 +496,34 @@
                     }));
                 }
             };
-        }  else if (e.target.closest('select[name="ftp_processing"]')) {
+        } else if (e.target.closest('select[name="ssh_source"]')) {
+            t = e.target.closest('select[name="ssh_source"]');
+            if (t.value == 'none') {
+                t.parentElement.querySelector('.' + t.getAttribute('data-ssh')).innerHTML = '';
+                return;
+            }
+            q = new XMLHttpRequest();
+            q.open('get', '/task/ssh-source?org=' + t.value, true);
+            q.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            q.setRequestHeader('Ajax', 'True');
+            q.send();
+            q.onload = function() {
+                var p = t.parentElement.querySelector('.' + t.getAttribute('data-ssh'));
+                p.innerHTML = q.responseText;
+
+                var s = p.querySelector('script');
+                if (s) {
+                    l = document.createElement('script');
+                    l.innerHTML = s.innerText;
+                    document.querySelector('body').appendChild(l);
+                }
+                if (t.closest('.clps-o')) {
+                    t.closest('.clps-o').dispatchEvent(new Event('change', {
+                        bubbles: true
+                    }));
+                }
+            };
+        } else if (e.target.closest('select[name="ftp_processing"]')) {
             t = e.target.closest('select[name="ftp_processing"]');
             if (t.value == 'none') {
                 t.parentElement.querySelector('.' + t.getAttribute('data-ftp')).innerHTML = '';
@@ -697,6 +724,7 @@
             p.querySelector('.task-sourceSftp').style.display = 'none';
             p.querySelector('.task-sourceFtp').style.display = 'none';
             p.querySelector('.task-query-location').style.display = 'none';
+            p.querySelector('.task-sourceSsh').style.display = 'none';
 
             if (t.value == 1) {
                 p.querySelector('.task-sourceDatabase').style.removeProperty('display');
@@ -708,6 +736,8 @@
             } else if (t.value == 4) {
                 p.querySelector('.task-sourceFtp').style.removeProperty('display');
             } else if (t.value == 5) {
+            } else if (t.value == 6) {
+                p.querySelector('.task-sourceSsh').style.removeProperty('display');
             }
         } else if (e.target.closest('select[name="sourceQueryType"]')) {
             t = e.target.closest('select[name="sourceQueryType"]');

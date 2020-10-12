@@ -102,6 +102,17 @@
 
 		{% endif %}
 
+		<!-- source Ssh -->
+		{% if t.source_type_id == 6 and t.source_ssh_id != None %}
+
+		</div>
+				<span class="em-gridName">SSH Connection</span>
+				<div class="em-code"><a class="em-link" href="/connection/{{t.source_ssh_conn.connection.id}}">{{t.source_ssh_conn.connection.name}} - {{ t.source_ssh_conn.name }}</a><br>{{ t.source_ssh_conn.address }}:{{ t.source_ssh_conn.port or '22' }}<br>user: {{ t.source_ssh_conn.username }}<br>pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.source_ssh_conn.password|decrypt }}" style="width:{{t.source_ssh_conn.password|decrypt|length * 6}}px;cursor: text;"/><a class="em-inputPlainCopy" title="copy password" data-value="{{ t.source_ssh_conn.password|decrypt }}"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg></a></div>
+
+			<div class="em-grid">
+
+		{% endif %}
+
 		<!-- query source -->	
 		{% if  t.query_type and t.source_type_id == 1 %}
 			<span class="em-gridName">Source Query Type</span>
@@ -184,7 +195,7 @@
 
 		
 		<!-- hand query -->
-		{% if t.source_code and t.source_type_id == 1 and t.source_query_type_id == 4 %}
+		{% if t.source_code and t.source_type_id in [1,6] and t.source_query_type_id == 4 %}
 			</div>
 			<span class="em-gridName">Source Code</span>
 			{% with code = t.source_code %}
@@ -273,7 +284,7 @@
 				{% endwith %}
 				<div class="em-grid">
 			{% endif %}
-
+			
 			{% if t.processing_command %}
 				</div>
 				<span class="em-gridName">Processing Command</span>
@@ -284,80 +295,81 @@
 
 		{% endif %}
 
-		<h2>Data Destination</h2>
-		<h3>File Information</h3>
-		<div class="em-grid">
-		<!-- file names -->
-			<span class="em-gridName">File Name</span>
-			<span class="em-gridValue">{{ t.destination_file_name or 'None speficied.' }}</span>
-			<span class="em-gridName">File Type</span>
-			<span class="em-gridValue">{{ t.file_type.name  or 'None speficied.'}}</span>
-			<span class="em-gridName">File Delimeter</span>
-			<span class="em-gridValue">{% if t.destination_ignore_delimiter == 1 %}Ignored{% else %}"{{ t.destination_file_delimiter or ',' }}"{% endif %}</span>
-			{% if t.destination_quote_level_id %}
-			<span class="em-gridName">Quote Level</span>
-			<span class="em-gridValue">{{ t.destination_file_quote_level.name  or 'None speficied.'}}</span>
-			{% endif %}
-			{% if t.destination_create_zip == 1 %}
-				<span class="em-gridName">Save into a ZIP archive?</span>
-				<span class="em-gridValue">Yes</span>
-				<span class="em-gridName">ZIP archive name</span>
-				<span class="em-gridValue">{{ t.destination_zip_name }}</span>
-			{% endif %}
+		{% if t.destination_file_name or t.file_type  or (t.destination_sftp_id and t.destination_sftp) or (t.destination_ftp_id and t.destination_ftp)%}
+			<h2>Data Destination</h2>
+			<h3>File Information</h3>
+			<div class="em-grid">
+			<!-- file names -->
+				<span class="em-gridName">File Name</span>
+				<span class="em-gridValue">{{ t.destination_file_name or 'None speficied.' }}</span>
+				<span class="em-gridName">File Type</span>
+				<span class="em-gridValue">{{ t.file_type.name  or 'None speficied.'}}</span>
+				<span class="em-gridName">File Delimeter</span>
+				<span class="em-gridValue">{% if t.destination_ignore_delimiter == 1 %}Ignored{% else %}"{{ t.destination_file_delimiter or ',' }}"{% endif %}</span>
+				{% if t.destination_quote_level_id %}
+				<span class="em-gridName">Quote Level</span>
+				<span class="em-gridValue">{{ t.destination_file_quote_level.name  or 'None speficied.'}}</span>
+				{% endif %}
+				{% if t.destination_create_zip == 1 %}
+					<span class="em-gridName">Save into a ZIP archive?</span>
+					<span class="em-gridValue">Yes</span>
+					<span class="em-gridName">ZIP archive name</span>
+					<span class="em-gridValue">{{ t.destination_zip_name }}</span>
+				{% endif %}
 		
-		<!-- sftp output -->
-		{% if t.destination_sftp_id and t.destination_sftp %}
-			</div>
-				<h3>SFTP</h3>
-				<div class="em-grid">
-				<span class="em-gridName">SFTP Overwrite Existing Files?</span>
-			<span class="em-gridValue">{% if t.destination_sftp_overwrite == 1 %}Yes{%else %}No{% endif %}</span>
-		</div>
-				<span class="em-gridName">SFTP Connection</span>
-				<div class="em-code"><a class="em-link" href="/connection/{{t.destination_sftp_conn.connection.id}}">{{t.destination_sftp_conn.connection.name}} - {{ t.destination_sftp_conn.name }}</a><br>{{ t.destination_sftp_conn.address }}:{{ t.destination_sftp_conn.port or '22' }}<br>{{ t.destination_sftp_conn.path|clean_path }}<br>user: {{ t.destination_sftp_conn.username }}<br>pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.destination_sftp_conn.password|decrypt }}" style="width:{{t.destination_sftp_conn.password|decrypt|length * 6}}px;cursor: text;"/><a class="em-inputPlainCopy" title="copy password" data-value="{{ t.destination_sftp_conn.password|decrypt }}"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg></a></div>
-			<div class="em-grid">
-			
-		{% endif %}
-
-		<!-- ftp output -->
-		{% if t.destination_ftp_id and t.destination_ftp %}
-			</div>
-				<h3>FTP</h3>
-				<div class="em-grid">
-
-				<span class="em-gridName">FTP Overwrite Existing Files?</span>
-				<span class="em-gridValue">{% if t.destination_ftp_overwrite == 1 %}Yes{%else %}No{% endif %}</span>
-			</div>
-				<span class="em-gridName">FTP Connection</span>
-				<div class="em-code"><a class="em-link" href="/connection/{{t.destination_ftp_conn.connection.id}}">{{t.destination_ftp_conn.connection.name}} - {{ t.destination_ftp_conn.name }}</a><br>{{ t.destination_ftp_conn.path|clean_path }}<br>user: {{ t.destination_ftp_conn.username }}<br>pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.destination_ftp_conn.password|decrypt }}" style="width:{{t.destination_ftp_conn.password|decrypt|length * 6}}px;cursor: text;"/><a class="em-inputPlainCopy" title="copy password" data-value="{{ t.destination_ftp_conn.password|decrypt }}"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg></a></div>
-			<div class="em-grid">
-
-		{% endif %}
-
-		<!-- smb output -->
-		{% if t.destination_smb_id and t.destination_smb %}
-			</div>
-				<h3>SMB</h3>
-				<div class="em-grid">
-					<span class="em-gridName">SMB Overwrite Existing Files?</span>
-					<span class="em-gridValue">{% if t.destination_smb_overwrite == 1 %}Yes{%else %}No{% endif %}</span>
+			<!-- sftp output -->
+			{% if t.destination_sftp_id and t.destination_sftp %}
 				</div>
-
-				<span class="em-gridName">SMB Connection</span>
-				<div class="em-code"><a class="em-link" href="/connection/{{t.destination_smb_conn.connection.id}}">{{t.destination_smb_conn.connection.name}} - {{ t.destination_smb_conn.name }}</a><br>{{ t.destination_smb_conn.server_name }} ({{t.destination_smb_conn.server_ip }})<br>{{ t.destination_smb_conn.share_name }}/{{t.destination_smb_conn.path|clean_path}}<br>user: {{ t.destination_smb_conn.username }}<br>pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.destination_smb_conn.password|decrypt }}" style="width:{{t.destination_smb_conn.password|decrypt|length * 6}}px;cursor: text;"/><a class="em-inputPlainCopy" title="copy password" data-value="{{ t.destination_smb_conn.password|decrypt }}"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg></a></div>
-			<div class="em-grid">
-			
+					<h3>SFTP</h3>
+					<div class="em-grid">
+					<span class="em-gridName">SFTP Overwrite Existing Files?</span>
+				<span class="em-gridValue">{% if t.destination_sftp_overwrite == 1 %}Yes{%else %}No{% endif %}</span>
+			</div>
+					<span class="em-gridName">SFTP Connection</span>
+					<div class="em-code"><a class="em-link" href="/connection/{{t.destination_sftp_conn.connection.id}}">{{t.destination_sftp_conn.connection.name}} - {{ t.destination_sftp_conn.name }}</a><br>{{ t.destination_sftp_conn.address }}:{{ t.destination_sftp_conn.port or '22' }}<br>{{ t.destination_sftp_conn.path|clean_path }}<br>user: {{ t.destination_sftp_conn.username }}<br>pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.destination_sftp_conn.password|decrypt }}" style="width:{{t.destination_sftp_conn.password|decrypt|length * 6}}px;cursor: text;"/><a class="em-inputPlainCopy" title="copy password" data-value="{{ t.destination_sftp_conn.password|decrypt }}"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg></a></div>
+				<div class="em-grid">
 				
-		{% endif %}
+			{% endif %}
 
-		<!-- no saved file output -->
-		{% if (not t.destination_sftp_id and t.destination_sftp != 1) and (not t.destination_smb_id and t.destination_smb != 1) and ( not t.destination_ftp_id and t.destination_ftp != 1) %}
-			<span class="em-gridName">Connection</span>
-			<span class="em-gridValue">No SFTP/FTP/SMB output.</span>
+			<!-- ftp output -->
+			{% if t.destination_ftp_id and t.destination_ftp %}
+				</div>
+					<h3>FTP</h3>
+					<div class="em-grid">
+
+					<span class="em-gridName">FTP Overwrite Existing Files?</span>
+					<span class="em-gridValue">{% if t.destination_ftp_overwrite == 1 %}Yes{%else %}No{% endif %}</span>
+				</div>
+					<span class="em-gridName">FTP Connection</span>
+					<div class="em-code"><a class="em-link" href="/connection/{{t.destination_ftp_conn.connection.id}}">{{t.destination_ftp_conn.connection.name}} - {{ t.destination_ftp_conn.name }}</a><br>{{ t.destination_ftp_conn.path|clean_path }}<br>user: {{ t.destination_ftp_conn.username }}<br>pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.destination_ftp_conn.password|decrypt }}" style="width:{{t.destination_ftp_conn.password|decrypt|length * 6}}px;cursor: text;"/><a class="em-inputPlainCopy" title="copy password" data-value="{{ t.destination_ftp_conn.password|decrypt }}"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg></a></div>
+				<div class="em-grid">
+
+			{% endif %}
+
+			<!-- smb output -->
+			{% if t.destination_smb_id and t.destination_smb %}
+				</div>
+					<h3>SMB</h3>
+					<div class="em-grid">
+						<span class="em-gridName">SMB Overwrite Existing Files?</span>
+						<span class="em-gridValue">{% if t.destination_smb_overwrite == 1 %}Yes{%else %}No{% endif %}</span>
+					</div>
+
+					<span class="em-gridName">SMB Connection</span>
+					<div class="em-code"><a class="em-link" href="/connection/{{t.destination_smb_conn.connection.id}}">{{t.destination_smb_conn.connection.name}} - {{ t.destination_smb_conn.name }}</a><br>{{ t.destination_smb_conn.server_name }} ({{t.destination_smb_conn.server_ip }})<br>{{ t.destination_smb_conn.share_name }}/{{t.destination_smb_conn.path|clean_path}}<br>user: {{ t.destination_smb_conn.username }}<br>pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.destination_smb_conn.password|decrypt }}" style="width:{{t.destination_smb_conn.password|decrypt|length * 6}}px;cursor: text;"/><a class="em-inputPlainCopy" title="copy password" data-value="{{ t.destination_smb_conn.password|decrypt }}"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg></a></div>
+				<div class="em-grid">
+				
+					
+			{% endif %}
+
+			<!-- no saved file output -->
+			{% if (not t.destination_sftp_id and t.destination_sftp != 1) and (not t.destination_smb_id and t.destination_smb != 1) and ( not t.destination_ftp_id and t.destination_ftp != 1) %}
+				<span class="em-gridName">Connection</span>
+				<span class="em-gridValue">No SFTP/FTP/SMB output.</span>
+			{% endif %}
+		</div>
 		{% endif %}
-		
-		
-	</div>
+	
 
 	<!-- success emails -->
 	{% if t.email_completion == 1 %}
