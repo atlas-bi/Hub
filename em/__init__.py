@@ -34,7 +34,11 @@ from flask import (
 app = Flask(__name__)
 
 # load configuration settings
-app.config.from_object("em.config.DevConfig")
+
+if app.config["DEBUG"] == True:
+    app.config.from_object("em.config.DevConfig")
+else:
+    app.config.from_object("em.config.Config")
 
 # static files
 from flask_compress import Compress
@@ -102,9 +106,10 @@ logging.getLogger("apscheduler").setLevel(logging.DEBUG)
 
 event_log()
 
-from flask_debugtoolbar import DebugToolbarExtension
+if app.config["DEBUG"] == True:
+    from flask_debugtoolbar import DebugToolbarExtension
 
-toolbar = DebugToolbarExtension(app)
+    toolbar = DebugToolbarExtension(app)
 
 
 if __name__ == "__main__":
