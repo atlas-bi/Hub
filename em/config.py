@@ -137,3 +137,4 @@ class DevConfig(Config):
     # pylint: disable=too-few-public-methods
     DEBUG = True
     SESSION_COOKIE_SECURE = False
+    DEBUG_TB_INTERCEPT_REDIRECTS = False

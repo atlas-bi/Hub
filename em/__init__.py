@@ -102,5 +102,10 @@ logging.getLogger("apscheduler").setLevel(logging.DEBUG)
 
 event_log()
 
+from flask_debugtoolbar import DebugToolbarExtension
+
+toolbar = DebugToolbarExtension(app)
+
+
 if __name__ == "__main__":
     app.run()

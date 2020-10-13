@@ -55,5 +55,6 @@ setup(
         "virtualenv",
         "python-dateutil",
         "psutil",
+        "flask-debugtoolbar",
     ],
 )

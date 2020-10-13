@@ -129,7 +129,7 @@ class File:
                 datetime.datetime.now().strftime("%s") + ".log"
             )
 
-        if "." not in self.task.destination_file_name:
+        if self.task.destination_file_type_id != 4:  # 4=other
             if self.task.file_type is not None:
                 self.file_name += "." + (self.task.file_type.ext or "csv")
 
@@ -139,7 +139,7 @@ class File:
         self.file_name = re.sub(r"\s+", "", self.file_name)
 
         self.file_path = self.base_path + self.file_name
-
+        print(self.file_name)
         Path(
             self.base_path,
         ).mkdir(parents=True, exist_ok=True)
@@ -165,7 +165,9 @@ class File:
                     wrtr = (
                         csv.writer(
                             myfile,
-                            delimiter=self.task.destination_file_delimiter,
+                            delimiter=str(self.task.destination_file_delimiter)
+                            .encode("utf-8")
+                            .decode("unicode_escape"),
                             quoting=self.__quote_level(),
                         )
                         if self.task.destination_file_delimiter is not None

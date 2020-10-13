@@ -54,6 +54,7 @@ from ..scripts.smb import Smb
 from ..scripts.sftp import Sftp
 from ..scripts.ftp import Ftp
 from ..scripts.smtp import Smtp
+from ..scripts.file_size import file_size
 from .filters import datetime_format
 
 env = Environment(
@@ -1818,7 +1819,7 @@ def get_task_files(my_id):
                     datetime.datetime.fromtimestamp(file.create_time),
                     "%a, %b %-d, %Y %H:%M:%S.%f",
                 ),
-                "File Size": str(file.file_size) + "b",
+                "File Size": file_size(file.file_size),
                 "Action": (
                     (
                         "<a href='/task/"
