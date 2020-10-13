@@ -663,6 +663,100 @@ def dash_log():
     return jsonify(me)
 
 
+@app.route("/dash/errorLog")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def dash_error_log():
+    """ dash get current log table """
+    page = request.args.get("p", default=1, type=int)
+    sort = request.args.get("s", default="Status Date.asc", type=str)
+    split_sort = sort.split(".")
+
+    page -= 1
+
+    logs = TaskLog.query.filter_by(error=1).order_by(TaskLog.status_date).all()
+
+    head = ["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]
+
+    me = [{"head": str(head)}]
+    table = []
+
+    [
+        table.append(
+            {
+                "Task Name": '<a class="em-link" href="/task/'
+                + str(log.task.id)
+                + '">'
+                + log.task.name
+                + "</a>"
+                if log.task
+                else "N/A",
+                "Project Name": (
+                    '<a class="em-link" href="/project/'
+                    + str(log.task.project.id)
+                    + '">'
+                    + log.task.project.name
+                    + "</a>"
+                )
+                if log.task and log.task.project
+                else "N/A",
+                "Owner": (
+                    "<a href='project/user/"
+                    + str(log.task.project.owner_id)
+                    + "' class='em-link'>"
+                    + log.task.project.project_owner.full_name
+                    + "</a>"
+                    if log.task and log.task.project and log.task.project.project_owner
+                    else "N/A"
+                ),
+                "Status Date": datetime.datetime.strftime(
+                    log.status_date,
+                    "%a, %b %-d, %Y %H:%M:%S.%f",
+                )
+                if log.status_date
+                else "None",
+                "my_date_sort": log.status_date,
+                "Status": log.status.name if log.status else "None",
+                "Message": (
+                    "Run: <a class='em-link' href='/task/"
+                    + str(log.task.id)
+                    + "/log/"
+                    + log.job_id
+                    + "'>"
+                    + log.job_id
+                    + ".</a> "
+                    if log.job_id
+                    else ""
+                )
+                + log.message,
+                "class": "error" if log.status_id == 2 or log.error == 1 else "",
+            }
+        )
+        for log in logs
+    ]
+
+    table = (
+        sorted(
+            table, key=lambda k: k[split_sort[0].replace("Status Date", "my_date_sort")]
+        )
+        if split_sort[1] == "desc"
+        else sorted(
+            table,
+            key=lambda k: k[split_sort[0].replace("Status Date", "my_date_sort")],
+            reverse=True,
+        )
+    )
+
+    [me.append(s) for s in table[page * 10 : page * 10 + 10]]
+
+    me.append({"total": len(table) or 0})  # runs.total
+    me.append({"page": page})  # page
+    me.append({"sort": sort})  # page
+    me.append({"empty_msg": "No log messages."})
+
+    return jsonify(me)
+
+
 @app.route("/dash/active")
 # @ldap.login_required
 # @ldap.group_required(["Analytics"])
