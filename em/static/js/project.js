@@ -737,7 +737,7 @@
                 p.querySelector('.task-sourceFtp').style.removeProperty('display');
             } else if (t.value == 5) {
             } else if (t.value == 6) {
-                p.querySelector('.task-sourceSsh').style.removeProperty('display');
+                p.querySelector('.task-query-location').style.removeProperty('display');
             }
         } else if (e.target.closest('select[name="sourceQueryType"]')) {
             t = e.target.closest('select[name="sourceQueryType"]');
