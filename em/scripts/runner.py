@@ -137,7 +137,7 @@ class Runner:
             # any cleanup process. remove file from local storage
             self.__send_email()
 
-            self.__clean_up()
+            # self.__clean_up()
 
             log = TaskLog(
                 task_id=task.id,
@@ -228,40 +228,58 @@ class Runner:
 
             # if a dir is specified then download all files
             if self.task.processing_command is not None:
-                url = (
-                    re.sub(
-                        r"(https?://)(.+?)",
-                        r"\1<username>:<password>@\2",
-                        self.task.processing_git,
-                        flags=re.IGNORECASE,
+                try:
+                    url = (
+                        re.sub(
+                            r"(https?://)(.+?)",
+                            r"\1<username>:<password>@\2",
+                            self.task.processing_git,
+                            flags=re.IGNORECASE,
+                        )
+                        .replace(
+                            "<username>", urllib.parse.quote(app.config["GIT_USERNAME"])
+                        )
+                        .replace(
+                            "<password>", urllib.parse.quote(app.config["GIT_PASSWORD"])
+                        )
                     )
-                    .replace(
-                        "<username>", urllib.parse.quote(app.config["GIT_USERNAME"])
+
+                    cmd = (
+                        "/bin/git clone -q --depth 1 --recurse-submodules --shallow-submodules "
+                        + url
+                        + " "
+                        + self.temp_path
                     )
-                    .replace(
-                        "<password>", urllib.parse.quote(app.config["GIT_PASSWORD"])
+
+                    output = Cmd(
+                        self.task,
+                        cmd,
+                        "Repo cloned.",
+                        "Failed to clone repo:" + self.task.processing_git,
+                    ).shell()
+
+                    processing_script_name = self.temp_path + (
+                        self.task.processing_command
+                        if self.task.processing_command is not None
+                        else ""
                     )
-                )
-
-                cmd = (
-                    "git clone -q --depth 1 --recurse-submodules --shallow-submodules "
-                    + url
-                    + " "
-                    + self.temp_path
-                )
-
-                output = Cmd(
-                    self.task,
-                    cmd,
-                    "Repo cloned.",
-                    "Failed to clone repo:" + self.task.processing_git,
-                ).run()
-
-                processing_script_name = self.temp_path + (
-                    self.task.processing_command
-                    if self.task.processing_command is not None
-                    else ""
-                )
+                # pylint: disable=bare-except
+                except:
+                    logging.error(
+                        "Runner: Processor failed to clone repo: Task: %s, with run: %s\n%s",
+                        str(self.task.id),
+                        str(self.task.last_run_job_id),
+                        str(full_stack()),
+                    )
+                    log = TaskLog(
+                        task_id=self.task.id,
+                        error=1,
+                        job_id=self.hash,
+                        status_id=8,
+                        message="Processor failed to clone repo:\n" + str(full_stack()),
+                    )
+                    db.session.add(log)
+                    db.session.commit()
 
             # otherwise get py file
             else:
@@ -269,25 +287,44 @@ class Runner:
 
         elif self.task.processing_type_id == 5 and self.task.processing_url is not None:
             if self.task.processing_command is not None:
-                cmd = (
-                    "git clone -q --depth 1 --recurse-submodules --shallow-submodules "
-                    + self.task.processing_url
-                    + " "
-                    + self.temp_path
-                )
+                try:
 
-                output = Cmd(
-                    self.task,
-                    cmd,
-                    "Repo cloned",
-                    "Failed to clone repo:" + self.task.processing_git,
-                ).run()
+                    cmd = (
+                        "/bin/git clone -q --depth 1 --recurse-submodules --shallow-submodules "
+                        + self.task.processing_url
+                        + " "
+                        + self.temp_path
+                    )
 
-                processing_script_name = self.temp_path + (
-                    self.task.processing_command
-                    if self.task.processing_command is not None
-                    else ""
-                )
+                    output = Cmd(
+                        self.task,
+                        cmd,
+                        "Repo cloned",
+                        "Failed to clone repo:" + self.task.processing_git,
+                    ).shell()
+
+                    processing_script_name = self.temp_path + (
+                        self.task.processing_command
+                        if self.task.processing_command is not None
+                        else ""
+                    )
+                # pylint: disable=bare-except
+                except:
+                    logging.error(
+                        "Runner: Processor failed to clone repo: Task: %s, with run: %s\n%s",
+                        str(self.task.id),
+                        str(self.task.last_run_job_id),
+                        str(full_stack()),
+                    )
+                    log = TaskLog(
+                        task_id=self.task.id,
+                        error=1,
+                        job_id=self.hash,
+                        status_id=8,
+                        message="Processor failed to clone repo:\n" + str(full_stack()),
+                    )
+                    db.session.add(log)
+                    db.session.commit()
             else:
                 my_file = SourceCode(self.task, self.task.processing_url).web()
         elif (

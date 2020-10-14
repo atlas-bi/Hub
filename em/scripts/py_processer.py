@@ -23,7 +23,6 @@
 from itertools import chain
 from pathlib import Path
 import logging
-import os
 import re
 from em import app, db
 from .error_print import full_stack
@@ -43,6 +42,7 @@ class PyProcesser:
     """
 
     # pylint: disable=too-few-public-methods
+    # pylint: disable=too-many-instance-attributes
 
     def __init__(self, task, script, input_path):
         self.task = task
@@ -65,30 +65,55 @@ class PyProcesser:
         Path(self.base_path).mkdir(parents=True, exist_ok=True)
         # Path("/home/venv/").mkdir(exist_ok=True)
 
-        self.env_path = self.base_path + self.env_name
-        # self.env_path = "/home/venv/" + self.env_name
+        self.env_path = self.base_path  # + self.env_name
+        if app.config["DEBUG"]:
+            self.env_path = "/home/venv/" + self.env_name + "/"
 
     def run(self):
+        """ run processing script """
         self.__build_env()
         self.__pip_install()
         self.__run_script()
 
         if self.output != "":
             return self.output
+        return ""
 
     def __build_env(self):
-        logging.info(
-            "PyProcesser: Building Env: Task: %s, with run: %s",
-            str(self.task.id),
-            str(self.task.last_run_job_id),
-        )
+        try:
+            logging.info(
+                "PyProcesser: Building Env: Task: %s, with run: %s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
+            )
 
-        output = Cmd(
-            self.task,
-            "virtualenv " + self.env_path,
-            "Environment  " + self.env_path + " created.",
-            "Failed to create environment  " + self.env_path,
-        ).run()
+            Cmd(
+                self.task,
+                "virtualenv " + self.env_path,
+                "Environment  " + self.env_path + " created.",
+                "Failed to create environment  " + self.env_path,
+            ).shell()
+
+        # pylint: disable=bare-except
+        except:
+            logging.error(
+                "PyProcesser: Failed to build environment: %s, with run: %s\n%s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
+                str(full_stack()),
+            )
+            log = TaskLog(
+                task_id=self.task.id,
+                job_id=self.task.last_run_job_id,
+                status_id=14,  # py
+                error=1,
+                message="Failed to build environment. "
+                + str(self.base_path)
+                + "\n"
+                + str(full_stack()),
+            )
+            db.session.add(log)
+            db.session.commit()
 
     def __pip_install(self):
 
@@ -103,86 +128,138 @@ class PyProcesser:
         # get from (...) imoprt (...)
         # (?<=^from)\s+[^\.].+?(?=import)
 
-        logging.info(
-            "PyProcesser: Pip Install: Task: %s, with run: %s",
-            str(self.task.id),
-            str(self.task.last_run_job_id),
-        )
-
-        imports = []
-
-        # find all scripts in dir
-        paths = list(Path(self.job_path).rglob("*.py"))
-
-        for file in paths:
-            for line in open(file):
-
-                imports.append(re.findall(r"(?<=^import)\s+[^\.][^\s]+?\s+?$", line))
-                imports.append(re.findall(r"(?<=^from)\s+[^\.].+?(?=import)", line))
-                imports.append(re.findall(r"(?<=^import)\s+[^\.][^\s]+?(?=\s)", line))
-
-        # clean list
-        imports = [x[0].strip() for x in imports if x != []]
-
-        # remove any relative imports
-        names = [file.stem for file in paths]
-
-        imports = list(set(imports) - set(names))
-
-        # remove preinstalled packages from imports
-        cmd = self.env_path + "/bin/python -c \"help('modules')\""
-        x = Cmd(
-            self.task,
-            cmd,
-            "Python packages loaded.",
-            "Failed to get preloaded packages: " + "\n" + cmd,
-        ).run()
-
-        x = x.split(
-            "Please wait a moment while I gather a list of all available modules..."
-        )[1].split("Enter any module name to get more help.")[0]
-
-        x = [
-            l.strip()
-            for l in list(
-                chain.from_iterable([g.split(" ") for g in x.split("\n") if g != ""])
+        try:
+            logging.info(
+                "PyProcesser: Pip Install: Task: %s, with run: %s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
             )
-            if l != ""
-        ]
 
-        # remove default python packages from list
-        imports = list(set(imports) - set(x))
+            imports = []
 
-        # try to install
-        if len(imports) > 0:
-            cmd = self.env_path + "/bin/pip install " + " ".join(imports)
-            output = Cmd(
+            # find all scripts in dir, but not in venv
+            paths = list(
+                set(Path(self.job_path).rglob("*.py"))
+                - set(Path(self.env_path).rglob("*.py"))
+            )
+
+            for file in paths:
+                for line in open(file):
+
+                    imports.append(
+                        re.findall(r"(?<=^import)\s+[^\.][^\s]+?\s+?$", line)
+                    )
+                    imports.append(re.findall(r"(?<=^from)\s+[^\.].+?(?=import)", line))
+                    imports.append(
+                        re.findall(r"(?<=^import)\s+[^\.][^\s]+?(?=\s)", line)
+                    )
+
+            # clean list
+            imports = [x[0].strip() for x in imports if x != []]
+
+            # remove any relative imports
+            names = [file.stem for file in paths]
+
+            imports = list(set(imports) - set(names))
+
+            # remove preinstalled packages from imports
+            cmd = self.env_path + "bin/python -c \"help('modules')\""
+            x = Cmd(
                 self.task,
                 cmd,
-                "Imports succesfully installed: "
-                + " ".join(imports)
-                + " with command: "
+                "Python packages loaded.",
+                "Failed to get preloaded packages: " + "\n" + cmd,
+            ).shell()
+
+            x = x.split(
+                "Please wait a moment while I gather a list of all available modules..."
+            )[1].split("Enter any module name to get more help.")[0]
+
+            x = [
+                l.strip()
+                for l in list(
+                    chain.from_iterable(
+                        [g.split(" ") for g in x.split("\n") if g != ""]
+                    )
+                )
+                if l != ""
+            ]
+
+            # remove default python packages from list
+            imports = list(set(imports) - set(x))
+
+            # try to install
+            if len(imports) > 0:
+                cmd = self.env_path + "bin/pip install " + " ".join(imports)
+                Cmd(
+                    self.task,
+                    cmd,
+                    "Imports succesfully installed: "
+                    + " ".join(imports)
+                    + " with command: "
+                    + "\n"
+                    + cmd,
+                    "Failed to install imports with command: " + "\n" + cmd,
+                ).shell()
+
+        # pylint: disable=bare-except
+        except:
+            logging.error(
+                "PyProcesser: Failed to install packages: %s, with run: %s\n%s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
+                str(full_stack()),
+            )
+            log = TaskLog(
+                task_id=self.task.id,
+                job_id=self.task.last_run_job_id,
+                status_id=14,  # py
+                error=1,
+                message="Failed to build install packages. "
+                + str(self.base_path)
                 + "\n"
-                + cmd,
-                "Failed to install imports with command: " + "\n" + cmd,
-            ).run()
+                + str(full_stack()),
+            )
+            db.session.add(log)
+            db.session.commit()
 
     def __run_script(self):
-        logging.info(
-            "PyProcesser: Running: Task: %s, with run: %s",
-            str(self.task.id),
-            str(self.task.last_run_job_id),
-        )
-        cmd = (
-            self.env_path
-            + "/bin/python "
-            + self.script
-            + (" " + self.input_path if self.input_path is not None else "")
-        )
+        try:
+            logging.info(
+                "PyProcesser: Running: Task: %s, with run: %s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
+            )
+            cmd = (
+                self.env_path
+                + "bin/python "
+                + self.script
+                + (" " + self.input_path if self.input_path is not None else "")
+            )
 
-        self.output = Cmd(
-            self.task,
-            cmd,
-            "Script successfully run.",
-            "Failed run script: " + "\n" + cmd,
-        ).run()
+            self.output = Cmd(
+                self.task,
+                cmd,
+                "Script successfully run.",
+                "Failed run script: " + "\n" + cmd,
+            ).shell()
+        # pylint: disable=bare-except
+        except:
+            logging.error(
+                "PyProcesser: Failed to run script: %s, with run: %s\n%s",
+                str(self.task.id),
+                str(self.task.last_run_job_id),
+                str(full_stack()),
+            )
+            log = TaskLog(
+                task_id=self.task.id,
+                job_id=self.task.last_run_job_id,
+                status_id=14,  # py
+                error=1,
+                message="Failed to build run script. "
+                + str(self.base_path)
+                + "\n"
+                + str(full_stack()),
+            )
+            db.session.add(log)
+            db.session.commit()

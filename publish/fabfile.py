@@ -58,6 +58,7 @@ def publish(conn):
     git = config["git_url"]
     site_name = config["site_name"]
     server_name = config["server_name"]
+    dns_name = config["dns_name"]
 
     # hash is used to identify current publish.
     my_hash = hashlib.sha256()
@@ -122,6 +123,15 @@ def publish(conn):
 
     # update and reload nginx
     # nginx logs sudo tail -F /var/log/nginx/error.log
+    conn.run(
+        "sed -i -e 's/dns-name/"
+        + dns_name
+        + "/g' /home/websites/"
+        + site_name
+        + "-"
+        + my_hash
+        + "/publish/nginx"
+    )
     conn.run(
         "sed -i -e 's/site-name/"
         + site_name

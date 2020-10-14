@@ -21,4 +21,5 @@ config = {
     "git_url": "url_to_source_repo",
     "site_name": "em",
     "server_name": "destination_server_name_or_ip",
+    "dns_name": "destination_dns_name",
 }

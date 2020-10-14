@@ -37,7 +37,10 @@ class Cmd:
     # pylint: disable=too-few-public-methods
     def __init__(self, task, cmd, success_msg, error_msg):
         self.task = task
-        self.cmd = cmd
+        self.cmd = (
+            "PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games export PATH && "
+            + cmd
+        )
         self.success_msg = success_msg
         self.error_msg = error_msg
 
@@ -45,7 +48,9 @@ class Cmd:
         """ function to run command and log output """
         out = ""
         try:
-            out = subprocess.check_output(self.cmd + " 2>&1", shell=True)
+            out = subprocess.check_output(
+                self.cmd, stderr=subprocess.STDOUT, shell=True
+            )
             out = out.decode("utf-8")
 
             if "Error" in out:
@@ -67,11 +72,36 @@ class Cmd:
                         self.task.last_run_job_id if self.task is not None else None
                     ),
                     status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
-                    message=self.success_msg,
+                    message=self.success_msg + (("\n" + out) if out != "" else ""),
                 )
                 db.session.add(log)
                 db.session.commit()
             return out
+
+        # pylint: disable=bare-except
+        except subprocess.CalledProcessError as e:
+            out = e.output.decode("utf-8")
+            logging.error(
+                "Cmd: Running Failed: Task: %s, with run: %s\n%s",
+                str(self.task.id if self.task is not None else None),
+                str(self.task.last_run_job_id if self.task is not None else None),
+                str(out) + "\n" + str(e),
+            )
+
+            log = TaskLog(
+                task_id=(self.task.id if self.task is not None else None),
+                job_id=(self.task.last_run_job_id if self.task is not None else None),
+                status_id=(17 if self.task else 7),  # 17 = cmd runner, 7 =  user
+                error=1,
+                message=self.error_msg
+                + (("\n" + out) if out != "" else "")
+                + "\n"
+                + str(e),
+            )
+
+            db.session.add(log)
+            db.session.commit()
+            return "Failed"
 
         # pylint: disable=bare-except
         except:

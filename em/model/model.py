@@ -829,6 +829,6 @@ class TaskLog(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     task_id = db.Column(db.Integer, db.ForeignKey(Task.id), nullable=True)
     status_id = db.Column(db.Integer, db.ForeignKey(TaskStatus.id), nullable=True)
-    message = db.Column(db.String(8000), nullable=True)
+    message = db.Column(db.Text, nullable=True)
     status_date = db.Column(db.DateTime, default=datetime.datetime.now)
     error = db.Column(db.Integer, nullable=True)
