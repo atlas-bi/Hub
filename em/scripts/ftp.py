@@ -93,7 +93,7 @@ class Ftp:
                 status_id=13,  # ftp
                 error=1,
                 message="Failed to connect to <a class='em-link' href='/connection/"
-                + str(self.connection.id)
+                + str(self.connection.connection.id)
                 + "'>"
                 + self.connection.name
                 + "("

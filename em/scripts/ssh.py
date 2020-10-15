@@ -98,7 +98,7 @@ class Ssh:
                 status_id=19,  # 19 SSH
                 error=1,
                 message="Failed to connect to <a class='em-link' href='/connection/"
-                + str(self.connection.id)
+                + str(self.connection.connection.id)
                 + "'>"
                 + self.connection.name
                 + "("

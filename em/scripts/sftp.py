@@ -99,7 +99,7 @@ class Sftp:
                 status_id=9,
                 error=1,
                 message="Failed to connect to <a class='em-link' href='/connection/"
-                + str(self.connection.id)
+                + str(self.connection.connection.id)
                 + "'>"
                 + self.connection.name
                 + "("
