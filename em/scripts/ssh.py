@@ -161,7 +161,7 @@ class Ssh:
 
             self.stderr_data = "".join(self.stderr_data)
 
-            if self.stderr_data != "" or self.session.recv_exit_status() == 1:
+            if self.stderr_data != "" or self.session.recv_exit_status() != 1:
 
                 logging.error(
                     "SSH: Error output: Task: %s, with run: %s\n%s",
