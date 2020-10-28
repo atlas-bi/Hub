@@ -107,7 +107,7 @@ class Smb:
                         self.server_ip, 139
                     )  # true = connected, false = no connection
                     break
-                except AssertionError as e:
+                except (AssertionError, ConnectionResetError) as e:
                     # pylint: disable=no-else-continue
                     if time.time() <= timeout:
                         time.sleep(10)  # wait 10 sec before retrying

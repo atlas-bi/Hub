@@ -56,5 +56,9 @@ setup(
         "python-dateutil",
         "psutil",
         "flask-debugtoolbar",
+        "flask-login",
+        "python3-saml",
+        "xmlsec",
+        "gevent",
     ],
 )

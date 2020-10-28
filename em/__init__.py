@@ -31,6 +31,7 @@ from flask import (
     jsonify,
 )
 
+
 app = Flask(__name__)
 
 # load configuration settings
@@ -113,4 +114,7 @@ if app.config["DEBUG"] == True:
 
 
 if __name__ == "__main__":
+    from gevent import monkey
+
+    monkey.patch_all(subprocess=True)
     app.run()

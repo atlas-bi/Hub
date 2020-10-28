@@ -139,7 +139,7 @@ class File:
         self.file_name = re.sub(r"\s+", "", self.file_name)
 
         self.file_path = self.base_path + self.file_name
-        print(self.file_name)
+
         Path(
             self.base_path,
         ).mkdir(parents=True, exist_ok=True)

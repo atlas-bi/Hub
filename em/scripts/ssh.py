@@ -171,17 +171,16 @@ class Ssh:
                 self.stdout_data += stdout.channel.recv(1024)
 
             for line in iter(stdout.readline, ""):
-                self.stdout_data += bytes(line,'utf8')
+                self.stdout_data += bytes(line, "utf8")
 
             for line in iter(stderr.readline, ""):
-                self.stderr_data += bytes(line,'utf8')
+                self.stderr_data += bytes(line, "utf8")
 
+            # if self.stderr_data:
+            #     print("error", str(self.stderr_data, "utf8"))
 
-            if self.stderr_data:
-                print("error", str(self.stderr_data, "utf8"))
-
-            if self.stdout_data:
-                print("success", str(self.stdout_data, "utf8"))
+            # if self.stdout_data:
+            #     print("success", str(self.stdout_data, "utf8"))
 
             if stdout.channel.recv_exit_status() != 0:
 
@@ -189,8 +188,8 @@ class Ssh:
                     "SSH: Error output: Task: %s, with run: %s\n%s\n%s",
                     str(self.task.id),
                     str(self.task.last_run_job_id),
-                    str(self.stdout_data,"utf8"),
-                    str(self.stderr_data,"utf8")
+                    str(self.stdout_data, "utf8"),
+                    str(self.stderr_data, "utf8"),
                 )
                 log = TaskLog(
                     task_id=self.task.id,
@@ -211,8 +210,8 @@ class Ssh:
                     "SSH: Output: Task: %s, with run: %s\n%s\n%s",
                     str(self.task.id),
                     str(self.task.last_run_job_id),
-                    str(self.stdout_data,"utf8"),
-                    str(self.stderr_data,"utf8")
+                    str(self.stdout_data, "utf8"),
+                    str(self.stderr_data, "utf8"),
                 )
                 log = TaskLog(
                     task_id=self.task.id,
@@ -221,7 +220,7 @@ class Ssh:
                     message="SSH Output:\n"
                     + str(self.stdout_data, "utf8")
                     + "\n"
-                    + str(self.stderr_data, "utf8"),                   
+                    + str(self.stderr_data, "utf8"),
                 )
                 db.session.add(log)
                 db.session.commit()

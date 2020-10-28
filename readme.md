@@ -141,7 +141,7 @@ source ~/.zshrc
 #### Add packages needed for install and setup.
 ```sh
 ash
-apk add --no-cache python3 build-base openldap-dev python3-dev tzdata libffi-dev openssl-dev sqlite unixodbc-dev postgresql-dev
+apk add --no-cache python3 build-base openldap-dev python3-dev tzdata libffi-dev openssl-dev sqlite unixodbc-dev postgresql-dev libxml2 libxslt libxslt-dev libxml2-dev xmlsec xmlsec-dev
 cp /usr/share/zoneinfo/America/Chicago /etc/localtime && echo "America/Chicago" > /etc/timezone
 apk del tzdata
 

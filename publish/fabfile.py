@@ -206,8 +206,8 @@ def publish(conn):
                 + " |  sed -n 's/.*Main PID: \\(.*\\)$/\\1/g p' | cut -f1 -d' ' "
                 + "| xargs kill -TERM || true"
             )
-            # wait 30 seconds for processes to stop and remove old processes
-            time.sleep(30)
+            # wait 10 seconds for processes to stop and remove old processes
+            time.sleep(10)
             conn.sudo("systemctl disable " + service)
             conn.sudo("systemctl stop " + service)
             conn.sudo("rm /etc/systemd/system/" + service + " || true")
