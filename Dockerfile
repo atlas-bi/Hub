@@ -2,7 +2,7 @@ FROM alpine:latest
 RUN apk update
 RUN apk add vim
 
-RUN apk add --no-cache git curl python3 build-base openldap-dev python3-dev tzdata libffi-dev openssl-dev sqlite unixodbc-dev postgresql-dev libxml2 libxslt libxml2-dev libxslt-dev \
+RUN apk add --no-cache git curl python3 build-base openldap-dev python3-dev tzdata libffi-dev openssl-dev sqlite unixodbc-dev postgresql-dev libxml2 libxslt libxslt-dev libxml2-dev xmlsec xmlsec-dev \
 	&& cp /usr/share/zoneinfo/America/Chicago /etc/localtime && echo "America/Chicago" > /etc/timezone \
 	&& apk del tzdata \
 	&& ln -sf python3 /usr/bin/python
