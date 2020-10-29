@@ -177,8 +177,8 @@ class SourceCode:
     def cleanup(query, my_type, task_params, project_params):
         """ used to clean code """
         # remove database call
-        query = re.sub(r"use\s+.+", "", query, flags=re.IGNORECASE)
-        query = re.sub(r"use\s+.+?;", "", query, flags=re.IGNORECASE)
+        query = re.sub(r"(^|\s)use\s+.+", "", query, flags=re.IGNORECASE)
+        query = re.sub(r"(^|\s)use\s+.+?;", "", query, flags=re.IGNORECASE)
 
         # only needed for mssql
         if my_type == "mssql":
