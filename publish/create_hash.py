@@ -1,8 +1,4 @@
-"""Publish script settings.
-
-git: url for source code to install
-dns: destination server dns name
-"""
+"""Extract Management 2.0 Publish Script."""
 # Extract Management 2.0
 # Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
@@ -18,9 +14,19 @@ dns: destination server dns name
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import hashlib
+import time
 
 
-config = {
-    "git": "https://github.com/Riverside-Healthcare/extract_management",
-    "dns": "localhost",
-}
+def create_hash():
+    """Create a hash of the current time.
+
+    :returns: string of hash
+    """
+    publish_hash = hashlib.sha256()
+    publish_hash.update(str(time.time()).encode("utf-8"))
+    return str(publish_hash.hexdigest()[:10])
+
+
+if __name__ == "__main__":
+    print(create_hash())  # noqa: T001

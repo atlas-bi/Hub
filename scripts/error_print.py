@@ -1,8 +1,4 @@
-"""Publish script settings.
-
-git: url for source code to install
-dns: destination server dns name
-"""
+"""Used for getting full stack trace exception messages."""
 # Extract Management 2.0
 # Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
@@ -20,7 +16,24 @@ dns: destination server dns name
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-config = {
-    "git": "https://github.com/Riverside-Healthcare/extract_management",
-    "dns": "localhost",
-}
+import sys
+import traceback
+
+
+def full_stack():
+    """Return full stack trace of an exception.
+
+    :returns: full stack trace of an exception.
+    """
+    exc = sys.exc_info()[0]
+    if exc is not None:
+        frame = sys.exc_info()[-1].tb_frame.f_back
+        stack = traceback.extract_stack(frame)
+    else:
+        stack = traceback.extract_stack()[:-1]  # last one would be full_stack()
+    trc = "Traceback (most recent call last):\n"
+    stackstr = trc + "".join(traceback.format_list(stack))
+    if exc is not None:
+        # pylint: disable=bad-str-strip-call
+        stackstr += "  " + traceback.format_exc().lstrip(trc)
+    return stackstr

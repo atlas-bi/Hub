@@ -1,7 +1,16 @@
-"""Publish script settings.
+"""
+EM Scheduler Extensions.
 
-git: url for source code to install
-dns: destination server dns name
+Set up basic flask items for import in other modules.
+
+*Items Setup*
+
+:db: database
+:scheduler: scheduler
+
+These items can be imported into other
+scripts after running :obj:`em_scheduler.create_app`
+
 """
 # Extract Management 2.0
 # Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
@@ -17,10 +26,9 @@ dns: destination server dns name
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# along
 
+from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy_caching import CachingQuery
 
-config = {
-    "git": "https://github.com/Riverside-Healthcare/extract_management",
-    "dns": "localhost",
-}
+db = SQLAlchemy(query_class=CachingQuery)

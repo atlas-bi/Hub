@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+
+<html dir="ltr" lang="en-US">
+
+    {#
+        Extract Management 2.0
+        Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see https://www.gnu.org/licenses/.
+    #}
+
+    {% cache None %}
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="Extract Management 2.0, running tasks on schedule." name="description" />
+    <meta content="Christopher Pickering" name="author" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <link href="/static/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
+    <link href="/static/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+    <link href="/static/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+    <link href="/static/site.webmanifest" rel="manifest" />
+    <link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" />
+    {% endcache %}
+
+    <title>Extract Management 2.0 - {{ title }}</title>
+
+    {% block head %}{% endblock head %}
+    {% block css %}{% endblock css %}
+
+    <body>
+        {% if config['DEMO'] %}
+            {% include 'demo.html.j2' %}
+        {% endif %}
+
+        {% block body_auth %}
+
+            {% include "sections/head.html.j2" %}
+
+            <div class="block">
+                <div class="block-left">
+                    {% include "sections/nav.html.j2" %}
+                </div>
+                <div class="block-right">
+                    <!-- status message -->
+                    <div class="em-status">
+                        <div class="em-statusContainer">
+                            <span class="em-statusTitle">Running tasks:</span>
+                            <span class="em-statusMessage"></span>
+                            <span class="blink">.</span>
+                            <span class="blink-2">.</span>
+                            <span class="blink-3">.</span>
+                        </div>
+                    </div>
+                    {% block body %}
+                    {% endblock body %}
+                </div>
+            </div>
+        {% endblock body_auth %}
+
+        {% block js %}{% endblock js %}
+    </body>
+</html>

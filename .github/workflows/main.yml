@@ -1,0 +1,42 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+name: "CI"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [main]
+  #schedule:
+  #  - cron: '0 0 * * 3'
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Analyze
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update -qq
+        apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config > /dev/null
+        apt-get install -y -qq git build-essential libssl-dev libffi-dev python-dev python3-dev libxml2-dev libxmlsec1-dev libxmlsec1-openssl libsasl2-dev libldap2-dev libssl-dev unixodbc unixodbc-dev redis-server postgresql postgresql-contrib > /dev/null
+        redis-server --daemonize yes
+        python -m pip install --disable-pip-version-check --quiet poetry tox tox-gh-actions
+        su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+    - name: Test with tox
+      run: tox

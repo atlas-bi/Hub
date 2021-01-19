@@ -1,0 +1,168 @@
+[tool.poetry]
+name = "extract-management"
+version = "2.0.0"
+description = "Extract Management 2.0 is a task scheduling tool for moving data."
+authors = [
+    "Paula Courville",
+    "Darrel Drake",
+    "Dee Anna Hillebrand",
+    "Scott Manley",
+    "Madeline Matz",
+    "Christopher Pickering <cpickering@rhc.net>",
+    "Dan Ryan",
+    "Richard Schissler",
+    "Eric Shultz"
+]
+maintainers = ["Christopher Pickering <cpickering@rhc.net>"]
+license = "GPL-3.0-or-later"
+readme = "readme.md"
+homepage = "https://extract-management.herokuapp.com"
+repository = "https://github.com/Riverside-Healthcare/extract_management"
+documentation = "https://github.com/Riverside-Healthcare/extract_management/docs/"
+keywords = [
+    "extract management",
+    "flask-apscheduler",
+    "flask",
+    "apscheduler",
+    "scheduling"
+]
+classifiers=[
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Flask",
+    "Intended Audience :: Healthcare Industry",
+    "Natural Language :: English",
+]
+packages = [
+    { include = "em_web" },
+    { include = "em_scheduler" },
+    { include = "em_runner" }
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.6"
+Flask-Migrate = "^2.5.3"
+python3-saml = "^1.9.0"
+SQLAlchemy = "^1.3.22"
+bs4 = "^0.0.1"
+flask-redis = "^0.4.0"
+Flask-SQLAlchemy = "^2.4.4"
+jsmin = "^2.2.2"
+python-dateutil = "^2.8.1"
+Flask-Executor = "^0.9.4"
+Flask = "^1.1.2"
+num2words = "^0.5.10"
+pyodbc = "^4.0.30"
+requests = "^2.25.1"
+Flask-APScheduler = "^1.11.0"
+Flask-Session = "^0.3.2"
+xmlsec = "^1.3.9"
+Flask-Assets = "^2.0"
+Flask-Caching = "^1.9.0"
+Flask-HTMLmin = "^2.0.0"
+redis = "^3.5.3"
+Flask-Script = "^2.0.6"
+Jinja2 = "^2.11.2"
+Flask-SQLAlchemy-Caching = "^1.0.4"
+pysmb = "^1.2.6"
+rcssmin = "^1.0.6"
+Flask-Compress = "^1.8.0"
+psutil = "^5.8.0"
+Flask-LDAP = "^0.1.6"
+cryptography = "^3.3.1"
+psycopg2-binary = "^2.8.6"
+virtualenv = "^20.2.2"
+paramiko = "^2.7.2"
+dataclasses = { version = "*", python = ">=3.6,<3.7" }
+tox = { version = "^3.20.1", optional = true }
+Pygments = { version = "^2.7.3", optional = true }
+pytest-cov = { version = "^2.10.1", optional = true }
+pytest = { version = "^6.2.1", optional = true }
+pytest-flask = { version = "^1.1.0", optional = true }
+toml = { version = "^0.10.2", optional = true }
+coverage = { version = "^5.3.1", optional = true }
+Flask-DebugToolbar = { version = "^0.11.0", optional = true }
+m2r2 = { version = "^0.2.7", optional = true }
+Sphinx = { version = "^3.4.2", optional = true }
+sphinx-autoapi = { version = "^1.5.1", optional = true }
+relative-to-now = "^0.0.5"
+
+[tool.poetry.extras]
+test = ["tox", "Pygments", "pytest-cov", "pytest", "pytest-flask", "toml", "coverage", "Flask-DebugToolbar"]
+docs = ["m2r2", "Sphinx", "Pygments", "sphinx-autoapi"]
+
+
+[tool.poetry.dev-dependencies]
+Flask-DebugToolbar = "^0.11.0"
+tox = "^3.20.1"
+
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "dirty-tag"
+
+
+[tool.pytest.ini_options]
+addopts = "-rsx --tb=short"
+testpaths = "tests"
+filterwarnings = "always"
+
+
+[tool.pylint.master]
+ignore="smb_fix.py"
+
+[tool.pylint.messages_control]
+disable = "C0330, C0326, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911"
+
+
+[tool.pylint.format]
+max-line-length = 99
+max-module-lines=1000
+
+
+[tool.pylint.basic]
+good-names = "i,j,k,ex,Run,x,id,e,me,l,_"
+include-naming-hint="no"
+
+
+
+[tool.black]
+max_line_length = 99
+exclude = 'flask_simpleldap.py'
+quiet = true
+
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 99
+skip = 'flask_simpleldap.py'
+quiet = true
+
+
+[tool.curlylint]
+include = '\.(html.j2)$'
+exclude = '''
+(
+    /pages/task/details.html.j2
+    | /pages/connection/all.html.j2
+)
+'''
+quiet = true
+
+
+[tool.curlylint.rules]
+indent = 4
+html_has_lang = 'en-US'

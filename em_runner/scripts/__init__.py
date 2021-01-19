@@ -1,8 +1,4 @@
-"""Publish script settings.
-
-git: url for source code to install
-dns: destination server dns name
-"""
+"""Collection of scripts used to run a task."""
 # Extract Management 2.0
 # Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
@@ -18,9 +14,4 @@ dns: destination server dns name
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-
-config = {
-    "git": "https://github.com/Riverside-Healthcare/extract_management",
-    "dns": "localhost",
-}
+print(__name__)  # noqa: T001

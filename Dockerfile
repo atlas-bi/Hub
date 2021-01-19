@@ -1,30 +1,44 @@
-FROM alpine:latest
-RUN apk update
-RUN apk add vim
+FROM python:3.9-slim
 
-RUN apk add --no-cache git curl python3 build-base openldap-dev python3-dev tzdata libffi-dev openssl-dev sqlite unixodbc-dev postgresql-dev libxml2 libxslt libxslt-dev libxml2-dev xmlsec xmlsec-dev \
-	&& cp /usr/share/zoneinfo/America/Chicago /etc/localtime && echo "America/Chicago" > /etc/timezone \
-	&& apk del tzdata \
-	&& ln -sf python3 /usr/bin/python
+ENV DEBIAN_FRONTEND=noninteractive \
+	FLASK_ENV=test \
+    FLASK_DEBUG=1 \
+	FLASK_APP=em_web \
+	PYTHONDONTWRITEBYTECODE=1 \
+	PYTHONUNBUFFERED=1
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-	PYTHONUNBUFFERED=1 \
-	FLASK_APP=em
-
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools wheel
-
-RUN curl -k -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.6.1.1-1_amd64.apk \
-	&& apk add --allow-untrusted msodbcsql17_17.6.1.1-1_amd64.apk
+RUN apt-get update -qq \
+    && apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config > /dev/null \
+	&& apt-get install -y -qq \
+	    git \
+	    build-essential \
+		libssl-dev \
+		libffi-dev \
+		python-dev \
+		python3-dev \
+		libxml2-dev \
+		libxmlsec1-dev \
+		libxmlsec1-openssl \
+		libsasl2-dev \
+		libldap2-dev \
+		libssl-dev \
+		unixodbc \
+		unixodbc-dev \
+		redis-server \
+		postgresql \
+		postgresql-contrib \
+		> /dev/null \
+  	&& redis-server --daemonize yes \
+  	&& python -m pip install --disable-pip-version-check --quiet poetry \
+  	&& su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
 
 WORKDIR /app
 
-RUN git clone https://github.com/Riverside-Healthcare/extract_management . \
-	&& pip3 install -e . 
+RUN git clone --depth 1 https://github.com/Riverside-Healthcare/extract_management . -q \
+	&& $(which poetry) install
 
-RUN python manage.py db init \
-	&& python manage.py db migrate \
-	&& python manage.py db upgrade \
-	&& sqlite3 em.sqlite ".read seed.sql"
+RUN cp em_web/model.py em_runner/model.py && cp em_web/model.py em_scheduler/model.py
 
-CMD flask run --host=0.0.0.0 --port=$PORT
+RUN flask db init && flask db migrate && flask db upgrade && flask seed && flask seed demo
+
+CMD (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

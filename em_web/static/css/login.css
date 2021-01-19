@@ -1,0 +1,190 @@
+/*
+    Extract Management 2.0
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+.login {
+  margin: 0 auto;
+  width: 460px;
+  position: relative;
+}
+
+.login-ttl {
+  text-align: center;
+  opacity: 0.9;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.login-cntr {
+  margin: 120px auto 0;
+  padding: 42px 42px 36px;
+  border: 1px solid #eaeced;
+  overflow: hidden;
+  border-radius: 5px;
+  position: relative;
+  -webkit-animation: fadein 0.5s;
+  animation: fadein 0.5s;
+}
+
+.login-inputTtl {
+  margin: 10px 0;
+  color: #6c7378;
+}
+
+.login-input {
+  height: 44px;
+  width: 100%;
+  padding: 0 10px;
+  background: #fff;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 4px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #000;
+  font-size: 1em;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  direction: ltr;
+  border: 1px solid rgb(9, 174, 187);
+  -webkit-transition: border 0.4s ease-out;
+  -o-transition: border 0.4s ease-out;
+  transition: border 0.4s ease-out;
+}
+
+.login-input:focus {
+  outline: 0;
+  border: 1px solid rgb(7, 137, 146);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background-color: #fff;
+}
+
+.login-btn {
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  display: block;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  color: #fff;
+  font-size: 17px;
+  text-align: center;
+  font-weight: 700;
+  font-family: HelveticaNeue-Medium, "Helvetica Neue Medium", HelveticaNeue,
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-shadow: none;
+  text-decoration: none;
+  -webkit-transition: background-color 0.4s ease-out;
+  -o-transition: background-color 0.4s ease-out;
+  transition: background-color 0.4s ease-out;
+  -webkit-font-smoothing: antialiased;
+  background-color: rgb(9, 174, 187);
+  padding: 11px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.login-btn:hover {
+  background-color: rgb(7, 137, 146);
+  outline: 0;
+}
+
+.login-copy {
+  text-align: center;
+  color: #6c7378;
+  font-size: 85%;
+  margin-top: 10px;
+}
+
+.login-error {
+  border-color: #c72e2e;
+  background-color: #fff7f7;
+  margin: 0;
+  padding: 13px 13px 13px 44px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  text-align: left;
+  font-size: 1em;
+  position: relative;
+}
+
+.login-errorIcn {
+  width: 20px;
+  fill: #c72e2e;
+  position: absolute;
+  left: 13px;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    zoom: 0.9;
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+    margin-top: 80px;
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    -ms-transform-origin: 50% 0%;
+  }
+
+  to {
+    opacity: 1;
+    zoom: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    margin-top: 120px;
+  }
+}
+
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+    zoom: 0.9;
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+    margin-top: 80px;
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    -ms-transform-origin: 50% 0%;
+  }
+
+  to {
+    opacity: 1;
+    zoom: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    margin-top: 120px;
+  }
+}

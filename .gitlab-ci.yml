@@ -1,0 +1,132 @@
+variables:
+  PYTHONDONTWRITEBYTECODE: 1
+  FLASK_ENV: test
+  FLASK_DEBUG: 1
+  FLASK_APP: em_web
+
+image: python:3.9-slim
+
+stages:
+  - Static
+  - Test
+  - Deploy
+
+before_script:
+  - python --version
+  - export DEBIAN_FRONTEND=noninteractive
+  - apt-get update -qq
+  - apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config > /dev/null
+  - >
+      apt-get install -y -qq
+      git
+      build-essential
+      libssl-dev
+      libffi-dev
+      python-dev
+      python3-dev
+      libxml2-dev
+      libxmlsec1-dev
+      libxmlsec1-openssl
+      libsasl2-dev
+      libldap2-dev
+      libssl-dev
+      unixodbc
+      unixodbc-dev
+      redis-server
+      postgresql
+      postgresql-contrib
+      > /dev/null
+  - redis-server --daemonize yes
+  - python -m pip install --disable-pip-version-check --quiet poetry tox
+  - cd /builds/extract-management/extract-management-site/
+  - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+
+Lint:
+  stage: Static
+  before_script:
+    - python -m pip install --disable-pip-version-check --quiet tox
+  script:
+    - tox -e lint
+
+Static:
+  stage: Static
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -qq
+    - apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config git > /dev/null
+    - python -m pip install --disable-pip-version-check --quiet tox
+    - curl -sL https://deb.nodesource.com/setup_14.x | bash - > /dev/null
+    - apt-get install -y -qq nodejs > /dev/null
+    - npm set strict-ssl false
+    - rm -rf package-lock.json
+    - rm -rf node_modules
+  script:
+    - tox -e static
+
+Html:
+  stage: Static
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -qq
+    - apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config git > /dev/null
+    - python -m pip install --disable-pip-version-check --quiet tox
+    - curl -sL https://deb.nodesource.com/setup_14.x | bash - > /dev/null
+    - apt-get install -y -qq nodejs > /dev/null
+    - npm set strict-ssl false
+    - rm -rf package-lock.json
+    - rm -rf node_modules
+  script:
+    - tox -e html
+
+Typing:
+  stage: Static
+  before_script:
+    - python -m pip install --disable-pip-version-check --quiet tox
+  script:
+    - tox -e typing
+
+Py39:
+  stage: Test
+  image: python:3.9-slim
+  script:
+    - tox -e clean,py39,cov
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+
+Py38:
+  stage: Test
+  image: python:3.8-slim
+  script:
+    - tox -e clean,py38,cov
+
+Py37:
+  stage: Test
+  image: python:3.7-slim
+  script:
+    - tox -e clean,py37,cov
+
+Docs:
+  image: alpine:latest
+  before_script:
+    - echo 'Nothing to do...'
+  stage: Deploy
+  script:
+    - mv docs/_build/ public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
+Publish:
+  image: python:3.9-slim
+  stage: Deploy
+  environment: Production
+  before_script:
+    - apt-get update -qq > /dev/null
+    - apt-get install -y -qq sshpass > /dev/null
+  script:
+    - export HASH=$(python publish/create_hash.py)
+    - export SSHPASS=$USER_PASS
+    - sshpass -e ssh -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "mkdir -p /home/websites/em/$HASH"
+    - sshpass -e scp -o StrictHostKeyChecking=no -r * $SSHUSER@$SSHHOST:/home/websites/em/$HASH/
+    - sshpass -e ssh -t -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "echo $SSHPASS | sudo -S bash /home/websites/em/$HASH/publish/install.sh $HASH $DNS"

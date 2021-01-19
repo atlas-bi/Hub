@@ -1,0 +1,14 @@
+[run]
+parallel = true
+source =
+    em_web
+    em_runner
+    em_scheduler
+
+
+[report]
+omit =
+    */confi_text.py
+    */smb_fix.py
+    */flask_simpleldap.py
+show_missing = true

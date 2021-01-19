@@ -1,0 +1,365 @@
+/*
+    Extract Management 2.0
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  color: #3e4042;
+  font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-backface-visibility: hidden;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (min-width: 1940px) {
+  body {
+    font-size: 96%;
+  }
+}
+
+h1 {
+  font-size: 2em;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-family: Georgia, serif;
+}
+
+h2,
+h3,
+h4,
+h5 {
+  font-family: Georgia, serif;
+}
+
+.block {
+  display: flex;
+  width: 90%;
+  margin: auto;
+}
+
+.block-left {
+  flex: 25%;
+  padding: 25px;
+  padding-top: 0;
+  max-width: 300px;
+}
+
+.block-right {
+  flex: 75%;
+  padding: 25px;
+  padding-top: 0;
+  max-width: calc(100% - 300px);
+}
+
+.icon-sm {
+  height: 15px;
+}
+
+.loader {
+  padding: 30px 0;
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 8px;
+}
+
+.loader img {
+  height: 8px;
+  float: right;
+}
+
+.loader-typing img {
+  height: 150px;
+}
+
+.em-titleGrey,
+.em-titleGrey:visited {
+  color: #6c7378;
+  text-decoration: none;
+}
+
+.em-titleGrey:hover {
+  text-decoration: none;
+}
+
+.em-titleStatus {
+  float: right;
+}
+
+.em-subTitle {
+  color: #6c7378;
+  font-style: italic;
+}
+
+.em-sectionTitle {
+  margin-bottom: 0;
+}
+
+.em-addElement {
+  height: 44px;
+  margin: 10px 0;
+  color: #6c7378;
+  font-size: 17px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+@media (min-width: 1940px) {
+  .em-addElement {
+    font-size: 96%;
+  }
+}
+
+.em-addElement svg {
+  padding-right: 20px;
+  height: 25px;
+  fill: #6c7378;
+  margin-bottom: -5px;
+}
+
+.em-code {
+  background: rgb(45, 46, 39);
+  border-radius: 6px;
+  color: #cc99cd;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 1em;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  padding: 1em;
+  margin: 0.5em 0;
+  overflow: auto;
+}
+
+.em-link,
+.em-link:visited {
+  color: #6c7378;
+  text-decoration: none;
+}
+
+.em-link:hover {
+  color: #09aebb;
+}
+
+.em-pSection {
+  margin-left: 50px;
+  display: block;
+}
+
+.foot-copy {
+  text-align: center;
+  color: #6c7378;
+  font-size: 85%;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.em-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: repeat(1, 1fr);
+  grid-column-gap: 20px;
+  grid-row-gap: 0;
+}
+
+.em-error {
+  color: rgba(255, 105, 97);
+}
+
+.em-success {
+  color: rgba(41, 206, 66);
+}
+
+.em-running {
+  color: rgba(250, 174, 71);
+}
+
+.em-border {
+  padding: 8px;
+  border-radius: 3px;
+}
+
+.em-error.em-border {
+  border: 2px solid rgba(255, 105, 97);
+}
+
+.em-success.em-border {
+  border: 2px solid rgba(41, 206, 66);
+}
+
+.em-running.em-border {
+  border: 2px solid rgba(250, 174, 71);
+}
+
+.em-paragraph {
+  white-space: pre;
+}
+
+.em-checkbox {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.em-codeBox {
+  max-height: 500px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #2e3440;
+  margin: 0.5em 0;
+}
+
+.em-codeBox pre {
+  display: inline-block;
+  min-width: calc(100% - 1em);
+  min-height: calc(100% - 1em);
+  padding: 1em 0 0 1em !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: hidden !important;
+}
+
+.em-codeBox code {
+  padding-bottom: 1rem;
+  padding-right: 130px;
+}
+
+/* tooltip from w3schools, thanks bro */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  min-width: 120px;
+  max-width: 300px;
+  background-color: #3e4042;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 50%;
+  margin-left: -25%;
+  font-style: normal;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #3e4042 transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.flashes {
+  list-style: none;
+  border-radius: 3px;
+  background-color: cornsilk;
+  padding: 10px;
+  border: 2px solid rgba(255, 105, 97);
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.flashes-close {
+  margin-left: 15px;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: -4px;
+}
+
+.flashes-close:hover {
+  color: black;
+}
+
+.em-status {
+  transition: height 0.2s;
+  height: 0;
+  overflow: hidden;
+}
+
+.em-statusContainer {
+  padding: 20px;
+  border: 2px solid rgb(9, 174, 187);
+  border-radius: 3px;
+}
+
+.em-statusTitle {
+  font-weight: bolder;
+  padding-right: 10px;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  50.01% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.blink {
+  animation: blink 0.75s linear infinite;
+}
+
+.blink-2 {
+  animation: blink 0.75s linear infinite;
+  animation-delay: 0.1s;
+}
+
+.blink-3 {
+  animation: blink 0.75s linear infinite;
+  animation-delay: 0.2s;
+}

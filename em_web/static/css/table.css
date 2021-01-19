@@ -1,0 +1,360 @@
+/*
+    Extract Management 2.0
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+.em-ajaxTable {
+  transition: opacity 0.1s ease-in-out;
+}
+
+.em-table {
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  border-spacing: 0;
+  width: 100%;
+  border-top: none;
+  position: relative;
+  white-space: pre-wrap;
+  max-width: 100%;
+  font-size: inherit;
+}
+
+.em-table th {
+  border-left: 1px solid #d9d9d9;
+}
+
+.em-tableProg th {
+  padding: 0 !important;
+  border-top: 1px solid #d9d9d9;
+}
+
+.em-tableProg + tr th {
+  padding: 6px 30px 10px 30px !important;
+  cursor: pointer;
+  border-radius: 0 !important;
+}
+
+.em-tableProg + tr {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.em-table thead tr {
+  background-color: #07aebb;
+  border: none;
+  color: #fff;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.em-table td {
+  border-top: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
+  word-break: break-word;
+}
+
+.em-table tbody tr td {
+  padding: 10px 10px;
+}
+
+.em-table thead tr th {
+  padding: 10px 30px 10px 30px;
+}
+
+.em-table td:first-child,
+.em-table th:first-child {
+  border-left: none;
+}
+
+.em-table tr:not(.em-tableProg) th {
+  transition: background 0.5s;
+}
+
+.em-table thead tr th:first-of-type {
+  border-top-left-radius: 3px;
+}
+
+.em-table thead tr th:last-of-type {
+  border-top-right-radius: 3px;
+}
+
+.em-table tr:not(.em-tableProg) th:hover {
+  background: rgb(7, 137, 146);
+}
+
+.em-table .icon-sm {
+  padding-left: 5px;
+  margin-bottom: -2px;
+  fill: #fff;
+}
+
+.em-tableProg {
+  height: 4px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  padding: 0;
+  z-index: 1;
+}
+
+.em-table tr:last-of-type td:first-of-type {
+  border-bottom-left-radius: 3px;
+}
+
+.em-table tr:last-of-type td:last-of-type {
+  border-bottom-right-radius: 3px;
+}
+
+.em-tableTools {
+  height: 25px;
+  padding: 10px 0;
+}
+
+.em-tableTools div {
+  float: right;
+}
+
+.em-tableTools div button {
+  float: left;
+  border: 1px solid #07aebb;
+  border-right: none;
+  fill: #6c7378;
+  background-color: transparent;
+  transition: background-color 0.2s;
+  outline: none;
+  height: 28px;
+  width: 25px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.em-tableTools div > button::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.em-tableTools div > button:hover {
+  background-color: rgba(7, 174, 187, 0.2);
+}
+
+.em-tableTools div > button:first-of-type {
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.em-tableTools div > button:last-of-type {
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
+  border-right: 1px solid #07aebb;
+}
+
+.em-tableLoad {
+  height: 4px;
+  overflow: hidden;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: -1;
+  text-align: left;
+}
+
+.em-tableLoad div {
+  background-color: #07aebb;
+  width: 0;
+  transition: width 10s linear;
+  height: 100%;
+}
+
+.em-tableGetRows > div {
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  line-height: 25px;
+}
+
+.em-tablePag {
+  display: inline-block;
+  float: left;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.em-tablePagItem {
+  border: 1px solid #07aebb;
+  border-right: none;
+  background-color: transparent;
+  height: 28px;
+  min-width: 25px;
+  color: #6c7378;
+  transition: background-color 0.2s;
+  margin: 0;
+}
+
+.em-tablePagItem.disabled {
+  background-color: #d9d9d9;
+}
+
+.em-tablePagItem:first-of-type {
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.em-tablePagItem:last-of-type {
+  border-right: 1px solid #07aebb;
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.em-tablePagItem:focus,
+.em-tablePagItem:active {
+  outline: none;
+}
+
+.em-tablePagItem:not(.disabled):hover {
+  background-color: rgba(7, 174, 187, 0.2);
+}
+
+.em-tableSort {
+  float: right;
+  position: relative;
+  display: inline-block;
+  color: #6c7378;
+  cursor: pointer;
+}
+
+.em-tableSortButton {
+  border: 1px solid #07aebb;
+  border-radius: 3px;
+  height: 28px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  color: #6c7378;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.em-tableSortButton:active,
+.em-tableSortButton:focus {
+  outline: none;
+}
+
+.em-tableSortSelect {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #07aebb;
+  border-radius: 3px;
+  min-width: 150px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.em-tableSortOption {
+  padding: 3px 10px;
+  text-decoration: none;
+  display: block;
+  background-color: transparent;
+  transition: background-color 0.2s;
+}
+
+.em-tableSortArrow {
+  padding-right: 10px;
+  display: inline-block;
+}
+
+.em-tableSortOption:hover {
+  background-color: rgba(7, 174, 187, 0.2);
+}
+
+.em-tableSortSelect:hover,
+.em-tableSort:hover .em-tableSortSelect {
+  display: block;
+}
+
+.em-tableCurrentRows {
+  font-style: italic;
+  color: #6c7378;
+  margin-bottom: 5px;
+}
+
+.em-table tr.error {
+  background-color: rgba(255, 105, 97, 0.2);
+}
+
+.em-tableSwitch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 30px;
+  margin: 0 5px;
+  outline: none;
+}
+
+.em-tableSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  outline: none;
+}
+
+.em-tableSwitch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #6c7378;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 30px;
+  outline: none;
+}
+
+.em-tableSwitch .slider::before {
+  position: absolute;
+  content: url(data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20512%20512%22%20style%3D%22fill%3A%236c7378%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M500.33%200h-47.41a12%2012%200%200%200-12%2012.57l4%2082.76A247.42%20247.42%200%200%200%20256%208C119.34%208%207.9%20119.53%208%20256.19%208.1%20393.07%20119.1%20504%20256%20504a247.1%20247.1%200%200%200%20166.18-63.91%2012%2012%200%200%200%20.48-17.43l-34-34a12%2012%200%200%200-16.38-.55A176%20176%200%201%201%20402.1%20157.8l-101.53-4.87a12%2012%200%200%200-12.57%2012v47.41a12%2012%200%200%200%2012%2012h200.33a12%2012%200%200%200%2012-12V12a12%2012%200%200%200-12-12z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E);
+  height: 12px;
+  width: 12px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+  padding: 6px;
+}
+
+.em-tableSwitch .counting::before {
+  content: attr(data-counter);
+  padding-left: 9px;
+  width: 9px;
+}
+
+.em-tableSwitch input:checked + .slider {
+  background-color: #07aebb;
+}
+
+.em-tableSwitch input:checked + .slider::before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
