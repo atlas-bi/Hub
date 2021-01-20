@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from create_hash import create_hash
 from fabric import task
 from settings import config
 
@@ -45,15 +44,7 @@ def publish(conn):
     removed. Finally, old code is removed.
 
     """
-    publish_hash = create_hash()
-
-    conn.run(
-        "mkdir -p /home/websites/em/%s && cd $_ && \
-        git -c http.sslVerify=false clone --depth 1 %s . -q"
-        % (publish_hash, config["git"])
-    )
-
     conn.sudo(
-        "bash /home/websites/em/%s/publish/install.sh %s %s"
-        % (publish_hash, publish_hash, config["dns"])
+        'bash -c "$(curl -kfsSL -H "PRIVATE-TOKEN: %s" "%s")"'
+        % (config["token"], config["sh"])
     )

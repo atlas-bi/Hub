@@ -20,9 +20,6 @@ import logging
 import sys
 from pathlib import Path
 
-from flask import Flask, render_template
-from flask.cli import with_appcontext
-
 from em_web.extensions import (
     cache,
     compress,
@@ -37,8 +34,11 @@ from em_web.extensions import (
     web_assets,
 )
 
+from flask import Flask, render_template  # isort:skip
+from flask.cli import with_appcontext  # isort:skip
+
 sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
-from error_print import full_stack
+from error_print import full_stack  # isort:skip
 
 
 def create_app():

@@ -47,19 +47,31 @@ EM2 is a three part server:
 
 EM2 runs with Nginx + Gunicorn. Three individual web services are created, the web app is the public web site and the other two (scheduler and runner) are internal API's running on the web server.
 
-An install script is provided to easily install EM2 onto your Ubuntu server. Update the `publish/settings.py` file "dns" value to be the dns of your server. If you plan to use ssl you can add the certs into the `publish` folder as well. Use names "cert.crt" and "cert.key".
+### Prerequisites
 
-The publish takes place over SSH from a git server.
+* Currently EM2 is setup to install on an Ubunut server, however with a few tweaks to the install script it will work well on most Linux.
+* curl or wget should be installed
+* Ideally, you will have your own git repository, holding updated config files, and will publish from there.
+
+### Installation
+
+An install script is provided to easily install EM2 onto your Ubuntu server. Update the `publish/install.sh` file "dns" value to be the dns of your server, and the "remote" to point to your repo path. If you plan to use ssl you can add the certs into the `publish` folder as well. Use names "cert.crt" and "cert.key".
+
+The publish takes place over SSH from a git server. It is possible to use an accesskey when publishing from fabric.
 
 Update username and hostname with your planned login.
 
-```sh
-cd publish && fab -H username@hostname --prompt-for-login-password --prompt-for-sudo-password  publish && cd ..
-```
 
-The server should have `git` installed already. After cloning the repo the `install.sh` script will install all packages necessary to start up the app.
+| Method | Command                                                                                                                           |
+| :------|:---------------------------------------------------------------------------------------------------------------------------------:|
+| fabric | ```cd publish && fab -H user@host_ip --prompt-for-login-password --prompt-for-sudo-password publish && cd ..```                   |
+| curl   | ```bash -c "$(curl -kfsSL https://raw.githubusercontent.com/Riverside-Healthcare/extract_management/main/publish/install.sh)"```  |
+| wget   | ```bash -c "$(wget -O- https://raw.githubusercontent.com/Riverside-Healthcare/extract_management/main/publish/install.sh)"```     |
 
-## Running EM2 Locally
+
+After cloning the repo the `install.sh` script will install all packages necessary to start up the app.
+
+### Running EM2 Locally
 
 EM2 can be run locally. We use pyenv and poetry to manage the project dependencies. Assuming you will too -
 
@@ -84,13 +96,14 @@ FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=em_scheduler && flask run --
 FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=em_runner && flask run --port=5002
 ```
 
-## Other Configuration Tips
+### Other Configuration Tips
 
 If you use hostnames vs IP addresses in your config files be sure to update hosts file `nano /etc/hosts` to include the ip address of any internal domain hosts you will use.
 For example, LDAP server, GIT server, any databases you plan to query, etc.
 
 
-## How Login Works
+## About the App
+### How Login Works
 
 Login is done through LDAP and follows this basic process
 Note: the python package python-simpleldap has been customized slightly to work with our ldap setup.
@@ -102,7 +115,7 @@ Note: the python package python-simpleldap has been customized slightly to work 
 
 Note: once logged in the user_id is kept in the server "session". When a user logs out we just drop the user_id from the session.
 
-## Data Flow
+### Data Flow
 
 Project name and schedule are created > tasks can be added to the project.
 
@@ -111,7 +124,7 @@ Task are completely independent, the order of tasks is not respected and tasks m
 The tasks in a job can indivitually be started or stopped.
 
 
-## Testing
+### Testing
 
 Code (python/javascript/css/html) is all tested with tox:
 
@@ -119,7 +132,7 @@ Code (python/javascript/css/html) is all tested with tox:
 tox
 ```
 
-## Webserver Info
+### Webserver Info
 
 EM2 uses three web services for a few reasons -
 

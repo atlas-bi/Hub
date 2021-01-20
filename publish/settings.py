@@ -19,8 +19,8 @@ dns: destination server dns name
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
+# pylint: disable=C0301
 config = {
-    "git": "https://github.com/Riverside-Healthcare/extract_management",
-    "dns": "localhost",
+    "sh": "https://raw.githubusercontent.com/Riverside-Healthcare/extract_management/main/publish/install.sh",  # noqa: E501
+    "token": "",
 }

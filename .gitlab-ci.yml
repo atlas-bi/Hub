@@ -123,10 +123,7 @@ Publish:
   environment: Production
   before_script:
     - apt-get update -qq > /dev/null
-    - apt-get install -y -qq sshpass > /dev/null
+    - apt-get install -y -qq sshpass curl > /dev/null
   script:
-    - export HASH=$(python publish/create_hash.py)
     - export SSHPASS=$USER_PASS
-    - sshpass -e ssh -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "mkdir -p /home/websites/em/$HASH"
-    - sshpass -e scp -o StrictHostKeyChecking=no -r * $SSHUSER@$SSHHOST:/home/websites/em/$HASH/
-    - sshpass -e ssh -t -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "echo $SSHPASS | sudo -S bash /home/websites/em/$HASH/publish/install.sh $HASH $DNS"
+    - sshpass -e ssh -t -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "bash -c "$(curl -kfsSl -H "PRIVATE-TOKEN:$TOKEN" $URL)""
