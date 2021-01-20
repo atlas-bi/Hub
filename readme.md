@@ -63,7 +63,7 @@ Update username and hostname with your planned login.
 
 
 | Method | Command                                                                                                                           |
-| :------|:---------------------------------------------------------------------------------------------------------------------------------:|
+| :------|:----------------------------------------------------------------------------------------------------------------------------------|
 | fabric | ```cd publish && fab -H user@host_ip --prompt-for-login-password --prompt-for-sudo-password publish && cd ..```                   |
 | curl   | ```bash -c "$(curl -kfsSL https://raw.githubusercontent.com/Riverside-Healthcare/extract_management/main/publish/install.sh)"```  |
 | wget   | ```bash -c "$(wget -O- https://raw.githubusercontent.com/Riverside-Healthcare/extract_management/main/publish/install.sh)"```     |
