@@ -86,7 +86,7 @@
                         <input class="em-input" type="text" name="sftp{{ s.id }}-user" value="{{ s.username }}"/>
 
                         <div class="em-inputTtl">SSH Key</div>
-                        <textarea class="em-input" type="text" name="sftp{{ s.id }}-key" rows="2">{{ s.key }}</textarea>
+                        <textarea class="em-input" type="text" name="sftp{{ s.id }}-key" rows="2">{{ s.key|decrypt or "" }}</textarea>
 
                         <div class="em-inputTtl">Password (ex: d0n't4g@!)</div>
                         <input class="em-input" type="password" name="sftp{{ s.id }}-pass" value="{{ s.password|decrypt }}"/>

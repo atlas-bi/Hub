@@ -937,26 +937,31 @@
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       weekNumbers: true,
+      time_24hr: true,
     });
     flatpickr("#project_intv_edate", {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       weekNumbers: true,
+      time_24hr: true,
     });
     flatpickr("#project_intv_sdate", {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       weekNumbers: true,
+      time_24hr: true,
     });
     flatpickr("#project_cron_edate", {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       weekNumbers: true,
+      time_24hr: true,
     });
     flatpickr("#project_cron_sdate", {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       weekNumbers: true,
+      time_24hr: true,
     });
   } catch (e) {}
 })();

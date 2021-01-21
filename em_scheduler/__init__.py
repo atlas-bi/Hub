@@ -59,16 +59,14 @@ Database model should be cloned from `em_web` before running app.
 
 import hashlib
 import logging
-import sys
 import time
-from pathlib import Path
-
-from flask import Flask, jsonify, make_response
-from requests import get
 
 from em_scheduler import config
 from em_scheduler.extensions import db
 from em_scheduler.model import Task
+from flask import Flask, jsonify, make_response
+from flask_apscheduler import APScheduler
+from requests import get
 
 from .scripts import event_log
 
@@ -84,13 +82,13 @@ else:
     logging.info("loading prod config")
     app.config.from_object(config.Config)
 
-from flask_apscheduler import APScheduler
 
 db.init_app(app)
 
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
+
 
 logging.basicConfig(level=logging.WARNING)
 

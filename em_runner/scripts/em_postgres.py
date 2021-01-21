@@ -23,14 +23,13 @@ import tempfile
 from pathlib import Path
 
 import psycopg2
-
 from em_runner import db
 from em_runner.model import TaskLog
+from error_print import full_stack
 
 from .em_file import file_size
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from error_print import full_stack
 
 
 class Postgres:
@@ -106,6 +105,14 @@ class Postgres:
                 mode="w+", newline="", delete=False
             ) as data_file:
                 writer = csv.writer(data_file)
+
+                if self.task.source_query_include_header:
+                    writer.writerow(
+                        [i[0] for i in self.cur.description]
+                        if self.cur.description
+                        else []
+                    )
+
                 for row in self.__rows():
                     writer.writerow(row)
 
@@ -125,7 +132,7 @@ class Postgres:
 
         except BaseException:
             logging.error(
-                "SQL Server: Failed to run query: Task: %s, with run: %s\n%s",
+                "Postgresql: Failed to run query: Task: %s, with run: %s\n%s",
                 str(self.task.id),
                 str(self.job_hash),
                 str(full_stack()),

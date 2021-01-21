@@ -37,8 +37,7 @@
 
     {% else %}
 
-        <h1 class="em-title">{{ p.name }} </h1>
-        <h2 class="em-subTitle">Owned by <a href="/project/user/{{ p.project_owner.id }}" title="{{ p.project_owner.full_name }}'s projects" class="em-link">{{ p.project_owner.full_name }}</a></h2>
+        <h1 class="em-title">Owner: {% if p.project_owner %}<a href="/project/user/{{ p.project_owner.id }}" title="{{ p.project_owner.full_name }}'s projects" class="em-link">{{ p.project_owner.full_name }}</a>{% else %}<span class="em-titleGrey">Unknown</span>{% endif %} / Project: {{ p.name }} </h1>
 
         {% include "pages/project/nav.html.j2" %}
 

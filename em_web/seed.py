@@ -217,6 +217,29 @@ def seed_demo():
     if User.query.filter_by(full_name="Mr Cool", user_id="1234").first() is None:
         db.session.add(User(full_name="Mr Cool", user_id="1234"))
 
+    # demo connection group
+    if (
+        Connection.query.filter_by(
+            name="Extract Organization",
+            description="The best place to send data.",
+            address="Organization Extract",
+            primary_contact="Boss Man",
+            primary_contact_email="boss@ma.n",
+            primary_contact_phone="(000)-000-0000",
+        ).first()
+        is None
+    ):
+        db.session.add(
+            Connection(
+                name="Extract Organization",
+                description="The best place to send data.",
+                address="Organization Extract",
+                primary_contact="Boss Man",
+                primary_contact_email="boss@ma.n",
+                primary_contact_phone="(000)-000-0000",
+            )
+        )
+
     # demo db
     if (
         ConnectionDatabase.query.filter_by(
@@ -239,29 +262,6 @@ def seed_demo():
                     + " dbname=pfmegrnargs user=reader password=NWDMCE5xdipIjRrp"
                 ),
                 connection_id=1,
-            )
-        )
-
-    # demo connection group
-    if (
-        Connection.query.filter_by(
-            name="Extract Organization",
-            description="The best place to send data.",
-            address="Organization Extract",
-            primary_contact="Boss Man",
-            primary_contact_email="boss@ma.n",
-            primary_contact_phone="(000)-000-0000",
-        ).first()
-        is None
-    ):
-        db.session.add(
-            Connection(
-                name="Extract Organization",
-                description="The best place to send data.",
-                address="Organization Extract",
-                primary_contact="Boss Man",
-                primary_contact_email="boss@ma.n",
-                primary_contact_phone="(000)-000-0000",
             )
         )
 

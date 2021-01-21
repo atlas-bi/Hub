@@ -28,9 +28,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from flask import current_app as app
-from jinja2 import Environment, PackageLoader, select_autoescape
-
+from crypto import em_decrypt
 from em_runner import db
 from em_runner.model import Task, TaskFile, TaskLog
 from em_runner.scripts.em_cmd import Cmd
@@ -47,10 +45,11 @@ from em_runner.scripts.em_sqlserver import SqlServer
 from em_runner.scripts.em_ssh import Ssh
 from em_runner.scripts.em_system import Monitor
 from em_runner.web.filters import datetime_format
+from error_print import full_stack
+from flask import current_app as app
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from crypto import em_decrypt
-from error_print import full_stack
 
 env = Environment(
     loader=PackageLoader("em_runner", "templates"),
@@ -184,6 +183,7 @@ class Runner:
             task.last_run = datetime.datetime.now()
             db.session.commit()
 
+    # pylint: disable=inconsistent-return-statements
     def __process(self):
         # pylint: disable=too-many-branches
         # pylint: disable=too-many-statements
@@ -211,18 +211,23 @@ class Runner:
                 self.task, self.task.source_smb_file, self.job_hash
             ).string_to_date()
 
-            my_file = (
-                Smb(
-                    task=self.task,
-                    connection=self.task.processing_smb_conn,
-                    file_path=file_name,
-                    job_hash=self.job_hash,
-                    overwrite=None,
-                    file_name=None,
+            try:
+                my_file = (
+                    Smb(
+                        task=self.task,
+                        connection=self.task.processing_smb_conn,
+                        file_path=file_name,
+                        job_hash=self.job_hash,
+                        overwrite=None,
+                        file_name=None,
+                    )
+                    .read()
+                    .decode()
                 )
-                .read()
-                .decode()
-            )
+            # pylint: disable=broad-except
+            except BaseException:
+                self.error += 1
+                return
 
         elif (
             self.task.processing_type_id == 2
@@ -232,14 +237,19 @@ class Runner:
                 self.task, self.task.processing_sftp_file, self.job_hash
             ).string_to_date()
 
-            my_file = Sftp(
-                task=self.task,
-                connection=self.task.processing_sftp_conn,
-                overwrite=None,
-                file_name=file_name,
-                file_path=None,
-                job_hash=self.job_hash,
-            ).read()
+            try:
+                my_file = Sftp(
+                    task=self.task,
+                    connection=self.task.processing_sftp_conn,
+                    overwrite=None,
+                    file_name=file_name,
+                    file_path=None,
+                    job_hash=self.job_hash,
+                ).read()
+            # pylint: disable=broad-except
+            except BaseException:
+                self.error += 1
+                return
 
         elif (
             self.task.processing_type_id == 3
@@ -251,14 +261,19 @@ class Runner:
                 job_hash=self.job_hash,
             ).string_to_date()
 
-            my_file = Ftp(
-                task=self.task,
-                connection=self.task.processing_ftp_conn,
-                overwrite=None,
-                file_name=file_name,
-                file_path=None,
-                job_hash=self.job_hash,
-            ).read()
+            try:
+                my_file = Ftp(
+                    task=self.task,
+                    connection=self.task.processing_ftp_conn,
+                    overwrite=None,
+                    file_name=file_name,
+                    file_path=None,
+                    job_hash=self.job_hash,
+                ).read()
+            # pylint: disable=broad-except
+            except BaseException:
+                self.error += 1
+                return
 
         elif self.task.processing_type_id == 4 and self.task.processing_git is not None:
 
@@ -320,9 +335,16 @@ class Runner:
 
             # otherwise get py file
             else:
-                my_file = SourceCode(
-                    task=self.task, url=self.task.processing_git, job_hash=self.job_hash
-                ).gitlab()
+                try:
+                    my_file = SourceCode(
+                        task=self.task,
+                        url=self.task.processing_git,
+                        job_hash=self.job_hash,
+                    ).gitlab()
+                # pylint: disable=broad-except
+                except BaseException:
+                    self.error += 1
+                    return False
 
         elif self.task.processing_type_id == 5 and self.task.processing_url is not None:
             if self.task.processing_command is not None:
@@ -367,9 +389,16 @@ class Runner:
                     db.session.add(log)
                     db.session.commit()
             else:
-                my_file = SourceCode(
-                    task=self.task, url=self.task.processing_url, job_hash=self.job_hash
-                ).web_url()
+                try:
+                    my_file = SourceCode(
+                        task=self.task,
+                        url=self.task.processing_url,
+                        job_hash=self.job_hash,
+                    ).web_url()
+                # pylint: disable=broad-except
+                except BaseException:
+                    self.error += 1
+                    return False
         elif (
             self.task.processing_type_id == 6 and self.task.processing_code is not None
         ):
@@ -659,14 +688,24 @@ class Runner:
     def __get_query(self):
         query = "error"
         if self.task.source_query_type_id == 3:  # url
-            query = SourceCode(
-                task=self.task, url=self.task.source_url, job_hash=self.job_hash
-            ).web_url()
+            try:
+                query = SourceCode(
+                    task=self.task, url=self.task.source_url, job_hash=self.job_hash
+                ).web_url()
+            # pylint: disable=broad-except
+            except BaseException:
+                self.error += 1
+                return False
 
         elif self.task.source_query_type_id == 1:  # gitlab url
-            query = SourceCode(
-                task=self.task, url=self.task.source_git, job_hash=self.job_hash
-            ).gitlab()
+            try:
+                query = SourceCode(
+                    task=self.task, url=self.task.source_git, job_hash=self.job_hash
+                ).gitlab()
+            # pylint: disable=broad-except
+            except BaseException:
+                self.error += 1
+                return False
 
         elif self.task.source_query_type_id == 4:  # code
             query = SourceCode(
@@ -807,7 +846,7 @@ class Runner:
                 path=smb_path,
                 task_id=self.task.id,
                 job_id=self.job_hash,
-                size=file_size(os.path.getsize(self.temp_path)),
+                size=file_size(os.path.getsize(self.file_path)),
             )
         )
         db.session.commit()

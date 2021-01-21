@@ -23,15 +23,13 @@ import time
 from ftplib import FTP  # noqa: S402
 from pathlib import Path
 
-from flask import current_app as app
-
+from crypto import em_decrypt
 from em_runner import db
 from em_runner.model import TaskLog
+from error_print import full_stack
+from flask import current_app as app
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-
-from crypto import em_decrypt
-from error_print import full_stack
 
 
 class Ftp:
@@ -148,7 +146,7 @@ class Ftp:
             data = "".join(my_binary)
 
         # pylint: disable=broad-except
-        except BaseException:
+        except BaseException as e:
             data = ""
             logging.error(
                 "FTP: Failed to Read File: Task: %s, with run: %s\n%s",
@@ -169,6 +167,8 @@ class Ftp:
             )
             db.session.add(log)
             db.session.commit()
+
+            raise e
 
         self.__close()
         return data

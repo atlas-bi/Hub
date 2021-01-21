@@ -126,4 +126,4 @@ Publish:
     - apt-get install -y -qq sshpass curl > /dev/null
   script:
     - export SSHPASS=$USER_PASS
-    - sshpass -e ssh -t -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "bash -c "$(curl -kfsSl -H "PRIVATE-TOKEN:$TOKEN" $URL)""
+    - sshpass -e ssh -t -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "bash -c \"$(curl -kfsSl -H \"PRIVATE-TOKEN:$TOKEN\" $URL)\""

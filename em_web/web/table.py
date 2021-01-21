@@ -30,11 +30,6 @@ import html
 import json
 
 import requests
-from flask import Blueprint
-from flask import current_app as app
-from flask import jsonify, request, session
-from sqlalchemy import and_, text
-
 from em_web import db, ldap
 from em_web.model import (
     ConnectionDatabase,
@@ -51,6 +46,10 @@ from em_web.model import (
     TaskStatus,
     User,
 )
+from flask import Blueprint
+from flask import current_app as app
+from flask import jsonify, request, session
+from sqlalchemy import and_, text
 
 table_bp = Blueprint("table_bp", __name__)
 
@@ -120,7 +119,7 @@ def project_list(my_type="all"):
     me.append({"total": projects.count() or 0})  # runs.total
     me.append({"page": page})  # page
     me.append({"sort": sort})  # page
-    me.append({"empty_msg": "No log messages."})
+    me.append({"empty_msg": "No projects."})
 
     for proj in projects.limit(10).offset(page * 10).all():
         proj = dict(zip(cols.keys(), proj))
@@ -1251,7 +1250,7 @@ def dash_error_log():
         me.append(
             {
                 "Task Name": '<a class="em-link" href="/task/'
-                + str(log["Log Id"])
+                + str(log["Task Id"])
                 + '">'
                 + log["Task Name"]
                 + "</a>"

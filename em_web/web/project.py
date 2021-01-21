@@ -19,12 +19,11 @@
 import datetime
 
 import requests
+from em_web import cache, db, ldap
+from em_web.model import Project, Task, TaskFile, TaskLog, User
 from flask import Blueprint
 from flask import current_app as app
 from flask import redirect, render_template, request, session, url_for
-
-from em_web import cache, db, ldap
-from em_web.model import Project, Task, TaskFile, TaskLog, User
 
 project_bp = Blueprint("project_bp", __name__)
 
@@ -495,6 +494,7 @@ def disable_all_project_tasks(project_id):
     tasks = Task.query.filter_by(project_id=project_id).all()
     for task in tasks:
         task.enabled = 0
+        task.next_run = None
         db.session.commit()
 
         try:

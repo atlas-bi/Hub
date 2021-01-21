@@ -25,17 +25,16 @@ import time
 import urllib
 from pathlib import Path
 
-from flask import current_app as app
-from smb.SMBConnection import SMBConnection
-
+from crypto import em_decrypt
 from em_runner import db, redis_client
 from em_runner.model import TaskLog
 from em_runner.scripts.smb_fix import SMBHandler
+from error_print import full_stack
+from flask import current_app as app
+from smb.base import SMBTimeout
+from smb.SMBConnection import SMBConnection
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-
-from crypto import em_decrypt
-from error_print import full_stack
 
 
 class Smb:
@@ -106,6 +105,21 @@ class Smb:
 
         Because we want to use existing connection we will not close them...
         """
+
+        def connect():
+            if self.conn is None:
+                self.conn = SMBConnection(
+                    self.username,
+                    em_decrypt(self.password, app.config["PASS_KEY"]),
+                    "EM2.0 Webapp",
+                    self.server_name,
+                    use_ntlm_v2=True,
+                )
+
+                redis_client.set(
+                    "smb_connection_" + self.server_name, pickle.dumps(self.conn)
+                )
+
         try:
             logging.info(
                 "SMB: Connecting: Task: %s, with run: %s",
@@ -120,18 +134,7 @@ class Smb:
             # there is no timeout in paramiko so...
             # continue to attemp to login during time limit
             # if we are getting timeout exceptions
-            if self.conn is None:
-                self.conn = SMBConnection(
-                    self.username,
-                    em_decrypt(self.password, app.config["PASS_KEY"]),
-                    "EM2.0 Webapp",
-                    self.server_name,
-                    use_ntlm_v2=True,
-                )
-
-                redis_client.set(
-                    "smb_connection_" + self.server_name, pickle.dumps(self.conn)
-                )
+            connect()
 
             # make connection is not already connected.
             timeout = time.time() + 60 * 3  # 3 mins from now
@@ -142,10 +145,12 @@ class Smb:
                         raise AssertionError()
                     break
 
-                except (AssertionError, ConnectionResetError) as e:
+                except (AssertionError, ConnectionResetError, SMBTimeout) as e:
                     # pylint: disable=no-else-continue
                     if time.time() <= timeout:
                         time.sleep(30)  # wait 30 sec before retrying
+                        # recreate login
+                        connect()
                         continue
                     elif time.time() > timeout:
                         # pylint: disable=raise-missing-from
@@ -346,7 +351,7 @@ class Smb:
 
             return temp.name
         # pylint: disable=broad-except
-        except BaseException:
+        except BaseException as e:
 
             logging.error(
                 "SMB: Failed to Read File: Task: %s, with run: %s\n%s",
@@ -367,7 +372,7 @@ class Smb:
             )
             db.session.add(log)
             db.session.commit()
-            return ""
+            raise e
 
     def save(self):
         """Load data into network file path, creating location if not existing.

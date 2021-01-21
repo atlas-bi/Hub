@@ -27,14 +27,13 @@ from pathlib import Path
 import requests
 import urllib3
 from bs4 import BeautifulSoup
-from flask import current_app as app
-
 from em_runner import db, redis_client
 from em_runner.model import TaskLog
+from error_print import full_stack
+from flask import current_app as app
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
-from error_print import full_stack
 
 urllib3.disable_warnings()
 
@@ -209,7 +208,7 @@ class SourceCode:
                 )
 
             # pylint: disable=broad-except
-            except BaseException:
+            except BaseException as e:
                 logging.error(
                     "Source: Failed Getting GitLab: %s\n%s", self.url, str(full_stack())
                 )
@@ -225,6 +224,8 @@ class SourceCode:
                 )
                 db.session.add(log)
                 db.session.commit()
+
+                raise e
 
         log = TaskLog(
             task_id=self.task.id,
@@ -261,7 +262,7 @@ class SourceCode:
             )
 
         # pylint: disable=broad-except
-        except BaseException:
+        except BaseException as e:
             logging.error(
                 "Source: Failed Getting GitLab: %s\n%s", self.url, str(full_stack())
             )
@@ -277,6 +278,8 @@ class SourceCode:
             )
             db.session.add(log)
             db.session.commit()
+
+            raise e
         return -1
 
     def source(self):

@@ -23,14 +23,13 @@ import time
 from pathlib import Path
 
 import paramiko
-from flask import current_app as app
-
+from crypto import em_decrypt
 from em_runner import db
 from em_runner.model import TaskLog
+from error_print import full_stack
+from flask import current_app as app
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from crypto import em_decrypt
-from error_print import full_stack
 
 
 class Sftp:
@@ -61,6 +60,7 @@ class Sftp:
         self.job_hash = job_hash
         self.transport = ""
         self.conn = ""
+        self.key = None
 
     def __connect(self):
 
@@ -83,18 +83,37 @@ class Sftp:
                         + str((self.connection.port or 22))
                     )
 
+                    # build ssh key file
+                    if self.connection.key:
+                        with tempfile.NamedTemporaryFile(
+                            mode="w+", newline=""
+                        ) as key_file:
+                            key_file.write(
+                                em_decrypt(self.connection.key, app.config["PASS_KEY"])
+                            )
+                            key_file.seek(0)
+
+                            self.key = paramiko.RSAKey.from_private_key_file(
+                                key_file.name,
+                                password=em_decrypt(
+                                    self.connection.password, app.config["PASS_KEY"]
+                                ),
+                            )
+
                     self.transport.connect(
                         username=self.connection.username,
-                        password=em_decrypt(
-                            self.connection.password, app.config["PASS_KEY"]
+                        password=(
+                            em_decrypt(self.connection.password, app.config["PASS_KEY"])
+                            if self.key is None
+                            else ""
                         ),
-                        pkey=(self.connection.key if self.connection.key else None),
+                        pkey=self.key,
                     )
 
                     self.conn = paramiko.SFTPClient.from_transport(self.transport)
 
                     break
-                except paramiko.ssh_exception.AuthenticationException as e:
+                except (paramiko.ssh_exception.AuthenticationException, EOFError) as e:
                     # pylint: disable=no-else-continue
                     if str(e) == "Authentication timeout." and time.time() <= timeout:
                         time.sleep(10)  # wait 10 sec before retrying

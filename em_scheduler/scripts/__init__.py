@@ -18,7 +18,6 @@
 
 import datetime
 
-import pytz
 from apscheduler.events import (
     EVENT_JOB_ADDED,
     EVENT_JOB_ERROR,
@@ -27,7 +26,6 @@ from apscheduler.events import (
     EVENT_JOB_REMOVED,
     EVENT_JOB_SUBMITTED,
 )
-
 from em_scheduler import db
 from em_scheduler.model import Task, TaskLog
 
@@ -130,21 +128,25 @@ def event_log(app):
     def job_executed(event):
         with app.app_context():
             job = app.apscheduler.get_job(event.job_id)
-            task = Task.query.filter_by(
-                id=job.args[0] if job else event.job_id.split("-")[1]
-            ).first()
-            ex_time = (
-                datetime.datetime.now(datetime.timezone.utc) - event.scheduled_run_time
-            )
-            if task:
-                log = TaskLog(
-                    task_id=task.id if task else event.job_id,
-                    job_id=task.last_run_job_id or "",
-                    status_id=6,
-                    message="Job excecuted in " + str(ex_time) + ".",
+            if job:
+                task = (
+                    Task.query.filter_by(id=job.args[0]).first()
+                    if job and len(job.args) > 0
+                    else None
                 )
-                db.session.add(log)
-                db.session.commit()
+                if task:
+                    ex_time = (
+                        datetime.datetime.now(datetime.timezone.utc)
+                        - event.scheduled_run_time
+                    )
+                    log = TaskLog(
+                        task_id=(task.id if task else None),
+                        job_id=(task.last_run_job_id or "" if task else None),
+                        status_id=6,
+                        message="Job excecuted in " + str(ex_time) + ".",
+                    )
+                    db.session.add(log)
+                    db.session.commit()
 
     app.apscheduler.add_listener(job_executed, EVENT_JOB_EXECUTED)
 
@@ -152,44 +154,50 @@ def event_log(app):
         """Event is triggered when job is first created in scheduler not for repeat runs."""
         with app.app_context():
             job = app.apscheduler.get_job(event.job_id)
-            task = Task.query.filter_by(id=job.args[0]).first()
-            if task:
-                task.next_run = (
-                    (
-                        min(
-                            task.next_run.astimezone(),
-                            job.next_run_time.replace(tzinfo=pytz.UTC),
+            if job:
+                task = Task.query.filter_by(
+                    id=(job.args[0] if job.args else -1)
+                ).first()
+                if task:
+                    task.next_run = (
+                        (
+                            min(
+                                task.next_run.astimezone(),
+                                job.next_run_time,
+                            )
+                            if task.next_run is not None
+                            else job.next_run_time
                         )
-                        if task.next_run is not None
-                        else job.next_run_time.replace(tzinfo=pytz.UTC)
+                        if job
+                        else None
                     )
-                    if job
-                    else None
-                )
-                db.session.add(task)
-                db.session.commit()
-                log = TaskLog(
-                    task_id=task.id if task else event.job_id,
-                    status_id=6,
-                    error=(0 if job.next_run_time else 1),
-                    message=(
-                        "Job added. Scheduled for: "
-                        + datetime.datetime.strftime(
-                            job.next_run_time,
-                            "%a, %b %-d, %Y %H:%M:%S",
-                        )
-                        if job.next_run_time
-                        else "Job could not be scheduled. Verify project has a valid schedule."
-                    ),
-                )
-                db.session.add(log)
-                db.session.commit()
+                    db.session.commit()
+
+                    log = TaskLog(
+                        task_id=task.id if task else event.job_id,
+                        status_id=6,
+                        error=(0 if job.next_run_time else 1),
+                        message=(
+                            "Job added. Scheduled for: "
+                            + datetime.datetime.strftime(
+                                job.next_run_time,
+                                "%a, %b %-d, %Y %H:%M:%S",
+                            )
+                            if job.next_run_time
+                            else "Job could not be scheduled. Verify project has a valid schedule."
+                        ),
+                    )
+                    db.session.add(log)
+                    db.session.commit()
 
     app.apscheduler.add_listener(job_added, EVENT_JOB_ADDED)
 
     def job_removed(event):
         with app.app_context():
-            task = Task.query.filter_by(id=event.job_id.split("-")[1]).first()
+            task = Task.query.filter_by(
+                id=(event.job_id.split("-")[1] if "-" in event.job_id else -1)
+            ).first()
+
             if task:
                 log = TaskLog(
                     task_id=task.id if task else event.job_id,
@@ -205,31 +213,34 @@ def event_log(app):
         """Event is triggered when an already added job is run."""
         with app.app_context():
             job = app.apscheduler.get_job(event.job_id)
-            task = Task.query.filter_by(
-                id=job.args[0] if job else event.job_id.split("-")[1]
-            ).first()
-            if task:
-                task.next_run = (
-                    (
-                        min(
-                            task.next_run.astimezone(),
-                            job.next_run_time.replace(tzinfo=pytz.UTC),
-                        )
-                        if task.next_run is not None
-                        else job.next_run_time.replace(tzinfo=pytz.UTC)
-                    )
-                    if job
+            if job:
+                task = (
+                    Task.query.filter_by(id=job.args[0]).first()
+                    if job and len(job.args) > 0
                     else None
                 )
-                db.session.add(task)
-                db.session.commit()
+                if task:
+                    task.next_run = (
+                        (
+                            min(
+                                task.next_run.astimezone(),
+                                job.next_run_time,
+                            )
+                            if task.next_run is not None
+                            else job.next_run_time
+                        )
+                        if job
+                        else None
+                    )
+                    db.session.add(task)
+                    db.session.commit()
 
-                log = TaskLog(
-                    task_id=task.id if task else event.job_id,
-                    status_id=6,
-                    message="Job submitted.",
-                )
-                db.session.add(log)
-                db.session.commit()
+                    log = TaskLog(
+                        task_id=task.id if task else event.job_id,
+                        status_id=6,
+                        message="Job submitted.",
+                    )
+                    db.session.add(log)
+                    db.session.commit()
 
     app.apscheduler.add_listener(job_submitted, EVENT_JOB_SUBMITTED)

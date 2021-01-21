@@ -19,10 +19,7 @@
 import sys
 from pathlib import Path
 
-from flask import Blueprint
-from flask import current_app as app
-from flask import redirect, render_template, request, session, url_for
-
+from crypto import em_encrypt
 from em_web import db, ldap
 from em_web.model import (
     Connection,
@@ -34,10 +31,12 @@ from em_web.model import (
     ConnectionSsh,
     TaskLog,
 )
+from flask import Blueprint
+from flask import current_app as app
+from flask import redirect, render_template, request, session, url_for
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
-from crypto import em_encrypt
 
 connection_bp = Blueprint("connection_bp", __name__)
 
@@ -126,7 +125,9 @@ def connection_edit(connection_id):
             form["sftp" + sftp + "-user"] if form.get("sftp" + sftp + "-user") else ""
         )
         sftp_conn.key = (
-            form["sftp" + sftp + "-key"] if form.get("sftp" + sftp + "-key") else ""
+            em_encrypt(form["sftp" + sftp + "-key"], app.config["PASS_KEY"])
+            if form.get("sftp" + sftp + "-key")
+            else None
         )
         sftp_conn.password = em_encrypt(
             form["sftp" + sftp + "-pass"], app.config["PASS_KEY"]
@@ -304,7 +305,6 @@ def connection_edit(connection_id):
         database_conn.connection_id = my_connection.id
         database_conn.name = form["database" + database + "-name"]
         database_conn.type_id = form["database" + database + "-type"]
-        em_encrypt(form["database" + database + "-conn"], app.config["PASS_KEY"])
         database_conn.connection_string = em_encrypt(
             form["database" + database + "-conn"], app.config["PASS_KEY"]
         )
@@ -468,7 +468,7 @@ def connection_new():
                         else None
                     ),
                     key=(
-                        form["sftp" + sftp + "-key"]
+                        em_encrypt(form["sftp" + sftp + "-key"], app.config["PASS_KEY"])
                         if form.get("sftp" + sftp + "-key")
                         else None
                     ),

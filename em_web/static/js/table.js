@@ -29,7 +29,7 @@
     q = new XMLHttpRequest();
     q.open(
       "get",
-      el.getAttribute("data-src") + "?v=" + new Date().getTime(),
+      el.getAttribute("data-src"), //+ "&v=" + new Date().getTime(),
       true
     );
     q.send();

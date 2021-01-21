@@ -22,12 +22,6 @@ import json
 import os
 
 import requests
-from flask import Blueprint, Response
-from flask import current_app as app
-from flask import jsonify, redirect, render_template, request, session, url_for
-from RelativeToNow import relative_to_now
-from sqlalchemy import and_, text
-
 from em_web import db, ldap
 from em_web.model import (
     Connection,
@@ -48,6 +42,11 @@ from em_web.model import (
     TaskStatus,
     User,
 )
+from flask import Blueprint, Response
+from flask import current_app as app
+from flask import jsonify, redirect, render_template, request, session, url_for
+from RelativeToNow import relative_to_now
+from sqlalchemy import and_, text
 
 task_bp = Blueprint("task_bp", __name__)
 
@@ -1583,6 +1582,7 @@ def disable_task(task_id):
 
         task = Task.query.filter_by(id=task_id).first()
         task.enabled = 0
+        task.next_run = None
         db.session.commit()
 
         log = TaskLog(
@@ -1637,10 +1637,10 @@ def get_task_run(task_id, run_id):
     return render_template("pages/task/runDetails.html.j2", invalid=True, title="Error")
 
 
-@task_bp.route("/task/<task_id>/file/<run_id>/<file_id>/sendSftp")
+@task_bp.route("/task/<task_id>/file/<file_id>/sendSftp")
 @ldap.login_required
 @ldap.group_required(["Analytics"])
-def get_task_file_send_sftp(task_id, run_id, file_id):
+def get_task_file_send_sftp(task_id, file_id):
     """Reload task SFTP output.
 
     :url: /task/<task_id>/file/<run_id>/<file_id>/sendSftp
@@ -1651,6 +1651,7 @@ def get_task_file_send_sftp(task_id, run_id, file_id):
     :returns: redirect to task details.
     """
     try:
+        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
         requests.get(
             app.config["RUNNER_HOST"]
             + "/send_sftp/"
@@ -1696,10 +1697,10 @@ def get_task_file_send_sftp(task_id, run_id, file_id):
     return redirect(url_for("task_bp.get_task", task_id=task_id))
 
 
-@task_bp.route("/task/<task_id>/file/<run_id>/<file_id>/sendFtp")
+@task_bp.route("/task/<task_id>/file/<file_id>/sendFtp")
 @ldap.login_required
 @ldap.group_required(["Analytics"])
-def get_task_file_send_ftp(task_id, run_id, file_id):
+def get_task_file_send_ftp(task_id, file_id):
     """Reload task FTP output.
 
     :url: /task/<task_id>/file/<run_id>/<file_id>/sendFtp
@@ -1710,6 +1711,7 @@ def get_task_file_send_ftp(task_id, run_id, file_id):
     :returns: redirect to task details.
     """
     try:
+        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
         requests.get(
             app.config["RUNNER_HOST"]
             + "/send_ftp/"
@@ -1757,10 +1759,10 @@ def get_task_file_send_ftp(task_id, run_id, file_id):
     return redirect(url_for("task_bp.get_task", task_id=task_id))
 
 
-@task_bp.route("/task/<task_id>/file/<run_id>/<file_id>/sendSmb")
+@task_bp.route("/task/<task_id>/file/<file_id>/sendSmb")
 @ldap.login_required
 @ldap.group_required(["Analytics"])
-def get_task_file_send_smb(task_id, run_id, file_id):
+def get_task_file_send_smb(task_id, file_id):
     """Reload task SMB output.
 
     :url: /task/<task_id>/file/<run_id>/<file_id>/sendSmb
@@ -1771,6 +1773,7 @@ def get_task_file_send_smb(task_id, run_id, file_id):
     :returns: redirect to task details.
     """
     try:
+        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
         requests.get(
             app.config["RUNNER_HOST"]
             + "/send_smb/"
@@ -1817,10 +1820,10 @@ def get_task_file_send_smb(task_id, run_id, file_id):
     return redirect(url_for("task_bp.get_task", task_id=task_id))
 
 
-@task_bp.route("/task/<task_id>/file/<run_id>/<file_id>/sendEmail")
+@task_bp.route("/task/<task_id>/file/<file_id>/sendEmail")
 @ldap.login_required
 @ldap.group_required(["Analytics"])
-def get_task_file_send_email(task_id, run_id, file_id):
+def get_task_file_send_email(task_id, file_id):
     """Resend task email output.
 
     :url: /task/<task_id>/file/<run_id>/<file_id>/sendEmail
@@ -1830,19 +1833,48 @@ def get_task_file_send_email(task_id, run_id, file_id):
 
     :returns: redirect to task details.
     """
-    task = Task.query.filter_by(id=task_id).first()
+    try:
+        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
+        requests.get(
+            app.config["RUNNER_HOST"]
+            + "/send_email/"
+            + task_id
+            + "/"
+            + run_id
+            + "/"
+            + file_id
+        )
 
-    log = TaskLog(
-        task_id=task.id,
-        job_id=run_id,
-        status_id=7,
-        message="("
-        + session.get("user_full_name")
-        + ") Manually sending file to completion email: "
-        + file_id,
-    )
-    db.session.add(log)
-    db.session.commit()
+        task = Task.query.filter_by(id=task_id).first()
+
+        log = TaskLog(
+            task_id=task.id,
+            job_id=run_id,
+            status_id=7,
+            message="("
+            + session.get("user_full_name")
+            + ") Manually sending email with file: "
+            + file_id,
+        )
+        db.session.add(log)
+        db.session.commit()
+    # pylint: disable=broad-except
+    except BaseException as e:
+        log = TaskLog(
+            status_id=7,
+            task_id=task_id,
+            job_id=run_id,
+            error=1,
+            message=(
+                session.get("user_full_name")
+                + ": Failed to send email with file. ("
+                + task_id
+                + ")\n"
+                + str(e)
+            ),
+        )
+        db.session.add(log)
+        db.session.commit()
 
     return redirect(url_for("task_bp.get_task", task_id=task_id))
 

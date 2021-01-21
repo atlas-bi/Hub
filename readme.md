@@ -59,7 +59,7 @@ An install script is provided to easily install EM2 onto your Ubuntu server. Upd
 
 The publish takes place over SSH from a git server. It is possible to use an accesskey when publishing from fabric.
 
-Update username and hostname with your planned login.
+Update username and hostname with your planned login. Commands require sudo. `sudo bash...`
 
 
 | Method | Command                                                                                                                           |
