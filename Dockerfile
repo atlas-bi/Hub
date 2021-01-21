@@ -32,7 +32,7 @@ RUN apt-get install -y -qq \
 
 WORKDIR /app
 
-RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
+RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" .  \
     && python -m pip install --disable-pip-version-check poetry \
     && poetry config virtualenvs.create false \
     && poetry install \
@@ -48,4 +48,4 @@ RUN /etc/init.d/postgresql start && flask db init && flask db migrate && flask d
 
 EXPOSE 5000
 
-CMD (/etc/init.d/postgresql start &) && (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --port=5000
+CMD (/etc/init.d/redis-server start &) && (/etc/init.d/postgresql start &) && (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

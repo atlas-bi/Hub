@@ -52,8 +52,8 @@ task_bp = Blueprint("task_bp", __name__)
 
 
 @task_bp.route("/task/<task_id>/duplicate")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_duplicate(task_id):
     """Duplicate a task.
 
@@ -101,8 +101,8 @@ def task_duplicate(task_id):
 
 
 @task_bp.route("/task/<task_id>/hello")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_hello(task_id):
     """Get basic task info.
 
@@ -130,8 +130,8 @@ def task_hello(task_id):
 
 
 @task_bp.route("/task/<task_id>/delete")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_delete(task_id):
     """Delete a task.
 
@@ -185,8 +185,8 @@ def task_delete(task_id):
 
 
 @task_bp.route("/task")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_all():
     """Page for all tasks.
 
@@ -200,8 +200,8 @@ def task_all():
 
 
 @task_bp.route("/task/mine")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_mine():
     """Page for my tasks.
 
@@ -222,8 +222,8 @@ def task_mine():
 
 
 @task_bp.route("/task/user/<user_id>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_user(user_id):
     """Page for tasks for a specific user.
 
@@ -251,8 +251,8 @@ def task_user(user_id):
 
 
 @task_bp.route("/project/<project_id>/task/new", methods=["GET", "POST"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_new(project_id):
     """Create a new task.
 
@@ -643,8 +643,8 @@ def task_new(project_id):
 
 
 @task_bp.route("/task/<task_id>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task(task_id):
     """Get task details page.
 
@@ -687,8 +687,8 @@ def get_task(task_id):
 
 
 @task_bp.route("/task/<task_id>/edit", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_edit_get(task_id):
     """Task edit page.
 
@@ -850,8 +850,8 @@ def task_edit_get(task_id):
 
 
 @task_bp.route("/task/<task_id>/git")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_get_git_code(task_id):
     """Get git code for a task.
 
@@ -889,8 +889,8 @@ def task_get_git_code(task_id):
 
 
 @task_bp.route("/task/<task_id>/source")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_get_source_code(task_id):
     """Get git code for a task.
 
@@ -928,8 +928,8 @@ def task_get_source_code(task_id):
 
 
 @task_bp.route("/task/<task_id>/url")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_get_url_code(task_id):
     """Get non-git source code for a task.
 
@@ -967,8 +967,8 @@ def task_get_url_code(task_id):
 
 
 @task_bp.route("/task/<task_id>/processing_git")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_get_processing_git_code(task_id):
     """Get git code for a task.
 
@@ -1008,8 +1008,8 @@ def task_get_processing_git_code(task_id):
 
 
 @task_bp.route("/task/<task_id>/processing_url")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_get_processing_url_code(task_id):
     """Get non-git code for a task.
 
@@ -1049,8 +1049,8 @@ def task_get_processing_url_code(task_id):
 
 
 @task_bp.route("/task/<task_id>/edit", methods=["POST"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_edit_post(task_id):
     """Save task edits.
 
@@ -1430,8 +1430,8 @@ def task_edit_post(task_id):
 
 
 @task_bp.route("/task/<task_id>/run")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def run_task_now(task_id):
     """Run a task.
 
@@ -1472,8 +1472,8 @@ def run_task_now(task_id):
 
 
 @task_bp.route("/task/<task_id>/schedule")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def schedule_task(task_id):
     """Add a task to scheduler.
 
@@ -1514,8 +1514,8 @@ def schedule_task(task_id):
 
 
 @task_bp.route("/task/<task_id>/enable")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def enable_task(task_id):
     """Enable a task.
 
@@ -1567,8 +1567,8 @@ def enable_task(task_id):
 
 
 @task_bp.route("/task/<task_id>/disable")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def disable_task(task_id):
     """Disable a task.
 
@@ -1613,8 +1613,8 @@ def disable_task(task_id):
 
 
 @task_bp.route("/task/<task_id>/log/<run_id>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_run(task_id, run_id):
     """Get task run details.
 
@@ -1638,8 +1638,8 @@ def get_task_run(task_id, run_id):
 
 
 @task_bp.route("/task/<task_id>/file/<file_id>/sendSftp")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_file_send_sftp(task_id, file_id):
     """Reload task SFTP output.
 
@@ -1698,8 +1698,8 @@ def get_task_file_send_sftp(task_id, file_id):
 
 
 @task_bp.route("/task/<task_id>/file/<file_id>/sendFtp")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_file_send_ftp(task_id, file_id):
     """Reload task FTP output.
 
@@ -1760,8 +1760,8 @@ def get_task_file_send_ftp(task_id, file_id):
 
 
 @task_bp.route("/task/<task_id>/file/<file_id>/sendSmb")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_file_send_smb(task_id, file_id):
     """Reload task SMB output.
 
@@ -1821,8 +1821,8 @@ def get_task_file_send_smb(task_id, file_id):
 
 
 @task_bp.route("/task/<task_id>/file/<file_id>/sendEmail")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_file_send_email(task_id, file_id):
     """Resend task email output.
 
@@ -1880,8 +1880,8 @@ def get_task_file_send_email(task_id, file_id):
 
 
 @task_bp.route("/file/<file_id>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_file_download(file_id):
     """Download task backup file.
 
@@ -1928,8 +1928,8 @@ def get_task_file_download(file_id):
 
 
 @task_bp.route("/task/<task_id>/runlog/<run_id>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_run_log(task_id, run_id):
     """Build json dataset for ajax tables of tasklog.
 
@@ -1992,8 +1992,8 @@ def get_task_run_log(task_id, run_id):
 
 
 @task_bp.route("/task/sftp-dest")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_sftp_dest():
     """Template to add sftp destination to a task.
 
@@ -2017,8 +2017,8 @@ def task_sftp_dest():
 
 
 @task_bp.route("/task/sftp-source")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_sftp_source():
     """Template to add sftp source to a task.
 
@@ -2042,8 +2042,8 @@ def task_sftp_source():
 
 
 @task_bp.route("/task/ssh-source")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_ssh_source():
     """Template to add ssh source to a task.
 
@@ -2067,8 +2067,8 @@ def task_ssh_source():
 
 
 @task_bp.route("/task/sftp-query")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_sftp_query():
     """Template to add sftp query source to a task.
 
@@ -2092,8 +2092,8 @@ def task_sftp_query():
 
 
 @task_bp.route("/task/sftp-processing")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_sftp_processing():
     """Template to add sftp processing source to a task.
 
@@ -2118,8 +2118,8 @@ def task_sftp_processing():
 
 
 @task_bp.route("/task/ftp-dest")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_ftp_dest():
     """Template to add ftp destination to a task.
 
@@ -2140,8 +2140,8 @@ def task_ftp_dest():
 
 
 @task_bp.route("/task/ftp-source")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_ftp_source():
     """Template to add ftp source to a task.
 
@@ -2165,8 +2165,8 @@ def task_ftp_source():
 
 
 @task_bp.route("/task/ftp-processing")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_ftp_processing():
     """Template to add ftp processing source to a task.
 
@@ -2189,8 +2189,8 @@ def task_ftp_processing():
 
 
 @task_bp.route("/task/ftp-query")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_ftp_query():
     """Template to add ftp query source to a task.
 
@@ -2214,8 +2214,8 @@ def task_ftp_query():
 
 
 @task_bp.route("/task/smb-source")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_smb_source():
     """Template to add smb source to a task.
 
@@ -2239,8 +2239,8 @@ def task_smb_source():
 
 
 @task_bp.route("/task/smb-dest")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_smb_dest():
     """Template to add smb destination to a task.
 
@@ -2261,8 +2261,8 @@ def task_smb_dest():
 
 
 @task_bp.route("/task/smb-query")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_smb_query():
     """Template to add smb query source to a task.
 
@@ -2286,8 +2286,8 @@ def task_smb_query():
 
 
 @task_bp.route("/task/smb-processing")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_smb_processing():
     """Template to add smb processing source to a task.
 
@@ -2311,8 +2311,8 @@ def task_smb_processing():
 
 
 @task_bp.route("/task/database-source")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_database_source():
     """Template to add database source to a task.
 
@@ -2336,8 +2336,8 @@ def task_database_source():
 
 
 @task_bp.route("/task/<task_id>/reset")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_reset(task_id):
     """Reset a task status to completed.
 

@@ -36,8 +36,8 @@ dashboard_bp = Blueprint("dashboard_bp", __name__)
 
 
 @dashboard_bp.route("/")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash():
     """Home page.
 
@@ -48,8 +48,8 @@ def dash():
 
 
 @dashboard_bp.route("/dash/errorGauge")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_error_gauge():
     """Guage showing number of errored tasks.
 
@@ -108,8 +108,8 @@ def dash_error_gauge():
 
 
 @dashboard_bp.route("/dash/runGauge")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_run_gauge():
     """Guage showing number of tasks run.
 
@@ -143,8 +143,8 @@ def dash_run_gauge():
 
 
 @dashboard_bp.route("/dash/orphans/delete")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_orphans_delete():
     """Button to delete any jobs without a linked tasks.
 
@@ -180,8 +180,8 @@ def dash_orphans_delete():
 
 
 @dashboard_bp.route("/dash/errored/run")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_errored_run():
     """Button to run all errored tasks.
 
@@ -194,8 +194,8 @@ def dash_errored_run():
 
 
 @dashboard_bp.route("/dash/errored/schedule")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_errored_schedule():
     """Button to schedule all errored tasks.
 
@@ -208,8 +208,8 @@ def dash_errored_schedule():
 
 
 @dashboard_bp.route("/dash/scheduled/run")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_scheduled_run():
     """Button to run all scheduled tasks.
 
@@ -222,8 +222,8 @@ def dash_scheduled_run():
 
 
 @dashboard_bp.route("/dash/scheduled/reschedule")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_scheduled_reschedule():
     """Button to reschedule all scheduled tasks.
 
@@ -236,8 +236,8 @@ def dash_scheduled_reschedule():
 
 
 @dashboard_bp.route("/dash/scheduled/disable")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_scheduled_disable():
     """Button to disable all scheduled tasks.
 

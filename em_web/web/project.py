@@ -29,8 +29,8 @@ project_bp = Blueprint("project_bp", __name__)
 
 
 @project_bp.route("/project")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project():
     """List all projects.
 
@@ -45,8 +45,8 @@ def project():
 
 @project_bp.route("/project/user", defaults={"user_id": None})
 @project_bp.route("/project/user/<user_id>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_user(user_id):
     """List projects for a specific user.
 
@@ -90,8 +90,8 @@ def project_user(user_id):
 
 
 @project_bp.route("/project/<project_id>", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_get(project_id):
     """Project detail page.
 
@@ -109,8 +109,8 @@ def project_get(project_id):
 
 
 @project_bp.route("/project/<project_id>/edit", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_edit_get(project_id):
     """Project editor page.
 
@@ -130,8 +130,8 @@ def project_edit_get(project_id):
 
 
 @project_bp.route("/project/<project_id>/edit", methods=["POST"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_edit_post(project_id):
     """Save project edits.
 
@@ -284,8 +284,8 @@ def project_edit_post(project_id):
 
 
 @project_bp.route("/project/new", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 @cache.cached(timeout=120)
 def project_new_form():
     """Create a new project page.
@@ -302,8 +302,8 @@ def project_new_form():
 
 
 @project_bp.route("/project/new", methods=["POST"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_new():
     """Save a new project.
 
@@ -409,8 +409,8 @@ def project_new():
 
 
 @project_bp.route("/project/<project_id>/delete")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_delete(project_id):
     """Delete a project.
 
@@ -481,8 +481,8 @@ def project_delete(project_id):
 
 
 @project_bp.route("/project/<project_id>/disable")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def disable_all_project_tasks(project_id):
     """Disable all tasks in a project.
 
@@ -524,8 +524,8 @@ def disable_all_project_tasks(project_id):
 
 
 @project_bp.route("/project/<project_id>/enable")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def enable_all_project_tasks(project_id):
     """Enable all tasks in a project.
 
@@ -564,8 +564,8 @@ def enable_all_project_tasks(project_id):
 
 
 @project_bp.route("/project/<project_id>/run")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def run_all_project_tasks(project_id):
     """Run all tasks in a project.
 

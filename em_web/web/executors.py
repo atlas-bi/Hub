@@ -31,8 +31,8 @@ executors_bp = Blueprint("executors_bp", __name__)
 
 
 @executors_bp.route("/executor/status")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def executor_status():
     """Get list of active executor jobs.
 

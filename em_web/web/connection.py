@@ -42,8 +42,8 @@ connection_bp = Blueprint("connection_bp", __name__)
 
 
 @connection_bp.route("/connection")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection():
     """List connections.
 
@@ -65,8 +65,8 @@ def connection():
 
 
 @connection_bp.route("/connection/<connection_id>", methods=["POST", "GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_edit(connection_id):
     """Get or edit existing connections.
 
@@ -348,8 +348,8 @@ def connection_edit(connection_id):
 
 
 @connection_bp.route("/connection/sftp")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_sftp():
     """Page for adding a SFTP Connection.
 
@@ -361,8 +361,8 @@ def connection_sftp():
 
 
 @connection_bp.route("/connection/smb")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_smb():
     """Page for adding a SMB Connection.
 
@@ -374,8 +374,8 @@ def connection_smb():
 
 
 @connection_bp.route("/connection/ssh")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_ssh():
     """Page for adding a SSH Connection.
 
@@ -387,8 +387,8 @@ def connection_ssh():
 
 
 @connection_bp.route("/connection/database")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_database():
     """Page for adding a Database Connection.
 
@@ -406,8 +406,8 @@ def connection_database():
 
 
 @connection_bp.route("/connection/ftp")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_ftp():
     """Page for adding a FTP Connection.
 
@@ -419,8 +419,8 @@ def connection_ftp():
 
 
 @connection_bp.route("/connection/new", methods=["POST", "GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_new():
     """Page for adding a new connection group.
 
@@ -666,8 +666,8 @@ def connection_new():
 
 
 @connection_bp.route("/connection/remove/<connection_id>", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove(connection_id):
     """Delete a connection group.
 
@@ -698,8 +698,8 @@ def connection_remove(connection_id):
 @connection_bp.route(
     "/connection/<connection_id>/removeSftp/<sftp_id>", methods=["GET"]
 )
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_sftp(connection_id, sftp_id):
     """Delete a SFPT connection from group.
 
@@ -726,8 +726,8 @@ def connection_remove_sftp(connection_id, sftp_id):
 
 
 @connection_bp.route("/connection/<connection_id>/removeSsh/<ssh_id>", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_ssh(connection_id, ssh_id):
     """Delete a SSH connection from group.
 
@@ -754,8 +754,8 @@ def connection_remove_ssh(connection_id, ssh_id):
 
 
 @connection_bp.route("/connection/<connection_id>/removeSmb/<smb_id>", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_smb(connection_id, smb_id):
     """Delete a SMB connection from group.
 
@@ -782,8 +782,8 @@ def connection_remove_smb(connection_id, smb_id):
 
 
 @connection_bp.route("/connection/<connection_id>/removeFtp/<ftp_id>", methods=["GET"])
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_ftp(connection_id, ftp_id):
     """Delete a FPT connection from group.
 
@@ -812,8 +812,8 @@ def connection_remove_ftp(connection_id, ftp_id):
 @connection_bp.route(
     "/connection/<connection_id>/removeDatabase/<database_id>", methods=["GET"]
 )
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_remove_database(connection_id, database_id):
     """Delete a database connection from group.
 

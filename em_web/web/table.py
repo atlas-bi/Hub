@@ -55,8 +55,8 @@ table_bp = Blueprint("table_bp", __name__)
 
 
 @table_bp.route("/table/project/<my_type>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_list(my_type="all"):
     """Build json dataset for ajax tables.
 
@@ -168,8 +168,8 @@ def project_list(my_type="all"):
 
 
 @table_bp.route("/table/tasklog/userevents")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def table_tasklog_userevents():
     """Table of all user events.
 
@@ -250,8 +250,8 @@ def table_tasklog_userevents():
 
 
 @table_bp.route("/table/user/auth")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def table_user_auth():
     """Table of all user login events.
 
@@ -308,8 +308,8 @@ def table_user_auth():
 
 
 @table_bp.route("/table/connection/<connection_id>/tasks")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def connection_task(connection_id):
     """Get a table of any tasks associated with the connection.
 
@@ -495,8 +495,8 @@ def connection_task(connection_id):
 
 
 @table_bp.route("/table/jobs/orphans")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def table_jobs_orphans():
     """Get a table of any jobs without a linked task.
 
@@ -557,8 +557,8 @@ def table_jobs_orphans():
 
 
 @table_bp.route("/table/tasks/<task_type>")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_errored(task_type):
     """Get a table of any jobs marked error.
 
@@ -689,8 +689,8 @@ def dash_errored(task_type):
 
 
 @table_bp.route("/table/tasks/<my_type>/list")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_list(my_type):
     """Build json dataset for ajax tables.
 
@@ -826,8 +826,8 @@ def task_list(my_type):
 
 
 @table_bp.route("/table/project/<project_id>/task")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_task_all(project_id):
     """Build json dataset for ajax tables of tasks for a project.
 
@@ -917,8 +917,8 @@ def project_task_all(project_id):
 
 
 @table_bp.route("/table/project/<project_id>/tasklog")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def project_task_log_all(project_id):
     """Build project tasklog json dataset for ajax tables.
 
@@ -1002,8 +1002,8 @@ def project_task_log_all(project_id):
 
 
 @table_bp.route("/table/task/<task_id>/log")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def task_log(task_id):
     """Build tasklog json dataset for ajax tables.
 
@@ -1081,8 +1081,8 @@ def task_log(task_id):
 
 
 @table_bp.route("/table/tasks/log")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_log():
     """Get a table of all task logs.
 
@@ -1191,8 +1191,8 @@ def dash_log():
 
 
 @table_bp.route("/table/tasks/errorLog")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash_error_log():
     """Get a table of all task error logs.
 
@@ -1302,8 +1302,8 @@ def dash_error_log():
 
 
 @table_bp.route("/table/task/<task_id>/files")
-@ldap.login_required
-@ldap.group_required(["Analytics"])
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def get_task_files(task_id):
     """Build backup files associated with task as json dataset.
 
