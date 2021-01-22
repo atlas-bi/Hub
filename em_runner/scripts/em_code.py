@@ -152,7 +152,7 @@ class SourceCode:
                         str(count),
                         self.url,
                     )
-                    time.sleep(5)
+                    time.sleep(10)
                     session = requests.session()
                     page = session.get(app.config["GIT_URL"], verify=False)
                     soup = BeautifulSoup(page.text, "html.parser")
@@ -168,11 +168,6 @@ class SourceCode:
                         verify=False,
                     )
 
-                    # save session cookies after logging in
-                    redis_client.set(
-                        "gitlab_session_cookie", pickle.dumps(session.cookies)
-                    )
-
                     page = requests.get(
                         self.url, verify=False, cookies=session.cookies  # noqa: S501
                     )
@@ -180,10 +175,14 @@ class SourceCode:
                     count += 1
 
                     if page.status_code == 200 and "Sign in · GitLab" not in page.text:
+                        # save session cookies after logging in
+                        redis_client.set(
+                            "gitlab_session_cookie", pickle.dumps(session.cookies)
+                        )
                         break
 
                 if "Sign in · GitLab" in page.text:
-                    raise Exception("Failed to login.")
+                    raise Exception("Failed to login after %s attempts." % count)
 
                 # decriment session counter
                 session_count = redis_client.zincrby("gitlab_session_count", -1, "inc")

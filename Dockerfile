@@ -46,4 +46,4 @@ ENV FLASK_ENV=test \
 
 RUN /etc/init.d/postgresql start && flask db init && flask db migrate && flask db upgrade && flask seed && flask seed_demo
 
-CMD (/etc/init.d/redis-server start &) && (/etc/init.d/postgresql start &) && (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT
+CMD (redis-server &) && (/etc/init.d/postgresql start &) && (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

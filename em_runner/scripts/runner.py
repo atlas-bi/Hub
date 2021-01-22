@@ -60,6 +60,23 @@ env = Environment(
 env.filters["datetime_format"] = datetime_format
 
 
+# set the limit for a csv cell value to something massive.
+# this is needed when users are building xml in a sql query
+# and have one very large column.
+
+MAX_INT = sys.maxsize
+
+while True:
+    # decrease the MAX_INT value by factor 10
+    # as long as the OverflowError occurs.
+
+    try:
+        csv.field_size_limit(MAX_INT)
+        break
+    except OverflowError:
+        MAX_INT = int(MAX_INT / 10)
+
+
 class Runner:
     """Group of functions used to run a task."""
 

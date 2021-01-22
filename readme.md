@@ -152,6 +152,18 @@ sudo visudo
 %webapp ALL=NOPASSWD: /bin/systemctl restart *
 ```
 
+If you will have "long running" tasks, it may be wise to increase the nginx timeout. (Gunicorn timeouts are already increased in the app install files.)
+
+```sh
+# open nginx config
+sudo nano /etc/nginx/nginx.conf
+
+# add these in the http secion. all for good luck...
+fastcgi_connect_timeout 999s;
+proxy_connect_timeout 999s;
+proxy_read_timeout 999s;
+```
+
 ## Credits
 
 Atlas was created by the Riverside Healthcare Analytics team -
