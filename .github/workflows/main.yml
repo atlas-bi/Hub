@@ -11,7 +11,7 @@ on:
 
 jobs:
   docs:
-    runs-on: christopherpickering/extract-management-2-python39-test
+    container: christopherpickering/extract-management-2-python39-test
     steps:
       - name: build
         run: tox -e docs
