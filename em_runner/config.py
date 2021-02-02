@@ -78,6 +78,7 @@ class Config:
     }
 
     WEB_HOST = "https://taskscheduler.riversidehealthcare.net"
+    SCHEUDULER_HOST = "http://127.0.0.1:5001/api"
 
     EXECUTOR_TYPE = "thread"
     EXECUTOR_MAX_WORKERS = 12

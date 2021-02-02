@@ -65,6 +65,44 @@
 		{% endif %}
 	{% endif %}
 
+	<!-- embeded file -->
+	{% if output and output|length > 0 %}
+		<h3>Output</h3>
+		<table style="margin-top:25px;margin-bottom:25px;border: 1px solid #d9d9d9;border-radius: 3px;border-spacing: 0;width: 100%;border-top: none;position: relative;white-space: pre-wrap;max-width: 100%;">
+			{% if task.source_query_include_header %}
+			<thead>
+				<tr style="background: #078992;border: none;color: #fff;border-top-right-radius: 3px;border-top-left-radius: 3px;">
+					{% for item in output[0] %}
+						{% if loop.index0 == 0 %}
+							<th style="border-top-left-radius: 3px;">{{ item }}</th>
+						{% elif loop.index == loop.length %}
+							<th style="border-top-right-radius: 3px;">{{ item }}</th>
+						{% else %}
+							<th>{{ item }}</th>
+						{% endif %}
+					{% endfor %}
+				</tr>
+			</thead>
+			{% endif %}
+			<tbody>
+				{% for row in output %}
+					{% if task.source_query_include_header and loop.index0 == 0 %}
+					{% else %}
+						<tr>
+							{% for cell in row %}
+								{% if loop.index0 > 0 %}
+									<td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;">{{ cell }}</td>
+								{% else %}
+									<td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;">{{ cell }}</td>
+								{% endif %}
+							{% endfor %}
+						</tr>
+					{% endif %}
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+
 	<!-- logs -->
 	{% if logs|length > 0 and ((task.email_completion_log == 1 and success == 1) or success == 0)%}
 		<h3>Logs</h3>

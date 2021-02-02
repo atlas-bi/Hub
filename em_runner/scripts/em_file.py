@@ -192,7 +192,7 @@ class File:
 
         try:
 
-            with open(self.data_file, "r") as data_file:
+            with open(self.data_file, "r", newline="") as data_file:
                 reader = csv.reader(data_file)
 
                 with open(self.file_path, mode="w") as myfile:

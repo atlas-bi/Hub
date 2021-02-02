@@ -50,12 +50,13 @@
 
         <div class="em-grid">
             <span class="em-gridName">Last Run</span>
-            <span class="em-gridValue"><span class="hello_last_run">{{ l_relative }}</span> ({{ l }})</span>
-            {% if r and t.enabled == 1 %}
-                <span class="em-gridName">Next Run:</span>
-                <span class="em-gridValue"><span class="hello_next_run">{{ r_relative }}</span> ({{ r }})</span>
-            {% endif %}
+            <span class="em-gridValue"><span class="hello_last_run">{{ l_relative }}</span> <span class="hello_last_run_abs">{{ l }}</span></span>
+            <span class="em-gridName">Next Run</span>
+            <span class="em-gridValue"><span class="hello_next_run">{{ r_relative }}</span> <span class="hello_next_run_abs">{{ r }}</span></span>
+            <span class="em-gridName">Max Retry Attempts</span>
+            <span class="em-gridValue">{% if t and t.max_retries is not none %}{{ t.max_retries }}{% else %}0{% endif %}</span>
         </div>
+
 
         <h2>Data Source</h2>
         <div class="em-grid">
@@ -552,6 +553,11 @@
                 {% if t.email_completion_file == 1 %}
                     <span class="em-gridName">Send if attachment is empty?</span>
                     <span class="em-gridValue">{% if t.email_completion_dont_send_empty_file == 1 %}No{% else %}Yes{% endif %}</span>
+                {% endif %}
+
+                {% if t.email_completion_file == 1 %}
+                    <span class="em-gridName">Embed file in email body?</span>
+                    <span class="em-gridValue">{% if t.email_completion_file_embed == 1 %}Yes{% else %}No{% endif %}</span>
                 {% endif %}
 
                 <span class="em-gridName">Include log information?</span>

@@ -29,12 +29,6 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-@media (min-width: 1940px) {
-  body {
-    font-size: 96%;
-  }
-}
-
 h1 {
   font-size: 2em;
   margin-top: 25px;
@@ -247,7 +241,6 @@ h5 {
 }
 
 .em-codeBox code {
-  padding-bottom: 1rem;
   padding-right: 130px;
 }
 
@@ -362,4 +355,104 @@ h5 {
 .blink-3 {
   animation: blink 0.75s linear infinite;
   animation-delay: 0.2s;
+}
+
+.em-cloudItem {
+  display: inline-block;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 4px;
+  margin-right: 4px;
+  margin-top: 4px;
+}
+
+.em-cloudName,
+.em-cloudName:hover,
+.em-cloudName:visited,
+.em-cloudName:active {
+  text-decoration: none;
+  color: #3e4042;
+}
+
+.em-cloudValue {
+  height: 16px;
+  min-width: 10px;
+  border-radius: 8px;
+  background-color: rgb(7, 137, 146);
+  color: #fff;
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+  margin-left: 4px;
+  padding: 0 3px;
+}
+
+.em-timeline {
+  height: 200px;
+  padding: 0 12px 0 45px;
+  margin-bottom: 60px;
+  border-bottom: 3px solid #09aebb;
+  border-radius: 3px;
+  position: relative;
+}
+
+.em-timelineLiner {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  width: calc(100% - 20px);
+  padding-left: 10px;
+}
+
+.em-el {
+  position: relative;
+  display: block;
+}
+
+.em-elLabel {
+  position: absolute;
+  top: calc(100% + 10px);
+  white-space: nowrap;
+  left: 50%;
+  transform: translate(-50%, -0%);
+}
+
+.em-elBar {
+  position: absolute;
+  bottom: 0;
+  left: -5px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 16px solid #09aebb;
+  transform: scaleY(13);
+  transform-origin: bottom center;
+}
+
+.em-timelineScale {
+  width: calc(100% - 50px);
+  height: 100%;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.em-ScaleBar {
+  height: 1px;
+  width: 100%;
+  background: rgba(108, 115, 120, 0.25);
+  position: relative;
+}
+
+.em-ScaleBar:last-of-type {
+  background: transparent;
+}
+
+.em-ScaleValue {
+  position: absolute;
+  left: -30px;
+  top: -8px;
+  color: #6c7378;
 }

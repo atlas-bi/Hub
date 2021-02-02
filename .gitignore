@@ -21,6 +21,7 @@ temp/
 node_modules
 Pipfile.lock
 migrations_test
+docs/_build
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,python,macos,windows,git
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,python,macos,windows,git

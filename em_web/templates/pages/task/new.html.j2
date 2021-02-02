@@ -40,6 +40,12 @@
         <br />
 
         <!--
+            max retries
+        -->
+        <div class="em-inputTtl">Max Retry Attempts</div>
+        <input class="em-input" type="number" name="task-retry" value="{% if t and t.max_retries is not none %}{{ t.max_retries }}{% else %}0{% endif %}" />
+
+        <!--
             data source
         -->
         <section>
@@ -679,6 +685,18 @@
                     Don't email if file is empty?
                 </div>
                 <input type="hidden" name="task_dont_send_empty" value="{% if t and t.email_completion_dont_send_empty_file == 1 %}1{% else %}0{% endif %}" />
+
+                <!--
+                    embed file in email?
+                -->
+                <div class="em-checkbox">
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="task_embed_output" {% if t and t.email_completion_file_embed == 1 %} checked="checked"{% endif %}/>
+                        <span class="checkmark"></span>
+                    </label>
+                    Embed file in email body?
+                </div>
+                <input type="hidden" name="task_embed_output" value="{% if t and t.email_completion_file_embed == 1 %}1{% else %}0{% endif %}" />
 
                 <!--
                     Send an error email?

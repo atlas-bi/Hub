@@ -37,13 +37,6 @@ class Config:
     SESSION_REDIS = redis.Redis(host="localhost", port=6379)
 
     """
-        minimum space needed to run tasks
-    """
-    MIN_DISK_SPACE = 1 * 1024 * 1024 * 1024
-    MIN_FREE_MEM_PERC = 10
-    MIN_FREE_CPU_PERC = 10
-
-    """
         LDAP Connection used for user authentication
     """
     LDAP_HOST = "10.0.0.0"  # defaults to localhost
@@ -66,12 +59,6 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
         user="webapp", pw="nothing", url="localhost", db="em_web"
-    )
-
-    SQLALCHEMY_TEST_DATABASE_URI = (
-        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-            user="webapp", pw="nothing", url="localhost", db="em_web_text"
-        )
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False

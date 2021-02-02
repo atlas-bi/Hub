@@ -178,7 +178,7 @@ def table_tasklog_userevents():
     :returns: json output of all user events.
     """
     page = request.args.get("p", default=1, type=int)
-    sort = request.args.get("s", default="Status Date.asc", type=str)
+    sort = request.args.get("s", default="Status Date.desc", type=str)
     split_sort = sort.split(".")
 
     page = page - 1
@@ -260,7 +260,7 @@ def table_user_auth():
     :returns: json output of all user events.
     """
     page = request.args.get("p", default=1, type=int)
-    sort = request.args.get("s", default="Login Date.asc", type=str)
+    sort = request.args.get("s", default="Login Date.desc", type=str)
     split_sort = sort.split(".")
 
     page = page - 1
@@ -584,6 +584,7 @@ def dash_errored(task_type):
         "Status": "task_status.name",
         "Last Run": "task.last_run",
         "Enabled": "task.enabled",
+        "Next Run": "task.next_run",
     }
 
     tasks = (
@@ -596,7 +597,11 @@ def dash_errored(task_type):
         .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
     )
 
-    me = [{"head": '["Action", "Task Name", "Project Name", "Owner", "Last Run"]'}]
+    me = [
+        {
+            "head": '["Action", "Task Name", "Project Name", "Owner", "Last Run", "Next Run"]'
+        }
+    ]
 
     if task_type == "errored":
         tasks = tasks.filter(Task.status_id == 2)
@@ -655,7 +660,16 @@ def dash_errored(task_type):
                     if task["Owner Id"]
                     else "N/A"
                 ),
-                "Last Run": task["Last Run"] or "Never",
+                "Last Run": datetime.datetime.strftime(
+                    task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
+                )
+                if task["Last Run"]
+                else "Never",
+                "Next Run": datetime.datetime.strftime(
+                    task["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
+                )
+                if task["Next Run"]
+                else "N/A",
                 "Action": (
                     (
                         "<a class='em-link' href='/task/"

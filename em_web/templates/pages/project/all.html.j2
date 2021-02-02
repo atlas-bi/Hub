@@ -34,6 +34,16 @@
     <!-- page title -->
     <h1 class="em-title">All Projects {% if username %} - {{ username }}{% endif %}{% if user_id %} (<a class="em-titleGrey" title="see tasks" href="/task/user/{{ user_id }}">See Tasks</a>){% endif %}</h1>
 
+    <!-- owner cloud -->
+    <div class="em-cloud">
+        {% for owner in owners %}
+            <div class="em-cloudItem">
+                <a class="em-cloudName" href="/project/user/{{ owner[1] }}" title="open {{ owner[0]}}'s projects">{{ owner[0]}}</a>
+                <span class="em-cloudValue">{{ owner[2] }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
     <!-- ajax table -->
     <div class="em-ajaxTable" data-src="/table/project/{% if user_id %}{{ user_id }}{% elif mine %}mine{% else %}all{% endif %}">
         <div class="loader">

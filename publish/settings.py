@@ -23,4 +23,7 @@ dns: destination server dns name
 config = {
     "sh": "https://raw.githubusercontent.com/Riverside-Healthcare/extract_management/main/publish/install.sh",  # noqa: E501
     "token": "",
+    "host": "1.2.3.4",
+    "user": "username",
+    "pass": "password",
 }

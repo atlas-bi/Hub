@@ -22,7 +22,7 @@ import json
 import os
 
 import requests
-from em_web import db, ldap
+from em_web import db, ldap, redis_client
 from em_web.model import (
     Connection,
     ConnectionDatabase,
@@ -46,9 +46,44 @@ from flask import Blueprint, Response
 from flask import current_app as app
 from flask import jsonify, redirect, render_template, request, session, url_for
 from RelativeToNow import relative_to_now
-from sqlalchemy import and_, text
+from sqlalchemy import and_, func, text
 
 task_bp = Blueprint("task_bp", __name__)
+
+
+@task_bp.route("/task/<task_id>/endretry")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def task_endretry(task_id):
+    """Stop a task from performing the scheduled retry.
+
+    :param task_id: id of task to stop
+    :returns: redirect to task details
+
+    First, remove the redis key for reruns
+    Then, force the task to reschedule, which will
+    clear any scheduled jobs that do not belong to
+    the primary schedule.
+    """
+    redis_client.delete("runner_" + str(task_id) + "_attempt")
+    task = Task.query.filter_by(id=task_id).first()
+
+    if task.enabled == 1:
+        requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task_id))
+    else:
+        task.next_run = None
+        db.session.commit()
+        requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task_id))
+
+    log = TaskLog(
+        status_id=7,
+        task_id=task_id,
+        message="%s: Task retry canceled." % session.get("user_full_name"),
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    return redirect(url_for("task_bp.get_task", task_id=task_id))
 
 
 @task_bp.route("/task/<task_id>/duplicate")
@@ -112,16 +147,37 @@ def task_hello(task_id):
     """
     task = Task.query.filter_by(id=task_id).first()
 
+    attempt = redis_client.zincrby("runner_" + str(task_id) + "_attempt", 0, "inc") or 0
+
     return jsonify(
         {
-            "status": (task.status.name if task.status else ""),
+            "status": (
+                task.status.name
+                + (
+                    " (attempt %d of %d)" % (attempt, task.max_retries)
+                    if attempt > 0 and task.status.name == "Running"
+                    else ""
+                )
+                if task.status
+                else ""
+            ),
             "next_run": (
                 relative_to_now(task.next_run.replace(tzinfo=None))
-                if task.next_run
+                if task.next_run and task.next_run > datetime.datetime.now()
+                else "N/A"
+            ),
+            "next_run_abs": (
+                "(%s)" % task.next_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
+                if task.next_run and task.next_run > datetime.datetime.now()
                 else ""
             ),
             "last_run": (
                 relative_to_now(task.last_run.replace(tzinfo=None))
+                if task.last_run
+                else ""
+            ),
+            "last_run_abs": (
+                "(%s)" % task.last_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
                 if task.last_run
                 else ""
             ),
@@ -196,7 +252,28 @@ def task_all():
     me = Task.query.count()
     if me < 1:
         return redirect(url_for("project_bp.project"))
-    return render_template("pages/task/all.html.j2", title="Tasks")
+
+    owners = (
+        db.session.query()
+        .select_from(User)
+        .join(Project, Project.owner_id == User.id)
+        .join(Task, Task.project_id == Project.id)
+        .add_columns(User.full_name, User.id, func.count(Task.id))
+        .group_by(User.full_name, User.id)
+        .all()
+    )
+
+    projects = (
+        db.session.query()
+        .select_from(Project)
+        .join(Task, Task.project_id == Project.id)
+        .add_columns(Project.name, Project.id, func.count(Task.id))
+        .group_by(Project.name, Project.id)
+        .all()
+    )
+    return render_template(
+        "pages/task/all.html.j2", title="Tasks", owners=owners, projects=projects
+    )
 
 
 @task_bp.route("/task/mine")
@@ -216,8 +293,23 @@ def task_mine():
     )
     if me < 1:
         return redirect(url_for("project_bp.project"))
+
+    projects = (
+        db.session.query()
+        .select_from(Project)
+        .join(User, User.id == Project.owner_id)
+        .join(Task, Task.project_id == Project.id)
+        .filter(User.user_id == session.get("user_id"))
+        .add_columns(Project.name, Project.id, func.count(Task.id))
+        .group_by(Project.name, Project.id)
+        .all()
+    )
+
     return render_template(
-        "pages/task/all.html.j2", mine=session.get("user_full_name"), title="My Tasks"
+        "pages/task/all.html.j2",
+        mine=session.get("user_full_name"),
+        title="My Tasks",
+        projects=projects,
     )
 
 
@@ -300,6 +392,8 @@ def task_new(project_id):
 
     tme.creator_id = whoami.id
     tme.updater_id = whoami.id
+
+    tme.max_retries = form.get("task-retry") or 0
 
     # source options
     if "sourceType" in form:
@@ -582,6 +676,10 @@ def task_new(project_id):
             form["task_dont_send_empty"] if "task_dont_send_empty" in form else 0
         )
 
+        tme.email_completion_file_embed = (
+            form["task_embed_output"] if "task_embed_output" in form else 0
+        )
+
     else:
         tme.email_completion = 0
 
@@ -660,24 +758,20 @@ def get_task(task_id):
             "pages/task/details.html.j2",
             t=task,
             r=(
-                task.next_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
-                if task.next_run
+                "(%s)" % task.next_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
+                if task.next_run and task.next_run > datetime.datetime.now()
                 else ""
-            )
-            if task.last_run
-            else "N/A",
+            ),
             r_relative=(
                 relative_to_now(task.next_run.replace(tzinfo=None))
-                if task.next_run
+                if task.next_run and task.next_run > datetime.datetime.now()
                 else "N/A"
             ),
             l=(
-                task.last_run.strftime("%a, %b %-d, %Y %H:%M:%S")
+                "(%s)" % task.last_run.strftime("%a, %b %-d, %Y %H:%M:%S")
                 if task.last_run
-                else ""
-            )
-            if task.last_run
-            else "Never",
+                else "Never"
+            ),
             l_relative=(relative_to_now(task.last_run) if task.last_run else "Never"),
             title=task.name,
             language=("bash" if task.source_type_id == 6 else "sql"),
@@ -1067,6 +1161,9 @@ def task_edit_post(task_id):
     tme = Task.query.filter_by(id=task_id).first()
 
     tme.name = form["name"].strip()
+
+    tme.max_retries = form.get("task-retry") or 0
+
     tme.updater_id = whoami.id
     # source options
     if "sourceType" in form:
@@ -1349,6 +1446,11 @@ def task_edit_post(task_id):
         tme.email_completion_dont_send_empty_file = (
             form["task_dont_send_empty"] if "task_dont_send_empty" in form else 0
         )
+
+        tme.email_completion_file_embed = (
+            form["task_embed_output"] if "task_embed_output" in form else 0
+        )
+
     else:
         tme.email_completion = 0
 
@@ -1441,6 +1543,7 @@ def run_task_now(task_id):
     :returns: redirect to task details page.
     """
     task = Task.query.filter_by(id=task_id).first()
+    redis_client.delete("runner_" + str(task_id) + "_attempt")
     if task:
         try:
             requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task_id))
@@ -1483,6 +1586,7 @@ def schedule_task(task_id):
     :returns: redirect to task details page.
     """
     try:
+        redis_client.delete("runner_" + str(task_id) + "_attempt")
         requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task_id))
 
         log = TaskLog(
@@ -1524,6 +1628,7 @@ def enable_task(task_id):
 
     :returns: redirect to task details page.
     """
+    redis_client.delete("runner_" + str(task_id) + "_attempt")
     task = Task.query.filter_by(id=task_id).first()
     task.enabled = 1
     db.session.commit()

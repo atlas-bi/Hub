@@ -47,7 +47,7 @@
             els[x].classList.remove("em-error");
             els[x].classList.remove("em-success");
             els[x].classList.remove("em-running");
-            switch (data[key]) {
+            switch (data[key].split(" ")[0]) {
               case "Running":
                 els[x].classList.add("em-running");
                 break;

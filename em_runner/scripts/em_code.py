@@ -16,18 +16,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import datetime
 import logging
-import pickle
 import re
 import sys
-import time
+import urllib.parse
 from pathlib import Path
 
 import requests
 import urllib3
-from bs4 import BeautifulSoup
-from em_runner import db, redis_client
+from em_runner import db
 from em_runner.model import TaskLog
 from error_print import full_stack
 from flask import current_app as app
@@ -62,138 +59,42 @@ class SourceCode:
 
         if self.url:
             try:
-                cookies = None
-
-                # test inc
-                session_count = redis_client.zincrby("gitlab_session_count", 1, "inc")
-
-                # data must be loaded from redis one time, then used.
-                # if it is loaded multiple times it will have changed
-                # and what we throught to be true will no longer be
-                # the case.
-
-                # a session is used for login, and then once logged in
-                # we only use the auth cookie.
-
-                gitlab_session_date = redis_client.get("gitlab_session_date")
-
-                session_date = (
-                    pickle.loads(gitlab_session_date)
-                    if gitlab_session_date
-                    else datetime.datetime.now() - datetime.timedelta(days=1)
+                # convert the "raw" url into an api url
+                branch = urllib.parse.quote(
+                    urllib.parse.unquote(
+                        re.findall(r"\/(?:raw|blob)\/(.+?)\/", self.url)[0]
+                    ),
+                    safe="",
                 )
 
-                session_age = (datetime.datetime.now() - session_date).seconds
+                project = urllib.parse.quote(
+                    urllib.parse.unquote(
+                        re.findall(r"\.(?:com|net|org)\/(.+?)\/-", self.url)[0]
+                    ),
+                    safe="",
+                )
 
-                if session_age <= 60 and redis_client.get("gitlab_session_cookie"):
-                    logging.info(
-                        "Found existing gitlab session. Age: %s, Users: %s",
-                        str(session_age),
-                        str(session_count),
-                    )
+                file_path = urllib.parse.quote(
+                    urllib.parse.unquote(
+                        re.findall(r"\/(?:raw|blob)\/.+?\/(.+?)$", self.url)[0]
+                    ),
+                    safe="",
+                )
 
-                    gitlab_session_cookie = redis_client.get("gitlab_session_cookie")
+                api_url = "%sapi/v4/projects/%s/repository/files/%s/raw?ref=%s" % (
+                    app.config["GIT_URL"],
+                    project,
+                    file_path,
+                    branch,
+                )
 
-                    cookies = (
-                        pickle.loads(gitlab_session_cookie)
-                        if gitlab_session_cookie
-                        else None
-                    )
-
-                else:
-                    # remove session if it is old
-                    redis_client.delete("gitlab_session_count")
-                    redis_client.delete("gitlab_session_date")
-                    redis_client.delete("gitlab_session_cookie")
-
-                # create new login if there is not existing login cookie.
-                if cookies is None:
-                    logging.info("Creating new gitlab session.")
-
-                    session = requests.session()
-
-                    # login
-                    page = session.get(app.config["GIT_URL"], verify=False)
-                    soup = BeautifulSoup(page.text, "html.parser")
-                    page = session.post(
-                        app.config["GIT_URL"] + "users/auth/ldapmain/callback",
-                        data={
-                            "authenticity_token": soup.find(
-                                "input", {"name": "authenticity_token"}
-                            ).get("value"),
-                            "username": app.config["GIT_USERNAME"],
-                            "password": app.config["GIT_PASSWORD"],
-                        },
-                        verify=False,
-                    )
-                    # save session after logging in
-                    redis_client.set(
-                        "gitlab_session_cookie", pickle.dumps(session.cookies)
-                    )
-                    cookies = session.cookies
-
-                logging.info("Source: Getting GitLab: %s", self.url)
-
-                # attempt to get page. notice we use "requests" not "session".
-                # the login info is saved into the cookies, and we no longer
-                # use sessions. Cookies can persist over several em_runner
-                # instances, but a session cannot.
+                headers = {"PRIVATE-TOKEN": app.config["GIT_TOKEN"]}
                 page = requests.get(
-                    self.url, verify=False, cookies=cookies
+                    api_url, verify=False, headers=headers
                 )  # noqa: S501
 
-                # if signin page is returned, try to log back in, only a few times.
-                # gitlab limit the number of logins (even tho disabled in settings)
-                # so it is possible we may have to wait a bit.
-                count = 1
-                while "Sign in · GitLab" in page.text and count <= 10:
-                    logging.info(
-                        "Attempting to login again (try %s) in 5 seconds. %s",
-                        str(count),
-                        self.url,
-                    )
-                    time.sleep(10)
-                    session = requests.session()
-                    page = session.get(app.config["GIT_URL"], verify=False)
-                    soup = BeautifulSoup(page.text, "html.parser")
-                    page = session.post(
-                        app.config["GIT_URL"] + "users/auth/ldapmain/callback",
-                        data={
-                            "authenticity_token": soup.find(
-                                "input", {"name": "authenticity_token"}
-                            ).get("value"),
-                            "username": app.config["GIT_USERNAME"],
-                            "password": app.config["GIT_PASSWORD"],
-                        },
-                        verify=False,
-                    )
-
-                    page = requests.get(
-                        self.url, verify=False, cookies=session.cookies  # noqa: S501
-                    )
-
-                    count += 1
-
-                    if page.status_code == 200 and "Sign in · GitLab" not in page.text:
-                        # save session cookies after logging in
-                        redis_client.set(
-                            "gitlab_session_cookie", pickle.dumps(session.cookies)
-                        )
-                        break
-
-                if "Sign in · GitLab" in page.text:
-                    raise Exception("Failed to login after %s attempts." % count)
-
-                # decriment session counter
-                session_count = redis_client.zincrby("gitlab_session_count", -1, "inc")
-
-                # update session age.
-                redis_client.set(
-                    "gitlab_session_date", pickle.dumps(datetime.datetime.now())
-                )
-
-                # session is left behind in redis - if another new connection
-                # comes up w/in the age limit we can still use it.
+                if page.status_code != 200:
+                    raise Exception("Failed to get code: " + page.text)
 
                 return self.cleanup(
                     (
@@ -324,8 +225,10 @@ class SourceCode:
         :returns: Cleaned up query.
         """
         # remove database call
-        query = re.sub(r"(^|\s)use\s+.+", "", query, flags=re.IGNORECASE)
-        query = re.sub(r"(^|\s)use\s+.+?;", "", query, flags=re.IGNORECASE)
+        query = re.sub(r"(^\s*)use\s+.+", "", query, flags=re.IGNORECASE | re.MULTILINE)
+        query = re.sub(
+            r"(^\s*)use\s+.+?;", "", query, flags=re.IGNORECASE | re.MULTILINE
+        )
 
         # only needed for mssql
         if db_type == "mssql":
@@ -389,4 +292,5 @@ class SourceCode:
                     flags=re.IGNORECASE,
                 )
 
-        return query
+        # add two blank lines on end of query
+        return query + "\n\n"

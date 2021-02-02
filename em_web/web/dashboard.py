@@ -21,16 +21,15 @@ import sys
 from pathlib import Path
 
 import requests
+from em_web import db, ldap
+from em_web.model import TaskLog
+from em_web.web import submit_executor
+from error_print import full_stack
 from flask import Blueprint
 from flask import current_app as app
 from flask import flash, redirect, render_template, session, url_for
 
-from em_web import db, ldap
-from em_web.model import TaskLog
-from em_web.web import submit_executor
-
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from error_print import full_stack
 
 dashboard_bp = Blueprint("dashboard_bp", __name__)
 
@@ -44,7 +43,47 @@ def dash():
     :url: /
     :returns: html webpage.
     """
-    return render_template("pages/dashboard/dashboard.html.j2", title="Dashboard")
+    return render_template(
+        "pages/dashboard/dashboard.html.j2",
+        title="Dashboard",
+    )
+
+
+@dashboard_bp.route("/schedule")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def active_schedule():
+    """Graph showing current run schedule for next 12 hrs.
+
+    :url: /schedule
+    :returns: html webpage.
+    """
+    try:
+        schedule = json.loads(
+            requests.get(app.config["SCHEUDULER_HOST"] + "/schedule").text
+        )
+
+        max_index = max(map(lambda x: x.get("count"), schedule))
+        index = (
+            [
+                max_index,
+                int(round(max_index * 0.75, 0)),
+                int(round(max_index * 0.5, 0)),
+                int(round(max_index * 0.25, 0)),
+            ]
+            if max_index > 4
+            else [max_index]
+        )
+        return render_template(
+            "pages/dashboard/schedule.html.j2",
+            schedule=schedule,
+            schedule_index=index,
+        )
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        print(e)  # noqa: T001
+        return "", 200
 
 
 @dashboard_bp.route("/dash/errorGauge")

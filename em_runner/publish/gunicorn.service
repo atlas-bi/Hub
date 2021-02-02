@@ -7,7 +7,7 @@ User=webapp
 Group=www-data
 WorkingDirectory=/home/websites/em/hash
 Environment="PATH=/home/websites/em/hash/venv/bin"
-ExecStart=/home/websites/em/hash/venv/bin/gunicorn --worker-class=gevent --worker-connections=1000 --workers 12 --threads 30 --timeout 999999999 --access-logfile /home/websites/em/hash/em_runner/logs/gunicorn-access.log --error-logfile /home/websites/em/hash/em_runner/logs/gunicorn-error.log --capture-output --bind  unix:em_runner.sock --umask 007 em_runner:app 
+ExecStart=/home/websites/em/hash/venv/bin/gunicorn --worker-class=gevent --worker-connections=1000 --workers 11 --threads 30 --timeout 999999999 --access-logfile /home/websites/em/hash/em_runner/logs/gunicorn-access.log --error-logfile /home/websites/em/hash/em_runner/logs/gunicorn-error.log --capture-output --bind  unix:em_runner.sock --umask 007 em_runner:app 
 
 [Install]
 WantedBy=multi-user.target

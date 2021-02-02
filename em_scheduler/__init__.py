@@ -57,9 +57,11 @@ Database model should be cloned from `em_web` before running app.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import datetime
 import hashlib
 import logging
 import time
+from itertools import groupby
 
 from em_scheduler import config
 from em_scheduler.extensions import db
@@ -126,6 +128,76 @@ def alive():
     return jsonify({"status": "alive"})
 
 
+@app.route("/api/schedule")
+def schedule():
+    """Build simulated run schedule.
+
+    Build list of hours to show on the chart:
+    ['now', <now + 1>, <now + 2>, etc]
+
+    Build list of schedule for next 24 hours
+
+    Merge two lists and put 0 where needed.
+
+    :url: /api/
+    :returns: status alive!
+    """
+    now = datetime.datetime.now(
+        datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
+    )
+    tomorrow = now + datetime.timedelta(hours=24)
+
+    hour_list = ["now"]
+
+    now_int = now
+
+    while now_int < tomorrow:
+        now_int = now_int + datetime.timedelta(hours=1)
+        hour_list.append(datetime.datetime.strftime(now_int, "%-H:00"))
+
+    active_schedule = []
+    for job in scheduler.get_jobs():
+        if not job.next_run_time and len(job.args) > 0:
+            continue
+        job_date = job.next_run_time
+
+        while job_date and job_date < tomorrow:
+
+            if now.replace(minute=0, second=0, microsecond=0) == job_date.replace(
+                minute=0, second=0, microsecond=0
+            ):
+                message = "now"
+
+            else:
+                message = datetime.datetime.strftime(job_date, "%-H:00")
+
+            active_schedule.append({"message": message, "date": job_date})
+
+            if not job_date.tzinfo:
+                job_date.astimezone()
+
+            job_date = job.trigger.get_next_fire_time(job_date, job_date)
+
+    active_schedule.sort(key=lambda active_schedule: active_schedule["date"])
+    groups = {
+        key: list(group)
+        for key, group in groupby(
+            active_schedule, lambda active_schedule: active_schedule["message"]
+        )
+    }
+    active_schedule = []
+
+    for hour in hour_list:
+        active_schedule.append(
+            {
+                "case": hour,
+                "count": (sum(1 for x in groups.get(hour)) if groups.get(hour) else 0),
+            }
+        )
+
+    return jsonify(active_schedule)
+
+
 @app.route("/api/add/<task_id>")
 def add_task(task_id):
     """Schedule task to run.
@@ -180,6 +252,40 @@ def run_task(task_id):
     # pylint: disable=broad-except
     except BaseException as e:
         return jsonify({"error": "Scheduler (run task):\n" + str(e)})
+
+
+@app.route("/api/run/<task_id>/delay/<minutes>")
+def run_task_delay(task_id, minutes):
+    """Run task in x minutes.
+
+    :url: /api/run/<task_id>/delay/<minutes>
+    :param task_id: id of task to run
+    :param minutes: minutes from now to run task
+    :returns: json message
+    """
+    try:
+        task = Task.query.filter_by(id=task_id).first()
+        project = task.project
+
+        my_hash = hashlib.sha256()
+        my_hash.update(str(time.time()).encode("utf-8"))
+
+        scheduler.add_job(
+            func=scheduler_task_runner,
+            trigger="date",
+            run_date=datetime.datetime.now() + datetime.timedelta(minutes=int(minutes)),
+            args=[
+                str(task_id),
+            ],
+            id=str(project.id) + "-" + str(task.id) + "-" + my_hash.hexdigest()[:10],
+            name="(one off delay) " + project.name + ": " + task.name,
+        )
+
+        return jsonify({"message": "Scheduler: task scheduled!"})
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        return jsonify({"error": "Scheduler (run task with delay):\n" + str(e)})
 
 
 @app.route("/api/delete")
@@ -439,6 +545,7 @@ def scheduler_add_task(task_id):
 
     """
     task = Task.query.filter_by(id=task_id).first()
+
     # fyi, task must be re-queried after each type is
     # scheduled, as the scheduler events will modify
     # the task causing a session break!!

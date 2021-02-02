@@ -158,11 +158,12 @@ def event_log(app):
                 task = Task.query.filter_by(
                     id=(job.args[0] if job.args else -1)
                 ).first()
+                task.next_run = None
                 if task:
                     task.next_run = (
                         (
                             min(
-                                task.next_run.astimezone(),
+                                task.next_run,
                                 job.next_run_time,
                             )
                             if task.next_run is not None
@@ -220,10 +221,11 @@ def event_log(app):
                     else None
                 )
                 if task:
+                    task.next_run = None
                     task.next_run = (
                         (
                             min(
-                                task.next_run.astimezone(),
+                                task.next_run,
                                 job.next_run_time,
                             )
                             if task.next_run is not None

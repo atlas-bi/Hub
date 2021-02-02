@@ -263,6 +263,18 @@
         ipt.value = 1;
         // add required attr on inputs
       }
+    } else if (e.target.closest(".task_embed_output")) {
+      i = e.target.closest(".task_embed_output");
+      ipt = d.querySelector('input[name="task_embed_output"]');
+      if (i.getAttribute("checked") == "checked") {
+        i.removeAttribute("checked");
+        ipt.value = 0;
+        // remove required attr on inputs
+      } else {
+        i.setAttribute("checked", "checked");
+        ipt.value = 1;
+        // add required attr on inputs
+      }
     } else if (e.target.closest(".send_error_email_check")) {
       i = e.target.closest(".send_error_email_check");
       ipt = d.querySelector('input[name="task_send_error_email"]');

@@ -72,11 +72,14 @@
 
       q.onload = function () {
         if (d.querySelectorAll(".em-drop[data-sftp]").length > 0) {
-          sftp = d
-            .querySelectorAll(".em-drop[data-sftp]")
-            [d.querySelectorAll(".em-drop[data-sftp]").length - 1].getAttribute(
-              "data-sftp"
-            );
+          sftp = Math.max.apply(
+            Math,
+            Array.from(document.querySelectorAll(".em-drop[data-sftp]")).map(
+              function (x) {
+                return x.getAttribute("data-sftp");
+              }
+            )
+          );
           sftp++;
         } else {
           sftp = 1;
@@ -111,11 +114,14 @@
 
       q.onload = function () {
         if (d.querySelectorAll(".em-drop[data-smb]").length > 0) {
-          smb = d
-            .querySelectorAll(".em-drop[data-smb]")
-            [d.querySelectorAll(".em-drop[data-smb]").length - 1].getAttribute(
-              "data-smb"
-            );
+          smb = Math.max.apply(
+            Math,
+            Array.from(document.querySelectorAll(".em-drop[data-smb]")).map(
+              function (x) {
+                return x.getAttribute("data-smb");
+              }
+            )
+          );
           smb++;
         } else {
           smb = 1;
@@ -150,11 +156,14 @@
 
       q.onload = function () {
         if (d.querySelectorAll(".em-drop[data-ssh]").length > 0) {
-          ssh = d
-            .querySelectorAll(".em-drop[data-ssh]")
-            [d.querySelectorAll(".em-drop[data-ssh]").length - 1].getAttribute(
-              "data-ssh"
-            );
+          ssh = Math.max.apply(
+            Math,
+            Array.from(document.querySelectorAll(".em-drop[data-ssh]")).map(
+              function (x) {
+                return x.getAttribute("data-ssh");
+              }
+            )
+          );
           ssh++;
         } else {
           ssh = 1;
@@ -189,11 +198,14 @@
 
       q.onload = function () {
         if (d.querySelectorAll(".em-drop[data-ftp]").length > 0) {
-          ftp = d
-            .querySelectorAll(".em-drop[data-ftp]")
-            [d.querySelectorAll(".em-drop[data-ftp]").length - 1].getAttribute(
-              "data-ftp"
-            );
+          ftp = Math.max.apply(
+            Math,
+            Array.from(document.querySelectorAll(".em-drop[data-ftp]")).map(
+              function (x) {
+                return x.getAttribute("data-ftp");
+              }
+            )
+          );
           ftp++;
         } else {
           ftp = 1;
@@ -229,11 +241,14 @@
 
       q.onload = function () {
         if (d.querySelectorAll(".em-drop[data-database]").length > 0) {
-          database = d
-            .querySelectorAll(".em-drop[data-database]")
-            [
-              d.querySelectorAll(".em-drop[data-database]").length - 1
-            ].getAttribute("data-database");
+          database = Math.max.apply(
+            Math,
+            Array.from(
+              document.querySelectorAll(".em-drop[data-database]")
+            ).map(function (x) {
+              return x.getAttribute("data-database");
+            })
+          );
           database++;
         } else {
           database = 1;

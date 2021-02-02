@@ -28,8 +28,9 @@ import time
 import urllib.parse
 from pathlib import Path
 
+import requests
 from crypto import em_decrypt
-from em_runner import db
+from em_runner import db, redis_client
 from em_runner.model import Task, TaskFile, TaskLog
 from em_runner.scripts.em_cmd import Cmd
 from em_runner.scripts.em_code import SourceCode
@@ -162,7 +163,7 @@ class Runner:
             if self.error == 0 and self.task.processing_type_id is not None:
                 self.__process()
 
-            # permanent storage of the file for hystorical purposes
+            # permanent storage of the file for historical purposes
             if self.error == 0:
                 self.__store_file()
 
@@ -177,7 +178,7 @@ class Runner:
                 job_id=self.job_hash,
                 status_id=8,
                 error=(0 if self.error == 0 else 1),
-                message=("Completed task." if self.error == 0 else "Task cancelled."),
+                message=("Completed task." if self.error == 0 else "Task canceled."),
             )
             db.session.add(log)
             db.session.commit()
@@ -191,9 +192,44 @@ class Runner:
                 .all()
             )
 
-            if len(error_logs) > 0:
+            if len(error_logs) > 0 or self.error != 0:
+                # increment attempt counter
+                redis_client.zincrby("runner_" + str(task_id) + "_attempt", 1, "inc")
                 task.status_id = 2
+
+                # if task ended with a non-catastrophic error, it is possible that we can rerun it.
+                if (
+                    redis_client.zincrby(
+                        "runner_" + str(task_id) + "_attempt", 0, "inc"
+                    )
+                    or 1
+                ) <= (task.max_retries or 0):
+                    # schedule a rerun in 5 minutes.
+                    log = TaskLog(
+                        task_id=task.id,
+                        job_id=self.job_hash,
+                        status_id=8,
+                        message=(
+                            "Scheduling re-attempt %d of %d."
+                            % (
+                                redis_client.zincrby(
+                                    "runner_" + str(task_id) + "_attempt", 0, "inc"
+                                ),
+                                task.max_retries,
+                            )
+                        ),
+                    )
+                    db.session.add(log)
+                    db.session.commit()
+
+                    requests.get(
+                        "%s/run/%s/delay/5" % (app.config["SCHEUDULER_HOST"], task_id)
+                    )
+                else:
+                    redis_client.delete("runner_" + str(task_id) + "_attempt")
             else:
+                # remove any retry tracking
+                redis_client.delete("runner_" + str(task_id) + "_attempt")
                 task.status_id = 4
 
             task.last_run_job_id = None
@@ -918,7 +954,28 @@ class Runner:
 
         date = str(datetime.datetime.now())
 
-        template = env.get_template("email/email.html.j2")
+        # pylint: disable=broad-except
+        try:
+            template = env.get_template("email/email.html.j2")
+        except BaseException:
+            logging.error(
+                "Runner: Failed to get email template: Task: %s, with run: %s\n%s",
+                str(self.task.id),
+                str(self.job_hash),
+                str(full_stack()),
+            )
+            log = TaskLog(
+                task_id=self.task.id,
+                error=1,
+                job_id=self.job_hash,
+                status_id=8,
+                message="Failed tto get email template.\n%s" % (str(full_stack()),),
+            )
+            db.session.add(log)
+            db.session.commit()
+
+            self.error += 1
+            return False
 
         # success email
         if self.task.email_completion == 1 and (
@@ -934,12 +991,16 @@ class Runner:
             db.session.add(log)
             db.session.commit()
 
+            output = None
             if (
                 self.task.email_completion_file == 1
                 and self.file_path != ""
                 and self.file_path is not None
             ):
                 attachment = self.file_path
+                if self.task.email_completion_file_embed == 1:
+                    with open(self.file_path, newline="") as csvfile:
+                        output = list(csv.reader(csvfile))
 
             # check attachement file size if the task
             # should not send blank files
@@ -977,6 +1038,7 @@ class Runner:
                     success=1,
                     date=date,
                     logs=logs,
+                    output=output,
                     host=app.config["WEB_HOST"],
                 ),
                 attachment=attachment,

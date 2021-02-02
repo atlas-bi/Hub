@@ -654,6 +654,7 @@ class Task(db.Model):
     email_completion: int
     email_completion_log: int
     email_completion_file: int
+    email_completion_file_embed: int
     email_completion_dont_send_empty_file: int
     email_completion_recipients: str
     email_completion_message: str
@@ -661,6 +662,8 @@ class Task(db.Model):
     email_error: int
     email_error_recipients: str
     email_error_message: str
+
+    max_retries: int
 
     """ general information """
     id = db.Column(db.Integer, primary_key=True, index=True)
@@ -829,14 +832,18 @@ class Task(db.Model):
     email_completion = db.Column(db.Integer, nullable=True, index=True)
     email_completion_log = db.Column(db.Integer, nullable=True)
     email_completion_file = db.Column(db.Integer, nullable=True)
+    email_completion_file_embed = db.Column(db.Integer, nullable=True)
     email_completion_recipients = db.Column(db.String(1000), nullable=True)
     email_completion_message = db.Column(db.String(8000), nullable=True)
     email_completion_dont_send_empty_file = db.Column(db.Integer, nullable=True)
 
-    # error eamil
+    # error email
     email_error = db.Column(db.Integer, nullable=True, index=True)
     email_error_recipients = db.Column(db.String(1000), nullable=True)
     email_error_message = db.Column(db.String(8000), nullable=True)
+
+    # rerun on fail
+    max_retries = db.Column(db.Integer, nullable=True, index=True)
 
     # tasklog link
     task = db.relationship(

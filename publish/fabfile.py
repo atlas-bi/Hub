@@ -15,12 +15,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from fabric import task
+
+from fabric import Config, Connection, task
 from settings import config
 
 
+# pylint: disable=W0105
+"""
+for debug:
+import logging
+logging.basicConfig(level=logging.DEBUG)
+"""
+
+
 @task
-def publish(conn):
+def publish(ctx):
     """Remotly publish Extract Management 2.0.
 
     :param conn: connection to deploy to
@@ -29,8 +38,7 @@ def publish(conn):
 
     .. code-block:: console
 
-        cd publish && fab -H user@host_ip --prompt-for-login-password --prompt-for-sudo-password \
-        publish && cd ..
+        cd publish && fab publish && cd ..
 
     To monitor online status of site while publishing
 
@@ -44,7 +52,15 @@ def publish(conn):
     removed. Finally, old code is removed.
 
     """
-    conn.sudo(
-        'bash -c "$(curl -kfsSL -H "PRIVATE-TOKEN: %s" "%s")"'
-        % (config["token"], config["sh"])
-    )
+    connection_properties = {
+        "host": config["host"],
+        "user": config["user"],
+        "config": Config(overrides={"sudo": {"password": config["pass"]}}),
+        "connect_kwargs": {"password": config["pass"]},
+    }
+    # pylint: disable=R1704
+    with Connection(**connection_properties) as ctx:
+        ctx.sudo(
+            'bash -c "$(curl -kfsSL -H "PRIVATE-TOKEN: %s" "%s")"'
+            % (config["token"], config["sh"])
+        )

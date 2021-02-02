@@ -104,6 +104,15 @@
 
                 <div class="em-addElement" id="connections-addDatabase"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>Add Database Connection</div>
 
+                <!-- add ssh connection to new group -->
+                <h2 class="em-sectionTitle">SSH Connections</h2>
+
+                <div id="em-elementGroupSsh">
+                    {% include "pages/connection/type/ssh.html.j2" %}
+                </div>
+
+                <div class="em-addElement" id="connections-addSsh"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>Add SSH Connection</div>
+
                 <!-- submit new connection group -->
                 <input class="em-submit" type="submit" value="Add connection" />
             </form>
@@ -132,7 +141,7 @@
 
                 {% if d.description %}<p>{{ d.description }}</p>{% endif %}
                 {% if d.address %}Address: {{ d.address }}{% endif %}
-                {% if d.primary_contact %}Primary Contact: <em>{{ d.primary_contact }}</em> {% endif %}{% if d.primary_contact_email %}Email: <em>{{ d.primary_contact_email }}</em> {% endif %}{% if d.primary_contact_phone %}Phone: <em>{{ d.primary_contact_phone }}</em>{% endif %}
+                {% if d.primary_contact %}Primary Contact: <em>{{ d.primary_contact }}</em> {% endif %}{% if d.primary_contact_email %}Email: <a class="em-link" href="mailto:{{ d.primary_contact_email }}"><em>{{ d.primary_contact_email }}</em></a> {% endif %}{% if d.primary_contact_phone %}Phone: <em>{{ d.primary_contact_phone }}</em>{% endif %}
 
 
                 <!-- sftp connections -->
@@ -144,7 +153,7 @@
                         <div class="em-code">{{ s.address }}:{{ s.port or '22' }}
                             <br />{{ s.path|clean_path }}
                             <br />user: {{ s.username }}
-                            <br />ssh key: {% if s.key %}connecting using ssh key{% endif %}
+                            <br />ssh key: {% if s.key and s.key != "" %}connecting using ssh key{% endif %}
                             <br />pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ s.password|decrypt }}" style="width:{{ s.password|decrypt|length * 6 }}px;cursor: text;"/>
                             <a class="em-inputPlainCopy" title="copy password" data-value="{{ s.password|decrypt }}" href=""><svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></svg>
                             </a>

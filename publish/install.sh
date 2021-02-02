@@ -100,6 +100,7 @@ command_install python3-pip
 command_install python3-setuptools
 command_install unixodbc
 command_install unixodbc-dev
+command_install libpq-dev
 command_install nginx
 command_install sqlite3
 command_install libsqlite3-0

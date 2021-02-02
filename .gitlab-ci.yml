@@ -1,115 +1,144 @@
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+code_quality:
+  before_script:
+    - echo "nothing to do.."
+  services:            # Shut off Docker-in-Docker
+  tags:
+    - cq-sans-dind     # Set this job to only run on our new specialized runner
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
+metrics:
+  before_script:
+    - echo "nothing to do.."
+  script:
+    - echo 'metric_name metric_value' > metrics.txt
+  artifacts:
+    reports:
+      metrics: metrics.txt
+
 variables:
   PYTHONDONTWRITEBYTECODE: 1
   FLASK_ENV: test
   FLASK_DEBUG: 1
   FLASK_APP: em_web
 
-image: python:3.9-slim
-
 stages:
-  - Static
-  - Test
-  - Deploy
-
+  - static
+  - test
+  - deploy
+  - docs
 before_script:
   - python --version
-  - export DEBIAN_FRONTEND=noninteractive
-  - apt-get update -qq
-  - apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config > /dev/null
-  - >
-      apt-get install -y -qq
-      git
-      build-essential
-      libssl-dev
-      libffi-dev
-      python-dev
-      python3-dev
-      libxml2-dev
-      libxmlsec1-dev
-      libxmlsec1-openssl
-      libsasl2-dev
-      libldap2-dev
-      libssl-dev
-      unixodbc
-      unixodbc-dev
-      redis-server
-      postgresql
-      postgresql-contrib
-      > /dev/null
   - redis-server --daemonize yes
-  - python -m pip install --disable-pip-version-check --quiet poetry tox
   - cd /builds/extract-management/extract-management-site/
   - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
 
-Lint:
-  stage: Static
+lint:
+  stage: static
   before_script:
     - python -m pip install --disable-pip-version-check --quiet tox
   script:
-    - tox -e lint
+    - export LINT=$(tox -e lint)
+    - echo -e $LINT
+    - python -m pip install --disable-pip-version-check --quiet anybadge
+    - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red
+  artifacts:
+    paths:
+      - lint.svg
+    when: always
+    expire_in: 4 weeks
 
-Static:
-  stage: Static
+web:
+  image: christopherpickering/extract-management-2-static-test
+  stage: static
   before_script:
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update -qq
-    - apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config git > /dev/null
-    - python -m pip install --disable-pip-version-check --quiet tox
-    - curl -sL https://deb.nodesource.com/setup_14.x | bash - > /dev/null
-    - apt-get install -y -qq nodejs > /dev/null
-    - npm set strict-ssl false
     - rm -rf package-lock.json
     - rm -rf node_modules
   script:
-    - tox -e static
+    - export STATIC=$(tox -e static)
+    - echo -e $STATIC
+    - python -m pip install --disable-pip-version-check --quiet anybadge
+    - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
+  artifacts:
+    paths:
+      - web.svg
+    when: always
+    expire_in: 4 weeks
 
-Html:
-  stage: Static
+html:
+  image: christopherpickering/extract-management-2-static-test
+  stage: static
   before_script:
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update -qq
-    - apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config git > /dev/null
-    - python -m pip install --disable-pip-version-check --quiet tox
-    - curl -sL https://deb.nodesource.com/setup_14.x | bash - > /dev/null
-    - apt-get install -y -qq nodejs > /dev/null
-    - npm set strict-ssl false
     - rm -rf package-lock.json
     - rm -rf node_modules
   script:
-    - tox -e html
+    - export HTML=$(tox -e html)
+    - echo -e $HTML
+    - python -m pip install --disable-pip-version-check --quiet anybadge
+    - anybadge -l $CI_JOB_NAME -v $(echo $HTML | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f html.svg succeeded=green failed=red
+  artifacts:
+    paths:
+      - html.svg
+    when: always
+    expire_in: 4 weeks
 
-Typing:
-  stage: Static
-  before_script:
-    - python -m pip install --disable-pip-version-check --quiet tox
-  script:
-    - tox -e typing
-
-Py39:
-  stage: Test
+typing:
   image: python:3.9-slim
+  stage: static
+  before_script:
+    - python -m pip install --disable-pip-version-check --quiet tox
+  script:
+    - export TYPING=$(tox -e typing)
+    - echo -e $TYPING
+    - python -m pip install --disable-pip-version-check --quiet anybadge
+    - anybadge -l $CI_JOB_NAME -v $(echo $TYPING | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f typing.svg succeeded=green failed=red
+  artifacts:
+    paths:
+      - typing.svg
+    when: always
+    expire_in: 4 weeks
+
+py39:
+  stage: test
+  image: christopherpickering/extract-management-2-python39-test
   script:
     - tox -e clean,py39,cov
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  needs:
+    - lint
+    - typing
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
 
-Py38:
-  stage: Test
-  image: python:3.8-slim
+py38:
+  stage: test
+  image: christopherpickering/extract-management-2-python38-test
   script:
     - tox -e clean,py38,cov
+  needs:
+    - lint
+    - typing
 
-Py37:
-  stage: Test
-  image: python:3.7-slim
+py37:
+  stage: test
+  image: christopherpickering/extract-management-2-python37-test
   script:
     - tox -e clean,py37,cov
+  needs:
+    - lint
+    - typing
 
-Docs:
-  image: alpine:latest
-  before_script:
-    - echo 'Nothing to do...'
-  stage: Deploy
+pages:
+  image: christopherpickering/extract-management-2-python39-test
+  stage: docs
+  needs: [py39]
   script:
+    - tox -e docs
     - mv docs/_build/ public/
   artifacts:
     paths:
@@ -117,13 +146,19 @@ Docs:
   only:
     - master
 
-Publish:
-  image: python:3.9-slim
-  stage: Deploy
+publish:
+  image: python:3.9
+  needs:
+    - py39
+    - py38
+    - py37
+    - html
+    - web
+  stage: deploy
   environment: Production
   before_script:
-    - apt-get update -qq > /dev/null
-    - apt-get install -y -qq sshpass curl > /dev/null
+    - python -m pip install --disable-pip-version-check fabric==2.5.0
   script:
-    - export SSHPASS=$USER_PASS
-    - sshpass -e ssh -t -o StrictHostKeyChecking=no $SSHUSER@$SSHHOST "bash -c \"$(curl -kfsSl -H \"PRIVATE-TOKEN:$TOKEN\" $URL)\""
+    - cd publish && fab publish
+  only:
+      - master

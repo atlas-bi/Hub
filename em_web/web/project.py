@@ -24,6 +24,7 @@ from em_web.model import Project, Task, TaskFile, TaskLog, User
 from flask import Blueprint
 from flask import current_app as app
 from flask import redirect, render_template, request, session, url_for
+from sqlalchemy import func
 
 project_bp = Blueprint("project_bp", __name__)
 
@@ -39,7 +40,17 @@ def project():
     :returns: html page for projects. If no projects exist then redirect to new project page.
     """
     if db.session.query().select_from(Project).add_columns(Project.id).first():
-        return render_template("pages/project/all.html.j2", title="Projects")
+        owners = (
+            db.session.query()
+            .select_from(User)
+            .join(Project, Project.owner_id == User.id)
+            .add_columns(User.full_name, User.id, func.count(Project.id))
+            .group_by(User.full_name, User.id)
+            .all()
+        )
+        return render_template(
+            "pages/project/all.html.j2", title="Projects", owners=owners
+        )
     return redirect(url_for("project_bp.project_new"))
 
 
@@ -574,7 +585,7 @@ def run_all_project_tasks(project_id):
 
     :returns: redirects to the project details page.
     """
-    tasks = Task.query.filter_by(project_id=project_id).all()
+    tasks = Task.query.filter_by(project_id=project_id, enabled=1).all()
     for task in tasks:
         try:
             requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task.id))
