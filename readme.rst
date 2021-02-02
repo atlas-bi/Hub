@@ -25,7 +25,9 @@
 Extract Management 2.0
 ======================
 
-|demo image|
+.. image:: images/em2.png
+  :alt: Demo Image
+  :width: 100%
 
 Extract Management 2.0 is a task scheduling tool for getting data from a
 source and depositing it in a destination - sql servers to SFTP servers.
@@ -240,5 +242,3 @@ Atlas was created by the Riverside Healthcare Analytics team -
    :target: #
 .. |html badge| image:: #artifacts/master/raw/html.svg?job=html
    :target: #
-.. |demo image| image:: images/em2.png
-  :alt: Demo Image
