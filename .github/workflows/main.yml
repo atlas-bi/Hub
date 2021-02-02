@@ -11,6 +11,7 @@ on:
 
 jobs:
   docs:
+    runs-on: ubuntu-latest
     container: christopherpickering/extract-management-2-python39-test
     steps:
       - name: build
