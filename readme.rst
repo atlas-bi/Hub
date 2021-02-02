@@ -17,10 +17,10 @@
 
 
 
-|pipeline status| |coverage report| |python-version| |web badge|
-|lint badge| |typing badge| |html badge|
+|python-version|
 
-`Documentation <https://extract-management.analytics-pages.riversidehealthcare.net/extract-management-site/>`__
+
+`Documentation <https://riverside-healthcare.github.io/extract_management/>`__
 
 Extract Management 2.0
 ======================
@@ -226,19 +226,19 @@ Atlas was created by the Riverside Healthcare Analytics team -
 - `Richard Schissler <https://github.com/schiss152>`__
 - `Eric Shultz <https://github.com/eshultz>`__
 
-.. |pipeline status| image:: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/badges/master/pipeline.svg
-   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/commits/master
-.. |coverage report| image:: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/badges/master/coverage.svg
-   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/commits/master
+.. |pipeline status| image:: #pipeline.svg
+   :target: #
+.. |coverage report| image:: #coverage.svg
+   :target: #
 .. |python-version| image:: https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue
-   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/commits/master
-.. |web badge| image:: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/artifacts/master/raw/web.svg?job=web
-   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/
-.. |lint badge| image:: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/artifacts/master/raw/lint.svg?job=lint
-   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/
-.. |typing badge| image:: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/artifacts/master/raw/typing.svg?job=typing
-   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/
-.. |html badge| image:: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/artifacts/master/raw/html.svg?job=html
-   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/jobs/
+   :target: #
+.. |web badge| image:: #artifacts/master/raw/web.svg?job=web
+   :target: #
+.. |lint badge| image:: #artifacts/master/raw/lint.svg?job=lint
+   :target: #
+.. |typing badge| image:: #artifacts/master/raw/typing.svg?job=typing
+   :target: #
+.. |html badge| image:: #artifacts/master/raw/html.svg?job=html
+   :target: #
 .. |demo image| image:: images/em2.png
   :alt: Demo Image
