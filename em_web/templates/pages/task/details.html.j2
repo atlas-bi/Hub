@@ -499,6 +499,7 @@
                     <span class="em-gridName">FTP Connection</span>
                     <div class="em-code">
                         <a class="em-link" title="open connection" href="/connection/{{ t.destination_ftp_conn.connection.id }}">{{ t.destination_ftp_conn.connection.name }} - {{ t.destination_ftp_conn.name }}</a>
+                        <br />{{ t.destination_ftp_conn.address }}
                         <br />{{ t.destination_ftp_conn.path|clean_path }}
                         <br />user: {{ t.destination_ftp_conn.username }}
                         <br />pass: <input type="password" class="em-inputPlain" disabled="true" value="{{ t.destination_ftp_conn.password|decrypt }}" style="width:{{ t.destination_ftp_conn.password|decrypt|length * 6 }}px;cursor: text;"/>

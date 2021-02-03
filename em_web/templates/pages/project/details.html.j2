@@ -61,7 +61,7 @@
                 <span class="em-pSection">{% if p.cron_day != None %}on <em>{{ p.cron_day|num_st }}</em> day of the month,{% endif %}</span>
 
                 <!-- time -->
-                <span class="em-pSection">{% if p.cron_hour != None %}at <em>{{ p.cron_hour|time }}:{{ p.cron_min|time }}:{{ p.cron_sec|time }}</em> (hh:mm:ss),{% endif %}</span>
+                <span class="em-pSection">{% if p.cron_hour or p.cron_min or p.cron_sec %}at <em>{{ p.cron_hour|time }}:{{ p.cron_min|time }}:{{ p.cron_sec|time }}</em> (hh:mm:ss),{% endif %}</span>
 
                 <!-- start / end dates -->
                 <span class="em-pSection">{% if p.cron_start_date != None %}starting on <em>{{ p.cron_start_date }}</em>,{% endif %}</span>

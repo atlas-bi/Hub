@@ -141,7 +141,7 @@
 
                 {% if d.description %}<p>{{ d.description }}</p>{% endif %}
                 {% if d.address %}Address: {{ d.address }}{% endif %}
-                {% if d.primary_contact %}Primary Contact: <em>{{ d.primary_contact }}</em> {% endif %}{% if d.primary_contact_email %}Email: <a class="em-link" href="mailto:{{ d.primary_contact_email }}"><em>{{ d.primary_contact_email }}</em></a> {% endif %}{% if d.primary_contact_phone %}Phone: <em>{{ d.primary_contact_phone }}</em>{% endif %}
+                {% if d.primary_contact %}Primary Contact: <em>{{ d.primary_contact }}</em> {% endif %}{% if d.primary_contact_email %}Email: <a class="em-link" href="mailto:{{ d.primary_contact_email }}" title="send email"><em>{{ d.primary_contact_email }}</em></a> {% endif %}{% if d.primary_contact_phone %}Phone: <em>{{ d.primary_contact_phone }}</em>{% endif %}
 
 
                 <!-- sftp connections -->

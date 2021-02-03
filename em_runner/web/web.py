@@ -21,9 +21,6 @@ import os
 import tempfile
 from pathlib import Path
 
-from flask import Blueprint, jsonify
-from jinja2 import Environment, PackageLoader, select_autoescape
-
 from em_runner import executor
 from em_runner.model import Task, TaskFile
 from em_runner.scripts.em_cmd import Cmd
@@ -33,6 +30,8 @@ from em_runner.scripts.em_sftp import Sftp
 from em_runner.scripts.em_smb import Smb
 from em_runner.scripts.em_smtp import Smtp
 from em_runner.scripts.runner import Runner
+from flask import Blueprint, jsonify
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 web_bp = Blueprint("web_bp", __name__)
 
@@ -58,6 +57,7 @@ def send_ftp(task_id, run_id, file_id):
     """
     try:
         task = Task.query.filter_by(id=task_id).first()
+        my_file = TaskFile.query.filter_by(id=file_id).first()
 
         with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp:
             temp.write(
@@ -66,7 +66,7 @@ def send_ftp(task_id, run_id, file_id):
                     "default",
                     None,
                     "",
-                    task.project.name + "/" + task.name + "/" + run_id + "/" + file_id,
+                    my_file.path,
                     job_hash=run_id,
                 ).read()
             )
@@ -105,6 +105,7 @@ def send_sftp(task_id, run_id, file_id):
     """
     try:
         task = Task.query.filter_by(id=task_id).first()
+        my_file = TaskFile.query.filter_by(id=file_id).first()
 
         with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp:
             temp.write(
@@ -113,7 +114,7 @@ def send_sftp(task_id, run_id, file_id):
                     "default",
                     None,
                     "",
-                    task.project.name + "/" + task.name + "/" + run_id + "/" + file_id,
+                    my_file.path,
                     job_hash=run_id,
                 ).read()
             )
@@ -122,7 +123,7 @@ def send_sftp(task_id, run_id, file_id):
             task,
             task.destination_sftp_conn,
             1,
-            file_id,
+            my_file.name,
             temp.name,  # is full path
             job_hash=run_id,
         ).save()
@@ -152,6 +153,7 @@ def send_smb(task_id, run_id, file_id):
     """
     try:
         task = Task.query.filter_by(id=task_id).first()
+        my_file = TaskFile.query.filter_by(id=file_id).first()
 
         with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp:
             temp.write(
@@ -160,13 +162,13 @@ def send_smb(task_id, run_id, file_id):
                     "default",
                     None,
                     "",
-                    task.project.name + "/" + task.name + "/" + run_id + "/" + file_id,
+                    my_file.path,
                     job_hash=run_id,
                 ).read()
             )
 
         Smb(
-            task, task.destination_smb_conn, 1, file_id, temp.name, job_hash=run_id
+            task, task.destination_smb_conn, 1, my_file.name, temp.name, job_hash=run_id
         ).save()
 
         os.remove(temp.name)
@@ -194,6 +196,7 @@ def send_email(task_id, run_id, file_id):
     """
     try:
         task = Task.query.filter_by(id=task_id).first()
+        my_file = TaskFile.query.filter_by(id=file_id).first()
 
         date = str(datetime.datetime.now())
 
@@ -206,7 +209,7 @@ def send_email(task_id, run_id, file_id):
                     "default",
                     None,
                     "",
-                    task.project.name + "/" + task.name + "/" + run_id + "/" + file_id,
+                    my_file.path,
                     job_hash=run_id,
                 ).read()
             )
@@ -222,7 +225,7 @@ def send_email(task_id, run_id, file_id):
                 logs=[],
             ),
             temp.name,
-            file_id,
+            my_file.name,
             job_hash=run_id,
         )
 

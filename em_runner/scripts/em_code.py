@@ -271,9 +271,8 @@ class SourceCode:
                 )
 
         if task_params is not None:
-
             params = [
-                re.split(":|=", param.replace(" ", ""))
+                re.split(r"(?:\s*:\s*|\s*=\s*)", param)
                 for param in task_params.split("\n")
                 if param != ""
             ]
