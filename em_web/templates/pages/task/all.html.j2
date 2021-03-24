@@ -55,7 +55,7 @@
     </div>
 
     <!-- ajax table -->
-    <div class="em-ajaxTable" data-src="/table/tasks/{% if user_id %}{{ user_id }}{% elif mine %}mine{% else %}all{% endif %}/list">
+    <div class="em-ajaxTable" data-theme="Exec" data-src="/table/tasks/{% if user_id %}{{ user_id }}{% elif mine %}mine{% else %}all{% endif %}/list">
         <div class="loader">
             <img src="/static/img/loader.gif" alt="loading..." title="loading image" />
         </div>

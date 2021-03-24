@@ -24,10 +24,11 @@ from pathlib import Path
 
 import paramiko
 from crypto import em_decrypt
-from em_runner import db
-from em_runner.model import TaskLog
 from error_print import full_stack
 from flask import current_app as app
+
+from em_runner import db
+from em_runner.model import TaskLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
@@ -317,6 +318,7 @@ class Sftp:
                 status_id=9,
                 message="File verified on server: "
                 + self.connection.path
+                + "/"
                 + self.file_name,
             )
             db.session.add(log)
@@ -337,6 +339,7 @@ class Sftp:
                 error=1,
                 message="File failed to finish loading to server: "
                 + self.connection.path
+                + "/"
                 + self.file_name
                 + "\n"
                 + str(full_stack()),

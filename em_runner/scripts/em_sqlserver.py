@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import csv
+import itertools
 import logging
 import os
 import sys
@@ -23,9 +24,10 @@ import tempfile
 from pathlib import Path
 
 import pyodbc
+from error_print import full_stack
+
 from em_runner import db
 from em_runner.model import TaskLog
-from error_print import full_stack
 
 from .em_file import file_size
 
@@ -65,16 +67,34 @@ class SqlServer:
         self.cur = None
         self.job_hash = job_hash
 
-    def __rows(self, size=50):
+    def __rows(self, size=500):
         """Return data from query by a generator.
 
         :param cursor: curser containing query output
         :param size: chunk size of rows to return
         """
-        while True:
+        # while True:
+
+        log = TaskLog(
+            task_id=self.task.id,
+            job_id=self.job_hash,
+            status_id=20,
+            message=("Getting first %d query rows." % size),
+        )
+        db.session.add(log)
+        db.session.commit()
+
+        for iteration in itertools.count():
             rows = self.cur.fetchmany(size)
             if not rows:
                 break
+
+            log.message = "Getting query rows %d-%d of ?" % (
+                (size * iteration),
+                (size * iteration + len(rows)),
+            )
+            db.session.add(log)
+            db.session.commit()
             yield from rows
 
     def __connect(self):
@@ -101,6 +121,7 @@ class SqlServer:
             )
             db.session.add(log)
             db.session.commit()
+            return False
 
     def __close(self):
         self.conn.close()

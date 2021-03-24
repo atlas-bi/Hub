@@ -312,6 +312,12 @@ class Connection(db.Model):
         lazy=True,
         foreign_keys="ConnectionDatabase.connection_id",
     )
+    gpg = db.relationship(
+        "ConnectionGpg",
+        backref="connection",
+        lazy=True,
+        foreign_keys="ConnectionGpg.connection_id",
+    )
 
 
 @dataclass
@@ -395,6 +401,32 @@ class ConnectionSsh(db.Model):
         backref="source_ssh_conn",
         lazy=True,
         foreign_keys="Task.source_ssh_id",
+    )
+
+
+@dataclass
+class ConnectionGpg(db.Model):
+    """Table conntaining gpg keys."""
+
+    # pylint: disable=too-many-instance-attributes
+
+    __tablename__ = "connection_gpg"
+    id: int
+    connection_id: int
+    name: str
+    key: str
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    connection_id = db.Column(
+        db.Integer, db.ForeignKey(Connection.id), nullable=False, index=True
+    )
+    name = db.Column(db.String(500), nullable=False)
+    key = db.Column(db.String(8000), nullable=True)
+    task_source = db.relationship(
+        "Task",
+        backref="file_gpg_conn",
+        lazy=True,
+        foreign_keys="Task.file_gpg_id",
     )
 
 
@@ -651,6 +683,9 @@ class Task(db.Model):
     destination_smb_overwrite: int
     destination_smb_id: int
 
+    file_gpg: int
+    file_gpg_id: int
+
     email_completion: int
     email_completion_log: int
     email_completion_file: int
@@ -664,6 +699,8 @@ class Task(db.Model):
     email_error_message: str
 
     max_retries: int
+
+    est_duration: int
 
     """ general information """
     id = db.Column(db.Integer, primary_key=True, index=True)
@@ -823,6 +860,11 @@ class Task(db.Model):
         db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True, index=True
     )
 
+    file_gpg = db.Column(db.Integer, nullable=True, index=True)
+    file_gpg_id = db.Column(
+        db.Integer, db.ForeignKey(ConnectionGpg.id), nullable=True, index=True
+    )
+
     destination_quote_level_id = db.Column(
         db.Integer, db.ForeignKey(QuoteLevel.id), nullable=True, index=True
     )
@@ -844,6 +886,8 @@ class Task(db.Model):
 
     # rerun on fail
     max_retries = db.Column(db.Integer, nullable=True, index=True)
+
+    est_duration = db.Column(db.Integer, nullable=True, index=True)
 
     # tasklog link
     task = db.relationship(
@@ -894,6 +938,7 @@ class TaskFile(db.Model):
     task_id: int
     job_id: str
     size: str
+    file_hash: str
     path: str
     created: datetime.datetime
 
@@ -903,6 +948,7 @@ class TaskFile(db.Model):
     job_id = db.Column(db.String(1000), nullable=True, index=True)
     size = db.Column(db.String(200), nullable=True, index=True)
     path = db.Column(db.String(1000), nullable=True, index=True)
+    file_hash = db.Column(db.String(1000), nullable=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now, index=True)
 
     __table_args__ = (

@@ -1,0 +1,79 @@
+/*
+    Extract Management 2.0
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#nav-search {
+  height: 35px;
+  width: 100%;
+  padding: 0 5px;
+  border: 1px solid #09aebb;
+  text-overflow: ellipsis;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 6px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  color: inherit;
+  margin-bottom: 5px;
+  background: #fff;
+}
+
+#nav-search.disabled {
+  pointer-events: none;
+  background-color: #f2f2f2;
+  visibility: hidden;
+}
+
+#nav-search:focus {
+  outline: none;
+}
+.block-search:not(.search-open) {
+  display: none;
+}
+
+.search-open {
+  flex: 75%;
+  padding: 25px;
+  padding-top: 0;
+  max-width: calc(100% - 300px);
+}
+
+.search-open + .block-right {
+  display: none;
+}
+
+.search-result {
+  padding: 10px;
+  margin: 5px;
+  border-bottom: 1px solid #d9d9d9;
+  width: auto;
+}
+
+.search-result a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.search-result a:visited,
+.search-result a:hover,
+.search-result a:focus,
+.search-result a:active {
+  text-decoration: none;
+  color: inherit;
+}

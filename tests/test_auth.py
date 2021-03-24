@@ -38,6 +38,7 @@ def logout(em_web_app):
 @pytest.mark.options(env="test")
 def test_login_logout(em_web_app):
     """Make sure login and logout works."""
+
     username = em_web_app.application.config["AUTH_USERNAME"]
     password = em_web_app.application.config["AUTH_PASSWORD"]
 

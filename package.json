@@ -1,58 +1,58 @@
 {
-    "name": "em",
-    "description": "a task scheduling tool",
-    "repository": {
-        "private": true
-    },
-    "license": "AGPL-3.0-or-later",
-    "eslintConfig": {
-        "plugins": [
-            "prettier"
-        ],
-        "rules": {
-            "prettier/prettier": "error"
-        },
-        "extends": [
-            "plugin:prettier/recommended"
-        ]
-    },
-    "prittier": {
-        "tabWidth": "4",
-        "printWidth": "99"
-    },
-    "stylelint": {
-        "plugins": [
-            "stylelint-prettier"
-        ],
-        "rules": {
-            "prettier/prettier": true
-        },
-        "extends": [
-            "stylelint-config-standard",
-            "stylelint-config-prettier"
-        ],
-        "ignoreFiles": [
-            "em_web/static/css/*.min.css"
-        ]
-    },
-    "jshintConfig": {
-        "ignore": [
-            "em_web/static/js/*.min.js"
-        ]
-    },
-    "devDependencies": {
-        "eslint": "^7.17.0",
-        "eslint-config-prettier": "^7.1.0",
-        "eslint-plugin-prettier": "^3.3.1",
-        "htmlhint": "git+https://github.com/christopherpickering/HTMLHint.git",
-        "jshint": "^2.12.0",
-        "prettier": "^2.2.1",
-        "stylelint": "^13.8.0",
-        "stylelint-config-prettier": "^8.0.2",
-        "stylelint-config-standard": "^20.0.0",
-        "stylelint-prettier": "^1.1.2"
-    },
-    "dependencies": {
-        "markdown-include": "^0.4.3"
+  "dependencies": {
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "htmlhint": "git+https://github.com/christopherpickering/HTMLHint.git",
+    "jshint": "^2.12.0",
+    "markdown-include": "^0.4.3",
+    "prettier": "^2.2.1",
+    "stylelint": "^13.8.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-prettier": "^1.1.2"
+  },
+  "description": "a task scheduling tool",
+  "eslintConfig": {
+    "extends": [
+      "plugin:prettier/recommended"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
     }
+  },
+  "jshintConfig": {
+    "ignore": [
+      "*.min.js",
+      "lib/*.js"
+    ]
+  },
+  "license": "AGPL-3.0-or-later",
+  "name": "em",
+  "prittier": {
+    "printWidth": "99",
+    "tabWidth": "4"
+  },
+  "repository": {
+    "private": true
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-prettier"
+    ],
+    "ignoreFiles": [
+      "*.min.css",
+      "lib/*.css"
+    ],
+    "plugins": [
+      "stylelint-prettier"
+    ],
+    "rules": {
+      "prettier/prettier": true
+    }
+  }
 }

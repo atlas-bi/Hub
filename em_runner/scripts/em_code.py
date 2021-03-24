@@ -24,10 +24,11 @@ from pathlib import Path
 
 import requests
 import urllib3
-from em_runner import db
-from em_runner.model import TaskLog
 from error_print import full_stack
 from flask import current_app as app
+
+from em_runner import db
+from em_runner.model import TaskLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
@@ -96,15 +97,23 @@ class SourceCode:
                 if page.status_code != 200:
                     raise Exception("Failed to get code: " + page.text)
 
-                return self.cleanup(
-                    (
-                        page.text
-                        if not page.text.startswith("<!DOCTYPE")
-                        else "Visit URL to view code"
-                    ),
-                    ("mssql" if self.task.source_database_id == 2 else None),
-                    self.task.query_params,
-                    self.task.project.global_params,
+                if self.url.lower().endswith(".sql"):
+
+                    return self.cleanup(
+                        (
+                            page.text
+                            if not page.text.startswith("<!DOCTYPE")
+                            else "Visit URL to view code"
+                        ),
+                        ("mssql" if self.task.source_database_id == 2 else None),
+                        self.task.query_params,
+                        self.task.project.global_params,
+                    )
+
+                return (
+                    page.text
+                    if not page.text.startswith("<!DOCTYPE")
+                    else "Visit URL to view code"
                 )
 
             # pylint: disable=broad-except
@@ -225,9 +234,13 @@ class SourceCode:
         :returns: Cleaned up query.
         """
         # remove database call
-        query = re.sub(r"(^\s*)use\s+.+", "", query, flags=re.IGNORECASE | re.MULTILINE)
+        # sql stuff
+
         query = re.sub(
-            r"(^\s*)use\s+.+?;", "", query, flags=re.IGNORECASE | re.MULTILINE
+            r"(^;?\s*;?)use\s+.+", "", query, flags=re.IGNORECASE | re.MULTILINE
+        )
+        query = re.sub(
+            r"(^;?\s*;?)use\s+.+?;", "", query, flags=re.IGNORECASE | re.MULTILINE
         )
 
         # only needed for mssql
@@ -241,11 +254,8 @@ class SourceCode:
             query = "SET STATISTICS IO OFF;\n" + query
             query = "SET STATISTICS TIME OFF;\n" + query
 
-        # remove html tags > should all be on one line
-        query = re.sub(r"\<(.+?)\>", r"\1", query, flags=re.IGNORECASE)
-
-        # remove "go"
-        query = re.sub(r"go", r"", query, flags=re.IGNORECASE)
+        # remove " go"
+        query = re.sub(r" go", r"", query, flags=re.IGNORECASE)
 
         # add global parameters
         if project_params is not None:

@@ -19,7 +19,6 @@
 from fabric import Config, Connection, task
 from settings import config
 
-
 # pylint: disable=W0105
 """
 for debug:

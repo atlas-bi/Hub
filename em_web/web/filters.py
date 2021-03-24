@@ -32,6 +32,20 @@ sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from scripts.crypto import em_decrypt
 
 
+@filters_bp.app_template_filter("duration")
+def duration(seconds):
+    """Convert seconds to hh:mm:ss.
+
+    :param seconds: seconds to convert
+
+    :returns: hh:mm:ss.
+    """
+    # pylint: disable=unused-argument
+    mins, secs = divmod(seconds, 60)
+    hours, mins = divmod(mins, 60)
+    return "%d:%02d:%02d" % (hours, mins, secs)
+
+
 @filters_bp.app_template_filter("dateHash")
 def date_hash(text):
     """Get a hash value of the current date.

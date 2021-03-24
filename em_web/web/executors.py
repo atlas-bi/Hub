@@ -21,11 +21,11 @@ import json
 import requests
 from flask import Blueprint
 from flask import current_app as app
-from flask import jsonify
+from flask import jsonify, session
 from sqlalchemy import and_, or_
 
 from em_web import db, executor, ldap, redis_client
-from em_web.model import Task
+from em_web.model import Task, TaskLog
 
 executors_bp = Blueprint("executors_bp", __name__)
 
@@ -53,7 +53,7 @@ def executor_status():
     return jsonify(active_executors)
 
 
-def submit_executor(name):
+def submit_executor(name, *args):
     """Task Executor.
 
     Redis is used to track current executors. When an executor is launched
@@ -68,7 +68,7 @@ def submit_executor(name):
     active_executors = json.loads(redis_client.get("executors") or json.dumps({}))
 
     # remove duplicate job
-    if name in active_executors.keys() or executor.futures.done(name) is not None:
+    if name in active_executors or executor.futures.done(name) is not None:
         executor.futures.pop(name)
 
     # launch job
@@ -76,10 +76,90 @@ def submit_executor(name):
     possibles.update(locals())
     method = possibles.get(name)
     active_executors[name] = method.__doc__
-    executor.submit_stored(name, method)
+    executor.submit_stored(name, method, args)
 
     # update active executor list
     redis_client.set("executors", json.dumps(active_executors))
+
+
+def enable_task(task_id):
+    """Enable task."""
+    task_id = task_id[0]
+    redis_client.delete("runner_" + str(task_id) + "_attempt")
+    task = Task.query.filter_by(id=task_id).first()
+    task.enabled = 1
+    db.session.commit()
+
+    log = TaskLog(
+        task_id=task_id,
+        status_id=7,
+        message=session.get("user_full_name") + ": Task enabled.",
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    try:
+        requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task_id))
+        log = TaskLog(
+            task_id=task_id,
+            status_id=7,
+            message=session.get("user_full_name") + ": Task scheduled.",
+        )
+        db.session.add(log)
+        db.session.commit()
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        log = TaskLog(
+            status_id=7,
+            error=1,
+            task_id=task_id,
+            message=(
+                session.get("user_full_name")
+                + ": Failed to schedule task. ("
+                + task_id
+                + ")\n"
+                + str(e)
+            ),
+        )
+        db.session.add(log)
+        db.session.commit()
+
+
+def disable_task(task_id):
+    """Disable task."""
+    task_id = task_id[0]
+    try:
+        requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task_id))
+
+        task = Task.query.filter_by(id=task_id).first()
+        task.enabled = 0
+        task.next_run = None
+        db.session.commit()
+
+        log = TaskLog(
+            task_id=task_id,
+            status_id=7,
+            message=session.get("user_full_name") + ": Task disabled.",
+        )
+        db.session.add(log)
+        db.session.commit()
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        log = TaskLog(
+            status_id=7,
+            error=1,
+            message=(
+                session.get("user_full_name")
+                + ": Failed to disable task. ("
+                + task_id
+                + ")\n"
+                + str(e)
+            ),
+        )
+        db.session.add(log)
+        db.session.commit()
 
 
 def rescheduled_scheduled_tasks():
@@ -139,6 +219,20 @@ def run_errored_tasks():
         db.session.query()
         .select_from(Task)
         .filter(or_(Task.status_id == 2, and_(Task.id.notin_(ids), Task.enabled == 1)))
+        .add_columns("task.id")
+        .all()
+    )
+
+    for task in tasks:
+        requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task[0]))
+
+
+def run_active_tasks():
+    """Rerun all running tasks."""
+    tasks = (
+        db.session.query()
+        .select_from(Task)
+        .filter(or_(Task.status_id == 1, Task.enabled == 1))  # 1 = running
         .add_columns("task.id")
         .all()
     )

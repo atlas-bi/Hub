@@ -19,9 +19,6 @@
 
 |python-version|
 
-
-`Documentation <https://riverside-healthcare.github.io/extract_management/>`__
-
 Extract Management 2.0
 ======================
 
@@ -193,17 +190,5 @@ Atlas was created by the Riverside Healthcare Analytics team -
 - `Richard Schissler <https://github.com/schiss152>`__
 - `Eric Shultz <https://github.com/eshultz>`__
 
-.. |pipeline status| image:: #pipeline.svg
-   :target: #
-.. |coverage report| image:: #coverage.svg
-   :target: #
 .. |python-version| image:: https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue
-   :target: #
-.. |web badge| image:: #artifacts/master/raw/web.svg?job=web
-   :target: #
-.. |lint badge| image:: #artifacts/master/raw/lint.svg?job=lint
-   :target: #
-.. |typing badge| image:: #artifacts/master/raw/typing.svg?job=typing
-   :target: #
-.. |html badge| image:: #artifacts/master/raw/html.svg?job=html
    :target: #

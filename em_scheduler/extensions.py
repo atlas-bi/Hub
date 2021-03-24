@@ -28,7 +28,9 @@ scripts after running :obj:`em_scheduler.create_app`
 # You should have received a copy of the GNU General Public License
 # along
 
+from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy_caching import CachingQuery
 
 db = SQLAlchemy(query_class=CachingQuery)
+scheduler = APScheduler()

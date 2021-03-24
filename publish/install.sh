@@ -110,6 +110,7 @@ command_install libxmlsec1-dev
 command_install libxmlsec1-dev
 command_install redis-server
 command_install ufw
+command_install gnupg
 
 
 fmt_blue "Updating timezone to CST"

@@ -170,7 +170,11 @@ class PyProcesser:
                         )
 
             # clean list
-            imports = [x[0].strip().split(".")[0] for x in imports if x != []]
+            imports = [
+                x[0].strip().split(".")[0].replace("dateutil", "python-dateutil")
+                for x in imports
+                if x != []
+            ]
 
             # remove any relative imports
             names = [my_file.stem for my_file in paths]
@@ -253,8 +257,9 @@ class PyProcesser:
             )
             cmd = (
                 self.env_path
-                + "bin/python "
+                + 'bin/python "'
                 + self.script
+                + '"'
                 + (" " + self.input_path if self.input_path is not None else "")
             )
 

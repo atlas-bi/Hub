@@ -24,7 +24,7 @@ ajaxContent = function () {
 
   function load(el, dest) {
     if (typeof dest == "undefined") dest = el;
-    q = new XMLHttpRequest();
+    var q = new XMLHttpRequest();
     q.open("get", el.getAttribute("data-src"), true);
     q.send();
 
@@ -56,3 +56,23 @@ ajaxContent = function () {
 };
 
 ajaxContent();
+
+(function () {
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("input[action]")) {
+      // submit ajax request to the specified action.
+      var q = new XMLHttpRequest(),
+        target = e.target.closest("input[action]"),
+        action = target.getAttribute("action");
+      q.open("get", action, true);
+      q.send();
+
+      // change from enable to disable and vise versa
+      if (action.indexOf("enable") != -1) {
+        target.setAttribute("action", action.replace("enable", "disable"));
+      } else {
+        target.setAttribute("action", action.replace("disable", "enable"));
+      }
+    }
+  });
+})();

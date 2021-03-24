@@ -20,20 +20,22 @@ import sys
 from pathlib import Path
 
 from crypto import em_encrypt
+from flask import Blueprint
+from flask import current_app as app
+from flask import redirect, render_template, request, session, url_for
+
 from em_web import db, ldap
 from em_web.model import (
     Connection,
     ConnectionDatabase,
     ConnectionDatabaseType,
     ConnectionFtp,
+    ConnectionGpg,
     ConnectionSftp,
     ConnectionSmb,
     ConnectionSsh,
     TaskLog,
 )
-from flask import Blueprint
-from flask import current_app as app
-from flask import redirect, render_template, request, session, url_for
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
@@ -283,6 +285,45 @@ def connection_edit(connection_id):
         db.session.add(log)
         db.session.commit()
 
+    # update gpg
+    gpg_list = [
+        k.split("gpg")[1].split("-")[0]
+        for k, v in form.items()
+        if k.startswith("gpg") and "name" in k
+    ]
+
+    for gpg in gpg_list:
+        # try to get first, else create.
+        if ConnectionGpg.query.filter_by(connection_id=connection_id, id=gpg).count():
+            gpg_conn = ConnectionGpg.query.filter_by(
+                connection_id=connection_id, id=gpg
+            ).first()
+        else:
+            gpg_conn = ConnectionGpg(connection_id=my_connection.id)
+            db.session.add(gpg_conn)
+
+        gpg_conn.connection_id = my_connection.id
+        gpg_conn.name = form["gpg" + gpg + "-name"]
+        gpg_conn.key = em_encrypt(form["gpg" + gpg + "-key"], app.config["PASS_KEY"])
+
+        db.session.commit()
+
+        log = TaskLog(
+            status_id=7,
+            message=session.get("user_full_name")
+            + ": Connection Gpg edited. ("
+            + str(my_connection.id)
+            + " "
+            + my_connection.name
+            + " "
+            + str(gpg_conn.connection_id)
+            + " "
+            + gpg_conn.name
+            + ")",
+        )
+        db.session.add(log)
+        db.session.commit()
+
     # update database
     database_list = [
         k.split("database")[1].split("-")[0]
@@ -358,6 +399,19 @@ def connection_sftp():
     :returns: html page.
     """
     return render_template("pages/connection/type/sftp.html.j2")
+
+
+@connection_bp.route("/connection/gpg")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def connection_gpg():
+    """Page for adding a GPG Encryption Key.
+
+    :url: /connection/gpg
+
+    :returns: html page.
+    """
+    return render_template("pages/connection/type/gpg.html.j2")
 
 
 @connection_bp.route("/connection/smb")
@@ -604,6 +658,42 @@ def connection_new():
                     + str(smb_conn.id)
                     + " "
                     + smb_conn.name
+                    + ")",
+                )
+                db.session.add(log)
+                db.session.commit()
+
+        # gpg encryption keys
+        gpg_list = [
+            k.split("gpg")[1].split("-")[0]
+            for k, v in form.items()
+            if k.startswith("gpg") and "name" in k
+        ]
+
+        for gpg in gpg_list:
+            if "gpg" + gpg + "-name" in form and form["gpg" + gpg + "-name"] != "":
+                gpg_conn = ConnectionGpg(connection_id=me.id)
+                db.session.add(gpg_conn)
+
+                gpg_conn.connection_id = me.id
+                gpg_conn.name = form["gpg" + gpg + "-name"]
+                gpg_conn.key = em_encrypt(
+                    form["gpg" + gpg + "-key"], app.config["PASS_KEY"]
+                )
+
+                db.session.commit()
+
+                log = TaskLog(
+                    status_id=7,
+                    message=session.get("user_full_name")
+                    + ": Connection Gpg added. ("
+                    + str(me.id)
+                    + " "
+                    + me.name
+                    + " "
+                    + str(gpg_conn.id)
+                    + " "
+                    + gpg_conn.name
                     + ")",
                 )
                 db.session.add(log)

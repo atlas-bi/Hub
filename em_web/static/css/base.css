@@ -20,7 +20,8 @@ body {
   margin: 0;
   padding: 0;
   color: #3e4042;
-  font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Inter", HelveticaNeue, "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
   font-size: 12px;
   -webkit-font-smoothing: antialiased;
   -webkit-backface-visibility: hidden;
@@ -359,11 +360,13 @@ h5 {
 
 .em-cloudItem {
   display: inline-block;
-  border: 1px solid #d9d9d9;
   border-radius: 6px;
   padding: 4px;
   margin-right: 4px;
   margin-top: 4px;
+  border: 1px solid #eee;
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05),
+    0 0 0.0625rem rgba(0, 0, 0, 0.1);
 }
 
 .em-cloudName,
@@ -455,4 +458,35 @@ h5 {
   left: -30px;
   top: -8px;
   color: #6c7378;
+}
+
+.em-icon {
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  margin: 0 20px 0 10px;
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05),
+    0 0 0.0625rem rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+.em-successIcon {
+  background-image: url("/static/img/solid_check.svg");
+  fill: rgba(41, 206, 66);
+}
+.em-runningIcon {
+  background-image: url("/static/img/solid_notch.svg");
+  fill: rgba(250, 174, 71);
+}
+.em-errorIcon {
+  background-image: url("/static/img/solid_times.svg");
+  fill: rgba(255, 105, 97);
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  border-radius: 6px;
 }

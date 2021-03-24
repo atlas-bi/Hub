@@ -25,7 +25,7 @@
     <select class="em-input" name="task-destination-smb">
         <option disabled="disabled" {% if not t %} selected="selected" {% endif %}>Choose one</option>
         {% for s in smb_dest %}
-            <option value="{{ s.id }}" {% if t and t.smb_id == s.id %} selected="selected" {% endif %}>{{ s.name }}</option>
+            <option value="{{ s.id }}" {% if t and t.destination_smb_id == s.id %} selected="selected" {% endif %}>{{ s.name }}</option>
         {% endfor %}
     </select>
 

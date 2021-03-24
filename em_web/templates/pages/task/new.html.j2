@@ -98,19 +98,6 @@
                 if File smb
             -->
             <section class="task-sourceSmb" {% if not t or t.source_type_id != 2 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl tooltip">SMB Network File (path/to/file.csv) (%d/%m/%Y %H:%M:%S all <a title="strftime and strptime behavior" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank" class="em-link">python date/time variables</a> allowed) (wildcard * can be used in filenames)<span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span></div>
-                <input class="em-input" name="sourceSmbFile" autocomplete="off" value="{{ t.source_smb_file or ''}}" />
-                <div class="em-inputTtl">Delimiter (blank defaults to comma)</div>
-                <input class="em-input" name="sourceSmbDelimiter" autocomplete="off" value="{{ t.source_smb_delimiter or ''}}" />
-                <div class="em-checkbox">
-                    <label class="checkbox-container">
-                        <input type="checkbox" class="task_smb_ignore_delimiter" {% if not t or t.source_smb_ignore_delimiter == 1 %} checked="checked"{% endif %}/>
-                        <span class="checkmark"></span>
-                    </label>
-                    Ignore Delimiter
-                </div>
-                <input type="hidden" name="task_smb_ignore_delimiter" value="{% if not t or t.source_smb_ignore_delimiter == 1 %}1{% else %}0{% endif %}" />
-
                 <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="smb_source" data-smb="task-smb-source-connection">
                     <option {% if not t or not t.source_smb_conn or not t.source_smb_conn.connection.id %} selected="selected" {% endif %} value="none">Choose one</option>
@@ -123,24 +110,24 @@
                         {% include "pages/task/source/smb_source.html.j2" %}
                     {% endif %}
                 </div>
+                <div class="em-inputTtl tooltip">SMB Network File (path/to/file.csv) (%d/%m/%Y %H:%M:%S all <a title="strftime and strptime behavior" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank" class="em-link">python date/time variables</a> allowed) (wildcard * can be used in filenames)<span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span></div>
+                <input class="em-input" name="sourceSmbFile" autocomplete="off" value="{{ t.source_smb_file or ''}}" />
+                <div class="em-inputTtl">Delimiter (blank defaults to comma)</div>
+                <input class="em-input" name="sourceSmbDelimiter" autocomplete="off" value="{{ t.source_smb_delimiter or ''}}" />
+                <div class="em-checkbox">
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="task_smb_ignore_delimiter" {% if not t or t.source_smb_ignore_delimiter == 1 %} checked="checked"{% endif %}/>
+                        <span class="checkmark"></span>
+                    </label>
+                    Ignore Delimiter
+                </div>
+                <input type="hidden" name="task_smb_ignore_delimiter" value="{% if not t or t.source_smb_ignore_delimiter == 1 %}1{% else %}0{% endif %}" />
             </section>
 
             <!--
                 if File SFTP
             -->
             <section class="task-sourceSftp" {% if not t or t.source_type_id != 3 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl tooltip">SFTP File Name (path/to/file.csv) (%d/%m/%Y %H:%M:%S all <a title="strftime and strptime behavior" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank" class="em-link">python date/time variables</a> allowed)<span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span></div>
-                <input class="em-input" name="sourceSftpFile" autocomplete="off" value="{{ t.source_sftp_file or ''}}" />
-                <div class="em-inputTtl">Delimiter (blank defaults to comma)</div>
-                <input class="em-input" name="sourceSftpDelimiter" autocomplete="off" value="{{ t.source_sftp_delimiter or ''}}" />
-                <div class="em-checkbox">
-                    <label class="checkbox-container">
-                        <input type="checkbox" class="task_sftp_ignore_delimiter" {% if not t or t.source_sftp_ignore_delimiter == 1 %} checked="checked"{% endif %}/>
-                        <span class="checkmark"></span>
-                    </label>Ignore Delimiter
-                </div>
-                <input type="hidden" name="task_sftp_ignore_delimiter" value="{% if not t or t.source_sftp_ignore_delimiter == 1 %}1{% else %}0{% endif %}"/>
-
                 <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="sftp_source" data-sftp="task-sftp-source-connection">
                     <option {% if not t or not t.source_sftp_conn or not t.source_sftp_conn.connection.id %} selected="selected" {% endif %} value="none">Choose one</option>
@@ -153,12 +140,35 @@
                         {% include "pages/task/source/sftp_source.html.j2" %}
                     {% endif %}
                 </div>
+                <div class="em-inputTtl tooltip">SFTP File Name (path/to/file.csv) (%d/%m/%Y %H:%M:%S all <a title="strftime and strptime behavior" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank" class="em-link">python date/time variables</a> allowed)<span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span></div>
+                <input class="em-input" name="sourceSftpFile" autocomplete="off" value="{{ t.source_sftp_file or ''}}" />
+                <div class="em-inputTtl">Delimiter (blank defaults to comma)</div>
+                <input class="em-input" name="sourceSftpDelimiter" autocomplete="off" value="{{ t.source_sftp_delimiter or ''}}" />
+                <div class="em-checkbox">
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="task_sftp_ignore_delimiter" {% if not t or t.source_sftp_ignore_delimiter == 1 %} checked="checked"{% endif %}/>
+                        <span class="checkmark"></span>
+                    </label>Ignore Delimiter
+                </div>
+                <input type="hidden" name="task_sftp_ignore_delimiter" value="{% if not t or t.source_sftp_ignore_delimiter == 1 %}1{% else %}0{% endif %}"/>
             </section>
 
             <!--
                 if File FTP
             -->
             <section class="task-sourceFtp" {% if not t or t.source_type_id != 4 %}style="display:none;"{% endif %}>
+                <div class="em-inputTtl">Organization</div>
+                <select class="em-input" name="ftp_source" data-ftp="task-ftp-source-connection">
+                    <option {% if not t or not t.source_ftp_conn or not t.source_ftp_conn.connection.id %} selected="selected" {% endif %} value="none">Choose one</option>
+                    {% for s in conn %}
+                        <option value="{{ s.id }}" {% if t.source_ftp_conn and t.source_ftp_conn.connection.id  == s.id %} selected="selected" {% endif %} >{{ s.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="task-ftp-source-connection">
+                    {% if t and t.source_ftp_id %}
+                        {% include "pages/task/source/ftp_source.html.j2" %}
+                    {% endif %}
+                </div>
                 <div class="em-inputTtl tooltip">FTP File Name (path/to/file.csv) (%d/%m/%Y %H:%M:%S all <a title="strftime and strptime behavior" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank" class="em-link">python date/time variables</a> allowed)<span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span></div>
 
                 <input class="em-input" name="sourceFtpFile" autocomplete="off" value="{{ t.source_ftp_file or ''}}" />
@@ -173,19 +183,6 @@
                     </label>Ignore Delimiter
                 </div>
                 <input type="hidden" name="task_ftp_ignore_delimiter" value="{% if not t or t.source_ftp_ignore_delimiter == 1 %}1{% else %}0{% endif %}" />
-
-                <div class="em-inputTtl">Organization</div>
-                <select class="em-input" name="ftp_source" data-ftp="task-ftp-source-connection">
-                    <option {% if not t or not t.source_ftp_conn or not t.source_ftp_conn.connection.id %} selected="selected" {% endif %} value="none">Choose one</option>
-                    {% for s in conn %}
-                        <option value="{{ s.id }}" {% if t.source_ftp_conn and t.source_ftp_conn.connection.id  == s.id %} selected="selected" {% endif %} >{{ s.name }}</option>
-                    {% endfor %}
-                </select>
-                <div class="task-ftp-source-connection">
-                    {% if t and t.source_ftp_id %}
-                        {% include "pages/task/source/ftp_source.html.j2" %}
-                    {% endif %}
-                </div>
             </section>
 
             <!--
@@ -411,7 +408,7 @@
             </section>
 
             <section class="task-processingCommand" {% if not t or not t.processing_type_id or t.processing_type_id == 6 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl">Command To Execute (ex: main.py)  required="required"  if a project directory was specified.</div>
+                <div class="em-inputTtl">Command To Execute (ex: main.py) only required if a project directory was specified.</div>
                 <input class="em-input" name="processingCommand" autocomplete="off" value="{{ t.processing_command or ''}}" />
             </section>
 
@@ -486,6 +483,38 @@
                         <input class="em-input" name="destinationZipName" autocomplete="off" value="{{ t.destination_zip_name or ''}}" />
                     </section>
                 </div>
+            </div>
+            <!--
+                encryption
+            -->
+
+            <div class="em-drop" data-toggle="clps" data-target="#task1-file-gpg" data-task="1">File Encryption<svg class="em-dropIcon" viewbox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg>
+            </div>
+            <div class="clps" id="task1-file-gpg">
+                <div class="em-dropBody">
+                    <div class="em-checkbox">
+                        <label class="checkbox-container">
+                            <input type="checkbox" class="task_file_gpg" {% if t and t.file_gpg == 1 %} checked="checked"{% endif %}/>
+                            <span class="checkmark"></span>
+                        </label>
+                        Encrypt file with GPG key
+                    </div>
+                    <input type="hidden" name="task_file_gpg" value="{% if t and t.file_gpg == 1 %}1{% else %}0{% endif %}" />
+
+                    <div class="em-inputTtl">Organization</div>
+                    <select class="em-input" name="gpg_file" data-gpg="task-gpg-connection">
+                        <option {% if not t or not t.file_gpg_conn or not t.file_gpg_conn.connection.id %} selected="selected" {% endif %} value="none">Choose one</option>
+                        {% for s in conn %}
+                            <option value="{{ s.id }}" {% if t.file_gpg_conn and t.file_gpg_conn.connection.id  == s.id %} selected="selected" {% endif %} >{{ s.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="task-gpg-connection">
+                        {% if t and t.file_gpg_id %}
+                            {% include "pages/task/dest/gpg_file.html.j2" %}
+                        {% endif %}
+                    </div>
+                </div>
+
             </div>
 
             <!--

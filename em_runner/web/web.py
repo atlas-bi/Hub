@@ -17,9 +17,10 @@
 
 
 import datetime
-import os
-import tempfile
 from pathlib import Path
+
+from flask import Blueprint, jsonify
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 from em_runner import executor
 from em_runner.model import Task, TaskFile
@@ -30,8 +31,6 @@ from em_runner.scripts.em_sftp import Sftp
 from em_runner.scripts.em_smb import Smb
 from em_runner.scripts.em_smtp import Smtp
 from em_runner.scripts.runner import Runner
-from flask import Blueprint, jsonify
-from jinja2 import Environment, PackageLoader, select_autoescape
 
 web_bp = Blueprint("web_bp", __name__)
 
@@ -59,28 +58,21 @@ def send_ftp(task_id, run_id, file_id):
         task = Task.query.filter_by(id=task_id).first()
         my_file = TaskFile.query.filter_by(id=file_id).first()
 
-        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp:
-            temp.write(
-                Smb(
-                    task,
-                    "default",
-                    None,
-                    "",
-                    my_file.path,
-                    job_hash=run_id,
-                ).read()
-            )
-
         Ftp(
             task,
             task.destination_ftp_conn,
             1,
-            file_id,
-            temp.name,
+            my_file.name,
+            Smb(
+                task,
+                "default",
+                None,
+                "",
+                my_file.path,
+                job_hash=run_id,
+            ).read(),
             run_id,
         ).save()
-
-        os.remove(temp.name)
 
         return jsonify({"message": "successfully sent file."})
 
@@ -107,28 +99,21 @@ def send_sftp(task_id, run_id, file_id):
         task = Task.query.filter_by(id=task_id).first()
         my_file = TaskFile.query.filter_by(id=file_id).first()
 
-        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp:
-            temp.write(
-                Smb(
-                    task,
-                    "default",
-                    None,
-                    "",
-                    my_file.path,
-                    job_hash=run_id,
-                ).read()
-            )
-
         Sftp(
-            task,
-            task.destination_sftp_conn,
-            1,
-            my_file.name,
-            temp.name,  # is full path
+            task=task,
+            connection=task.destination_sftp_conn,
+            overwrite=1,
+            file_name=my_file.name,
+            file_path=Smb(
+                task,
+                "default",
+                None,
+                "",
+                my_file.path,
+                job_hash=run_id,
+            ).read(),  # is full path
             job_hash=run_id,
         ).save()
-
-        os.remove(temp.name)
 
         return jsonify({"message": "successfully sent file."})
 
@@ -155,23 +140,21 @@ def send_smb(task_id, run_id, file_id):
         task = Task.query.filter_by(id=task_id).first()
         my_file = TaskFile.query.filter_by(id=file_id).first()
 
-        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp:
-            temp.write(
-                Smb(
-                    task,
-                    "default",
-                    None,
-                    "",
-                    my_file.path,
-                    job_hash=run_id,
-                ).read()
-            )
-
         Smb(
-            task, task.destination_smb_conn, 1, my_file.name, temp.name, job_hash=run_id
+            task,
+            task.destination_smb_conn,
+            1,
+            my_file.name,
+            Smb(
+                task,
+                "default",
+                None,
+                "",
+                my_file.path,
+                job_hash=run_id,
+            ).read(),
+            job_hash=run_id,
         ).save()
-
-        os.remove(temp.name)
 
         return jsonify({"message": "successfully sent file."})
 
@@ -202,18 +185,6 @@ def send_email(task_id, run_id, file_id):
 
         template = env.get_template("email/email.html.j2")
 
-        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp:
-            temp.write(
-                Smb(
-                    task,
-                    "default",
-                    None,
-                    "",
-                    my_file.path,
-                    job_hash=run_id,
-                ).read()
-            )
-
         Smtp(
             task,
             task.email_completion_recipients,
@@ -224,12 +195,17 @@ def send_email(task_id, run_id, file_id):
                 date=date,
                 logs=[],
             ),
-            temp.name,
+            Smb(
+                task,
+                "default",
+                None,
+                "",
+                my_file.path,
+                job_hash=run_id,
+            ).read(),
             my_file.name,
             job_hash=run_id,
         )
-
-        os.remove(temp.name)
 
         return jsonify({"message": "successfully sent file."})
 

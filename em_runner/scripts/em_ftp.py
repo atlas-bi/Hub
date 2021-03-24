@@ -24,10 +24,11 @@ from ftplib import FTP  # noqa: S402
 from pathlib import Path
 
 from crypto import em_decrypt
-from em_runner import db
-from em_runner.model import TaskLog
 from error_print import full_stack
 from flask import current_app as app
+
+from em_runner import db
+from em_runner.model import TaskLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 

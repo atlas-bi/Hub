@@ -18,10 +18,19 @@
 
 .em-ajaxTable {
   transition: opacity 0.1s ease-in-out;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.em-ajaxTable > div.loader-typing {
+  padding: 10px;
 }
 
 .em-table {
-  border: 1px solid #d9d9d9;
+  border: 1px solid #eee;
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05),
+    0 0 0.0625rem rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   border-spacing: 0;
   width: 100%;
@@ -33,12 +42,12 @@
 }
 
 .em-table th {
-  border-left: 1px solid #d9d9d9;
+  border-left: 1px solid #eee;
 }
 
 .em-tableProg th {
   padding: 0 !important;
-  border-top: 1px solid #d9d9d9;
+  border-top: 1px solid #eee;
 }
 
 .em-tableProg + tr th {
@@ -61,8 +70,8 @@
 }
 
 .em-table td {
-  border-top: 1px solid #d9d9d9;
-  border-left: 1px solid #d9d9d9;
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
   word-break: break-word;
 }
 
@@ -95,6 +104,29 @@
   background: rgb(7, 137, 146);
 }
 
+.em-tableTools div {
+  float: right;
+}
+
+.em-tableLoad div {
+  background-color: #07aebb;
+  width: 0;
+  transition: width 10s linear;
+  height: 100%;
+}
+
+.em-tableGetRows > div {
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  line-height: 25px;
+}
+
+.em-table td div {
+  display: flex;
+  align-items: center;
+}
+
 .em-table .icon-sm {
   padding-left: 5px;
   margin-bottom: -2px;
@@ -120,10 +152,6 @@
 .em-tableTools {
   height: 25px;
   padding: 10px 0;
-}
-
-.em-tableTools div {
-  float: right;
 }
 
 .em-tableTools div button {
@@ -172,20 +200,6 @@
   top: 0;
   z-index: -1;
   text-align: left;
-}
-
-.em-tableLoad div {
-  background-color: #07aebb;
-  width: 0;
-  transition: width 10s linear;
-  height: 100%;
-}
-
-.em-tableGetRows > div {
-  margin: 5px 0;
-  display: flex;
-  justify-content: space-between;
-  line-height: 25px;
 }
 
 .em-tablePag {
@@ -357,4 +371,19 @@
   -webkit-transform: translateX(20px);
   -ms-transform: translateX(20px);
   transform: translateX(20px);
+}
+
+.em-table a {
+  color: #3e4042 !important;
+}
+
+.em-table tbody td div label {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.em-tableUpdated {
+  text-align: center;
+  margin: 10px;
+  font-family: ;
 }

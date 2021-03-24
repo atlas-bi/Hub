@@ -21,24 +21,96 @@ import sys
 from pathlib import Path
 
 import requests
-from em_web import db, ldap
-from em_web.model import TaskLog
-from em_web.web import submit_executor
 from error_print import full_stack
 from flask import Blueprint
 from flask import current_app as app
-from flask import flash, redirect, render_template, session, url_for
+from flask import flash, jsonify, redirect, render_template, session, url_for
+
+from em_web import db, ldap
+from em_web.model import Project, Task, TaskLog, User
+from em_web.web import submit_executor
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
 dashboard_bp = Blueprint("dashboard_bp", __name__)
 
 
+@dashboard_bp.route("/search")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def search():
+    """Search data."""
+    my_json = {}
+
+    tasks = db.session.query(Task.id, Task.name).order_by(Task.name).all()
+    task_json = {}
+    for t_id, t_name in tasks:
+        task_json[str(t_id)] = t_name
+
+    project_json = {}
+    projects = db.session.query(Project.id, Project.name).order_by(Project.name).all()
+    for t_id, t_name in projects:
+        project_json[str(t_id)] = t_name
+
+    user_json = {}
+    users = db.session.query(User.id, User.full_name).order_by(User.full_name).all()
+    for t_id, t_name in users:
+        user_json[str(t_id)] = t_name
+
+    my_json["task"] = task_json
+    my_json["project"] = project_json
+    my_json["user"] = user_json
+
+    return jsonify(my_json)
+
+
 @dashboard_bp.route("/")
 # @ldap.login_required
 # @ldap.group_required(["Analytics"])
+def home():
+    """Return default landing page.
+
+    If user has projects, they will direct to that screen.
+
+    :url: /
+    :returns: html webpage.
+    """
+    my_user = User.query.filter_by(user_id=session.get("user_id"))
+
+    if my_user.count():
+        user_id = (
+            db.session.query()
+            .select_from(User)
+            .add_columns(User.id)
+            .filter(User.user_id == session.get("user_id"))
+            .first()
+        )[0]
+
+        if (
+            db.session.query()
+            .select_from(Project)
+            .add_columns(Project.id)
+            .filter(Project.owner_id == user_id)
+            .first()
+        ):
+
+            my_user = User.query.filter_by(id=user_id).first()
+
+            return render_template(
+                "pages/project/all.html.j2",
+                title=my_user.full_name + "'s Projects",
+                username=my_user.full_name,
+                user_id=user_id,
+            )
+
+    return redirect(url_for("dashboard_bp.dash"))
+
+
+@dashboard_bp.route("/dashboard")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
 def dash():
-    """Home page.
+    """Dashboard page.
 
     :url: /
     :returns: html webpage.
@@ -228,6 +300,20 @@ def dash_errored_run():
     :returns: redirects to dashboard.
     """
     submit_executor("run_errored_tasks")
+
+    return redirect(url_for("dashboard_bp.dash"))
+
+
+@dashboard_bp.route("/dash/active/run")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def dash_active_run():
+    """Button to run all errored tasks.
+
+    :url: /dash/errored/run
+    :returns: redirects to dashboard.
+    """
+    submit_executor("run_active_tasks")
 
     return redirect(url_for("dashboard_bp.dash"))
 

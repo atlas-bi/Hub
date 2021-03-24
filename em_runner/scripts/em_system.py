@@ -76,8 +76,7 @@ class Monitor:
 
         :returns: True if test passes, else False.
         """
-        my_cpu = self.process.cpu_percent(interval=None)
-        my_cpu = self.process.cpu_percent(interval=None)
+        my_cpu = psutil.cpu_percent(interval=5)  # seconds to check cpu
 
         if my_cpu > 100 - app.config["MIN_FREE_CPU_PERC"]:
             logging.error(

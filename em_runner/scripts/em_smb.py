@@ -26,13 +26,14 @@ import urllib
 from pathlib import Path
 
 from crypto import em_decrypt
-from em_runner import db, redis_client
-from em_runner.model import TaskLog
-from em_runner.scripts.smb_fix import SMBHandler
 from error_print import full_stack
 from flask import current_app as app
 from smb.base import SMBTimeout
 from smb.SMBConnection import SMBConnection
+
+from em_runner import db, redis_client
+from em_runner.model import TaskLog
+from em_runner.scripts.smb_fix import SMBHandler
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 

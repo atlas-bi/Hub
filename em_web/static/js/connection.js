@@ -142,6 +142,48 @@
           );
         }
       };
+    } else if (e.target.closest("#connections-addGpg")) {
+      t = e.target.closest("#connections-addGpg");
+      //get teamplate
+      q = new XMLHttpRequest();
+      q.open("get", "/connection/gpg", true);
+      q.setRequestHeader(
+        "Content-Type",
+        "application/x-www-form-urlencoded; charset=UTF-8"
+      );
+      q.setRequestHeader("Ajax", "True");
+      q.send();
+
+      q.onload = function () {
+        if (d.querySelectorAll(".em-drop[data-gpg]").length > 0) {
+          gpg = Math.max.apply(
+            Math,
+            Array.from(document.querySelectorAll(".em-drop[data-gpg]")).map(
+              function (x) {
+                return x.getAttribute("data-gpg");
+              }
+            )
+          );
+          gpg++;
+        } else {
+          gpg = 1;
+        }
+        document
+          .getElementById("em-elementGroupGpg")
+          .insertAdjacentHTML(
+            "beforeend",
+            q.responseText
+              .replace(/gpg1/gm, "gpg" + gpg)
+              .replace(/data-gpg="1"/gm, 'data-gpg="' + gpg + '"')
+          );
+        if (t.closest(".clps-o")) {
+          t.closest(".clps-o").dispatchEvent(
+            new Event("change", {
+              bubbles: true,
+            })
+          );
+        }
+      };
     } else if (e.target.closest("#connections-addSsh")) {
       t = e.target.closest("#connections-addSsh");
       //get teamplate

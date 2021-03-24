@@ -24,6 +24,12 @@ def em_web_app():
 def em_web_authed(em_web_app):
     assert em_web_app.get("/login").status_code == 200
 
+    import os
+
+    print(os.environ.get("FLASK_ENV"))
+    print(os.environ.get("FLASK_DEBUG"))
+    print(os.environ.get("FLASK_APP"))
+
     em_web_app.post(
         url_for("auth_bp.login"),
         data=dict(
@@ -77,9 +83,15 @@ def runner():
 
 @pytest.fixture
 def scheduler_client():
+    import os
+
     from em_scheduler import app
     from em_scheduler.extensions import db
     from em_scheduler.model import Project, Task, TaskLog
+
+    print(os.environ.get("FLASK_ENV"))
+    print(os.environ.get("FLASK_DEBUG"))
+    print(os.environ.get("FLASK_APP"))
 
     with app.test_client() as client:
         with app.app_context():

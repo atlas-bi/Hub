@@ -72,12 +72,12 @@ def create_app():
     # pylint: disable=W0621
     app = Flask(__name__)
 
-    if app.config["DEBUG"] or app.config["ENV"] == "test" and not app.config["DEBUG"]:
-        logging.info("loading debug config")
-        app.config.from_object("em_runner.config.DevConfig")
-    elif app.config["ENV"] == "test":
+    if app.config["ENV"] == "test":
         logging.info("loading test config")
         app.config.from_object("em_runner.config.TestConfig")
+    elif app.config["DEBUG"] or app.config["ENV"] == "test":
+        logging.info("loading debug config")
+        app.config.from_object("em_runner.config.DevConfig")
     else:
         logging.info("loading prod config")
         app.config.from_object("em_runner.config.Config")

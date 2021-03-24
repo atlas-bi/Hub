@@ -19,12 +19,13 @@
 import datetime
 
 import requests
-from em_web import cache, db, ldap
-from em_web.model import Project, Task, TaskFile, TaskLog, User
 from flask import Blueprint
 from flask import current_app as app
 from flask import redirect, render_template, request, session, url_for
-from sqlalchemy import func
+from sqlalchemy import func, text
+
+from em_web import cache, db, ldap
+from em_web.model import Project, Task, TaskFile, TaskLog, User
 
 project_bp = Blueprint("project_bp", __name__)
 
@@ -439,7 +440,7 @@ def project_delete(project_id):
             db.session.query()
             .select_from(Task)
             .filter(Task.project_id == project_id)
-            .add_columns("task.id")
+            .add_columns(text("task.id"))
             .all()
         )
     ]

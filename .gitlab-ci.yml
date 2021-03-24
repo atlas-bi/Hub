@@ -1,12 +1,30 @@
+variables:
+  PYTHONDONTWRITEBYTECODE: 1
+  FLASK_ENV: test
+  FLASK_DEBUG: 1
+  FLASK_APP: em_web
+
+stages:
+  - static
+  - test
+  - deploy
+  - docs
+
+before_script:
+  - python --version
+  - redis-server --daemonize yes
+  - cd /builds/extract-management/extract-management-site/
+  - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+
 include:
   - template: Code-Quality.gitlab-ci.yml
 
 code_quality:
-  before_script:
-    - echo "nothing to do.."
   services:            # Shut off Docker-in-Docker
   tags:
     - cq-sans-dind     # Set this job to only run on our new specialized runner
+  before_script:
+    - echo "nothing to do.."
   artifacts:
     paths: [gl-code-quality-report.json]
 
@@ -19,25 +37,11 @@ metrics:
     reports:
       metrics: metrics.txt
 
-variables:
-  PYTHONDONTWRITEBYTECODE: 1
-  FLASK_ENV: test
-  FLASK_DEBUG: 1
-  FLASK_APP: em_web
 
-stages:
-  - static
-  - test
-  - deploy
-  - docs
-before_script:
-  - python --version
-  - redis-server --daemonize yes
-  - cd /builds/extract-management/extract-management-site/
-  - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
 
 lint:
   stage: static
+  image: python:3.9
   before_script:
     - python -m pip install --disable-pip-version-check --quiet tox
   script:
@@ -45,6 +49,7 @@ lint:
     - echo -e $LINT
     - python -m pip install --disable-pip-version-check --quiet anybadge
     - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red
+    - echo $LINT | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
       - lint.svg
@@ -62,6 +67,7 @@ web:
     - echo -e $STATIC
     - python -m pip install --disable-pip-version-check --quiet anybadge
     - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
+    - echo $STATIC | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
       - web.svg
@@ -79,6 +85,7 @@ html:
     - echo -e $HTML
     - python -m pip install --disable-pip-version-check --quiet anybadge
     - anybadge -l $CI_JOB_NAME -v $(echo $HTML | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f html.svg succeeded=green failed=red
+    - echo $HTML | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
       - html.svg
@@ -95,6 +102,7 @@ typing:
     - echo -e $TYPING
     - python -m pip install --disable-pip-version-check --quiet anybadge
     - anybadge -l $CI_JOB_NAME -v $(echo $TYPING | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f typing.svg succeeded=green failed=red
+    - echo $TYPING | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
       - typing.svg
@@ -105,6 +113,9 @@ py39:
   stage: test
   image: christopherpickering/extract-management-2-python39-test
   script:
+    - echo $FLASK_ENV
+    - echo $FLASK_DEBUG
+    - echo $FLASK_APP
     - tox -e clean,py39,cov
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   needs:
@@ -119,6 +130,9 @@ py38:
   stage: test
   image: christopherpickering/extract-management-2-python38-test
   script:
+    - echo $FLASK_ENV
+    - echo $FLASK_DEBUG
+    - echo $FLASK_APP
     - tox -e clean,py38,cov
   needs:
     - lint
@@ -128,6 +142,9 @@ py37:
   stage: test
   image: christopherpickering/extract-management-2-python37-test
   script:
+    - echo $FLASK_ENV
+    - echo $FLASK_DEBUG
+    - echo $FLASK_APP
     - tox -e clean,py37,cov
   needs:
     - lint
@@ -146,19 +163,19 @@ pages:
   only:
     - master
 
-publish:
-  image: python:3.9
-  needs:
-    - py39
-    - py38
-    - py37
-    - html
-    - web
-  stage: deploy
-  environment: Production
-  before_script:
-    - python -m pip install --disable-pip-version-check fabric==2.5.0
-  script:
-    - cd publish && fab publish
-  only:
-      - master
+# publish:
+#   image: python:3.9
+#   needs:
+#     - py39
+#     - py38
+#     - py37
+#     - html
+#     - web
+#   stage: deploy
+#   environment: Production
+#   before_script:
+#     - python -m pip install --disable-pip-version-check fabric==2.5.0
+#   script:
+#     - cd publish && fab publish
+#   only:
+#       - master

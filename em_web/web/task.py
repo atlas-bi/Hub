@@ -20,13 +20,29 @@ import datetime
 import html
 import json
 import os
+import zipfile
 
 import requests
+from flask import Blueprint, Response
+from flask import current_app as app
+from flask import (
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    session,
+    url_for,
+)
+from RelativeToNow import relative_to_now
+from sqlalchemy import and_, func, text
+
 from em_web import db, ldap, redis_client
 from em_web.model import (
     Connection,
     ConnectionDatabase,
     ConnectionFtp,
+    ConnectionGpg,
     ConnectionSftp,
     ConnectionSmb,
     ConnectionSsh,
@@ -42,11 +58,7 @@ from em_web.model import (
     TaskStatus,
     User,
 )
-from flask import Blueprint, Response
-from flask import current_app as app
-from flask import jsonify, redirect, render_template, request, session, url_for
-from RelativeToNow import relative_to_now
-from sqlalchemy import and_, func, text
+from em_web.web import submit_executor
 
 task_bp = Blueprint("task_bp", __name__)
 
@@ -103,7 +115,7 @@ def task_duplicate(task_id):
     new_task = Task()
 
     # pylint: disable=protected-access
-    for key in my_task.__table__.columns._data.keys():
+    for key in my_task.__table__.columns.keys():
         if key not in ["id", "last_run", "last_run_job_id", "status_id"]:
             setattr(new_task, key, getattr(my_task, key))
 
@@ -625,6 +637,10 @@ def task_new(project_id):
         and str(form["task_ignore_file_delimiter"]) == "1"
         else None
     )
+
+    tme.file_gpg = form["task_file_gpg"] if "task_file_gpg" in form else 0
+    tme.file_gpg_id = form["task-file-gpg"] if "task-file-gpg" in form else None
+
     tme.destination_sftp = form["task_save_sftp"] if "task_save_sftp" in form else 0
     tme.destination_sftp_id = (
         form["task-destination-sftp"] if "task-destination-sftp" in form else None
@@ -642,7 +658,7 @@ def task_new(project_id):
     )
 
     tme.destination_smb = form["task_save_smb"] if "task_save_smb" in form else 0
-    tme.smb_id = (
+    tme.destination_smb_id = (
         form["task-destination-smb"] if "task-destination-smb" in form else None
     )
     tme.destination_smb_overwrite = (
@@ -831,7 +847,15 @@ def task_edit_get(task_id):
             if me.destination_smb_id
             else ""
         )
-
+        gpg_file = (
+            (
+                ConnectionGpg.query.filter_by(
+                    connection_id=me.file_gpg_conn.connection_id
+                ).all()
+            )
+            if me.file_gpg_conn
+            else ""
+        )
         sftp_source = (
             ConnectionSftp.query.filter_by(
                 connection_id=me.source_sftp_conn.connection_id
@@ -936,6 +960,7 @@ def task_edit_get(task_id):
             ftp_processing=ftp_processing,
             smb_processing=smb_processing,
             database_source=database_source,
+            gpg_file=gpg_file,
             file_type=file_type,
             quote_level=quote_level,
         )
@@ -1396,6 +1421,9 @@ def task_edit_post(task_id):
         else None
     )
 
+    tme.file_gpg = form["task_file_gpg"] if "task_file_gpg" in form else 0
+    tme.file_gpg_id = form["task-file-gpg"] if "task-file-gpg" in form else None
+
     tme.destination_sftp = form["task_save_sftp"] if "task_save_sftp" in form else 0
     tme.destination_sftp_id = (
         form["task-destination-sftp"] if "task-destination-sftp" in form else None
@@ -1413,7 +1441,7 @@ def task_edit_post(task_id):
     )
 
     tme.destination_smb = form["task_save_smb"] if "task_save_smb" in form else 0
-    tme.smb_id = (
+    tme.destination_smb_id = (
         form["task-destination-smb"] if "task-destination-smb" in form else None
     )
     tme.destination_smb_overwrite = (
@@ -1628,47 +1656,9 @@ def enable_task(task_id):
 
     :returns: redirect to task details page.
     """
-    redis_client.delete("runner_" + str(task_id) + "_attempt")
-    task = Task.query.filter_by(id=task_id).first()
-    task.enabled = 1
-    db.session.commit()
+    submit_executor("enable_task", task_id)
 
-    log = TaskLog(
-        task_id=task_id,
-        status_id=7,
-        message=session.get("user_full_name") + ": Task enabled.",
-    )
-    db.session.add(log)
-    db.session.commit()
-
-    try:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task_id))
-        log = TaskLog(
-            task_id=task_id,
-            status_id=7,
-            message=session.get("user_full_name") + ": Task scheduled.",
-        )
-        db.session.add(log)
-        db.session.commit()
-
-    # pylint: disable=broad-except
-    except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            error=1,
-            task_id=task_id,
-            message=(
-                session.get("user_full_name")
-                + ": Failed to schedule task. ("
-                + task_id
-                + ")\n"
-                + str(e)
-            ),
-        )
-        db.session.add(log)
-        db.session.commit()
-
-    return redirect(url_for("task_bp.get_task", task_id=task_id))
+    return "enabling task"
 
 
 @task_bp.route("/task/<task_id>/disable")
@@ -1682,39 +1672,9 @@ def disable_task(task_id):
 
     :returns: redirect to task details page.
     """
-    try:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task_id))
+    submit_executor("disable_task", task_id)
 
-        task = Task.query.filter_by(id=task_id).first()
-        task.enabled = 0
-        task.next_run = None
-        db.session.commit()
-
-        log = TaskLog(
-            task_id=task_id,
-            status_id=7,
-            message=session.get("user_full_name") + ": Task disabled.",
-        )
-        db.session.add(log)
-        db.session.commit()
-
-    # pylint: disable=broad-except
-    except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            error=1,
-            message=(
-                session.get("user_full_name")
-                + ": Failed to disable task. ("
-                + task_id
-                + ")\n"
-                + str(e)
-            ),
-        )
-        db.session.add(log)
-        db.session.commit()
-
-    return redirect(url_for("task_bp.get_task", task_id=task_id))
+    return "disabling task"
 
 
 @task_bp.route("/task/<task_id>/log/<run_id>")
@@ -1756,13 +1716,13 @@ def get_task_file_send_sftp(task_id, file_id):
     :returns: redirect to task details.
     """
     try:
-        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
+        my_file = TaskFile.query.filter_by(id=file_id).first()
         requests.get(
             app.config["RUNNER_HOST"]
             + "/send_sftp/"
             + task_id
             + "/"
-            + run_id
+            + my_file.job_id
             + "/"
             + file_id
         )
@@ -1770,13 +1730,13 @@ def get_task_file_send_sftp(task_id, file_id):
 
         log = TaskLog(
             task_id=task.id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             status_id=7,
             message="("
             + session.get("user_full_name")
             + ") Manually sending file to SFTP server: "
             + task.destination_sftp_conn.path
-            + file_id,
+            + my_file.name,
         )
         db.session.add(log)
         db.session.commit()
@@ -1786,7 +1746,7 @@ def get_task_file_send_sftp(task_id, file_id):
         log = TaskLog(
             status_id=7,
             task_id=task_id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             error=1,
             message=(
                 session.get("user_full_name")
@@ -1816,13 +1776,13 @@ def get_task_file_send_ftp(task_id, file_id):
     :returns: redirect to task details.
     """
     try:
-        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
+        my_file = TaskFile.query.filter_by(id=file_id).first()
         requests.get(
             app.config["RUNNER_HOST"]
             + "/send_ftp/"
             + task_id
             + "/"
-            + run_id
+            + my_file.job_id
             + "/"
             + file_id
         )
@@ -1831,14 +1791,14 @@ def get_task_file_send_ftp(task_id, file_id):
 
         log = TaskLog(
             task_id=task.id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             status_id=7,
             message="("
             + session.get("user_full_name")
             + ") Manually sending file to FTP server: "
             + task.destination_ftp_conn.path
             + "/"
-            + file_id,
+            + my_file.name,
         )
         db.session.add(log)
         db.session.commit()
@@ -1848,7 +1808,7 @@ def get_task_file_send_ftp(task_id, file_id):
         log = TaskLog(
             status_id=7,
             task_id=task_id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             error=1,
             message=(
                 session.get("user_full_name")
@@ -1878,13 +1838,13 @@ def get_task_file_send_smb(task_id, file_id):
     :returns: redirect to task details.
     """
     try:
-        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
+        my_file = TaskFile.query.filter_by(id=file_id).first().job_id
         requests.get(
             app.config["RUNNER_HOST"]
             + "/send_smb/"
             + task_id
             + "/"
-            + run_id
+            + my_file.job_id
             + "/"
             + file_id
         )
@@ -1893,14 +1853,14 @@ def get_task_file_send_smb(task_id, file_id):
 
         log = TaskLog(
             task_id=task.id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             status_id=7,
             message="("
             + session.get("user_full_name")
             + ") Manually sending file to SMB server: "
             + task.destination_smb_conn.path
             + "/"
-            + file_id,
+            + my_file.name,
         )
         db.session.add(log)
         db.session.commit()
@@ -1909,7 +1869,7 @@ def get_task_file_send_smb(task_id, file_id):
         log = TaskLog(
             status_id=7,
             task_id=task_id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             error=1,
             message=(
                 session.get("user_full_name")
@@ -1939,13 +1899,13 @@ def get_task_file_send_email(task_id, file_id):
     :returns: redirect to task details.
     """
     try:
-        run_id = TaskFile.query.filter_by(id=file_id).first().job_id
+        my_file = TaskFile.query.filter_by(id=file_id).first()
         requests.get(
             app.config["RUNNER_HOST"]
             + "/send_email/"
             + task_id
             + "/"
-            + run_id
+            + my_file.job_id
             + "/"
             + file_id
         )
@@ -1954,12 +1914,12 @@ def get_task_file_send_email(task_id, file_id):
 
         log = TaskLog(
             task_id=task.id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             status_id=7,
             message="("
             + session.get("user_full_name")
             + ") Manually sending email with file: "
-            + file_id,
+            + my_file.name,
         )
         db.session.add(log)
         db.session.commit()
@@ -1968,7 +1928,7 @@ def get_task_file_send_email(task_id, file_id):
         log = TaskLog(
             status_id=7,
             task_id=task_id,
-            job_id=run_id,
+            job_id=my_file.job_id,
             error=1,
             message=(
                 session.get("user_full_name")
@@ -2006,8 +1966,8 @@ def get_task_file_download(file_id):
             job_id=my_file.job_id,
             status_id=7,
             message=(
-                "(%s) Manually downloading file. %s"
-                % (session.get("user_full_name"), file_id)
+                "(%s) Manually downloading file %s."
+                % (session.get("user_full_name"), my_file.name)
             ),
         )
         db.session.add(log)
@@ -2017,11 +1977,19 @@ def get_task_file_download(file_id):
             requests.get("%s/file/%s" % (app.config["RUNNER_HOST"], file_id)).text
         ).get("message")
 
-        file_handle = open(source_file, "r")  # noqa:SIM115
-
         def stream_and_remove_file():
             yield from file_handle
             os.remove(source_file)
+
+        # check if it is a zip
+
+        if zipfile.is_zipfile(source_file):
+            return send_file(
+                source_file, as_attachment=True, attachment_filename=my_file.name
+            )
+
+        # otherwise, stream it.
+        file_handle = open(source_file, "r")  # noqa:SIM115
 
         return Response(
             stream_and_remove_file(),
@@ -2051,11 +2019,11 @@ def get_task_run_log(task_id, run_id):
     page = page - 1
 
     cols = {
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Status Date": "task_log.status_date",
-        "Message": "task_log.message",
-        "Error": "task_log.error",
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Status Date": text("task_log.status_date"),
+        "Message": text("task_log.message"),
+        "Error": text("task_log.error"),
     }
 
     logs = (
@@ -2065,7 +2033,7 @@ def get_task_run_log(task_id, run_id):
         .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
         .filter(and_(Task.id == task_id, TaskLog.job_id == run_id))
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [{"head": '["Status", "Status Date", "Message"]'}]
@@ -2117,6 +2085,31 @@ def task_sftp_dest():
         "pages/task/dest/sftp_dest.html.j2",
         org=org,
         sftp_dest=dest,
+        title="Connections",
+    )
+
+
+@task_bp.route("/task/gpg-file")
+# @ldap.login_required
+# @ldap.group_required(["Analytics"])
+def task_gpg_file():
+    """Template to add gpg encryption to a task.
+
+    :url: /task/gpg-file
+    :returns: html page.
+    """
+    org = request.args.get("org", default=1, type=int)
+    dest = (
+        ConnectionGpg.query.filter_by(connection_id=org)
+        .order_by(ConnectionGpg.name)
+        .all()
+    )
+    org = Connection.query.filter_by(id=org).first()
+
+    return render_template(
+        "pages/task/dest/gpg_file.html.j2",
+        org=org,
+        gpg_file=dest,
         title="Connections",
     )
 

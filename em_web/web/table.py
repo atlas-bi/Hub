@@ -30,6 +30,12 @@ import html
 import json
 
 import requests
+from flask import Blueprint
+from flask import current_app as app
+from flask import jsonify, request, session
+from RelativeToNow import relative_to_now
+from sqlalchemy import and_, text
+
 from em_web import db, ldap
 from em_web.model import (
     ConnectionDatabase,
@@ -46,10 +52,6 @@ from em_web.model import (
     TaskStatus,
     User,
 )
-from flask import Blueprint
-from flask import current_app as app
-from flask import jsonify, request, session
-from sqlalchemy import and_, text
 
 table_bp = Blueprint("table_bp", __name__)
 
@@ -72,24 +74,23 @@ def project_list(my_type="all"):
     page -= 1
 
     cols = {
-        "Project Id": "project.id",
-        "Name": "project.name",
-        "Owner Id": '"user".id',
-        "Owner": '"user".full_name',
-        "Last Run": "max(task.last_run)",
-        "Next Run": "max(task.next_run)",
-        "Tasks": "count(*)",
-        "Enabled Tasks": "sum(case when task.enabled = 1 then 1 else 0 end )",
-        "Running Tasks": "sum(case when task.status_id = 1 then 1 else 0 end)",
-        "Errored Tasks": "sum(case when task.status_id = 2 then 1 else 0 end)",
-        "Last Edited": "coalesce(project.updated,project.created)",
+        "Project Id": text("project.id"),
+        "Name": text("project.name"),
+        "Owner Id": text('"user".id'),
+        "Owner": text('"user".full_name'),
+        "Last Run": text("max(task.last_run)"),
+        "Next Run": text("max(task.next_run)"),
+        "Tasks": text("count(*)"),
+        "Enabled Tasks": text("sum(case when task.enabled = 1 then 1 else 0 end )"),
+        "Running Tasks": text("sum(case when task.status_id = 1 then 1 else 0 end)"),
+        "Errored Tasks": text("sum(case when task.status_id = 2 then 1 else 0 end)"),
     }
 
     groups = {
-        "Project Id": "project.id",
-        "Name": "project.name",
-        "Owner Id": '"user".id',
-        "Last Edited": "coalesce(project.updated,project.created)",
+        "Project Id": text("project.id"),
+        "Name": text("project.name"),
+        "Owner Id": text('"user".id'),
+        "Last Edited": text("coalesce(project.updated,project.created)"),
     }
 
     projects = (
@@ -98,7 +99,7 @@ def project_list(my_type="all"):
         .outerjoin(Task, Task.project_id == Project.id)
         .outerjoin(User, User.id == Project.owner_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         .group_by(*groups.values())
     )
 
@@ -109,24 +110,44 @@ def project_list(my_type="all"):
     elif my_type != "all":
         projects = projects.filter(User.user_id == session.get("user_id"))
 
-    me = [
-        {
-            "head": '["Name","Owner","Last Run","Next Run","Last Edited",'
-            + '"Tasks","Enabled Tasks","Running Tasks","Errored Tasks"]'
-        }
-    ]
+    me = [{"head": '["Name","Owner","Last Run","Next Run","Tasks","Enabled"]'}]
 
     me.append({"total": projects.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 40})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No projects."})
 
-    for proj in projects.limit(10).offset(page * 10).all():
+    for proj in projects.limit(40).offset(page * 40).all():
         proj = dict(zip(cols.keys(), proj))
+
+        status_icon = ""
+
+        if proj["Running Tasks"] > 0:
+            status_icon = '<i class="em-icon em-runningIcon"></i>'
+        elif proj["Errored Tasks"] > 0:
+            status_icon = '<i class="em-icon em-errorIcon"></i>'
+        elif proj["Enabled Tasks"] > 0 and not proj["Errored Tasks"]:
+            status_icon = '<i class="em-icon em-successIcon"></i>'
+
+        enabled = (
+            str(proj["Enabled Tasks"]) + " enabled," if proj["Enabled Tasks"] else ""
+        )
+        running = (
+            str(proj["Running Tasks"]) + " running," if proj["Running Tasks"] else ""
+        )
+        errored = (
+            str(proj["Errored Tasks"]) + " errored" if proj["Errored Tasks"] else ""
+        )
+
+        task_message = (
+            "- " + enabled + running + errored if enabled or running or errored else ""
+        )
 
         me.append(
             {
-                "Name": '<a class="em-link" href="/project/'
+                "Name": status_icon
+                + '<a class="em-link" href="/project/'
                 + str(proj["Project Id"])
                 + '">'
                 + proj["Name"]
@@ -138,29 +159,24 @@ def project_list(my_type="all"):
                     + proj["Owner"]
                     + "</a>"
                     if proj["Owner"]
-                    else "N/A"
+                    else ""
                 ),
-                "Last Run": datetime.datetime.strftime(
-                    proj["Last Run"],
-                    "%a, %b %-d, %Y %H:%M:%S",
-                )
+                "Last Run": relative_to_now(proj["Last Run"])
                 if proj["Last Run"]
-                else "Never",
+                else "",
                 "Next Run": datetime.datetime.strftime(
-                    proj["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
+                    proj["Next Run"], " %m/%-d%y %H:%M"
                 )
                 if proj["Next Run"]
-                else "N/A",
-                "Last Edited": datetime.datetime.strftime(
-                    proj["Last Edited"], "%a, %b %-d, %Y %H:%M:%S"
-                )
-                if proj["Last Edited"]
-                else "Never",
-                "Tasks": proj["Tasks"],
-                "Enabled Tasks": proj["Enabled Tasks"],
-                "Running Tasks": proj["Running Tasks"],
-                "Errored Tasks": proj["Errored Tasks"],
-                "class": "error" if proj["Errored Tasks"] > 0 else "",
+                else "",
+                "Tasks": "<strong>%s</strong> %s" % (proj["Tasks"] or 0, task_message),
+                "Enabled": "<a class='em-link' href=/project/"
+                + str(proj["Project Id"])
+                + "/disable>Disable</a>"
+                if proj["Enabled Tasks"] > 0
+                else "<a class='em-link' href=/project/"
+                + str(proj["Project Id"])
+                + "/enable>Enable</a>",
             }
         )
 
@@ -184,15 +200,15 @@ def table_tasklog_userevents():
     page = page - 1
 
     cols = {
-        "Log Id": "task_log.id",
-        "Task Id": "task.id",
-        "Job Id": "task_log.job_id",
-        "Task Name": "task.name",
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Status Date": "task_log.status_date",
-        "Message": "task_log.message",
-        "Error": "task_log.error",
+        "Log Id": text("task_log.id"),
+        "Task Id": text("task.id"),
+        "Job Id": text("task_log.job_id"),
+        "Task Name": text("task.name"),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Status Date": text("task_log.status_date"),
+        "Message": text("task_log.message"),
+        "Error": text("task_log.error"),
     }
 
     logs = (
@@ -202,13 +218,14 @@ def table_tasklog_userevents():
         .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
         .filter(TaskLog.status_id == 7)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [{"head": '["Task Name", "Run Id", "Status Date", "Message"]'}]
 
     me.append({"total": logs.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No log messages."})
 
@@ -266,10 +283,10 @@ def table_user_auth():
     page = page - 1
 
     cols = {
-        "User": "login.username",
-        "Login Date": "login.login_date",
-        "Login Type Id": "login.type_id",
-        "Login Type": "login_type.name",
+        "User": text("login.username"),
+        "Login Date": text("login.login_date"),
+        "Login Type Id": text("login.type_id"),
+        "Login Type": text("login_type.name"),
     }
 
     logs = (
@@ -277,13 +294,14 @@ def table_user_auth():
         .select_from(Login)
         .join(LoginType, LoginType.id == Login.type_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [{"head": '["User", "Login Date", "Action"]'}]
 
     me.append({"total": logs.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No log messages."})
 
@@ -325,16 +343,16 @@ def connection_task(connection_id):
     page -= 1
 
     cols = {
-        "Task Id": "task.id",
-        "Task Name": "task.name",
-        "Project Id": "task.project_id",
-        "Project Name": "project.name",
-        "Enabled": "task.enabled",
-        "Connection": "connection_sftp_name",
-        "Last Run": "task.last_run",
-        "Next Run": "task.next_run",
-        "Status": "task_status.name",
-        "Status Id": "task_status.id",
+        "Task Id": text("task.id"),
+        "Task Name": text("task.name"),
+        "Project Id": text("task.project_id"),
+        "Project Name": text("project.name"),
+        "Enabled": text("task.enabled"),
+        "Connection": text("connection_sftp_name"),
+        "Last Run": text("task.last_run"),
+        "Next Run": text("task.next_run"),
+        "Status": text("task_status.name"),
+        "Status Id": text("task_status.id"),
     }
 
     s_sftp = (
@@ -429,7 +447,7 @@ def connection_task(connection_id):
         .outerjoin(Project, Project.id == Task.project_id)
         .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [
@@ -442,6 +460,7 @@ def connection_task(connection_id):
 
     me.append({"total": tasks.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No tasks associated with this connection."})
 
@@ -505,7 +524,8 @@ def table_jobs_orphans():
     :returns: json output of associated jobs.
     """
     active_tasks = [
-        x[0] for x in db.session.query().select_from(Task).add_columns("task.id").all()
+        x[0]
+        for x in db.session.query().select_from(Task).add_columns(text("task.id")).all()
     ]
 
     page = request.args.get("p", default=1, type=int)
@@ -551,6 +571,7 @@ def table_jobs_orphans():
 
     me.append({"total": len(table)})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
 
     return jsonify(me)
@@ -574,17 +595,16 @@ def dash_errored(task_type):
     page -= 1
 
     cols = {
-        "Task Id": "task.id",
-        "Task Name": "task.name",
-        "Project Id": "project.id",
-        "Project Name": "project.name",
-        "Owner Id": '"user".id',
-        "Owner": '"user".full_name',
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Last Run": "task.last_run",
-        "Enabled": "task.enabled",
-        "Next Run": "task.next_run",
+        "Task Id": text("task.id"),
+        "Task Name": text("task.name"),
+        "Project Name": text("project.name"),
+        "Owner Id": text('"user".id'),
+        "Owner": text('"user".full_name'),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Last Run": text("task.last_run"),
+        "Enabled": text("task.enabled"),
+        "Next Run": text("task.next_run"),
     }
 
     tasks = (
@@ -594,14 +614,10 @@ def dash_errored(task_type):
         .outerjoin(Project, Project.id == Task.project_id)
         .outerjoin(User, User.id == Project.owner_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["Action", "Task Name", "Project Name", "Owner", "Last Run", "Next Run"]'
-        }
-    ]
+    me = [{"head": '["Name", "Owner", "Last Run", "Next Run", "Enabled"]'}]
 
     if task_type == "errored":
         tasks = tasks.filter(Task.status_id == 2)
@@ -625,6 +641,7 @@ def dash_errored(task_type):
 
     me.append({"total": tasks.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
 
     if "empty_msg" not in me:
@@ -633,24 +650,24 @@ def dash_errored(task_type):
     for task in tasks.limit(10).offset(page * 10).all():
         task = dict(zip(cols.keys(), task))
 
+        status_icon = ""
+
+        if task["Status"] == "Completed":
+            status_icon = '<i class="em-icon em-successIcon"></i>'
+        elif task["Status"] == "Running":
+            status_icon = '<i class="em-icon em-runningIcon"></i>'
+        elif task["Status"] == "Errored":
+            status_icon = '<i class="em-icon em-errorIcon"></i>'
+
         me.append(
             {
-                "Task Name": '<a class="em-link" href="/task/'
+                "Name": status_icon
+                + '<a class="em-link" href="/task/'
                 + str(task["Task Id"])
                 + '">'
                 + task["Task Name"]
+                + (" - " + task["Project Name"] if task["Project Name"] else "")
                 + "</a>",
-                "Project Name": (
-                    (
-                        '<a class="em-link" href="/project/'
-                        + str(task["Project Id"])
-                        + '">'
-                        + task["Project Name"]
-                        + "</a>"
-                    )
-                    if task["Project Id"]
-                    else "Project Deleted"
-                ),
                 "Owner": (
                     "<a href='project/user/"
                     + str(task["Owner Id"])
@@ -658,19 +675,17 @@ def dash_errored(task_type):
                     + task["Owner"]
                     + "</a>"
                     if task["Owner Id"]
-                    else "N/A"
+                    else ""
                 ),
-                "Last Run": datetime.datetime.strftime(
-                    task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
-                )
+                "Last Run": relative_to_now(task["Last Run"])
                 if task["Last Run"]
                 else "Never",
                 "Next Run": datetime.datetime.strftime(
-                    task["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
+                    task["Next Run"], "%m/%-d/%y %H:%M"
                 )
                 if task["Next Run"]
-                else "N/A",
-                "Action": (
+                else "",
+                "Enabled": (
                     (
                         "<a class='em-link' href='/task/"
                         + str(task["Task Id"])
@@ -695,7 +710,6 @@ def dash_errored(task_type):
                     if task["Status Id"] == 2
                     else ""
                 ),
-                "class": "error" if task["Status Id"] == 2 else "",
             }
         )
 
@@ -720,18 +734,16 @@ def task_list(my_type):
     page -= 1
 
     cols = {
-        "Task Id": "task.id",
-        "Name": "task.name",
-        "Project Id": "project.id",
-        "Project Name": "project.name",
-        "Owner": '"user".full_name',
-        "Owner Id": '"user".id',
-        "Last Run": "task.last_run",
-        "Next Run": "task.next_run",
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Enabled": "task.enabled",
-        "Last Edited": "coalesce(task.updated,task.created)",
+        "Task Id": text("task.id"),
+        "Name": text("task.name"),
+        "Project Name": text("project.name"),
+        "Owner": text('"user".full_name'),
+        "Owner Id": text('"user".id'),
+        "Last Run": text("task.last_run"),
+        "Next Run": text("task.next_run"),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Enabled": text("task.enabled"),
     }
 
     if my_type == "all":
@@ -742,7 +754,7 @@ def task_list(my_type):
             .outerjoin(User, User.id == Project.owner_id)
             .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
             .add_columns(*cols.values())
-            .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+            .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
 
     elif my_type.isdigit():
@@ -754,7 +766,7 @@ def task_list(my_type):
             .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
             .filter(User.id == int(my_type))
             .add_columns(*cols.values())
-            .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+            .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
 
     else:
@@ -766,75 +778,63 @@ def task_list(my_type):
             .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
             .filter(User.user_id == session.get("user_id"))
             .add_columns(*cols.values())
-            .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+            .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
 
-    me = [
-        {
-            "head": '["Name","Project","Owner","Enabled","Last Run"'
-            + ',"Run Now","Status","Next Run","Last Edited"]'
-        }
-    ]
+    if my_type == "all":
+        me = [{"head": '["Name","Owner","Last Run"' + ',"Next Run","Enabled"]'}]
+    else:
+        me = [{"head": '["Name","Last Run"' + ',"Next Run","Enabled"]'}]
     me.append({"total": tasks.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 40})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No tasks."})
 
-    for task in tasks.limit(10).offset(page * 10).all():
+    for task in tasks.limit(40).offset(page * 40).all():
         task = dict(zip(cols.keys(), task))
 
-        me.append(
-            {
-                "Name": '<a class="em-link" href="/task/'
-                + str(task["Task Id"])
-                + '">'
-                + task["Name"]
-                + "</a>",
-                "Project": '<a class="em-link" href="/project/'
-                + str(task["Project Id"])
-                + '">'
-                + task["Project Name"]
+        status_icon = ""
+
+        if task["Status"] == "Completed":
+            status_icon = '<i class="em-icon em-successIcon"></i>'
+        elif task["Status"] == "Running":
+            status_icon = '<i class="em-icon em-runningIcon"></i>'
+        elif task["Status"] == "Errored":
+            status_icon = '<i class="em-icon em-errorIcon"></i>'
+
+        data = {
+            "Name": status_icon
+            + '<a class="em-link" href="/task/'
+            + str(task["Task Id"])
+            + '">'
+            + task["Name"]
+            + (" - " + task["Project Name"] if task["Project Name"] else ""),
+            "Last Run": relative_to_now(task["Last Run"]) if task["Last Run"] else "",
+            "Next Run": datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
+            if task["Next Run"]
+            else "",
+            "Enabled": "<a class='em-link' href=/task/"
+            + str(task["Task Id"])
+            + "/disable>Disable</a>"
+            if task["Enabled"] == 1
+            else "<a class='em-link' href=/task/"
+            + str(task["Task Id"])
+            + "/enable>Enable</a>",
+        }
+
+        if my_type == "all":
+            data["Owner"] = (
+                "<a href='project/user/"
+                + str(task["Owner Id"])
+                + "' class='em-link'>"
+                + task["Owner"]
                 + "</a>"
-                if task["Project Id"]
-                else "Orphan :'(",
-                "Owner": (
-                    "<a href='project/user/"
-                    + str(task["Owner Id"])
-                    + "' class='em-link'>"
-                    + task["Owner"]
-                    + "</a>"
-                    if task["Owner"]
-                    else "N/A"
-                ),
-                "Enabled": "<a class='em-link' href=/task/"
-                + str(task["Task Id"])
-                + "/disable>Disable</a>"
-                if task["Enabled"] == 1
-                else "<a class='em-link' href=/task/"
-                + str(task["Task Id"])
-                + "/enable>Enable</a>",
-                "Last Run": datetime.datetime.strftime(
-                    task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
-                )
-                if task["Last Run"]
-                else "Never",
-                "Last Edited": datetime.datetime.strftime(
-                    task["Last Edited"], "%a, %b %-d, %Y %H:%M:%S"
-                )
-                if task["Last Edited"]
-                else "Never",
-                "Run Now": "<a class='em-link' href='/task/"
-                + str(task["Task Id"])
-                + "/run'>Run Now</a>",
-                "Status": task["Status"] if task["Status"] else "None",
-                "Next Run": datetime.datetime.strftime(
-                    task["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
-                )
-                if task["Next Run"]
-                else "None",
-                "class": "error" if task["Status Id"] == 2 else "",
-            }
-        )
+                if task["Owner"]
+                else ""
+            )
+
+        me.append(data)
 
     return jsonify(me)
 
@@ -857,14 +857,13 @@ def project_task_all(project_id):
     page -= 1
 
     cols = {
-        "Task Id": "task.id",
-        "Name": "task.name",
-        "Last Edited": "task.updated",
-        "Last Run": "task.last_run",
-        "Next Run": "task.next_run",
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Enabled": "task.enabled",
+        "Task Id": text("task.id"),
+        "Name": text("task.name"),
+        "Last Run": text("task.last_run"),
+        "Next Run": text("task.next_run"),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Enabled": text("task.enabled"),
     }
 
     tasks = (
@@ -873,26 +872,33 @@ def project_task_all(project_id):
         .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
         .filter(Task.project_id == project_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["Name","Enabled","Last Run","Run Now","Status","Next Run","Last Edited"]'
-        }
-    ]
+    me = [{"head": '["Name","Enabled","Last Run","Run Now","Next Run"]'}]
 
     me.append({"total": tasks.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No tasks."})
 
     for task in tasks.limit(10).offset(page * 10).all():
         task = dict(zip(cols.keys(), task))
 
+        status_icon = ""
+
+        if task["Status"] == "Completed":
+            status_icon = '<i class="em-icon em-successIcon"></i>'
+        elif task["Status"] == "Running":
+            status_icon = '<i class="em-icon em-runningIcon"></i>'
+        elif task["Status"] == "Errored":
+            status_icon = '<i class="em-icon em-errorIcon"></i>'
+
         me.append(
             {
-                "Name": '<a class="em-link" href="/task/'
+                "Name": status_icon
+                + '<a class="em-link" href="/task/'
                 + str(task["Task Id"])
                 + '">'
                 + task["Name"]
@@ -904,26 +910,17 @@ def project_task_all(project_id):
                 else "<a class='em-link' href=/task/"
                 + str(task["Task Id"])
                 + "/enable>Enable</a>",
-                "Last Run": datetime.datetime.strftime(
-                    task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
-                )
+                "Last Run": relative_to_now(task["Last Run"])
                 if task["Last Run"]
-                else "Never",
+                else "",
                 "Run Now": "<a class='em-link' href='/task/"
                 + str(task["Task Id"])
                 + "/run'>Run Now</a>",
-                "Status": task["Status"] if task["Status"] else "None",
                 "Next Run": datetime.datetime.strftime(
-                    task["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
+                    task["Next Run"], "%m/%-d/%y %H:%M"
                 )
                 if task["Next Run"]
-                else "None",
-                "class": "error" if task["Status Id"] == 2 else "",
-                "Last Edited": datetime.datetime.strftime(
-                    task["Last Edited"], "%a, %b %-d, %Y %H:%M:%S"
-                )
-                if task["Last Edited"]
-                else "Never",
+                else "",
             }
         )
 
@@ -948,15 +945,15 @@ def project_task_log_all(project_id):
     page = page - 1
 
     cols = {
-        "Log Id": "task_log.id",
-        "Task Id": "task.id",
-        "Job Id": "task_log.job_id",
-        "Task Name": "task.name",
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Status Date": "task_log.status_date",
-        "Message": "task_log.message",
-        "Error": "task_log.error",
+        "Log Id": text("task_log.id"),
+        "Task Id": text("task.id"),
+        "Job Id": text("task_log.job_id"),
+        "Task Name": text("task.name"),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Status Date": text("task_log.status_date"),
+        "Message": text("task_log.message"),
+        "Error": text("task_log.error"),
     }
 
     logs = (
@@ -966,13 +963,14 @@ def project_task_log_all(project_id):
         .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
         .filter(Task.project_id == project_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [{"head": '["Task Name", "Run Id", "Status", "Status Date", "Message"]'}]
 
     me.append({"total": logs.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No log messages."})
 
@@ -1034,15 +1032,15 @@ def task_log(task_id):
     page = page - 1
 
     cols = {
-        "Log Id": "task_log.id",
-        "Task Id": "task.id",
-        "Job Id": "task_log.job_id",
-        "Task Name": "task.name",
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Status Date": "task_log.status_date",
-        "Message": "task_log.message",
-        "Error": "task_log.error",
+        "Log Id": text("task_log.id"),
+        "Task Id": text("task.id"),
+        "Job Id": text("task_log.job_id"),
+        "Task Name": text("task.name"),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Status Date": text("task_log.status_date"),
+        "Message": text("task_log.message"),
+        "Error": text("task_log.error"),
     }
 
     logs = (
@@ -1052,13 +1050,14 @@ def task_log(task_id):
         .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
         .filter(Task.id == task_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [{"head": '["Run Id", "Status", "Status Date", "Message"]'}]
 
     me.append({"total": logs.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No log messages."})
 
@@ -1111,19 +1110,19 @@ def dash_log():
     page = page - 1
 
     cols = {
-        "Log Id": "task_log.id",
-        "Task Id": "task.id",
-        "Job Id": "task_log.job_id",
-        "Task Name": "task.name",
-        "Project Id": "project.id",
-        "Project Name": "project.name",
-        "Owner Id": '"user".id',
-        "Owner": '"user".full_name',
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Status Date": "task_log.status_date",
-        "Message": "task_log.message",
-        "Error": "task_log.error",
+        "Log Id": text("task_log.id"),
+        "Task Id": text("task.id"),
+        "Job Id": text("task_log.job_id"),
+        "Task Name": text("task.name"),
+        "Project Id": text("project.id"),
+        "Project Name": text("project.name"),
+        "Owner Id": text('"user".id'),
+        "Owner": text('"user".full_name'),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Status Date": text("task_log.status_date"),
+        "Message": text("task_log.message"),
+        "Error": text("task_log.error"),
     }
 
     logs = (
@@ -1134,7 +1133,7 @@ def dash_log():
         .outerjoin(User, User.id == Project.owner_id)
         .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [
@@ -1144,6 +1143,7 @@ def dash_log():
     ]
     me.append({"total": logs.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No log messages."})
 
@@ -1221,19 +1221,19 @@ def dash_error_log():
     page = page - 1
 
     cols = {
-        "Log Id": "task_log.id",
-        "Task Id": "task.id",
-        "Job Id": "task.last_run_job_id",
-        "Task Name": "task.name",
-        "Project Id": "project.id",
-        "Project Name": "project.name",
-        "Owner Id": '"user".id',
-        "Owner": '"user".full_name',
-        "Status Id": "task_status.id",
-        "Status": "task_status.name",
-        "Status Date": "task_log.status_date",
-        "Message": "task_log.message",
-        "Error": "task_log.error",
+        "Log Id": text("task_log.id"),
+        "Task Id": text("task.id"),
+        "Job Id": text("task.last_run_job_id"),
+        "Task Name": text("task.name"),
+        "Project Id": text("project.id"),
+        "Project Name": text("project.name"),
+        "Owner Id": text('"user".id'),
+        "Owner": text('"user".full_name'),
+        "Status Id": text("task_status.id"),
+        "Status": text("task_status.name"),
+        "Status Date": text("task_log.status_date"),
+        "Message": text("task_log.message"),
+        "Error": text("task_log.error"),
     }
 
     logs = (
@@ -1245,7 +1245,7 @@ def dash_error_log():
         .join(TaskStatus, TaskStatus.id == TaskLog.status_id)
         .filter(TaskLog.error == 1)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
     me = [
@@ -1255,6 +1255,7 @@ def dash_error_log():
     ]
     me.append({"total": logs.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No log messages."})
 
@@ -1333,11 +1334,12 @@ def get_task_files(task_id):
     page -= 1
 
     cols = {
-        "File Id": "task_file.id",
-        "Run Id": "task_file.job_id",
-        "File Name": "task_file.name",
-        "File Size": "task_file.size",
-        "Created": "task_file.created",
+        "File Id": text("task_file.id"),
+        "Run Id": text("task_file.job_id"),
+        "File Name": text("task_file.name"),
+        "md5 Hash": text("task_file.file_hash"),
+        "File Size": text("task_file.size"),
+        "Created": text("task_file.created"),
     }
 
     my_files = (
@@ -1345,12 +1347,17 @@ def get_task_files(task_id):
         .select_from(TaskFile)
         .filter(TaskFile.task_id == task_id)
         .add_columns(*cols.values())
-        .order_by(text(cols[split_sort[0]] + " " + split_sort[1]))
+        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [{"head": '["File Name", "Run Id", "Created", "File Size", "Action"]'}]
+    me = [
+        {
+            "head": '["File Name", "Run Id", "Created", "md5 Hash", "File Size", "Action"]'
+        }
+    ]
     me.append({"total": my_files.count() or 0})  # runs.total
     me.append({"page": page})  # page
+    me.append({"page_size": 10})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No files available."})
 
@@ -1379,6 +1386,7 @@ def get_task_files(task_id):
                         else "N/A"
                     ),
                     "File Size": my_file["File Size"],
+                    "md5 Hash": my_file["md5 Hash"],
                     "Action": (
                         (
                             "<a href='/task/"

@@ -32,7 +32,18 @@
     <link href="/static/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
     <link href="/static/site.webmanifest" rel="manifest" />
     <link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" />
+
+    {% assets "css_font" %}
+    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+
     {% endcache %}
+    {% assets "css_search" %}
+    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+    {% assets "js_search" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 
     <title>Extract Management 2.0 - {{ title }}</title>
 
@@ -52,6 +63,9 @@
                 <div class="block-left">
                     {% include "sections/nav.html.j2" %}
                 </div>
+                <div class="block-search">
+                    {% include "sections/search.html.j2" %}
+                </div>
                 <div class="block-right">
                     <!-- status message -->
                     <div class="em-status">
@@ -68,7 +82,6 @@
                 </div>
             </div>
         {% endblock body_auth %}
-
         {% block js %}{% endblock js %}
     </body>
 </html>

@@ -70,6 +70,8 @@ A query location must be chosen. The query can be loaded from SFTP, FTP, SMB, Gi
 
 Query Parameters can be added. These will override what is set at the project level and will follow the same format. See :ref:`project_parameters`
 
+SQL Server queries will do a row count as the queries run and will log the current row count to the task log.
+
 FTP/SFTP/SMB
 ------------
 
@@ -107,7 +109,7 @@ A script like this will pick up that file.
 
 .. code:: python
 
-    import
+    import sys
     input_file = sys.argv[1]
 
 All processing scripts are run in their own environment and dependencies are automatically installed as needed.
@@ -131,6 +133,18 @@ For example, if you want to include the day yesterday in your filename you can d
 The '%d-1' will parse out to the day number yesterday.
 
 If needed, the file can be sent inside a zip folder.
+
+File Encryption
+===============
+
+Files can be encrypted using a gpg key. Check the box to run encryption on and pick the encryption key from the dropdown.
+
+Filenames will be preserved and ".gpg" appended to the current extension. Files will be encrypted before zipping if the zip option is selected.
+
+md5 Hash
+========
+
+After creating the file, and optionally encrypting the file, a md5 hash of the file is created and save along with the file name, file size, etc, for future file verification.
 
 SFTP/SMB/FTP
 ------------

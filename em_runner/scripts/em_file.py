@@ -18,6 +18,7 @@
 
 import csv
 import datetime
+import hashlib
 import logging
 import os
 import re
@@ -25,10 +26,14 @@ import sys
 import zipfile
 from pathlib import Path
 
+import gnupg
+from crypto import em_decrypt
+from error_print import full_stack
+from flask import current_app as app
+
 from em_runner import db
 from em_runner.model import TaskLog
 from em_runner.scripts.em_date import DateParsing
-from error_print import full_stack
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
@@ -89,6 +94,7 @@ class File:
         self.file_name = ""
         self.file_path = ""
         self.zip_name = ""
+        self.file_hash = ""
         self.job_hash = job_hash
         self.base_path = self.temp_path = "%s/temp/%s/%s/%s/" % (
             str(Path(__file__).parent.parent),
@@ -259,6 +265,81 @@ class File:
             db.session.add(log)
             db.session.commit()
 
+            # encrypt file
+            if self.task.file_gpg == 1:
+                gpg = gnupg.GPG("/usr/local/bin/gpg")
+
+                # import the key
+                keychain = gpg.import_keys(
+                    em_decrypt(self.task.file_gpg_conn.key, app.config["PASS_KEY"])
+                )
+
+                # set it to trusted
+                gpg.trust_keys(keychain.fingerprints, "TRUST_ULTIMATE")
+
+                # encrypt file
+                with open(self.file_path, "rb") as my_file:
+                    encrypt_status = gpg.encrypt_file(
+                        file=my_file,
+                        recipients=keychain.fingerprints,
+                        output=self.file_path + ".gpg",
+                    )
+
+                # remove key
+                gpg.delete_keys(keychain.fingerprints)
+
+                # update global file name
+                if not encrypt_status.ok:
+                    log = TaskLog(
+                        task_id=self.task.id,
+                        job_id=self.job_hash,
+                        status_id=11,  # 11 = file
+                        error=1,
+                        message="File failed to encrypt: %s\n%s\n%s"
+                        % (
+                            self.file_path,
+                            encrypt_status.status,
+                            encrypt_status.stderr,
+                        ),
+                    )
+
+                    db.session.add(log)
+                    db.session.commit()
+                    raise ValueError("failed to encrypt file.")
+
+                self.file_path = self.file_path + ".gpg"
+                self.file_name = self.file_name + ".gpg"
+
+                log = TaskLog(
+                    task_id=self.task.id,
+                    job_id=self.job_hash,
+                    status_id=11,  # 11 = file
+                    message="File encrypted: %s\n%s\n%s"
+                    % (self.file_path, encrypt_status.status, encrypt_status.stderr),
+                )
+
+                db.session.add(log)
+                db.session.commit()
+
+            # get file hash.. after encrypting
+            with open(self.file_path, "rb") as my_file:
+                self.file_hash = hashlib.md5()  # noqa: S303
+                while True:
+                    chunk = my_file.read(8192)
+                    if not chunk:
+                        break
+                    self.file_hash.update(chunk)
+
+            log = TaskLog(
+                task_id=self.task.id,
+                job_id=self.job_hash,
+                status_id=11,  # 11 = file
+                message="File md5 hash: %s" % (self.file_hash.hexdigest()),
+            )
+
+            db.session.add(log)
+            db.session.commit()
+
             # create zip
             if self.task.destination_create_zip == 1:
 
@@ -314,4 +395,4 @@ class File:
             db.session.add(log)
             db.session.commit()
 
-        return self.file_name, self.file_path
+        return self.file_name, self.file_path, self.file_hash.hexdigest()

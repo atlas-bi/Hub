@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-(function () {
+(function (rhc_table, $, undefined) {
   var tables = document.getElementsByClassName("em-ajaxTable");
 
   for (var x = 0; x < tables.length; x++) {
@@ -41,7 +41,6 @@
       } catch (e) {
         dest.innerHTML =
           "<span class='em-error'>Failed to load. " + e + "</span>";
-        console.log(this.responseText);
       }
       if (el.closest(".clps-o"))
         el.closest(".clps-o").dispatchEvent(
@@ -60,14 +59,26 @@
       total = arr.length,
       key,
       page = 1,
+      page_size = 10,
       sort = "",
       q,
-      empty_msg = "No data to show.";
+      empty_msg = "No data to show.",
+      current_date = new Date()
+        .toLocaleString()
+        .replace(",", "")
+        .replace(/:\d\d\s/, " ");
 
     // get total rows
     for (x = 0; x < arr.length; x++) {
       if (arr[x].total || arr[x].total == 0) {
         total = arr[x].total;
+        arr.splice(x, 1);
+        break;
+      }
+    }
+    for (x = 0; x < arr.length; x++) {
+      if (arr[x].page_size) {
+        page_size = arr[x].page_size;
         arr.splice(x, 1);
         break;
       }
@@ -109,8 +120,8 @@
     r[++j] =
       '<div class="em-tableTools"><div><button class="em-tableReload" title="refresh"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12z"/></svg></button><button class="em-tableCopy" title="copy table"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/></button><button class="em-tableSave" title="download table"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/></svg></button><label class="em-tableSwitch"><input type="checkbox"><span class="slider"></span></label></div></div>';
 
-    if (total > 10) {
-      var pages = Math.ceil(total / 10);
+    if (total > page_size) {
+      var pages = Math.ceil(total / page_size);
 
       var paginate = [],
         l = -1;
@@ -174,7 +185,7 @@
       }
 
       paginate[++l] = "</div>";
-      var pageMessage = page ? page * 10 : 10;
+      var pageMessage = page ? page * page_size : page_size;
       var sortSelect = [];
       q = -1;
 
@@ -205,12 +216,12 @@
       r[++j] = paginate.join("");
       r[++j] =
         '<div class="em-tableCurrentRows">Showing records ' +
-        (pageMessage - 9) +
+        (pageMessage - parseInt(page_size - 1)) +
         "-" +
         Math.min(pageMessage, total) +
         " of " +
         total +
-        ".</div>";
+        ". </div>";
       r[++j] =
         '<div class="em-tableSort">Sort by<button class="em-tableSortButton"><div class="em-tableSortArrow">';
       if (sort && sort.split(".").length > 0) {
@@ -228,7 +239,12 @@
       r[++j] = "</div></div>";
     } // table
 
-    r[++j] = '<table class="em-table sort"><thead>'; // progress bar
+    theme = "";
+    if (el.hasAttribute("data-theme")) {
+      theme = " em-table" + el.getAttribute("data-theme");
+    }
+
+    r[++j] = '<table class="em-table sort ' + theme + '"><thead>'; // progress bar
 
     r[++j] = '<tr class="em-tableProg">';
 
@@ -269,7 +285,13 @@
         }
 
         for (x = 0; x < head.length; x++) {
-          r[++j] = "<td><div>" + arr[key][head[x]] + "</div></td>";
+          var cell_value = (arr[key][head[x]] || "").toString();
+
+          if (rhc_table.cell_processor !== undefined) {
+            cell_value = rhc_table.cell_processor(cell_value);
+          }
+
+          r[++j] = "<td><div>" + cell_value + "</div></td>";
         }
 
         r[++j] = "</tr>";
@@ -278,6 +300,7 @@
     r[++j] = "</tbody>";
     r[++j] = '<caption class="em-tableLoad"><div></div></caption>';
     r[++j] = "</table>";
+    r[++j] = "<div class='em-tableUpdated'>" + current_date + "</div>";
 
     el.innerHTML = r.join("");
 
@@ -471,4 +494,4 @@
 
       return i;
     };
-})();
+})((window.rhc_table = window.rhc_table || {}));

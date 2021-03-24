@@ -30,6 +30,10 @@ from pathlib import Path
 
 import requests
 from crypto import em_decrypt
+from error_print import full_stack
+from flask import current_app as app
+from jinja2 import Environment, PackageLoader, select_autoescape
+
 from em_runner import db, redis_client
 from em_runner.model import Task, TaskFile, TaskLog
 from em_runner.scripts.em_cmd import Cmd
@@ -46,9 +50,6 @@ from em_runner.scripts.em_sqlserver import SqlServer
 from em_runner.scripts.em_ssh import Ssh
 from em_runner.scripts.em_system import Monitor
 from em_runner.web.filters import datetime_format
-from error_print import full_stack
-from flask import current_app as app
-from jinja2 import Environment, PackageLoader, select_autoescape
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
@@ -99,6 +100,7 @@ class Runner:
             self.data_file = None
             self.file_path = ""
             self.file_name = ""
+            self.file_hash = ""
             print("starting task " + str(task.id))  # noqa: T001
             logging.info(
                 "Runner: Starting task: %s, with run: %s",
@@ -231,6 +233,9 @@ class Runner:
                 # remove any retry tracking
                 redis_client.delete("runner_" + str(task_id) + "_attempt")
                 task.status_id = 4
+                task.est_duration = (
+                    datetime.datetime.now() - task.last_run
+                ).total_seconds()
 
             task.last_run_job_id = None
             task.last_run = datetime.datetime.now()
@@ -255,6 +260,7 @@ class Runner:
         # 6 = source code
 
         processing_script_name = self.temp_path + self.job_hash + ".py"
+
         my_file = ""
         if (
             self.task.processing_type_id == 1
@@ -331,7 +337,10 @@ class Runner:
         elif self.task.processing_type_id == 4 and self.task.processing_git is not None:
 
             # if a dir is specified then download all files
-            if self.task.processing_command is not None:
+            if (
+                self.task.processing_command is not None
+                and self.task.processing_command != ""
+            ):
                 try:
                     url = (
                         re.sub(
@@ -804,7 +813,7 @@ class Runner:
                 str(self.job_hash),
             )
 
-            self.file_name, self.file_path = File(
+            self.file_name, self.file_path, self.file_hash = File(
                 task=self.task, data_file=self.data_file, job_hash=self.job_hash
             ).save()
 
@@ -899,6 +908,7 @@ class Runner:
                 path=smb_path,
                 task_id=self.task.id,
                 job_id=self.job_hash,
+                file_hash=self.file_hash,
                 size=file_size(os.path.getsize(self.file_path)),
             )
         )

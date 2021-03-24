@@ -16,6 +16,65 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+.em-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 26px;
+  margin: 0 5px;
+  outline: none;
+}
+
+.em-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  outline: none;
+}
+
+.em-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #6c7378;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 30px;
+  outline: none;
+}
+
+.em-switch .slider::before {
+  position: absolute;
+  height: 8px;
+  width: 8px;
+  content: "";
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+  padding: 6px;
+}
+
+.em-switch .counting::before {
+  padding-left: 9px;
+  width: 9px;
+}
+
+.em-switch input:checked + .slider {
+  background-color: #07aebb;
+}
+
+.em-switch input:checked + .slider::before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
 .input-dateTime {
   border: 1px solid rgb(9, 174, 187);
   border-radius: 4px;
@@ -317,6 +376,10 @@ select.em-input option {
 .em-tools > a:active {
   text-decoration: none;
   outline: none;
+}
+
+.em-tools > .em-switch {
+  float: left;
 }
 
 .em-inputPlain {

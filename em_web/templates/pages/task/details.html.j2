@@ -53,6 +53,10 @@
             <span class="em-gridValue"><span class="hello_last_run">{{ l_relative }}</span> <span class="hello_last_run_abs">{{ l }}</span></span>
             <span class="em-gridName">Next Run</span>
             <span class="em-gridValue"><span class="hello_next_run">{{ r_relative }}</span> <span class="hello_next_run_abs">{{ r }}</span></span>
+            {% if t.est_duration %}
+                <span class="em-gridName">Estimated Duration</span>
+                <span class="em-gridValue">{{ t.est_duration|duration }}</span>
+            {% endif %}
             <span class="em-gridName">Max Retry Attempts</span>
             <span class="em-gridValue">{% if t and t.max_retries is not none %}{{ t.max_retries }}{% else %}0{% endif %}</span>
         </div>
@@ -458,6 +462,19 @@
                     <span class="em-gridValue">Yes</span>
                     <span class="em-gridName">ZIP archive name</span>
                     <span class="em-gridValue">{{ t.destination_zip_name }}</span>
+                {% endif %}
+
+                <!-- encryption -->
+                {% if t.file_gpg_id and t.file_gpg %}
+                    </div>
+                    <h3>File Encryption</h3>
+                    <span class="em-gridName">GPG Encryption Key</span>
+                    <div class="em-code">
+                        <a class="em-link" title="open connection" href="/connection/{{ t.file_gpg_conn.connection.id }}">{{ t.file_gpg_conn.connection.name }} - {{ t.file_gpg_conn.name }}</a>
+                        <br />open connection to view key
+                    </div>
+
+                    <div class="em-grid">
                 {% endif %}
 
                 <!-- sftp output -->

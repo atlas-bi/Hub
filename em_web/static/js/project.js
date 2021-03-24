@@ -155,6 +155,18 @@
         ipt.value = 1;
         // add required attr on inputs
       }
+    } else if (e.target.closest(".task_file_gpg")) {
+      i = e.target.closest(".task_file_gpg");
+      ipt = d.querySelector('input[name="task_file_gpg"]');
+      if (i.getAttribute("checked") == "checked") {
+        i.removeAttribute("checked");
+        ipt.value = 0;
+        // remove required attr on inputs
+      } else {
+        i.setAttribute("checked", "checked");
+        ipt.value = 1;
+        // add required attr on inputs
+      }
     } else if (e.target.closest(".task_save_ftp")) {
       i = e.target.closest(".task_save_ftp");
       ipt = d.querySelector('input[name="task_save_ftp"]');
@@ -421,6 +433,40 @@
         var p = t.parentElement.querySelector(
           "." + t.getAttribute("data-sftp")
         );
+        p.innerHTML = q.responseText;
+
+        var s = p.querySelector("script");
+        if (s) {
+          l = document.createElement("script");
+          l.innerHTML = s.innerText;
+          document.querySelector("body").appendChild(l);
+        }
+        if (t.closest(".clps-o")) {
+          t.closest(".clps-o").dispatchEvent(
+            new Event("change", {
+              bubbles: true,
+            })
+          );
+        }
+      };
+    } else if (e.target.closest('select[name="gpg_file"]')) {
+      t = e.target.closest('select[name="gpg_file"]');
+      if (t.value == "none") {
+        t.parentElement.querySelector(
+          "." + t.getAttribute("data-gpg")
+        ).innerHTML = "";
+        return;
+      }
+      q = new XMLHttpRequest();
+      q.open("get", "/task/gpg-file?org=" + t.value, true);
+      q.setRequestHeader(
+        "Content-Type",
+        "application/x-www-form-urlencoded; charset=UTF-8"
+      );
+      q.setRequestHeader("Ajax", "True");
+      q.send();
+      q.onload = function () {
+        var p = t.parentElement.querySelector("." + t.getAttribute("data-gpg"));
         p.innerHTML = q.responseText;
 
         var s = p.querySelector("script");
@@ -874,6 +920,7 @@
         p.querySelector(".task-sourceFtp").style.removeProperty("display");
       } else if (t.value == 5) {
       } else if (t.value == 6) {
+        p.querySelector(".task-sourceSsh").style.removeProperty("display");
         p.querySelector(".task-query-location").style.removeProperty("display");
       }
     } else if (e.target.closest('select[name="sourceQueryType"]')) {

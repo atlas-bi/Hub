@@ -27,6 +27,12 @@ from flask_assets import Bundle
 
 from em_web import web_assets
 
+# font
+css = Bundle(
+    "./fonts/Inter/stylesheet.css", filters="rcssmin", output="css/inter.min.css"
+)
+web_assets.register("css_font", css)
+
 # login page
 css = Bundle(
     "./css/base.css", "./css/login.css", filters="rcssmin", output="css/login.min.css"
@@ -70,6 +76,7 @@ css = Bundle(
     "./css/nav.css",
     "./css/input.css",
     "./css/table.css",
+    "./css/table-exec.css",
     filters="rcssmin",
     output="css/admin.min.css",
 )
@@ -78,6 +85,7 @@ web_assets.register("css_admin", css)
 
 js = Bundle(
     "./js/table.js",
+    "./js/table_cust.js",
     "./js/ajax.js",
     "./js/executor_status.js",
     "./js/flashes.js",
@@ -93,6 +101,7 @@ css = Bundle(
     "./css/head.css",
     "./css/nav.css",
     "./css/table.css",
+    "./css/table-exec.css",
     "./css/dashboard.css",
     "./css/collapse.css",
     "./css/input.css",
@@ -104,6 +113,7 @@ web_assets.register("css_dashboard", css)
 
 js = Bundle(
     "./js/table.js",
+    "./js/table_cust.js",
     "./js/ajax.js",
     "./js/collapse.js",
     "./js/dashboard.js",
@@ -123,6 +133,7 @@ css = Bundle(
     "./css/project.css",
     "./css/input.css",
     "./css/table.css",
+    "./css/table-exec.css",
     filters="rcssmin",
     output="css/project.min.css",
 )
@@ -131,12 +142,29 @@ web_assets.register("css_project", css)
 js = Bundle(
     "./js/collapse.js",
     "./js/table.js",
+    "./js/table_cust.js",
     "./js/executor_status.js",
     "./js/flashes.js",
+    "./js/ajax.js",
     filters="jsmin",
     output="js/project.min.js",
 )
 web_assets.register("js_project", js)
+
+# search
+css = Bundle(
+    "./css/search.css",
+    filters="rcssmin",
+    output="css/search.min.css",
+)
+web_assets.register("css_search", css)
+
+js = Bundle(
+    "./js/search.js",
+    filters="jsmin",
+    output="js/search.min.js",
+)
+web_assets.register("js_search", js)
 
 # new project
 css = Bundle(
@@ -170,6 +198,7 @@ js = Bundle(
     "./js/password.js",
     "./js/executor_status.js",
     "./js/flashes.js",
+    "./js/ajax.js",
     filters="jsmin",
     output="js/project_new.min.js",
 )
@@ -181,6 +210,7 @@ css = Bundle(
     "./css/head.css",
     "./css/nav.css",
     "./css/table.css",
+    "./css/table-exec.css",
     "./css/project.css",
     "./css/input.css",
     "./css/scroll.css",
@@ -194,6 +224,7 @@ web_assets.register("css_project_details", css)
 js = Bundle(
     "./js/project.js",
     "./js/table.js",
+    "./js/table_cust.js",
     "./js/password.js",
     "./js/scroll.js",
     "./js/ajax.js",
@@ -219,6 +250,7 @@ css = Bundle(
     "./css/nav.css",
     "./css/collapse.css",
     "./css/table.css",
+    "./css/table-exec.css",
     "./css/input.css",
     "./css/connection.css",
     "./lib/codemirror/codemirror.css",
@@ -239,10 +271,12 @@ js = Bundle(
     "./js/functions.js",
     "./js/password.js",
     "./js/table.js",
+    "./js/table_cust.js",
     "./js/collapse.js",
     "./js/connection.js",
     "./js/executor_status.js",
     "./js/flashes.js",
+    "./js/ajax.js",
     filters="jsmin",
     output="js/project.min.js",
 )

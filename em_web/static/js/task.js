@@ -29,7 +29,6 @@
     task_id = d.querySelector("h1.em-title[task_id]").getAttribute("task_id");
 
   function taskHello() {
-    console.log("taskHello");
     var q = new XMLHttpRequest();
     q.open("get", "/task/{}/hello".format(task_id), true);
     q.send();

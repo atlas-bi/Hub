@@ -23,9 +23,10 @@ import tempfile
 from pathlib import Path
 
 import psycopg2
+from error_print import full_stack
+
 from em_runner import db
 from em_runner.model import TaskLog
-from error_print import full_stack
 
 from .em_file import file_size
 
@@ -99,6 +100,7 @@ class Postgres:
             )
             db.session.add(log)
             db.session.commit()
+            return False
 
     def __close(self):
         self.conn.close()
