@@ -30,7 +30,7 @@ Extract Management 2.0 is a task scheduling tool for getting data from a source 
 
 Tasks can run at any time and on any schedule.
 
-Checkout the `demo site <https://extract-management.herokuapp.com>`__!
+Checkout the `demo site <https://extract-management.herokuapp.com>`_!
 Or, you can run your own docker image:
 
 
@@ -39,6 +39,8 @@ Or, you can run your own docker image:
 
     docker run -i -t -p 5003:5003 -e PORT=5003 -u 0 christopherpickering/extract_management:latest
     # access on http://localhost:5003
+
+Check out our `documentation site <https://riverside-healthcare.github.io/extract_management/>`_.
 
 How To Use?
 -----------
@@ -181,14 +183,14 @@ Credits
 Atlas was created by the Riverside Healthcare Analytics team -
 
 - Paula Courville
-- `Darrel Drake <https://www.linkedin.com/in/darrel-drake-57562529>`__
-- `Dee Anna Hillebrand <https://github.com/DHillebrand2016>`__
-- `Scott Manley <https://github.com/Scott-Manley>`__
-- `Madeline Matz <mailto:mmatz@RHC.net>`__
-- `Christopher Pickering <https://github.com/christopherpickering>`__
-- `Dan Ryan <https://github.com/danryan1011>`__
-- `Richard Schissler <https://github.com/schiss152>`__
-- `Eric Shultz <https://github.com/eshultz>`__
+- `Darrel Drake <https://www.linkedin.com/in/darrel-drake-57562529>`_
+- `Dee Anna Hillebrand <https://github.com/DHillebrand2016>`_
+- `Scott Manley <https://github.com/Scott-Manley>`_
+- `Madeline Matz <mailto:mmatz@RHC.net>`_
+- `Christopher Pickering <https://github.com/christopherpickering>`_
+- `Dan Ryan <https://github.com/danryan1011>`_
+- `Richard Schissler <https://github.com/schiss152>`_
+- `Eric Shultz <https://github.com/eshultz>`_
 
 .. |python-version| image:: https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue
-   :target: #
+   :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/commits/master

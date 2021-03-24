@@ -131,17 +131,24 @@ def project_list(my_type="all"):
             status_icon = '<i class="em-icon em-successIcon"></i>'
 
         enabled = (
-            str(proj["Enabled Tasks"]) + " enabled," if proj["Enabled Tasks"] else ""
+            str(proj["Enabled Tasks"]) + " enabled" if proj["Enabled Tasks"] else ""
         )
         running = (
-            str(proj["Running Tasks"]) + " running," if proj["Running Tasks"] else ""
+            str(proj["Running Tasks"]) + " running" if proj["Running Tasks"] else ""
         )
         errored = (
             str(proj["Errored Tasks"]) + " errored" if proj["Errored Tasks"] else ""
         )
 
         task_message = (
-            "- " + enabled + running + errored if enabled or running or errored else ""
+            "- "
+            + enabled
+            + (", " if enabled and running else "")
+            + running
+            + (", " if (running or enabled) and errored else "")
+            + errored
+            if enabled or running or errored
+            else ""
         )
 
         me.append(
