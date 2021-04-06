@@ -14,13 +14,11 @@ services:
   - postgres
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
-  - pip install tox-travis
-  - pip install --disable-pip-version-check --quiet poetry tox
+  - pip install tox-travis poetry tox
   - python --version
-  - redis-server --daemonize yes
   - psql --command "CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';" -U postgres
   - psql --command 'CREATE database em_web_test WITH OWNER webapp;' -U postgres
 script:
  - tox -e clean,$TOXV,cov
-after_success:
+after:
   - codecov
