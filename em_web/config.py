@@ -127,8 +127,8 @@ class DevTestConfig(DevConfig):
     # pylint: disable=too-few-public-methods
     LDAP_BASE_DN = ""
 
-    AUTH_USERNAME = "username"
-    AUTH_PASSWORD = "password"  # noqa: S105
+    # AUTH_USERNAME = "username"  # noqa: E800
+    # AUTH_PASSWORD = "password"  # noqa: S105
     TEST = True
 
 

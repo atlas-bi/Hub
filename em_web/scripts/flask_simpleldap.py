@@ -329,6 +329,7 @@ class LDAP(object):
                 session["ldap_groups"] = ["analytics"]
                 session["ldap_username"] = "Mr Cool"
                 session["ldap_password"] = "asdf"
+                session["user_full_name"] = "Mr Cool"
 
                 return func(*args, **kwargs)
             # if "user" not in g or g.user is None:

@@ -12,7 +12,7 @@ stages:
 
 include:
   - template: Code-Quality.gitlab-ci.yml
-  - template: Security/SAST.gitlab-ci.yml
+#  - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 code_quality:
@@ -50,10 +50,10 @@ py_secret_detection:
     paths:
       - .secrets.baseline
 
-sast:
-  stage: test
-  before_script:
-    - ""
+# sast:
+#   stage: test
+#   before_script:
+#     - ""
 
 lint:
   stage: static

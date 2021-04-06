@@ -30,14 +30,15 @@ def em_web_authed(em_web_app):
     print(os.environ.get("FLASK_DEBUG"))
     print(os.environ.get("FLASK_APP"))
 
-    em_web_app.post(
-        url_for("auth_bp.login"),
-        data=dict(
-            user=em_web_app.application.config["AUTH_USERNAME"],
-            password=em_web_app.application.config["AUTH_PASSWORD"],
-        ),
-        follow_redirects=True,
-    )
+    if not em_web_app.application.config["TEST"]:
+        em_web_app.post(
+            url_for("auth_bp.login"),
+            data=dict(
+                user=em_web_app.application.config["AUTH_USERNAME"],
+                password=em_web_app.application.config["AUTH_PASSWORD"],
+            ),
+            follow_redirects=True,
+        )
 
     from em_web.extensions import db
 

@@ -17,7 +17,7 @@
 
 
 
-|python-version| |travis| |codecov|
+|python-version| |travis| |codecov| |climage|
 
 Extract Management 2.0
 ======================
@@ -200,3 +200,7 @@ Atlas was created by the Riverside Healthcare Analytics team -
 
 .. |codecov| image:: https://codecov.io/gh/Riverside-Healthcare/extract_management/branch/main/graph/badge.svg
   :target: https://codecov.io/gh/Riverside-Healthcare/extract_management
+
+.. |climage| image:: https://api.codeclimate.com/v1/badges/7dffbd981397d1152b59/maintainability
+   :target: https://codeclimate.com/github/Riverside-Healthcare/extract_management/maintainability
+   :alt: Maintainability

@@ -40,24 +40,25 @@ def logout(em_web_app):
 def test_login_logout(em_web_app):
     """Make sure login and logout works."""
 
-    username = em_web_app.application.config["AUTH_USERNAME"]
-    password = em_web_app.application.config["AUTH_PASSWORD"]
+    if not em_web_app.application.config["TEST"]:
+        username = em_web_app.application.config["AUTH_USERNAME"]
+        password = em_web_app.application.config["AUTH_PASSWORD"]
 
-    rv = login(em_web_app, username, password)
-    assert rv.status_code == 200
-    assert b"Extract Management 2.0 - Dashboard" in rv.data
+        rv = login(em_web_app, username, password)
+        assert rv.status_code == 200
+        assert b"Extract Management 2.0 - Dashboard" in rv.data
 
-    # verify we stay logged in
-    rv = em_web_app.get("/login", follow_redirects=True)
-    assert rv.status_code == 200
-    assert b"Extract Management 2.0 - Dashboard" in rv.data
+        # verify we stay logged in
+        rv = em_web_app.get("/login", follow_redirects=True)
+        assert rv.status_code == 200
+        assert b"Extract Management 2.0 - Dashboard" in rv.data
 
-    rv = logout(em_web_app)
-    assert rv.status_code == 200
-    assert b"Bye." in rv.data
+        rv = logout(em_web_app)
+        assert rv.status_code == 200
+        assert b"Bye." in rv.data
 
-    rv = login(em_web_app, username + "x", password)
-    assert b"Invalid login, please try again!" in rv.data
+        rv = login(em_web_app, username + "x", password)
+        assert b"Invalid login, please try again!" in rv.data
 
-    rv = login(em_web_app, username, password + "x")
-    assert b"Invalid login, please try again!" in rv.data
+        rv = login(em_web_app, username, password + "x")
+        assert b"Invalid login, please try again!" in rv.data
