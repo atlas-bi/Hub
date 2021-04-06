@@ -18,7 +18,6 @@
 import hashlib
 import time
 
-from flask import current_app
 from requests import get
 
 from em_scheduler.extensions import db, scheduler
@@ -31,7 +30,8 @@ def scheduler_delete_all_tasks():
     :returns: true
     """
     for job in scheduler.get_jobs():
-        job.remove()
+        if job.args:
+            job.remove()
 
     return True
 
@@ -43,19 +43,20 @@ def scheduler_delete_task(task_id):
     :returns: true
     """
     for job in scheduler.get_jobs():
-        if str(job.args[0]) == str(task_id):
+        if job.args and str(job.args[0]) == str(task_id):
             job.remove()
 
     return True
 
 
-def scheduler_task_runner(task_id, runner_host):
+def scheduler_task_runner(task_id):
     """Send request to runner api to run task.
 
     :param task_id: id of task to run
     """
     try:
-        get(runner_host + "/" + task_id)
+        with scheduler.app.app_context():
+            get(scheduler.app.config["RUNNER_HOST"] + "/" + task_id)
     # pylint: disable=broad-except
     except BaseException as e:
         print("failed to run job.")  # noqa: T001
@@ -132,7 +133,6 @@ def scheduler_add_task(task_id):
     # schedule cron
     if task.project.cron == 1:
         project = task.project
-        my_hash.update(str(time.time()).encode("utf-8"))
         scheduler.add_job(
             func=scheduler_task_runner,
             trigger="cron",
@@ -146,16 +146,16 @@ def scheduler_add_task(task_id):
             day_of_week=project.cron_week_day,
             start_date=project.cron_start_date,
             end_date=project.cron_end_date,
-            args=[str(task_id), current_app.config["RUNNER_HOST"]],
-            id=str(project.id) + "-" + str(task.id) + "-" + my_hash.hexdigest()[:10],
+            args=[str(task_id)],
+            id=str(project.id) + "-" + str(task.id) + "-cron",
             name="(cron) " + project.name + ": " + task.name,
+            replace_existing=True,
         )
 
     # schedule interval
     task = Task.query.filter_by(id=task_id).first()
     if task.project.intv == 1:
         project = task.project
-        my_hash.update(str(time.time()).encode("utf-8"))
         weeks = project.intv_value or 999 if project.intv_type == "w" else 0
         days = project.intv_value or 999 if project.intv_type == "d" else 0
         hours = project.intv_value or 999 if project.intv_type == "h" else 0
@@ -172,11 +172,13 @@ def scheduler_add_task(task_id):
             weeks=weeks,
             start_date=project.intv_start_date,
             end_date=project.intv_end_date,
-            args=[str(task_id), current_app.config["RUNNER_HOST"]],
-            id=str(project.id) + "-" + str(task.id) + "-" + my_hash.hexdigest()[:10],
+            args=[str(task_id)],
+            id=str(project.id) + "-" + str(task.id) + "-intv",
             name="(inverval) " + project.name + ": " + task.name,
+            replace_existing=True,
         )
 
+    # ooff tasks use a hash to identify jobs as a job can have multiple one-off runs scheduled.
     task = Task.query.filter_by(id=task_id).first()
     if task.project.ooff == 1:
         project = task.project
@@ -185,9 +187,10 @@ def scheduler_add_task(task_id):
             func=scheduler_task_runner,
             trigger="date",
             run_date=project.ooff_date,
-            args=[str(task_id), current_app.config["RUNNER_HOST"]],
+            args=[str(task_id)],
             id=str(project.id) + "-" + str(task.id) + "-" + my_hash.hexdigest()[:10],
             name="(one off) " + project.name + ": " + task.name,
+            replace_existing=True,
         )
 
     return True

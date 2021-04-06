@@ -16,11 +16,27 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-.em-connectionExample {
-  margin-left: 20px;
-}
+@import "include/color";
+@import "include/font";
+@import "include/layout";
 
-.em_connectionExample ul,
-.em_connectionExample li {
-  margin-top: 5px;
+.nav-link {
+  font-size: $font-size-med;
+  font-family: $font-serif;
+  border-bottom: $border-small solid $color-blue;
+  padding: $padding-xsmall $padding-xsmall;
+  background: transparent;
+  transition: color $transition_dur;
+  &:hover {
+    color: $color-blue;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover,
+    &:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
 }

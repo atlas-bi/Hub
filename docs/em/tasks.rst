@@ -134,6 +134,8 @@ The '%d-1' will parse out to the day number yesterday.
 
 If needed, the file can be sent inside a zip folder.
 
+Additional characters can be appended to each line in the file.
+
 File Encryption
 ===============
 

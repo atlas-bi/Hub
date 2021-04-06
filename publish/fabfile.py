@@ -55,7 +55,7 @@ def publish(ctx):
         "host": config["host"],
         "user": config["user"],
         "config": Config(overrides={"sudo": {"password": config["pass"]}}),
-        "connect_kwargs": {"password": config["pass"]},
+        "connect_kwargs": {"password": config["pass"], "allow_agent": False},
     }
     # pylint: disable=R1704
     with Connection(**connection_properties) as ctx:

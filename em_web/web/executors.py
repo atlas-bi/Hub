@@ -22,7 +22,7 @@ import requests
 from flask import Blueprint
 from flask import current_app as app
 from flask import jsonify, session
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, text
 
 from em_web import db, executor, ldap, redis_client
 from em_web.model import Task, TaskLog
@@ -162,7 +162,8 @@ def disable_task(task_id):
         db.session.commit()
 
 
-def rescheduled_scheduled_tasks():
+# pylint: disable=W0613
+def rescheduled_scheduled_tasks(*args):
     """Rescheduling scheduled tasks."""
     ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
 
@@ -172,7 +173,8 @@ def rescheduled_scheduled_tasks():
         requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task.id))
 
 
-def run_scheduled_tasks():
+# pylint: disable=W0613
+def run_scheduled_tasks(*args):
     """Running all scheduled tasks."""  # noqa: D401
     ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
 
@@ -182,7 +184,8 @@ def run_scheduled_tasks():
         requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task.id))
 
 
-def disabled_scheduled_tasks():
+# pylint: disable=W0613
+def disabled_scheduled_tasks(*args):
     """Disabling scheduled tasks."""
     ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
 
@@ -195,7 +198,8 @@ def disabled_scheduled_tasks():
         requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task.id))
 
 
-def schedule_errored_tasks():
+# pylint: disable=W0613
+def schedule_errored_tasks(*args):
     """Scheduling all errored tasks."""
     ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
 
@@ -203,7 +207,7 @@ def schedule_errored_tasks():
         db.session.query()
         .select_from(Task)
         .filter(or_(Task.status_id == 2, and_(Task.id.notin_(ids), Task.enabled == 1)))
-        .add_columns("task.id")
+        .add_columns(text("task.id"))
         .all()
     )
 
@@ -211,7 +215,8 @@ def schedule_errored_tasks():
         requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task[0]))
 
 
-def run_errored_tasks():
+# pylint: disable=W0613
+def run_errored_tasks(*args):
     """Running all errored tasks."""  # noqa: D401
     ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
 
@@ -219,7 +224,7 @@ def run_errored_tasks():
         db.session.query()
         .select_from(Task)
         .filter(or_(Task.status_id == 2, and_(Task.id.notin_(ids), Task.enabled == 1)))
-        .add_columns("task.id")
+        .add_columns(text("task.id"))
         .all()
     )
 
@@ -227,13 +232,14 @@ def run_errored_tasks():
         requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task[0]))
 
 
-def run_active_tasks():
+# pylint: disable=W0613
+def run_active_tasks(*args):
     """Rerun all running tasks."""
     tasks = (
         db.session.query()
         .select_from(Task)
         .filter(or_(Task.status_id == 1, Task.enabled == 1))  # 1 = running
-        .add_columns("task.id")
+        .add_columns(text("task.id"))
         .all()
     )
 

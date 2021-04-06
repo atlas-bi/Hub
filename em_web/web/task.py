@@ -627,8 +627,13 @@ def task_new(project_id):
         tme.destination_file_delimiter = (
             form["fileDelimiter"] if "fileDelimiter" in form else None
         )
+        tme.destination_file_line_terminator = (
+            form["fileTerminator"] if "fileTerminator" in form else None
+        )
+
     else:
         tme.destination_file_delimiter = None
+        tme.destination_file_line_terminator = None
 
     tme.destination_ignore_delimiter = (
         1
@@ -1410,8 +1415,12 @@ def task_edit_post(task_id):
         tme.destination_file_delimiter = (
             form["fileDelimiter"] if "fileDelimiter" in form else None
         )
+        tme.destination_file_line_terminator = (
+            form["fileTerminator"] if "fileTerminator" in form else None
+        )
     else:
         tme.destination_file_delimiter = None
+        tme.destination_file_line_terminator = None
 
     tme.destination_ignore_delimiter = (
         1

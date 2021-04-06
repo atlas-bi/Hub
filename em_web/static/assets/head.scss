@@ -16,43 +16,45 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-.logout {
-  margin: 0 auto;
-  width: 460px;
-  position: relative;
+@import "include/color";
+@import "include/font";
+@import "include/layout";
+
+.head {
+  width: $page-width;
+  margin: auto;
+  display: flex;
+  font-family: $font-serif;
+  font-size: $font-size-lg;
 }
 
-.logout-cntr {
-  margin: 120px auto 0;
-  padding: 42px 42px 36px;
-  overflow: hidden;
-  border-radius: 5px;
-  position: relative;
-  -webkit-animation: fadein 0.5s;
-  animation: fadein 0.5s;
+.head-title {
+  padding: $padding-medium;
+  flex: 50%;
 }
 
-.logout-message {
-  text-align: center;
-  margin-bottom: 50px;
-  font-size: 50px;
+.head-subTitle {
+  color: $color-font-light;
+  font-size: $font-size-med;
 }
 
-.logout-copy {
-  text-align: center;
-  color: #6c7378;
-  font-size: 85%;
-  margin-top: 10px;
+.head-links {
+  padding: $padding-medium;
+  flex: 50%;
+  display: flex;
+  justify-content: flex-end;
+  margin: auto;
 }
 
-.logout-link {
-  text-decoration: none;
-  color: #6c7378;
-  text-align: center;
-  display: block;
+.head-linksButton {
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  color: $color-font-light;
+  fill: $color-font-light;
 }
 
-.logout-link:hover,
-.logout-link:visited {
-  text-decoration: none;
+.head-status {
+  color: $color-font-light;
+  font-size: $font-size-med;
 }

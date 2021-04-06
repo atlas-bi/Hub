@@ -56,12 +56,19 @@
 
     <!-- actions -->
     <section>
-        <div class="em-drop" data-toggle="clps" data-target="#dash-errored-tasks">
-            Errored Tasks
-            <svg class="em-dropIcon" viewbox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg>
+
+
+        <!-- tab control -->
+        <div class="tab">
+            <a title="errored tasks" class="tab-lnk active" href="errored">Errored Tasks</a>
+            <a title="active tasks" class="tab-lnk" href="active">Active Tasks</a>
+            <a title="scheduled tasks" class="tab-lnk" href="scheduled">Scheduled Tasks</a>
+            <a title="orphaned tasks" class="tab-lnk" href="orphaned">Orphaned Jobs</a>
         </div>
-        <div class="clps" id="dash-errored-tasks">
-            <div class="em-dropBody">
+
+        <!-- tab body -->
+        <div class="tab-cnt">
+            <div class="tab-dta active" id="errored">
                 <div class="em-tools">
                     <a class="em-link" title="run all now" href="/dash/errored/run">Run all now</a>
                     <a class="em-link" title="schedule all now" href="/dash/errored/schedule">Schedule all now</a>
@@ -72,13 +79,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="em-drop" data-toggle="clps" data-target="#dash-active-tasks">
-            Active Tasks
-            <svg class="em-dropIcon" viewbox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg>
-        </div>
-        <div class="clps" id="dash-active-tasks">
-            <div class="em-dropBody">
+            <div class="tab-dta" id="active">
                 <div class="em-tools">
                     <a class="em-link" title="run all now" href="/dash/active/run">Run all now</a>
                 </div>
@@ -88,13 +89,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="em-drop" data-toggle="clps" data-target="#dash-scheduled-tasks">
-            Scheduled Tasks
-            <svg class="em-dropIcon" viewbox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg>
-        </div>
-        <div class="clps" id="dash-scheduled-tasks">
-            <div class="em-dropBody">
+            <div class="tab-dta" id="scheduled">
                 <div class="em-tools">
                     <a class="em-link" title="run all now" href="/dash/scheduled/run">Run all now</a>
                     <a class="em-link" title="reschedule all" href="/dash/scheduled/reschedule">Reschedule all</a>
@@ -106,13 +101,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="em-drop" data-toggle="clps" data-target="#dash-orphaned-tasks">
-            Orphaned Jobs
-            <svg class="em-dropIcon" viewbox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="m143 352.3-136-136c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"/></svg>
-        </div>
-        <div class="clps" id="dash-orphaned-tasks">
-            <div class="em-dropBody">
+            <div class="tab-dta" id="orphaned">
                 <div class="em-tools">
                     <a class="em-link" title="delete all" href="/dash/orphans/delete">Delete all</a>
                 </div>
@@ -127,18 +116,27 @@
 
     <!-- logs -->
     <section>
-        <!-- task logs -->
-        <h2 class="em-title">Logs</h2>
-        <div class="em-ajaxTable" data-src="/table/tasks/log">
-            <div class="loader-typing">
-                <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
-            </div>
+        <!-- tab control -->
+        <div class="tab">
+            <a title="all logs" class="tab-lnk active" href="logs">All Logs</a>
+            <a title="error logs" class="tab-lnk" href="errorlogs">Error Logs</a>
         </div>
-        <!-- error logs -->
-        <h2 class="em-title">Error Log</h2>
-        <div class="em-ajaxTable" data-src="/table/tasks/errorLog">
-            <div class="loader-typing">
-                <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
+
+        <!-- tab body -->
+        <div class="tab-cnt">
+            <div class="tab-dta active" id="logs">
+                <div class="em-ajaxTable" data-src="/table/tasks/log">
+                    <div class="loader-typing">
+                        <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
+                    </div>
+                </div>
+            </div>
+            <div class="tab-dta" id="errorlogs">
+                <div class="em-ajaxTable" data-src="/table/tasks/errorLog">
+                    <div class="loader-typing">
+                        <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
+                    </div>
+                </div>
             </div>
         </div>
     </section>

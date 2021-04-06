@@ -15,14 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+@import "include/color";
+@import "include/font";
+@import "include/layout";
+
 body {
   min-height: 100%;
   margin: 0;
   padding: 0;
-  color: #3e4042;
-  font-family: "Inter", HelveticaNeue, "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
-  font-size: 12px;
+  color: $color-font;
+  font-family: $font-sans;
+  font-size: $font-size;
   -webkit-font-smoothing: antialiased;
   -webkit-backface-visibility: hidden;
   -moz-text-size-adjust: 100%;
@@ -31,67 +35,66 @@ body {
 }
 
 h1 {
-  font-size: 2em;
-  margin-top: 25px;
-  margin-bottom: 25px;
-  font-family: Georgia, serif;
+  font-size: $font-size-h1;
+  margin-top: $margin-medium;
+  margin-bottom: $margin-medium;
+  font-family: $font-serif;
+}
+
+h2 {
+  font-size: $font-size-h2;
 }
 
 h2,
 h3,
 h4,
 h5 {
-  font-family: Georgia, serif;
+  font-family: $font-serif;
 }
 
 .block {
   display: flex;
-  width: 90%;
+  width: $page-width;
   margin: auto;
 }
 
 .block-left {
-  flex: 25%;
-  padding: 25px;
+  flex: $page-left;
+  padding: $padding-medium;
   padding-top: 0;
-  max-width: 300px;
+  max-width: $nav-width;
 }
 
 .block-right {
-  flex: 75%;
-  padding: 25px;
+  flex: $page-right;
+  padding: $padding-medium;
   padding-top: 0;
-  max-width: calc(100% - 300px);
+  max-width: calc(100% - #{$nav-width});
+  min-width: 0;
 }
 
 .icon-sm {
-  height: 15px;
+  height: $icon-sm-hight;
 }
 
 .loader {
-  padding: 30px 0;
-  margin-left: 10px;
-  margin-right: 10px;
-  height: 8px;
-}
-
-.loader img {
-  height: 8px;
-  float: right;
-}
-
-.loader-typing img {
-  height: 150px;
+  padding: $padding-medium 0;
+  margin-left: $margin-small;
+  margin-right: $margin-small;
+  height: $icon-xsm-hight;
+  img {
+    height: $icon-xsm-hight;
+    float: right;
+  }
 }
 
 .em-titleGrey,
 .em-titleGrey:visited {
-  color: #6c7378;
+  color: $color-font-light;
   text-decoration: none;
-}
-
-.em-titleGrey:hover {
-  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 .em-titleStatus {
@@ -99,68 +102,55 @@ h5 {
 }
 
 .em-subTitle {
-  color: #6c7378;
+  color: $color-font-light;
   font-style: italic;
 }
 
 .em-sectionTitle {
-  margin-bottom: 0;
+  margin-bottom: $margin-xsmall;
 }
 
 .em-addElement {
   height: 44px;
-  margin: 10px 0;
-  color: #6c7378;
-  font-size: 17px;
+  margin: $margin-small 0;
+  color: $color-font-light;
+  font-size: $font-size-med;
   letter-spacing: 1px;
   cursor: pointer;
-}
-
-@media (min-width: 1940px) {
-  .em-addElement {
-    font-size: 96%;
+  svg {
+    padding-right: $padding-medium;
+    height: 25px;
+    fill: $color-font-light;
+    margin-bottom: -5px;
   }
 }
 
-.em-addElement svg {
-  padding-right: 20px;
-  height: 25px;
-  fill: #6c7378;
-  margin-bottom: -5px;
-}
-
 .em-code {
-  background: rgb(45, 46, 39);
-  border-radius: 6px;
-  color: #cc99cd;
-  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-  font-size: 1em;
+  background: $color-background-dark;
+  border-radius: $border-radius-med;
+  color: $color-pink;
+  font-family: $font-code;
+  font-size: $font-size;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
   line-height: 1.5;
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
   tab-size: 4;
-  -webkit-hyphens: none;
-  -moz-hyphens: none;
-  -ms-hyphens: none;
   hyphens: none;
-  padding: 1em;
-  margin: 0.5em 0;
+  padding: $padding-small;
+  margin: $margin-xxsmall 0;
   overflow: auto;
 }
 
 .em-link,
 .em-link:visited {
-  color: #6c7378;
+  color: $color-font-light;
   text-decoration: none;
-}
-
-.em-link:hover {
-  color: #09aebb;
+  &:hover {
+    color: $color-blue;
+  }
 }
 
 .em-pSection {
@@ -170,47 +160,44 @@ h5 {
 
 .foot-copy {
   text-align: center;
-  color: #6c7378;
-  font-size: 85%;
-  margin-top: 20px;
-  margin-bottom: 30px;
+  color: $color-font-light;
+  font-size: $font-size-small;
+  margin: $margin-medium 0;
 }
 
 .em-grid {
   display: grid;
   grid-template-columns: max-content 1fr;
   grid-template-rows: repeat(1, 1fr);
-  grid-column-gap: 20px;
+  grid-column-gap: $padding-medium;
   grid-row-gap: 0;
-}
-
-.em-error {
-  color: rgba(255, 105, 97);
-}
-
-.em-success {
-  color: rgba(41, 206, 66);
-}
-
-.em-running {
-  color: rgba(250, 174, 71);
+  margin: $margin-xsmall 0;
 }
 
 .em-border {
-  padding: 8px;
-  border-radius: 3px;
+  padding: $padding-xsmall;
+  border-radius: $border-radius-small;
 }
 
-.em-error.em-border {
-  border: 2px solid rgba(255, 105, 97);
+.em-error {
+  color: $color-error;
+  &.em-border {
+    border: $border-med solid $color-error;
+  }
 }
 
-.em-success.em-border {
-  border: 2px solid rgba(41, 206, 66);
+.em-success {
+  color: $color-success;
+  &.em-border {
+    border: $border-med solid $color-success;
+  }
 }
 
-.em-running.em-border {
-  border: 2px solid rgba(250, 174, 71);
+.em-running {
+  color: $color-warning;
+  &.em-border {
+    border: $border-med solid $color-warning;
+  }
 }
 
 .em-paragraph {
@@ -218,16 +205,16 @@ h5 {
 }
 
 .em-checkbox {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: $margin-small;
+  margin-bottom: $margin-small;
 }
 
 .em-codeBox {
   max-height: 500px;
   overflow: hidden;
-  border-radius: 6px;
-  background: #2e3440;
-  margin: 0.5em 0;
+  border-radius: $border-radius-med;
+  background: $color-background-dark;
+  margin: $margin-xsmall 0;
 }
 
 .em-codeBox pre {
@@ -249,81 +236,79 @@ h5 {
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  min-width: 120px;
-  max-width: 300px;
-  background-color: #3e4042;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 10px;
-  position: absolute;
-  z-index: 1;
-  top: 150%;
-  left: 50%;
-  margin-left: -25%;
-  font-style: normal;
-}
-
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent #3e4042 transparent;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
+  border-bottom: $border-small dotted;
+  .tooltiptext {
+    visibility: hidden;
+    min-width: 120px;
+    max-width: 300px;
+    background-color: $color-font;
+    color: $color-white;
+    text-align: center;
+    border-radius: $border-radius-med;
+    padding: $padding-small;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -25%;
+    font-style: normal;
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent $color-font transparent;
+    }
+  }
+  &:hover {
+    .tooltiptext {
+      visibility: visible;
+    }
+  }
 }
 
 .flashes {
   list-style: none;
-  border-radius: 3px;
-  background-color: cornsilk;
-  padding: 10px;
-  border: 2px solid rgba(255, 105, 97);
+  border-radius: $border-radius-small;
+  background-color: $color-background;
+  padding: $padding-small;
+  border: $border-med solid $color-error;
   opacity: 1;
-  transition: opacity 0.2s;
+  transition: opacity $transition_dur;
 }
 
 .flashes-close {
-  margin-left: 15px;
+  margin-left: $margin-small;
   font-weight: bold;
   float: right;
   font-size: 22px;
   line-height: 20px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: $transition_dur;
   margin-top: -4px;
-}
-
-.flashes-close:hover {
-  color: black;
+  &:hover {
+    color: $color-black;
+  }
 }
 
 .em-status {
-  transition: height 0.2s;
+  transition: height $transition_dur;
   height: 0;
   overflow: hidden;
 }
 
 .em-statusContainer {
-  padding: 20px;
-  border: 2px solid rgb(9, 174, 187);
-  border-radius: 3px;
+  padding: $padding-medium;
+  border: $border-med solid $color-blue;
+  border-radius: $border-radius-small;
 }
 
 .em-statusTitle {
   font-weight: bolder;
-  padding-right: 10px;
+  padding-right: $padding-small;
 }
 
 @keyframes blink {
@@ -360,13 +345,12 @@ h5 {
 
 .em-cloudItem {
   display: inline-block;
-  border-radius: 6px;
-  padding: 4px;
-  margin-right: 4px;
-  margin-top: 4px;
-  border: 1px solid #eee;
-  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05),
-    0 0 0.0625rem rgba(0, 0, 0, 0.1);
+  border-radius: $border-radius-med;
+  padding: $padding-xsmall;
+  margin-right: $margin-xsmall;
+  margin-top: $margin-xsmall;
+  border: $border-small solid $color-border-light;
+  box-shadow: $shadow-light;
 }
 
 .em-cloudName,
@@ -374,15 +358,15 @@ h5 {
 .em-cloudName:visited,
 .em-cloudName:active {
   text-decoration: none;
-  color: #3e4042;
+  color: $color-font;
 }
 
 .em-cloudValue {
   height: 16px;
   min-width: 10px;
   border-radius: 8px;
-  background-color: rgb(7, 137, 146);
-  color: #fff;
+  background-color: $color-blue-dark;
+  color: $color-white;
   display: inline-block;
   font-weight: 600;
   text-align: center;
@@ -394,8 +378,8 @@ h5 {
   height: 200px;
   padding: 0 12px 0 45px;
   margin-bottom: 60px;
-  border-bottom: 3px solid #09aebb;
-  border-radius: 3px;
+  border-bottom: 3px solid $color-blue;
+  border-radius: $border-radius-small;
   position: relative;
 }
 
@@ -428,7 +412,7 @@ h5 {
   height: 0;
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-bottom: 16px solid #09aebb;
+  border-bottom: 16px solid $color-blue;
   transform: scaleY(13);
   transform-origin: bottom center;
 }
@@ -447,17 +431,16 @@ h5 {
   width: 100%;
   background: rgba(108, 115, 120, 0.25);
   position: relative;
-}
-
-.em-ScaleBar:last-of-type {
-  background: transparent;
+  &:last-of-type {
+    background: transparent;
+  }
 }
 
 .em-ScaleValue {
   position: absolute;
   left: -30px;
   top: -8px;
-  color: #6c7378;
+  color: $color-font-light;
 }
 
 .em-icon {
@@ -468,25 +451,33 @@ h5 {
   display: inline-flex;
   justify-content: center;
   margin: 0 20px 0 10px;
-  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05),
-    0 0 0.0625rem rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow-light;
   border-radius: 20px;
   box-sizing: border-box;
 }
 .em-successIcon {
   background-image: url("/static/img/solid_check.svg");
-  fill: rgba(41, 206, 66);
+  fill: $color-success;
 }
 .em-runningIcon {
   background-image: url("/static/img/solid_notch.svg");
-  fill: rgba(250, 174, 71);
+  fill: $color-warning;
 }
 .em-errorIcon {
   background-image: url("/static/img/solid_times.svg");
-  fill: rgba(255, 105, 97);
+  fill: $color-error;
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-  border-radius: 6px;
+  border-radius: $border-radius-med;
 }
+
+.CodeMirror {
+  font-size: $font-size !important;
+}
+
+.em-taskSummary {
+  margin: $margin-medium 0;
+}
+@import "tabs";

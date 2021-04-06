@@ -16,41 +16,45 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-.head {
-  width: 90%;
-  margin: auto;
-  display: flex;
-  font-family: Georgia, serif;
-  font-size: 35px;
+@import "include/color";
+@import "include/font";
+@import "include/layout";
+
+.logout {
+  margin: 0 auto;
+  width: 460px;
+  position: relative;
 }
 
-.head-title {
-  padding: 25px;
-  flex: 50%;
+.logout-cntr {
+  margin: 120px auto 0;
+  padding: $padding-large $padding-large $padding-large;
+  overflow: hidden;
+  border-radius: $border-radius-med;
+  position: relative;
+  animation: fadein $transition_dur;
 }
 
-.head-subTitle {
-  color: #6c7378;
-  font-size: 15px;
+.logout-message {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 50px;
 }
 
-.head-links {
-  padding: 25px;
-  flex: 50%;
-  display: flex;
-  justify-content: flex-end;
-  margin: auto;
+.logout-copy {
+  text-align: center;
+  color: $color-font-light;
+  font-size: $font-size-small;
+  margin-top: $margin-small;
 }
 
-.head-linksButton {
-  height: 30px;
-  width: 30px;
-  display: inline-block;
-  color: #6c7378;
-  fill: #6c7378;
-}
-
-.head-status {
-  color: #6c7378;
-  font-size: 15px;
+.logout-link {
+  text-decoration: none;
+  color: $color-font-light;
+  text-align: center;
+  display: block;
+  &:hover,
+  &:visited {
+    text-decoration: none;
+  }
 }

@@ -30,6 +30,7 @@ import html
 import json
 
 import requests
+import urllib3
 from flask import Blueprint
 from flask import current_app as app
 from flask import jsonify, request, session
@@ -569,7 +570,7 @@ def table_jobs_orphans():
         )
 
         me.append({"empty_msg": "No orphans."})
-    except requests.exceptions.ConnectionError:
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
         table = []
         me.append({"empty_msg": "Error - EM_Scheduler offline."})
 
@@ -587,7 +588,7 @@ def table_jobs_orphans():
 @table_bp.route("/table/tasks/<task_type>")
 # @ldap.login_required
 # @ldap.group_required(["Analytics"])
-def dash_errored(task_type):
+def dash_tasks(task_type):
     """Get a table of any jobs marked error.
 
     :url: /table/tasks/<task_type>
@@ -595,8 +596,10 @@ def dash_errored(task_type):
 
     :returns: json output of associated tasks.
     """
+    default_sort = "Next Run.asc" if task_type == "scheduled" else "Last Run.asc"
+
     page = request.args.get("p", default=1, type=int)
-    sort = request.args.get("s", default="Last Run.asc", type=str)
+    sort = request.args.get("s", default=default_sort, type=str)
     split_sort = sort.split(".")
 
     page -= 1
@@ -635,15 +638,21 @@ def dash_errored(task_type):
                 requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text
             )
             tasks = tasks.filter(and_(Task.id.in_(ids), Task.enabled == 1))
-        except requests.exceptions.ConnectionError:
-            task = tasks.filter_by(id=-1)
-            me.append({"empty_msg": "Error EM_Scheduler is offline."})
+        except (
+            requests.exceptions.ConnectionError,
+            urllib3.exceptions.NewConnectionError,
+        ):
+            tasks = tasks.filter(Task.id == -1)
+            me.append({"empty_msg": "Error - EM_Scheduler is offline."})
 
     elif task_type == "active":
         try:
             tasks = tasks.filter(Task.status_id == 1)  # running
-        except requests.exceptions.ConnectionError:
-            task = tasks.filter_by(id=-1)
+        except (
+            requests.exceptions.ConnectionError,
+            urllib3.exceptions.NewConnectionError,
+        ):
+            tasks = tasks.filter_by(id=-1)
             me.append({"empty_msg": "Error querying active tasks."})
 
     me.append({"total": tasks.count() or 0})  # runs.total

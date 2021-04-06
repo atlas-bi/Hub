@@ -116,6 +116,8 @@ def create_app():
 
         if app.config["DEBUG"]:
             toolbar.init_app(app)
+            assets.cache = False
+            assets.manifest = False
 
         return app
 

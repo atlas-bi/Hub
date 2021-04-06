@@ -1,0 +1,157 @@
+/*
+    Extract Management 2.0
+    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+@import "include/color";
+@import "include/font";
+@import "include/layout";
+
+.login {
+  margin: 0 auto;
+  width: 460px;
+  position: relative;
+}
+
+.login-ttl {
+  text-align: center;
+  opacity: 0.9;
+  margin-top: 0;
+  margin-bottom: $margin-large;
+}
+
+.login-cntr {
+  margin: 120px auto 0;
+  padding: 42px 42px 36px;
+  border: 1px solid $color-border-light;
+  overflow: hidden;
+  border-radius: $border-radius-med;
+  position: relative;
+  animation: fadein $transition_dur;
+}
+
+.login-inputTtl {
+  margin: $margin-small 0;
+  color: $color-font-light;
+}
+
+.login-input {
+  height: 44px;
+  width: 100%;
+  padding: 0 $padding-small;
+  background: $color-white;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  border-radius: $border-radius-small;
+  box-shadow: none;
+  color: $color-black;
+  font-size: $font-size-med;
+  font-weight: $font-weight-light;
+  border: $border-small solid $color-blue;
+  transition: border $transition_dur ease-out;
+  &:focus {
+    outline: 0;
+    border-color: $color-blue-dark;
+    box-shadow: none;
+    background-color: $color-white;
+  }
+}
+
+.login-btn {
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  display: block;
+  box-shadow: none;
+  border-radius: $border-radius-small;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  color: $color-white;
+  font-size: $font-size-med;
+  text-align: center;
+  font-weight: $font-weight-heavy;
+  text-shadow: none;
+  text-decoration: none;
+  transition: background-color $transition_dur ease-out;
+  background-color: $color-blue;
+  padding: $padding-small;
+  margin-top: $margin-large;
+  margin-bottom: $margin-small;
+  letter-spacing: 1px;
+  &:hover {
+    background-color: $color-blue-dark;
+    outline: 0;
+  }
+}
+
+.login-copy {
+  text-align: center;
+  color: $color-font-light;
+  font-size: $font-size-small;
+  margin-top: $margin-small;
+}
+
+.login-error {
+  border: $border-small solid $color-error;
+  background-color: $color-background;
+  margin: 0;
+  padding: $padding-small $padding-small $padding-small $padding-large;
+  border-radius: $border-radius-med;
+  text-align: left;
+  position: relative;
+}
+
+.login-errorIcn {
+  width: 20px;
+  fill: $color-error;
+  position: absolute;
+  left: 13px;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    zoom: 0.9;
+    transform: scale(0.9);
+    margin-top: 80px;
+    transform-origin: 50% 0%;
+  }
+
+  to {
+    opacity: 1;
+    zoom: 1;
+    transform: scale(1);
+    margin-top: 120px;
+  }
+}
+
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+    zoom: 0.9;
+    transform: scale(0.9);
+    margin-top: 80px;
+    transform-origin: 50% 0%;
+  }
+
+  to {
+    opacity: 1;
+    zoom: 1;
+    transform: scale(1);
+    margin-top: 120px;
+  }
+}

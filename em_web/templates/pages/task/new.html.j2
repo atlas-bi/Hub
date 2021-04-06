@@ -459,6 +459,9 @@
                             Ignore Delimiter
                         </div>
                         <input type="hidden" name="task_ignore_file_delimiter" value="{% if t and t.destination_ignore_delimiter == 1 %}1{% else %}0{% endif %}"/>
+
+                        <div class="em-inputTtl">Line End Appending (defaults to "", normally this is not used. ex: ~)</div>
+                        <input class="em-input" name="fileTerminator" autocomplete="off" value="{{ t.destination_file_line_terminator or '' }}" />
                     </div>
 
                     <div class="em-inputTtl">Quote Level</div>

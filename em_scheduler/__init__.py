@@ -59,7 +59,7 @@ Database model should be cloned from `em_web` before running app.
 
 import logging
 
-from flask import Flask
+from flask import Flask, jsonify, make_response
 
 from em_scheduler.extensions import db, scheduler
 
@@ -89,6 +89,9 @@ def create_app():
     logging.basicConfig(level=logging.WARNING)
 
     with app.app_context():
+        # pylint: disable=W0611
+        from em_scheduler import maintenance  # noqa: F401
+
         scheduler.start()
         # pylint: disable=C0415
         from em_scheduler import web
@@ -107,6 +110,23 @@ def create_app():
 
 
 app = create_app()
+
+
+@app.errorhandler(404)
+@app.errorhandler(500)
+def error_message(error):
+    """Return error page for 404 and 500 errors including the specific error message.
+
+    :param error: error message
+    :return: json web response with error message:
+
+    .. code-block:: python
+
+        {"error": "messsage"}
+
+    """
+    return make_response(jsonify({"error": str(error)}), 404)
+
 
 if __name__ == "__main__":
     app.run(port=5001)

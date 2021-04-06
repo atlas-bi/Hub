@@ -1,181 +1,244 @@
+# You can override the included template(s) by including variable overrides
+# See https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#priority-of-environment-variables
 variables:
   PYTHONDONTWRITEBYTECODE: 1
   FLASK_ENV: test
   FLASK_DEBUG: 1
   FLASK_APP: em_web
-
 stages:
-  - static
-  - test
-  - deploy
-  - docs
-
+- static
+- test
+- deploy
+- docs
 before_script:
-  - python --version
-  - redis-server --daemonize yes
-  - cd /builds/extract-management/extract-management-site/
-  - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+- python --version
+- redis-server --daemonize yes
+- cd /builds/extract-management/extract-management-site/
+- su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp
+  WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+# include:
+# - template: Code-Quality.gitlab-ci.yml
+# - template: Security/SAST.gitlab-ci.yml
+# - template: Security/Secret-Detection.gitlab-ci.yml
+# code_quality:
+#   services: 
+#   except:
+#   - public
+#   tags:
+#   - cq-sans-dind
+#   before_script:
+#   - echo "nothing to do.."
+#   artifacts:
+#     paths:
+#     - gl-code-quality-report.json
+# metrics:
+#   before_script:
+#   - echo "nothing to do.."
+#   script:
+#   - echo 'metric_name metric_value' > metrics.txt
+#   artifacts:
+#     reports:
+#       metrics: metrics.txt
+# lint:
+#   stage: static
+#   image: python:3.9
+#   except:
+#   - public
+#   before_script:
+#   - python -m pip install --disable-pip-version-check --quiet tox
+#   script:
+#   - export LINT=$(tox -e lint)
+#   - echo -e $LINT
+#   - python -m pip install --disable-pip-version-check --quiet anybadge
+#   - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo
+#     "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red
+#   - echo $LINT | grep -q "commands succeeded" && exit 0 || exit 1
+#   artifacts:
+#     paths:
+#     - lint.svg
+#     when: always
+#     expire_in: 4 weeks
+# web:
+#   image: christopherpickering/extract-management-2-static-test
+#   stage: static
+#   except:
+#   - public
+#   before_script:
+#   - rm -rf package-lock.json
+#   - rm -rf node_modules
+#   script:
+#   - export STATIC=$(tox -e static)
+#   - echo -e $STATIC
+#   - python -m pip install --disable-pip-version-check --quiet anybadge
+#   - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo
+#     "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
+#   - echo $STATIC | grep -q "commands succeeded" && exit 0 || exit 1
+#   artifacts:
+#     paths:
+#     - web.svg
+#     when: always
+#     expire_in: 4 weeks
+# html:
+#   image: christopherpickering/extract-management-2-static-test
+#   stage: static
+#   except:
+#   - public
+#   before_script:
+#   - rm -rf package-lock.json
+#   - rm -rf node_modules
+#   script:
+#   - export HTML=$(tox -e html)
+#   - echo -e $HTML
+#   - python -m pip install --disable-pip-version-check --quiet anybadge
+#   - anybadge -l $CI_JOB_NAME -v $(echo $HTML | grep -q "commands succeeded" && echo
+#     "succeeded" || echo "failed") -f html.svg succeeded=green failed=red
+#   - echo $HTML | grep -q "commands succeeded" && exit 0 || exit 1
+#   artifacts:
+#     paths:
+#     - html.svg
+#     when: always
+#     expire_in: 4 weeks
+# typing:
+#   image: python:3.9-slim
+#   stage: static
+#   except:
+#   - public
+#   before_script:
+#   - python -m pip install --disable-pip-version-check --quiet tox
+#   script:
+#   - export TYPING=$(tox -e typing)
+#   - echo -e $TYPING
+#   - python -m pip install --disable-pip-version-check --quiet anybadge
+#   - anybadge -l $CI_JOB_NAME -v $(echo $TYPING | grep -q "commands succeeded" && echo
+#     "succeeded" || echo "failed") -f typing.svg succeeded=green failed=red
+#   - echo $TYPING | grep -q "commands succeeded" && exit 0 || exit 1
+#   artifacts:
+#     paths:
+#     - typing.svg
+#     when: always
+#     expire_in: 4 weeks
+# py39:
+#   stage: test
+#   image: christopherpickering/extract-management-2-python39-test
+#   except:
+#   - public
+#   script:
+#   - echo $FLASK_ENV
+#   - echo $FLASK_DEBUG
+#   - echo $FLASK_APP
+#   - tox -e clean,py39,cov
+#   coverage: "/^TOTAL.*\\s+(\\d+\\%)$/"
+#   needs:
+#   - lint
+#   - typing
+#   artifacts:
+#     when: always
+#     reports:
+#       junit: report.xml
+# py38:
+#   stage: test
+#   image: christopherpickering/extract-management-2-python38-test
+#   except:
+#   - public
+#   script:
+#   - echo $FLASK_ENV
+#   - echo $FLASK_DEBUG
+#   - echo $FLASK_APP
+#   - tox -e clean,py38,cov
+#   needs:
+#   - lint
+#   - typing
+# py37:
+#   stage: test
+#   image: christopherpickering/extract-management-2-python37-test
+#   except:
+#   - public
+#   script:
+#   - echo $FLASK_ENV
+#   - echo $FLASK_DEBUG
+#   - echo $FLASK_APP
+#   - tox -e clean,py37,cov
+#   needs:
+#   - lint
+#   - typing
+# pages:
+#   image: christopherpickering/extract-management-2-python39-test
+#   stage: docs
+#   except:
+#   - public
+#   needs:
+#   - py39
+#   script:
+#   - tox -e docs
+#   - mv docs/_build/ public/
+#   artifacts:
+#     paths:
+#     - public
+#   only:
+#   - master
+# sast:
+#   stage: test
+#   except:
+#   - public
+#   before_script:
+#   - ""
 
-include:
-  - template: Code-Quality.gitlab-ci.yml
-
-code_quality:
-  services:            # Shut off Docker-in-Docker
-  tags:
-    - cq-sans-dind     # Set this job to only run on our new specialized runner
+public:
+  stage: deploy
+  image: python:3.9
+  # only:
+  #   - master
+  except:
+    - public
   before_script:
-    - echo "nothing to do.."
-  artifacts:
-    paths: [gl-code-quality-report.json]
-
-metrics:
-  before_script:
-    - echo "nothing to do.."
+  - apt-get install -y git
   script:
-    - echo 'metric_name metric_value' > metrics.txt
+    - cd public-publish && python build_em_public.py
+    - cd $CI_PROJECT_DIR
+    - git init
+    - git remote add origin https://oauth2:${CI_PUSH_TOKEN}@$CI_SERVER_HOST/$CI_PROJECT_PATH.git
+    - git config user.email "$GITLAB_USER_EMAIL"
+    - git config user.name "$GITLAB_USER_NAME"
+    - git add . && git commit -m '[skip ci] public update'
+    - export GIT_SSL_NO_VERIFY=1 && git push --force --follow-tags origin HEAD:public
   artifacts:
-    reports:
-      metrics: metrics.txt
+    paths:
+    - $CI_PROJECT_DIR
 
-
-
-lint:
-  stage: static
+github:
+  when: manual
+  only:
+    - public # public branch
+  stage: deploy
   image: python:3.9
   before_script:
-    - python -m pip install --disable-pip-version-check --quiet tox
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - echo "$github_priv_key" | tr -d '\r' | ssh-add -
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git config --global user.name "$GITLAB_USER_NAME"
+    - shopt -s dotglob # include dotfiles in mv
+
   script:
-    - export LINT=$(tox -e lint)
-    - echo -e $LINT
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red
-    - echo $LINT | grep -q "commands succeeded" && exit 0 || exit 1
+    - cd .. && mkdir pub && cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/extract_management.git && git pull origin main
+    - git rm -rf . ; git clean -fxd # remove pub files, except git
+    - cd $CI_PROJECT_DIR && rm -rf .git
+    - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
+    - ls
+    - git status
+    - git add . && git commit -m "$MESSAGE"
+    - git status
+    - git branch -m master main
+    - git push -u origin main
   artifacts:
     paths:
-      - lint.svg
-    when: always
-    expire_in: 4 weeks
+    - $CI_PROJECT_DIR
 
-web:
-  image: christopherpickering/extract-management-2-static-test
-  stage: static
-  before_script:
-    - rm -rf package-lock.json
-    - rm -rf node_modules
-  script:
-    - export STATIC=$(tox -e static)
-    - echo -e $STATIC
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
-    - echo $STATIC | grep -q "commands succeeded" && exit 0 || exit 1
-  artifacts:
-    paths:
-      - web.svg
-    when: always
-    expire_in: 4 weeks
 
-html:
-  image: christopherpickering/extract-management-2-static-test
-  stage: static
-  before_script:
-    - rm -rf package-lock.json
-    - rm -rf node_modules
-  script:
-    - export HTML=$(tox -e html)
-    - echo -e $HTML
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $HTML | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f html.svg succeeded=green failed=red
-    - echo $HTML | grep -q "commands succeeded" && exit 0 || exit 1
-  artifacts:
-    paths:
-      - html.svg
-    when: always
-    expire_in: 4 weeks
-
-typing:
-  image: python:3.9-slim
-  stage: static
-  before_script:
-    - python -m pip install --disable-pip-version-check --quiet tox
-  script:
-    - export TYPING=$(tox -e typing)
-    - echo -e $TYPING
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $TYPING | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f typing.svg succeeded=green failed=red
-    - echo $TYPING | grep -q "commands succeeded" && exit 0 || exit 1
-  artifacts:
-    paths:
-      - typing.svg
-    when: always
-    expire_in: 4 weeks
-
-py39:
-  stage: test
-  image: christopherpickering/extract-management-2-python39-test
-  script:
-    - echo $FLASK_ENV
-    - echo $FLASK_DEBUG
-    - echo $FLASK_APP
-    - tox -e clean,py39,cov
-  coverage: '/^TOTAL.*\s+(\d+\%)$/'
-  needs:
-    - lint
-    - typing
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml
-
-py38:
-  stage: test
-  image: christopherpickering/extract-management-2-python38-test
-  script:
-    - echo $FLASK_ENV
-    - echo $FLASK_DEBUG
-    - echo $FLASK_APP
-    - tox -e clean,py38,cov
-  needs:
-    - lint
-    - typing
-
-py37:
-  stage: test
-  image: christopherpickering/extract-management-2-python37-test
-  script:
-    - echo $FLASK_ENV
-    - echo $FLASK_DEBUG
-    - echo $FLASK_APP
-    - tox -e clean,py37,cov
-  needs:
-    - lint
-    - typing
-
-pages:
-  image: christopherpickering/extract-management-2-python39-test
-  stage: docs
-  needs: [py39]
-  script:
-    - tox -e docs
-    - mv docs/_build/ public/
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
-
-# publish:
-#   image: python:3.9
-#   needs:
-#     - py39
-#     - py38
-#     - py37
-#     - html
-#     - web
-#   stage: deploy
-#   environment: Production
-#   before_script:
-#     - python -m pip install --disable-pip-version-check fabric==2.5.0
-#   script:
-#     - cd publish && fab publish
-#   only:
-#       - master
+# secret_detection:
+#   before_script: 
+#   - ""

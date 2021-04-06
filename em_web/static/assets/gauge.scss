@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+@import "include/color";
+
 .gauge {
   height: 150px;
   width: 300px;
@@ -28,7 +30,7 @@
 .gauge-liner {
   z-index: 3;
   position: absolute;
-  background-color: #fff;
+  background-color: $color-white;
   width: 250px;
   height: 125px;
   top: 25px;
@@ -40,7 +42,7 @@
 .gauge-line {
   z-index: 2;
   position: absolute;
-  background-color: rgb(9, 174, 187);
+  background-color: $color-blue;
   width: 300px;
   height: 150px;
   top: 150px;

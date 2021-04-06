@@ -16,9 +16,22 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-.dash-gauge {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-}
+/* font families */
+$font-sans: "Inter", "HelveticaNeue", "Helvetica Neue", "Helvetica", "Arial",
+  sans-serif;
+$font-code: "Consolas", "Monaco", "Andale Mono", "Ubuntu Mono", monospace;
+$font-serif: "Georgia", serif;
+
+/* font sizes */
+$font-size-small: 10px;
+$font-size: 12px;
+$font-size-med: 15px;
+$font-size-lg: 35px;
+
+$font-size-h1: 2em;
+$font-size-h2: 1.5em;
+
+/* font weights */
+$font-weight-light: 400;
+$font-weight-med: 600;
+$font-weight-heavy: 700;

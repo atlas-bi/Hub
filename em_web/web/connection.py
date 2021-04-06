@@ -106,7 +106,7 @@ def connection_edit(connection_id):
     sftp_list = [
         k.split("sftp")[1].split("-")[0]
         for k, v in form.items()
-        if k.startswith("sftp") and "name" in k
+        if k.startswith("sftp") and k.endswith("-name")
     ]
     for sftp in sftp_list:
         # try to get first, else create.
@@ -157,7 +157,7 @@ def connection_edit(connection_id):
     ssh_list = [
         k.split("ssh")[1].split("-")[0]
         for k, v in form.items()
-        if k.startswith("ssh") and "name" in k
+        if k.startswith("ssh") and k.endswith("-name")
     ]
     for ssh in ssh_list:
         # try to get first, else create.
@@ -200,7 +200,7 @@ def connection_edit(connection_id):
     ftp_list = [
         k.split("ftp")[1].split("-")[0]
         for k, v in form.items()
-        if k.startswith("ftp") and "name" in k
+        if k.startswith("ftp") and k.endswith("-name")
     ]
     for ftp in ftp_list:
         # try to get first, else create.
@@ -243,7 +243,7 @@ def connection_edit(connection_id):
     smb_list = [
         k.split("smb")[1].split("-")[0]
         for k, v in form.items()
-        if k.startswith("smb") and "name" in k
+        if k.startswith("smb") and k.endswith("-name")
     ]
 
     for smb in smb_list:
@@ -258,9 +258,9 @@ def connection_edit(connection_id):
 
         smb_conn.connection_id = my_connection.id
         smb_conn.name = form["smb" + smb + "-name"]
-        smb_conn.server_name = form["smb" + smb + "-server-name"]
-        smb_conn.server_ip = form["smb" + smb + "-server-ip"]
-        smb_conn.share_name = form["smb" + smb + "-share-name"]
+        smb_conn.server_name = form["smb" + smb + "-servername"]
+        smb_conn.server_ip = form["smb" + smb + "-serverip"]
+        smb_conn.share_name = form["smb" + smb + "-sharename"]
         smb_conn.path = form["smb" + smb + "-path"]
         smb_conn.username = form["smb" + smb + "-user"]
         smb_conn.password = em_encrypt(
@@ -289,7 +289,7 @@ def connection_edit(connection_id):
     gpg_list = [
         k.split("gpg")[1].split("-")[0]
         for k, v in form.items()
-        if k.startswith("gpg") and "name" in k
+        if k.startswith("gpg") and k.endswith("-name")
     ]
 
     for gpg in gpg_list:
@@ -328,7 +328,7 @@ def connection_edit(connection_id):
     database_list = [
         k.split("database")[1].split("-")[0]
         for k, v in form.items()
-        if k.startswith("database") and "name" in k
+        if k.startswith("database") and k.endswith("-name")
     ]
 
     for database in database_list:
@@ -505,7 +505,7 @@ def connection_new():
         sftp_list = [
             k.split("sftp")[1].split("-")[0]
             for k, v in form.items()
-            if k.startswith("sftp") and "name" in k
+            if k.startswith("sftp") and k.endswith("-name")
         ]
 
         for sftp in sftp_list:
@@ -552,7 +552,7 @@ def connection_new():
         ssh_list = [
             k.split("ssh")[1].split("-")[0]
             for k, v in form.items()
-            if k.startswith("ssh") and "name" in k
+            if k.startswith("ssh") and k.endswith("-name")
         ]
 
         for ssh in ssh_list:
@@ -590,7 +590,7 @@ def connection_new():
         ftp_list = [
             k.split("ftp")[1].split("-")[0]
             for k, v in form.items()
-            if k.startswith("ftp") and "name" in k
+            if k.startswith("ftp") and k.endswith("-name")
         ]
 
         for ftp in ftp_list:
@@ -626,7 +626,7 @@ def connection_new():
         smb_list = [
             k.split("smb")[1].split("-")[0]
             for k, v in form.items()
-            if k.startswith("smb") and "name" in k
+            if k.startswith("smb") and k.endswith("-name")
         ]
 
         for smb in smb_list:
@@ -667,7 +667,7 @@ def connection_new():
         gpg_list = [
             k.split("gpg")[1].split("-")[0]
             for k, v in form.items()
-            if k.startswith("gpg") and "name" in k
+            if k.startswith("gpg") and k.endswith("-name")
         ]
 
         for gpg in gpg_list:
@@ -703,7 +703,7 @@ def connection_new():
         database_list = [
             k.split("database")[1].split("-")[0]
             for k, v in form.items()
-            if k.startswith("database") and "name" in k
+            if k.startswith("database") and k.endswith("-name")
         ]
 
         for database in database_list:

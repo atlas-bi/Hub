@@ -664,6 +664,7 @@ class Task(db.Model):
     destination_file_delimiter: str
     destination_file_name: str
     destination_ignore_delimiter: int
+    destination_file_line_terminator: str
     destination_quote_level_id: int
 
     destination_create_zip: int
@@ -830,6 +831,7 @@ class Task(db.Model):
     destination_file_name = db.Column(db.String(1000), nullable=True)
     destination_file_delimiter = db.Column(db.String(10), nullable=True)
     destination_ignore_delimiter = db.Column(db.Integer, nullable=True)
+    destination_file_line_terminator = db.Column(db.String(10), nullable=True)
 
     # destination zip archive
     destination_create_zip = db.Column(db.Integer, nullable=True)

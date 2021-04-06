@@ -16,64 +16,64 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+@import "include/color";
+@import "include/font";
+@import "include/layout";
+
 #nav-search {
   height: 35px;
   width: 100%;
-  padding: 0 5px;
-  border: 1px solid #09aebb;
+  padding: 0 $padding-xsmall;
+  border: $border-small solid $color-blue;
   text-overflow: ellipsis;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border-radius: 6px;
+  border-radius: $border-radius-med;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
   color: inherit;
-  margin-bottom: 5px;
-  background: #fff;
+  margin-bottom: $margin-xsmall;
+  background: $color-white;
+  &.disabled {
+    pointer-events: none;
+    background-color: $color-background;
+    visibility: hidden;
+  }
+  &:focus {
+    outline: none;
+  }
 }
 
-#nav-search.disabled {
-  pointer-events: none;
-  background-color: #f2f2f2;
-  visibility: hidden;
-}
-
-#nav-search:focus {
-  outline: none;
-}
 .block-search:not(.search-open) {
   display: none;
 }
 
 .search-open {
-  flex: 75%;
-  padding: 25px;
+  flex: $page-right;
+  padding: $padding-medium;
   padding-top: 0;
-  max-width: calc(100% - 300px);
-}
-
-.search-open + .block-right {
-  display: none;
+  max-width: calc(100% - #{$nav-width});
+  & + .block-right {
+    display: none;
+  }
 }
 
 .search-result {
-  padding: 10px;
-  margin: 5px;
-  border-bottom: 1px solid #d9d9d9;
+  padding: $padding-small;
+  margin: $margin-xsmall;
+  border-bottom: $border-small solid $color-border-medium;
   width: auto;
-}
-
-.search-result a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.search-result a:visited,
-.search-result a:hover,
-.search-result a:focus,
-.search-result a:active {
-  text-decoration: none;
-  color: inherit;
+  a {
+    text-decoration: none;
+    color: inherit;
+    &:visited,
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
 }

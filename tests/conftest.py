@@ -119,19 +119,22 @@ def scheduler_client():
             db.session.commit()
 
             g.task_id = test_task.id
+            g.project_id = test_project.id
 
             db.session.rollback()
 
             yield client
 
             db.session.rollback()
-
-            TaskLog.query.filter_by(task_id=g.task_id).delete()
             db.session.commit()
 
-            db.session.delete(test_task)
-            db.session.commit()
+            # # logs are still getting adding during teardown.
+            # while TaskLog.query.filter_by(task_id=g.task_id).count() > 0:
+            #     TaskLog.query.filter_by(task_id=g.task_id).delete()
+            #     db.session.commit()
 
-            db.session.delete(test_project)
+            # Task.query.filter_by(id=g.task_id).delete()
+            # db.session.commit()
 
-            db.session.commit()
+            # Project.query.filter_by(id=g.project_id).delete()
+            # db.session.commit()

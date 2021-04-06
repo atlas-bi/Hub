@@ -28,65 +28,84 @@ from flask_assets import Bundle
 from em_web import web_assets
 
 # font
-css = Bundle(
+css_font = Bundle(
     "./fonts/Inter/stylesheet.css", filters="rcssmin", output="css/inter.min.css"
 )
-web_assets.register("css_font", css)
+web_assets.register("css_font", css_font)
+
+# table
+css_table = Bundle(
+    "./lib/table/table.css",
+    "./lib/table/table-exec.css",
+    filters="rcssmin",
+    output="css/table.min.css",
+)
+web_assets.register("css_table", css_table)
+
+# scroll
+css_scroll = Bundle(
+    "./lib/scroll/scroll.css", filters="rcssmin", output="css/scroll.min.css"
+)
+web_assets.register("css_scroll", css_scroll)
 
 # login page
-css = Bundle(
-    "./css/base.css", "./css/login.css", filters="rcssmin", output="css/login.min.css"
+css_login = Bundle(
+    "./assets/base.scss",
+    "./assets/login.scss",
+    filters="pyscss,rcssmin",
+    output="css/login.min.css",
 )
-web_assets.register("css_login", css)
+web_assets.register("css_login", css_login)
 
 js = Bundle("./js/login.js", filters="jsmin", output="js/login.min.js")
 web_assets.register("js_login", js)
 
 # logout page
-css = Bundle(
-    "./css/base.css", "./css/logout.css", filters="rcssmin", output="css/logout.min.css"
+css_logout = Bundle(
+    "./assets/base.scss",
+    "./assets/logout.scss",
+    filters="pyscss,rcssmin",
+    output="css/logout.min.css",
 )
-web_assets.register("css_logout", css)
+web_assets.register("css_logout", css_logout)
 
 js = Bundle("./js/logout.js", filters="jsmin", output="js/logout.min.js")
 web_assets.register("js_logout", js)
 
 # demo
-css = Bundle(
-    "./css/demo.css",
-    filters="rcssmin",
-    output="css/emo.min.css",
+css_demo = Bundle(
+    "./assets/demo.scss",
+    filters="pyscss,rcssmin",
+    output="css/demo.min.css",
 )
-web_assets.register("css_demo", css)
+web_assets.register("css_demo", css_demo)
 
-# error
-css = Bundle(
-    "./css/base.css",
-    "./css/head.css",
-    "./css/nav.css",
-    filters="rcssmin",
+
+css_error = Bundle(
+    "./assets/base.scss",
+    "./assets/head.scss",
+    "./assets/nav.scss",
+    filters="pyscss,rcssmin",
     output="css/error.min.css",
 )
-web_assets.register("css_error", css)
+web_assets.register("css_error", css_error)
 
 # admin
-css = Bundle(
-    "./css/base.css",
-    "./css/head.css",
-    "./css/nav.css",
-    "./css/input.css",
-    "./css/table.css",
-    "./css/table-exec.css",
-    filters="rcssmin",
+css_admin = Bundle(
+    "./assets/base.scss",
+    "./assets/head.scss",
+    "./assets/nav.scss",
+    "./assets/input.scss",
+    filters="pyscss,rcssmin",
     output="css/admin.min.css",
 )
-web_assets.register("css_admin", css)
-
+web_assets.register("css_admin", css_admin)
 
 js = Bundle(
-    "./js/table.js",
+    "./lib/table/table.js",
     "./js/table_cust.js",
     "./js/ajax.js",
+    "./js/tabs.js",
     "./js/executor_status.js",
     "./js/flashes.js",
     filters="jsmin",
@@ -96,25 +115,24 @@ web_assets.register("js_admin", js)
 
 
 # dashboard
-css = Bundle(
-    "./css/base.css",
-    "./css/head.css",
-    "./css/nav.css",
-    "./css/table.css",
-    "./css/table-exec.css",
-    "./css/dashboard.css",
-    "./css/collapse.css",
-    "./css/input.css",
-    "./css/gauge.css",
-    filters="rcssmin",
+css_dashboard = Bundle(
+    "./assets/base.scss",
+    "./assets/head.scss",
+    "./assets/nav.scss",
+    "./assets/dashboard.scss",
+    "./assets/collapse.scss",
+    "./assets/input.scss",
+    "./assets/gauge.scss",
+    filters="pyscss,rcssmin",
     output="css/dashboard.min.css",
 )
-web_assets.register("css_dashboard", css)
+web_assets.register("css_dashboard", css_dashboard)
 
 js = Bundle(
-    "./js/table.js",
+    "./lib/table/table.js",
     "./js/table_cust.js",
     "./js/ajax.js",
+    "./js/tabs.js",
     "./js/collapse.js",
     "./js/dashboard.js",
     "./js/executor_status.js",
@@ -125,26 +143,24 @@ js = Bundle(
 web_assets.register("js_dashboard", js)
 
 # all project
-css = Bundle(
-    "./css/base.css",
-    "./css/head.css",
-    "./css/nav.css",
-    "./css/collapse.css",
-    "./css/project.css",
-    "./css/input.css",
-    "./css/table.css",
-    "./css/table-exec.css",
-    filters="rcssmin",
+css_project = Bundle(
+    "./assets/base.scss",
+    "./assets/head.scss",
+    "./assets/nav.scss",
+    "./assets/collapse.scss",
+    "./assets/input.scss",
+    filters="pyscss,rcssmin",
     output="css/project.min.css",
 )
-web_assets.register("css_project", css)
+web_assets.register("css_project", css_project)
 
 js = Bundle(
     "./js/collapse.js",
-    "./js/table.js",
+    "./lib/table/table.js",
     "./js/table_cust.js",
     "./js/executor_status.js",
     "./js/flashes.js",
+    "./js/tabs.js",
     "./js/ajax.js",
     filters="jsmin",
     output="js/project.min.js",
@@ -152,12 +168,12 @@ js = Bundle(
 web_assets.register("js_project", js)
 
 # search
-css = Bundle(
-    "./css/search.css",
-    filters="rcssmin",
+css_search = Bundle(
+    "./assets/search.scss",
+    filters="pyscss,rcssmin",
     output="css/search.min.css",
 )
-web_assets.register("css_search", css)
+web_assets.register("css_search", css_search)
 
 js = Bundle(
     "./js/search.js",
@@ -167,21 +183,27 @@ js = Bundle(
 web_assets.register("js_search", js)
 
 # new project
-css = Bundle(
-    "./css/base.css",
-    "./css/head.css",
-    "./css/nav.css",
-    "./css/collapse.css",
-    "./css/project.css",
-    "./css/input.css",
+scss_project_new = Bundle(
+    "./assets/base.scss",
+    "./assets/head.scss",
+    "./assets/nav.scss",
+    "./assets/collapse.scss",
+    "./assets/input.scss",
+    filters="pyscss,rcssmin",
+    output="css/project_new.min.css",
+)
+web_assets.register("scss_project_new", scss_project_new)
+
+css_project_new = Bundle(
+    scss_project_new,
     "./lib/flatpickr/flatpickr.css",
     "./lib/codemirror/codemirror.css",
     "./lib/codemirror/nord.css",
     "./lib/codemirror/simplescrollbars.css",
     filters="rcssmin",
-    output="css/project_new.min.css",
+    output="css/search.min.css",
 )
-web_assets.register("css_project_new", css)
+web_assets.register("css_project_new", css_project_new)
 
 js = Bundle(
     "./lib/codemirror/codemirror.js",
@@ -199,35 +221,33 @@ js = Bundle(
     "./js/executor_status.js",
     "./js/flashes.js",
     "./js/ajax.js",
+    "./js/tabs.js",
     filters="jsmin",
     output="js/project_new.min.js",
 )
 web_assets.register("js_project_new", js)
 
 # project details
-css = Bundle(
-    "./css/base.css",
-    "./css/head.css",
-    "./css/nav.css",
-    "./css/table.css",
-    "./css/table-exec.css",
-    "./css/project.css",
-    "./css/input.css",
-    "./css/scroll.css",
+css_project_details = Bundle(
+    "./assets/base.scss",
+    "./assets/head.scss",
+    "./assets/nav.scss",
+    "./assets/input.scss",
     "./lib/prism/prism.css",
-    "./css/collapse.css",
-    filters="rcssmin",
+    "./assets/collapse.scss",
+    filters="pyscss,rcssmin",
     output="css/project.min.css",
 )
-web_assets.register("css_project_details", css)
+web_assets.register("css_project_details", css_project_details)
 
 js = Bundle(
     "./js/project.js",
-    "./js/table.js",
+    "./lib/table/table.js",
     "./js/table_cust.js",
     "./js/password.js",
-    "./js/scroll.js",
+    "./lib/scroll/scroll.js",
     "./js/ajax.js",
+    "./js/tabs.js",
     "./js/collapse.js",
     "./js/executor_status.js",
     "./js/flashes.js",
@@ -244,22 +264,20 @@ js = Bundle(
 web_assets.register("js_task", js)
 
 # connections
-css = Bundle(
-    "./css/base.css",
-    "./css/head.css",
-    "./css/nav.css",
-    "./css/collapse.css",
-    "./css/table.css",
-    "./css/table-exec.css",
-    "./css/input.css",
-    "./css/connection.css",
+css_connections = Bundle(
+    "./assets/base.scss",
+    "./assets/head.scss",
+    "./assets/nav.scss",
+    "./assets/collapse.scss",
+    "./assets/input.scss",
+    "./assets/connection.scss",
     "./lib/codemirror/codemirror.css",
     "./lib/codemirror/nord.css",
     "./lib/codemirror/simplescrollbars.css",
-    filters="rcssmin",
+    filters="pyscss,rcssmin",
     output="css/project.min.css",
 )
-web_assets.register("css_connections", css)
+web_assets.register("css_connections", css_connections)
 
 js = Bundle(
     "./lib/codemirror/codemirror.js",
@@ -270,12 +288,13 @@ js = Bundle(
     "./lib/codemirror/simplescrollbars.js",
     "./js/functions.js",
     "./js/password.js",
-    "./js/table.js",
+    "./lib/table/table.js",
     "./js/table_cust.js",
     "./js/collapse.js",
     "./js/connection.js",
     "./js/executor_status.js",
     "./js/flashes.js",
+    "./js/tabs.js",
     "./js/ajax.js",
     filters="jsmin",
     output="js/project.min.js",
@@ -284,8 +303,10 @@ web_assets.register("js_connections", js)
 
 
 # prism
-css = Bundle("./lib/prism/prism.css", filters="rcssmin", output="css/prism.min.css")
-web_assets.register("css_prism", css)
+css_prism = Bundle(
+    "./lib/prism/prism.css", filters="pyscss,rcssmin", output="css/prism.min.css"
+)
+web_assets.register("css_prism", css_prism)
 
 js = Bundle("./lib/prism/prism.js", filters="jsmin", output="js/prism.min.js")
 web_assets.register("js_prism", js)

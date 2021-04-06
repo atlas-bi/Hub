@@ -27,6 +27,9 @@
     {% assets "css_project_details" %}
     <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
+    {% assets "css_scroll" %}
+    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
 {% endblock css %}
 
 {% block body %}
@@ -86,23 +89,34 @@
             <div class="em-code">{{ p.global_params }}</div>
         {% endif %}
 
-        <h2>Tasks</h2>
-        <div class="em-tools">
-            <a class="em-link" title="add a task" href="/project/{{ p.id }}/task/new">Add a task</a>
-            <a class="em-link" title="disable all tasks" href="/project/{{ p.id }}/disable">Disable all tasks</a>
-            <a class="em-link" title="enable all tasks" href="/project/{{ p.id }}/enable">Enable all tasks</a>
-            <a class="em-link" title="run all tasks" href="/project/{{ p.id }}/run">Run all tasks</a>
-        </div>
-        <div class="em-ajaxTable" data-theme="Exec" data-src="/table/project/{{ p.id }}/task">
-            <div class="loader-typing">
-                <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
-            </div>
-        </div>
 
-        <h2>Task Log</h2>
-        <div class="em-ajaxTable" data-src="/table/project/{{ p.id }}/tasklog">
-            <div class="loader-typing">
-                <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
+        <!-- tab control -->
+        <div class="tab">
+            <a title="tasks" class="tab-lnk active" href="tasks">Tasks</a>
+            <a title="task logs" class="tab-lnk" href="tasklog">Task Logs</a>
+        </div>
+        <!-- tab body -->
+
+        <div class="tab-cnt">
+            <div class="tab-dta active" id="tasks">
+                <div class="em-tools">
+                    <a class="em-link" title="add a task" href="/project/{{ p.id }}/task/new">Add a task</a>
+                    <a class="em-link" title="disable all tasks" href="/project/{{ p.id }}/disable">Disable all tasks</a>
+                    <a class="em-link" title="enable all tasks" href="/project/{{ p.id }}/enable">Enable all tasks</a>
+                    <a class="em-link" title="run all tasks" href="/project/{{ p.id }}/run">Run all tasks</a>
+                </div>
+                <div class="em-ajaxTable" data-theme="Exec" data-src="/table/project/{{ p.id }}/task">
+                    <div class="loader-typing">
+                        <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
+                    </div>
+                </div>
+            </div>
+            <div class="tab-dta" id="tasklog">
+                <div class="em-ajaxTable" data-src="/table/project/{{ p.id }}/tasklog">
+                    <div class="loader-typing">
+                        <img src="/static/img/typing.gif" alt="loading..." title="loading image" />
+                    </div>
+                </div>
             </div>
         </div>
 

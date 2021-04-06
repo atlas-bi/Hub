@@ -16,16 +16,17 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+@import "include/layout";
+
 [data-toggle="clps"] {
   cursor: pointer;
 }
 
 .clps {
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height $transition_dur ease-in-out;
   max-height: 0;
   overflow: hidden;
-}
-
-.clps.clps-o {
-  max-height: 1000vh;
+  &.clps-o {
+    max-height: 1000vh;
+  }
 }

@@ -236,6 +236,19 @@ class File:
                                 (x.strip('"').strip("'") if isinstance(x, str) else x)
                                 for x in row
                             ]
+
+                            if (
+                                self.task.destination_file_type_id == 1
+                                or self.task.destination_file_type_id == 2
+                                or self.task.destination_file_type_id == 4
+                            ) and (
+                                self.task.destination_file_line_terminator is not None
+                                and self.task.destination_file_line_terminator != ""
+                            ):
+                                new_row.append(
+                                    self.task.destination_file_line_terminator
+                                )
+
                             wrtr.writerow(new_row)
 
                     # if xlxs (3)

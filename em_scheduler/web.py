@@ -19,9 +19,7 @@ import hashlib
 import time
 from itertools import groupby
 
-from flask import Blueprint
-from flask import current_app as app
-from flask import jsonify, make_response
+from flask import Blueprint, jsonify
 
 from em_scheduler.extensions import scheduler
 from em_scheduler.functions import (
@@ -33,22 +31,6 @@ from em_scheduler.functions import (
 from em_scheduler.model import Task
 
 web_bp = Blueprint("web_bp", __name__)
-
-
-@web_bp.errorhandler(404)
-@web_bp.errorhandler(500)
-def error_message(error):
-    """Return error page for 404 and 500 errors including the specific error message.
-
-    :param error: error message
-    :return: json web response with error message:
-
-    .. code-block:: python
-
-        {"error": "messsage"}
-
-    """
-    return make_response(jsonify({"error": str(error)}), 404)
 
 
 @web_bp.route("/api")
@@ -179,7 +161,7 @@ def run_task(task_id):
     :returns: json message
     """
     try:
-        scheduler_task_runner(task_id, app.config["RUNNER_HOST"])
+        scheduler_task_runner(task_id)
         return jsonify({"message": "Scheduler: task job started!"})
 
     # pylint: disable=broad-except
@@ -207,7 +189,7 @@ def run_task_delay(task_id, minutes):
             func=scheduler_task_runner,
             trigger="date",
             run_date=datetime.datetime.now() + datetime.timedelta(minutes=int(minutes)),
-            args=[str(task_id), app.config["RUNNER_HOST"]],
+            args=[str(task_id)],
             id=str(project.id) + "-" + str(task.id) + "-" + my_hash.hexdigest()[:10],
             name="(one off delay) " + project.name + ": " + task.name,
         )
@@ -311,7 +293,7 @@ def get_jobs():
     :returns: list of job ids.
     """
     try:
-        return jsonify([int(job.args[0]) for job in scheduler.get_jobs()])
+        return jsonify([int(job.args[0]) for job in scheduler.get_jobs() if job.args])
 
     # pylint: disable=broad-except
     except BaseException as e:
@@ -335,6 +317,7 @@ def get_jobs_details():
                     "id": job.args[0],
                 }
                 for job in scheduler.get_jobs()
+                if job.args
             ]
         )
 
@@ -355,7 +338,7 @@ def get_scheduled_jobs():
             [
                 int(job.args[0])
                 for job in scheduler.get_jobs()
-                if job.next_run_time is not None
+                if job.next_run_time is not None and job.args
             ]
         )
 
@@ -373,7 +356,7 @@ def delete_orphans():
     """
     try:
         for job in scheduler.get_jobs():
-            if Task.query.filter_by(id=int(job.args[0])).count() == 0:
+            if job.args and Task.query.filter_by(id=int(job.args[0])).count() == 0:
                 job.remove()
 
         return jsonify({"message": "Scheduler: orphans deleted!"})

@@ -54,7 +54,11 @@ def scheduler_logs(app):
         with app.app_context():
             job = scheduler.get_job(event.job_id)
             if job:
-                task = Task.query.filter_by(id=job.args[0]).first()
+                task = (
+                    Task.query.filter_by(id=job.args[0]).first()
+                    if job and len(job.args) > 0
+                    else None
+                )
                 ex_time = (
                     datetime.datetime.now(datetime.timezone.utc)
                     - event.scheduled_run_time
@@ -79,7 +83,11 @@ def scheduler_logs(app):
         with app.app_context():
             job = scheduler.get_job(event.job_id)
             if job:
-                task = Task.query.filter_by(id=job.args[0]).first()
+                task = (
+                    Task.query.filter_by(id=job.args[0]).first()
+                    if job and len(job.args) > 0
+                    else None
+                )
                 ex_time = (
                     datetime.datetime.now(datetime.timezone.utc)
                     - event.scheduled_run_time
