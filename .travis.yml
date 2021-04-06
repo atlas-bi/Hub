@@ -10,8 +10,8 @@ jobs:
     - python: 3.9
       env: TOXV=py39
 before_install:
-  - apt-get update -qq && apt-get install -y --no-install-recommends apt-utils curl pkg-config
-  - apt-get install -y \
+  - sudo apt-get update -qq && apt-get install -y --no-install-recommends apt-utils curl pkg-config
+  - sudo apt-get install -y \
     git \
     build-essential \
     libssl-dev \
