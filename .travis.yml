@@ -13,6 +13,7 @@ services:
   - redis-server
   - postgres
 before_install:
+  - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
   - pip install tox-travis
   - pip install --disable-pip-version-check --quiet poetry tox
   - python --version
