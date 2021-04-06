@@ -1,4 +1,8 @@
-language: generic
+language: python
+python:
+  - "3.7"
+  - "3.8"
+  - "3.9"
 os: linux
 dist: bionic
 jobs:
@@ -10,12 +14,12 @@ jobs:
     - python: 3.9
       env: TOXV=py39
 before_install:
-  - python -m pip install --disable-pip-version-check --quiet poetry tox
+  - pip install tox-travis
+  - pip install --disable-pip-version-check --quiet poetry tox
   - python --version
   - redis-server --daemonize yes
   - cd /builds/extract-management/extract-management-site/
   - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
-
 script:
  - tox -e clean,$TOXV,cov
 after_success:
