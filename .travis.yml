@@ -17,8 +17,8 @@ before_install:
   - pip install --disable-pip-version-check --quiet poetry tox
   - python --version
   - redis-server --daemonize yes
-  - psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\" -U postgres
-  - psql --command \"CREATE database em_web_test WITH OWNER webapp;\" -U postgres  
+  - psql --command "CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';" -U postgres
+  - psql --command 'CREATE database em_web_test WITH OWNER webapp;' -U postgres
 script:
  - tox -e clean,$TOXV,cov
 after_success:
