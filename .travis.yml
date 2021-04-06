@@ -1,8 +1,4 @@
 language: python
-python:
-  - "3.7"
-  - "3.8"
-  - "3.9"
 os: linux
 dist: bionic
 jobs:
@@ -18,7 +14,6 @@ before_install:
   - pip install --disable-pip-version-check --quiet poetry tox
   - python --version
   - redis-server --daemonize yes
-  - cd /builds/extract-management/extract-management-site/
   - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
 script:
  - tox -e clean,$TOXV,cov
