@@ -68,7 +68,7 @@ class Config:
 
     SCHEDULER_API_ENABLED = False
 
-    RUNNER_HOST = "http://127.0.0.1:5002/api"
+    RUNNER_HOST = "http://0.0.0.0:5002/api"
 
     MIGRATIONS = "migrations"
 

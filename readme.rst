@@ -195,8 +195,8 @@ Atlas was created by the Riverside Healthcare Analytics team -
 .. |python-version| image:: https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue
    :target: https://analyticsgit.riversidehealthcare.net/extract-management/extract-management-site/-/commits/master
 
-.. |travis| image:: https://travis-ci.org/Riverside-Healthcare/extract_management.svg?branch=main
-    :target: https://travis-ci.org/Riverside-Healthcare/extract_management
+.. |travis| image:: https://travis-ci.com/Riverside-Healthcare/extract_management.svg?branch=main
+    :target: https://travis-ci.com/Riverside-Healthcare/extract_management
 
 .. |codecov| image:: https://codecov.io/gh/Riverside-Healthcare/extract_management/branch/main/graph/badge.svg
   :target: https://codecov.io/gh/Riverside-Healthcare/extract_management
