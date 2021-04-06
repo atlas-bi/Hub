@@ -162,10 +162,11 @@ def project_edit_post(project_id):
 
     if User.query.filter_by(user_id=session.get("user_id")).count():
         updater = User.query.filter_by(user_id=session.get("user_id")).first()
-        updater.full_name = session.get("user_full_name")
+        updater.full_name = session.get("user_full_name") or "none"
     else:
         updater = User(
-            user_id=session.get("user_id"), full_name=session.get("user_full_name")
+            user_id=session.get("user_id"),
+            full_name=(session.get("user_full_name") or "none"),
         )
 
     form = request.form
@@ -286,7 +287,7 @@ def project_edit_post(project_id):
         log = TaskLog(
             task_id=task.id,
             status_id=7,
-            message=session.get("user_full_name") + ": Task rescheduled.",
+            message=(session.get("user_full_name") or "none") + ": Task rescheduled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -335,10 +336,11 @@ def project_new():
     # create owner record
     if User.query.filter_by(user_id=session.get("user_id")).count():
         owner = User.query.filter_by(user_id=session.get("user_id")).first()
-        owner.full_name = session.get("user_full_name")
+        owner.full_name = session.get("user_full_name") or "none"
     else:
         owner = User(
-            user_id=session.get("user_id"), full_name=session.get("user_full_name")
+            user_id=session.get("user_id"),
+            full_name=(session.get("user_full_name") or "none"),
         )
 
     db.session.add(owner)
@@ -451,7 +453,7 @@ def project_delete(project_id):
             log = TaskLog(
                 task_id=task,
                 status_id=7,
-                message=session.get("user_full_name") + ": Task deleted.",
+                message=(session.get("user_full_name") or "none") + ": Task deleted.",
             )
             db.session.add(log)
             db.session.commit()
@@ -461,7 +463,7 @@ def project_delete(project_id):
                 task_id=task,
                 status_id=7,
                 error=1,
-                message=session.get("user_full_name")
+                message=(session.get("user_full_name") or "none")
                 + ": Failed to delete task.\n"
                 + str(e),
             )
@@ -515,7 +517,7 @@ def disable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=session.get("user_full_name") + ": Task disabled.",
+                message=(session.get("user_full_name") or "none") + ": Task disabled.",
             )
             db.session.add(log)
             db.session.commit()
@@ -525,7 +527,7 @@ def disable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=session.get("user_full_name")
+                message=(session.get("user_full_name") or "none")
                 + ": Failed to disable task.\n"
                 + str(e),
             )
@@ -555,7 +557,7 @@ def enable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=session.get("user_full_name") + ": Task enabled.",
+                message=(session.get("user_full_name") or "none") + ": Task enabled.",
             )
             db.session.add(log)
             db.session.commit()
@@ -565,7 +567,7 @@ def enable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=session.get("user_full_name")
+                message=(session.get("user_full_name") or "none")
                 + ": Failed to enable task.\n"
                 + str(e),
             )
@@ -594,7 +596,8 @@ def run_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=session.get("user_full_name") + ": Task manually run.",
+                message=(session.get("user_full_name") or "none")
+                + ": Task manually run.",
             )
             db.session.add(log)
             db.session.commit()
@@ -603,7 +606,7 @@ def run_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=session.get("user_full_name")
+                message=(session.get("user_full_name") or "none")
                 + ": Failed to run task.\n"
                 + str(e),
             )

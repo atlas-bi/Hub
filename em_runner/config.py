@@ -77,8 +77,8 @@ class Config:
         "pool_size": 5,  # how many queries will run symultaniously?
     }
 
-    WEB_HOST = "https://taskscheduler.riversidehealthcare.net"
-    SCHEUDULER_HOST = "http://0.0.0.0:5001/api"
+    WEB_HOST = "https://127.0.0.1"
+    SCHEUDULER_HOST = "http://127.0.0.1:5001/api"
 
     EXECUTOR_TYPE = "thread"
     EXECUTOR_MAX_WORKERS = 12

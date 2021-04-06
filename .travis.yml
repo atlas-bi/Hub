@@ -10,8 +10,8 @@ jobs:
     - python: 3.9
       env: TOXV=py39
 services:
-  - redis-server
-  - postgres
+  - redis
+  - postgresql
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
   - pip install tox-travis poetry tox
@@ -20,5 +20,5 @@ before_install:
   - psql --command 'CREATE database em_web_test WITH OWNER webapp;' -U postgres
 script:
  - tox -e clean,$TOXV,cov
-after:
+after_success:
   - codecov

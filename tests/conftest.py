@@ -45,8 +45,7 @@ def em_web_authed(em_web_app):
     g.db = db
 
     with em_scheduler_app.test_client() as scheduler_client:
-        runner_app = em_runner_create_app()
-
+        em_runner_create_app()
         yield em_web_app
 
     from em_web.model import Project, Task, TaskLog
@@ -78,8 +77,9 @@ def em_web_authed(em_web_app):
 
 @pytest.fixture
 def runner():
-    runner = em_runner_create_app()
-    yield runner
+    with em_runner_create_app() as runner:
+        print("runner started")
+        yield runner
 
 
 @pytest.fixture
@@ -96,6 +96,7 @@ def scheduler_client():
 
     with app.test_client() as client:
         with app.app_context():
+            print("scheduler started")
             test_project = Project(
                 name="scheduler_test_project",
                 intv=1,

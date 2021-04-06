@@ -90,7 +90,7 @@ def task_endretry(task_id):
     log = TaskLog(
         status_id=7,
         task_id=task_id,
-        message="%s: Task retry canceled." % session.get("user_full_name"),
+        message="%s: Task retry canceled." % (session.get("user_full_name") or "none"),
     )
     db.session.add(log)
     db.session.commit()
@@ -223,7 +223,7 @@ def task_delete(task_id):
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=(session.get("user_full_name") or "none")
             + ": Task deleted. ("
             + str(task_id)
             + ")",
@@ -237,7 +237,7 @@ def task_delete(task_id):
             status_id=7,
             error=1,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to delete task. ("
                 + task_id
                 + ")\n"
@@ -319,7 +319,7 @@ def task_mine():
 
     return render_template(
         "pages/task/all.html.j2",
-        mine=session.get("user_full_name"),
+        mine=(session.get("user_full_name") or "none"),
         title="My Tasks",
         projects=projects,
     )
@@ -725,7 +725,7 @@ def task_new(project_id):
     log = TaskLog(
         task_id=tme.id,
         status_id=7,
-        message=session.get("user_full_name") + ": Task created.",
+        message=(session.get("user_full_name") or "none") + ": Task created.",
     )
     db.session.add(log)
     db.session.commit()
@@ -736,7 +736,7 @@ def task_new(project_id):
             log = TaskLog(
                 task_id=tme.id,
                 status_id=7,
-                message=session.get("user_full_name") + ": Task enabled.",
+                message=(session.get("user_full_name") or "none") + ": Task enabled.",
             )
             db.session.add(log)
             db.session.commit()
@@ -748,7 +748,7 @@ def task_new(project_id):
                 error=1,
                 task_id=tme.id,
                 message=(
-                    session.get("user_full_name")
+                    (session.get("user_full_name") or "none")
                     + ": Failed to enable task. ("
                     + tme.id
                     + ")\n"
@@ -995,7 +995,7 @@ def task_get_git_code(task_id):
             error=1,
             task_id=task_id,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to get git code. ("
                 + task_id
                 + ")\n"
@@ -1034,7 +1034,7 @@ def task_get_source_code(task_id):
             error=1,
             task_id=task_id,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to get source code. ("
                 + task_id
                 + ")\n"
@@ -1073,7 +1073,7 @@ def task_get_url_code(task_id):
             error=1,
             task_id=task_id,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to get url code. ("
                 + task_id
                 + ")\n"
@@ -1114,7 +1114,7 @@ def task_get_processing_git_code(task_id):
             error=1,
             task_id=task_id,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to get processing_git code. ("
                 + task_id
                 + ")\n"
@@ -1155,7 +1155,7 @@ def task_get_processing_url_code(task_id):
             error=1,
             task_id=task_id,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to get processing_url code. ("
                 + task_id
                 + ")\n"
@@ -1512,7 +1512,7 @@ def task_edit_post(task_id):
     log = TaskLog(
         task_id=tme.id,
         status_id=7,
-        message=session.get("user_full_name") + ": Task edited.",
+        message=(session.get("user_full_name") or "none") + ": Task edited.",
     )
     db.session.add(log)
     db.session.commit()
@@ -1521,7 +1521,7 @@ def task_edit_post(task_id):
         log = TaskLog(
             task_id=tme.id,
             status_id=7,
-            message=session.get("user_full_name") + ": Task enabled.",
+            message=(session.get("user_full_name") or "none") + ": Task enabled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -1535,7 +1535,7 @@ def task_edit_post(task_id):
                 error=1,
                 task_id=task_id,
                 message=(
-                    session.get("user_full_name")
+                    (session.get("user_full_name") or "none")
                     + ": Failed to add job to scheduler. ("
                     + str(tme.id)
                     + ")\n"
@@ -1555,7 +1555,7 @@ def task_edit_post(task_id):
                 error=1,
                 task_id=task_id,
                 message=(
-                    session.get("user_full_name")
+                    (session.get("user_full_name") or "none")
                     + ": Failed to delete job from scheduler. ("
                     + str(tme.id)
                     + ")\n"
@@ -1587,7 +1587,8 @@ def run_task_now(task_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=session.get("user_full_name") + ": Task manually run.",
+                message=(session.get("user_full_name") or "none")
+                + ": Task manually run.",
             )
             db.session.add(log)
             db.session.commit()
@@ -1598,7 +1599,7 @@ def run_task_now(task_id):
                 error=1,
                 task_id=task_id,
                 message=(
-                    session.get("user_full_name")
+                    (session.get("user_full_name") or "none")
                     + ": Failed to manually run task. ("
                     + task_id
                     + ")\n"
@@ -1629,7 +1630,7 @@ def schedule_task(task_id):
         log = TaskLog(
             task_id=task_id,
             status_id=7,
-            message=session.get("user_full_name") + ": Task scheduled.",
+            message=(session.get("user_full_name") or "none") + ": Task scheduled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -1641,7 +1642,7 @@ def schedule_task(task_id):
             error=1,
             task_id=task_id,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to schedule task. ("
                 + task_id
                 + ")\n"
@@ -1742,7 +1743,7 @@ def get_task_file_send_sftp(task_id, file_id):
             job_id=my_file.job_id,
             status_id=7,
             message="("
-            + session.get("user_full_name")
+            + (session.get("user_full_name") or "none")
             + ") Manually sending file to SFTP server: "
             + task.destination_sftp_conn.path
             + my_file.name,
@@ -1758,7 +1759,7 @@ def get_task_file_send_sftp(task_id, file_id):
             job_id=my_file.job_id,
             error=1,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to send file to SFTP server. ("
                 + task_id
                 + ")\n"
@@ -1803,7 +1804,7 @@ def get_task_file_send_ftp(task_id, file_id):
             job_id=my_file.job_id,
             status_id=7,
             message="("
-            + session.get("user_full_name")
+            + (session.get("user_full_name") or "none")
             + ") Manually sending file to FTP server: "
             + task.destination_ftp_conn.path
             + "/"
@@ -1820,7 +1821,7 @@ def get_task_file_send_ftp(task_id, file_id):
             job_id=my_file.job_id,
             error=1,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to send file to FTP server. ("
                 + task_id
                 + ")\n"
@@ -1865,7 +1866,7 @@ def get_task_file_send_smb(task_id, file_id):
             job_id=my_file.job_id,
             status_id=7,
             message="("
-            + session.get("user_full_name")
+            + (session.get("user_full_name") or "none")
             + ") Manually sending file to SMB server: "
             + task.destination_smb_conn.path
             + "/"
@@ -1881,7 +1882,7 @@ def get_task_file_send_smb(task_id, file_id):
             job_id=my_file.job_id,
             error=1,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to send file to SMB server. ("
                 + task_id
                 + ")\n"
@@ -1926,7 +1927,7 @@ def get_task_file_send_email(task_id, file_id):
             job_id=my_file.job_id,
             status_id=7,
             message="("
-            + session.get("user_full_name")
+            + (session.get("user_full_name") or "none")
             + ") Manually sending email with file: "
             + my_file.name,
         )
@@ -1940,7 +1941,7 @@ def get_task_file_send_email(task_id, file_id):
             job_id=my_file.job_id,
             error=1,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to send email with file. ("
                 + task_id
                 + ")\n"
@@ -1976,7 +1977,7 @@ def get_task_file_download(file_id):
             status_id=7,
             message=(
                 "(%s) Manually downloading file %s."
-                % (session.get("user_full_name"), my_file.name)
+                % ((session.get("user_full_name") or "none"), my_file.name)
             ),
         )
         db.session.add(log)
@@ -2460,7 +2461,8 @@ def task_reset(task_id):
     log = TaskLog(
         task_id=task.id,
         status_id=7,
-        message=session.get("user_full_name") + ": Reset task status to completed.",
+        message=(session.get("user_full_name") or "none")
+        + ": Reset task status to completed.",
     )
     db.session.add(log)
     db.session.commit()

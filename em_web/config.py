@@ -67,9 +67,9 @@ class Config:
         "pool_size": 5,  # how many queries will run symultaniously?
     }
 
-    SCHEUDULER_HOST = "http://0.0.0.0:5001/api"
+    SCHEUDULER_HOST = "http://127.0.0.1:5001/api"
 
-    RUNNER_HOST = "http://0.0.0.0:5002/api"
+    RUNNER_HOST = "http://127.0.0.1:5002/api"
 
     WEB_HOST = "0.0.0.0"  # noqa: S104
 

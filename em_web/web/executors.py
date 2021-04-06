@@ -93,7 +93,7 @@ def enable_task(task_id):
     log = TaskLog(
         task_id=task_id,
         status_id=7,
-        message=session.get("user_full_name") + ": Task enabled.",
+        message=(session.get("user_full_name") or "none") + ": Task enabled.",
     )
     db.session.add(log)
     db.session.commit()
@@ -103,7 +103,7 @@ def enable_task(task_id):
         log = TaskLog(
             task_id=task_id,
             status_id=7,
-            message=session.get("user_full_name") + ": Task scheduled.",
+            message=(session.get("user_full_name") or "none") + ": Task scheduled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -115,7 +115,7 @@ def enable_task(task_id):
             error=1,
             task_id=task_id,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to schedule task. ("
                 + task_id
                 + ")\n"
@@ -140,7 +140,7 @@ def disable_task(task_id):
         log = TaskLog(
             task_id=task_id,
             status_id=7,
-            message=session.get("user_full_name") + ": Task disabled.",
+            message=(session.get("user_full_name") or "none") + ": Task disabled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -151,7 +151,7 @@ def disable_task(task_id):
             status_id=7,
             error=1,
             message=(
-                session.get("user_full_name")
+                (session.get("user_full_name") or "none")
                 + ": Failed to disable task. ("
                 + task_id
                 + ")\n"

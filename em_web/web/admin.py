@@ -423,7 +423,7 @@ def add_user_log(message, error_code):
     log = TaskLog(
         status_id=7,
         error=error_code,
-        message=session.get("user_full_name") + ": " + message,
+        message=(session.get("user_full_name") or "none") + ": " + message,
     )
     db.session.add(log)
     db.session.commit()
