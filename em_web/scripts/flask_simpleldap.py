@@ -8,7 +8,16 @@ import re
 from functools import wraps
 
 import ldap
-from flask import abort, current_app, g, make_response, redirect, request, session, url_for
+from flask import (
+    abort,
+    current_app,
+    g,
+    make_response,
+    redirect,
+    request,
+    session,
+    url_for,
+)
 from ldap import filter as ldap_filter
 
 __all__ = ["LDAP"]
@@ -315,6 +324,13 @@ class LDAP(object):
 
         @wraps(func)
         def wrapped(*args, **kwargs):
+            if current_app.config.get("TEST"):
+                session["user"] = "Mr Cool"
+                session["ldap_groups"] = ["analytics"]
+                session["ldap_username"] = "Mr Cool"
+                session["ldap_password"] = "asdf"
+
+                return func(*args, **kwargs)
             # if "user" not in g or g.user is None:
             if "user" not in session or session["user"] is None:
                 return redirect(url_for(current_app.config["LDAP_LOGIN_VIEW"]))
@@ -340,6 +356,8 @@ class LDAP(object):
         def wrapper(func):
             @wraps(func)
             def wrapped(*args, **kwargs):
+                if current_app.config.get("TEST"):
+                    return func(*args, **kwargs)
                 # if g.user is None:
                 if session["user"] is None:
                     return redirect(url_for(current_app.config["LDAP_LOGIN_VIEW"]))
@@ -395,7 +413,9 @@ class LDAP(object):
                 current_app.logger.debug("Got a request without auth data")
                 return make_auth_required_response()
 
-            if not self.bind_user(req_username, req_password):
+            if not self.bind_user(
+                req_username, req_password
+            ) and not current_app.config.get("TEST"):
                 current_app.logger.debug(
                     "User {0!r} gave wrong " "password".format(req_username)
                 )

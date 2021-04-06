@@ -29,7 +29,7 @@ auth_bp = Blueprint("auth_bp", __name__)
 
 def before_request():
     """Validate user and reloads auth before each request."""
-    if "username" in session:
+    if "username" in session and not app.config.get("TEST"):
         session["user"] = ldap.get_object_details(
             user=session.get("username"), dn_only=False
         )

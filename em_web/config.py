@@ -129,6 +129,7 @@ class DevTestConfig(DevConfig):
 
     AUTH_USERNAME = "username"
     AUTH_PASSWORD = "password"  # noqa: S105
+    TEST = True
 
 
 class TestConfig(DevTestConfig):
