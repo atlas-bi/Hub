@@ -9,12 +9,16 @@ jobs:
       env: TOXV=py38
     - python: 3.9
       env: TOXV=py39
+services:
+  - redis-server
+  - postgres
 before_install:
   - pip install tox-travis
   - pip install --disable-pip-version-check --quiet poetry tox
   - python --version
   - redis-server --daemonize yes
-  - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+  - psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\" -U postgres
+  - psql --command \"CREATE database em_web_test WITH OWNER webapp;\" -U postgres  
 script:
  - tox -e clean,$TOXV,cov
 after_success:
