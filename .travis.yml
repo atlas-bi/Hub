@@ -1,6 +1,6 @@
 language: generic
 os: linux
-dist: xenial
+dist: bionic
 jobs:
   include:
     - python: 3.7
@@ -10,7 +10,8 @@ jobs:
     - python: 3.9
       env: TOXV=py39
 before_install:
-  - sudo apt-get update -qq && apt-get install -y --no-install-recommends apt-utils curl pkg-config
+  - sudo apt-get update -qq
+  - sudo apt-get install -y --no-install-recommends apt-utils curl pkg-config
   - sudo apt-get install -y \
     git \
     build-essential \
