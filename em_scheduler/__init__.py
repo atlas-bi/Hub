@@ -72,14 +72,13 @@ def create_app():
     # pylint: disable=W0621
     app = Flask(__name__)
 
-    if app.config["ENV"] == "test" and app.config["DEBUG"]:
-        logging.info("loading test congif")
+    if app.config["ENV"] == "test":
         app.config.from_object("em_scheduler.config.TestConfig")
-    elif app.config["DEBUG"] or app.config["ENV"] == "test":
-        logging.info("loading dev config")
+
+    elif app.config["DEBUG"]:
         app.config.from_object("em_scheduler.config.DevConfig")
+
     else:
-        logging.info("loading prod config")
         app.config.from_object("em_scheduler.config.Config")
 
     db.init_app(app)

@@ -140,8 +140,6 @@ typing:
 py39:
   stage: test
   image: christopherpickering/extract-management-2-python39-test
-  except:
-    - public
   before_script:
     - python --version
     - redis-server --daemonize yes
@@ -152,9 +150,6 @@ py39:
     - echo $FLASK_APP
     - tox -e clean,py39,cov
   coverage: "/^TOTAL.*\\s+(\\d+\\%)$/"
-  needs:
-    - lint
-    - typing
   artifacts:
     when: always
     reports:
@@ -163,8 +158,6 @@ py39:
 py38:
   stage: test
   image: christopherpickering/extract-management-2-python38-test
-  except:
-    - public
   before_script:
     - python --version
     - redis-server --daemonize yes
@@ -174,15 +167,10 @@ py38:
     - echo $FLASK_DEBUG
     - echo $FLASK_APP
     - tox -e clean,py38,cov
-  needs:
-    - lint
-    - typing
 
 py37:
   stage: test
   image: christopherpickering/extract-management-2-python37-test
-  except:
-    - public
   before_script:
     - python --version
     - redis-server --daemonize yes
@@ -192,9 +180,6 @@ py37:
     - echo $FLASK_DEBUG
     - echo $FLASK_APP
     - tox -e clean,py37,cov
-  needs:
-    - lint
-    - typing
 
 pages:
   image: christopherpickering/extract-management-2-python39-test

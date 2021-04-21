@@ -33,9 +33,11 @@ class Config:
     TESTING = False
     DEMO = False
 
-    SECRET_KEY = b"something secret"
-    IV_KEY = b"something secret"
-    PASS_KEY = b"something secret"
+    # https://stackoverflow.com/a/50575445/10265880
+    # dd if=/dev/urandom bs=32 count=1 2>/dev/null | openssl base64
+    SECRET_KEY = b"hAGBYwfuCRkBFvf1l0JyJZQA9VTqo6sl6scdCUt0T+Y="  # noqa: S105
+    IV_KEY = b"hAGBYwfuCRkBFvf1l0JyJZQA9VTqo6sl6scdCUt0T+Y="  # noqa: S105
+    PASS_KEY = b"hAGBYwfuCRkBFvf1l0JyJZQA9VTqo6sl6scdCUt0T+Y="  # noqa: S105
 
     # redis sessions
     SESSION_TYPE = "redis"
