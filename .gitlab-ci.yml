@@ -64,7 +64,7 @@ lint:
     - python -m pip install --disable-pip-version-check --quiet tox
   script:
     - export LINT=$(tox -e lint)
-    - echo -e $LINT
+    - echo -e "$LINT"
     - python -m pip install --disable-pip-version-check --quiet anybadge
     - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo
       "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red
@@ -85,7 +85,7 @@ web:
     - rm -rf node_modules
   script:
     - export STATIC=$(tox -e static)
-    - echo -e $STATIC
+    - echo -e "$STATIC"
     - python -m pip install --disable-pip-version-check --quiet anybadge
     - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo
       "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
@@ -126,7 +126,7 @@ typing:
     - python -m pip install --disable-pip-version-check --quiet tox
   script:
     - export TYPING=$(tox -e typing)
-    - echo -e $TYPING
+    - echo -e "$TYPING"
     - python -m pip install --disable-pip-version-check --quiet anybadge
     - anybadge -l $CI_JOB_NAME -v $(echo $TYPING | grep -q "commands succeeded" && echo
       "succeeded" || echo "failed") -f typing.svg succeeded=green failed=red
@@ -205,7 +205,7 @@ pages:
   except:
     - public
   needs:
-    - py39
+   - py39
   before_script:
     - python --version
     - redis-server --daemonize yes
@@ -223,6 +223,9 @@ pages:
 public:
   stage: deploy
   image: python:3.9
+  needs:
+    - job: py39
+      artifacts: false
   only:
     - master
   except:

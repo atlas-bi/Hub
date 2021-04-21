@@ -10,7 +10,6 @@ Set up basic flask items for import in other modules.
 :db: database
 :executor: run process off main thread
 :htmlmin: html minifier
-:ldap: ldap auth
 :migrate: sql migrations
 :redis_client: redis connection
 :sess: session
@@ -31,24 +30,23 @@ from flask_compress import Compress
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_executor import Executor
 from flask_htmlmin import HTMLMIN
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_redis import FlaskRedis
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy_caching import CachingQuery
 
-from em_web.scripts.flask_simpleldap import LDAP
-
 cache = Cache()
 compress = Compress()
 db = SQLAlchemy(query_class=CachingQuery)
 executor = Executor()
 htmlmin = HTMLMIN(remove_empty_space=True)
-ldap = LDAP()
 migrate = Migrate()
 redis_client = FlaskRedis()
 sess = Session()
 toolbar = DebugToolbarExtension()
 web_assets = Environment()
+login_manager = LoginManager()
 
 logging.basicConfig(level=logging.WARNING)

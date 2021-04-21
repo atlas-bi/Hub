@@ -16,7 +16,7 @@ sys.path.append(str(Path(__file__).parent))
 # -- Project information -----------------------------------------------------
 #
 
-project = "Extract Management 2.0"
+project = "Extract Management 2.0 Docs"
 copyright = "2020, Riverside Healthcare"
 author = "Riverside Healthcare"
 
@@ -55,7 +55,7 @@ autoapi_options = [
 
 autoapi_keep_files = False
 autoapi_python_class_content = "both"
-autoapi_ignore = ["*config*", "*flask_simpleldap*"]
+autoapi_ignore = ["*config*", "*ldap_auth*"]
 
 templates_path = ["_templates"]
 

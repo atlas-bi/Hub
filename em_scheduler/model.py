@@ -79,12 +79,16 @@ class User(db.Model):
     # pylint: disable=too-many-instance-attributes
 
     id: int
-    user_id: str
+    account_name: str
+    email: str
     full_name: str
+    first_name: str
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    user_id = db.Column(db.String(120), nullable=False, index=True)
-    full_name = db.Column(db.String(200), nullable=False)
+    account_name = db.Column(db.String(200), nullable=True, index=True)
+    email = db.Column(db.String(200), nullable=True, index=True)
+    full_name = db.Column(db.String(200), nullable=True)
+    first_name = db.Column(db.String(200), nullable=True)
     project_owner = db.relationship(
         "Project", backref="project_owner", lazy=True, foreign_keys="Project.owner_id"
     )
@@ -106,6 +110,13 @@ class User(db.Model):
     task_updater = db.relationship(
         "Task", backref="task_updater", lazy=True, foreign_keys="Task.updater_id"
     )
+    is_authenticated = True
+    is_active = True
+    is_anonymous = False
+
+    def get_id(self):
+        """Convert id to unicode."""
+        return str(self.id).encode("utf-8").decode("utf-8")
 
 
 @dataclass

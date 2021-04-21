@@ -26,19 +26,15 @@ def em_web_authed(em_web_app):
 
     import os
 
-    print(os.environ.get("FLASK_ENV"))
-    print(os.environ.get("FLASK_DEBUG"))
-    print(os.environ.get("FLASK_APP"))
-
-    if not em_web_app.application.config["TEST"]:
-        em_web_app.post(
-            url_for("auth_bp.login"),
-            data=dict(
-                user=em_web_app.application.config["AUTH_USERNAME"],
-                password=em_web_app.application.config["AUTH_PASSWORD"],
-            ),
-            follow_redirects=True,
-        )
+    # if not em_web_app.application.config["TEST"]:
+    em_web_app.post(
+        url_for("auth_bp.login"),
+        data=dict(
+            user="mr-cool",
+            password="",
+        ),
+        follow_redirects=True,
+    )
 
     from em_web.extensions import db
 
@@ -89,10 +85,6 @@ def scheduler_client():
     from em_scheduler import app
     from em_scheduler.extensions import db
     from em_scheduler.model import Project, Task, TaskLog
-
-    print(os.environ.get("FLASK_ENV"))
-    print(os.environ.get("FLASK_DEBUG"))
-    print(os.environ.get("FLASK_APP"))
 
     with app.test_client() as client:
         with app.app_context():

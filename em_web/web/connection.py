@@ -22,9 +22,10 @@ from pathlib import Path
 from crypto import em_encrypt
 from flask import Blueprint
 from flask import current_app as app
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 
-from em_web import db, ldap
+from em_web import db
 from em_web.model import (
     Connection,
     ConnectionDatabase,
@@ -44,8 +45,7 @@ connection_bp = Blueprint("connection_bp", __name__)
 
 
 @connection_bp.route("/connection")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection():
     """List connections.
 
@@ -67,8 +67,7 @@ def connection():
 
 
 @connection_bp.route("/connection/<connection_id>", methods=["POST", "GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_edit(connection_id):
     """Get or edit existing connections.
 
@@ -94,6 +93,7 @@ def connection_edit(connection_id):
         )
 
     form = request.form
+
     my_connection.name = form["name"]
     my_connection.description = form.get("desc")
     my_connection.address = form.get("addr")
@@ -139,7 +139,7 @@ def connection_edit(connection_id):
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=current_user.full_name
             + ": Connection Sftp edited. ("
             + str(my_connection.id)
             + " "
@@ -182,7 +182,7 @@ def connection_edit(connection_id):
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=current_user.full_name
             + ": Connection Sftp edited. ("
             + str(my_connection.id)
             + " "
@@ -225,7 +225,7 @@ def connection_edit(connection_id):
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=current_user.full_name
             + ": Connection Ftp edited. ("
             + str(my_connection.id)
             + " "
@@ -271,7 +271,7 @@ def connection_edit(connection_id):
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=current_user.full_name
             + ": Connection Smb edited. ("
             + str(my_connection.id)
             + " "
@@ -310,7 +310,7 @@ def connection_edit(connection_id):
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=current_user.full_name
             + ": Connection Gpg edited. ("
             + str(my_connection.id)
             + " "
@@ -354,7 +354,7 @@ def connection_edit(connection_id):
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=current_user.full_name
             + ": Connection Database edited. ("
             + str(my_connection.id)
             + " "
@@ -370,7 +370,7 @@ def connection_edit(connection_id):
 
     log = TaskLog(
         status_id=7,
-        message=session.get("user_full_name")
+        message=current_user.full_name
         + ": Connection group edited. ("
         + str(my_connection.id)
         + " "
@@ -389,8 +389,7 @@ def connection_edit(connection_id):
 
 
 @connection_bp.route("/connection/sftp")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_sftp():
     """Page for adding a SFTP Connection.
 
@@ -402,8 +401,7 @@ def connection_sftp():
 
 
 @connection_bp.route("/connection/gpg")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_gpg():
     """Page for adding a GPG Encryption Key.
 
@@ -415,8 +413,7 @@ def connection_gpg():
 
 
 @connection_bp.route("/connection/smb")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_smb():
     """Page for adding a SMB Connection.
 
@@ -428,8 +425,7 @@ def connection_smb():
 
 
 @connection_bp.route("/connection/ssh")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_ssh():
     """Page for adding a SSH Connection.
 
@@ -441,8 +437,7 @@ def connection_ssh():
 
 
 @connection_bp.route("/connection/database")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_database():
     """Page for adding a Database Connection.
 
@@ -460,8 +455,7 @@ def connection_database():
 
 
 @connection_bp.route("/connection/ftp")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_ftp():
     """Page for adding a FTP Connection.
 
@@ -473,8 +467,7 @@ def connection_ftp():
 
 
 @connection_bp.route("/connection/new", methods=["POST", "GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_new():
     """Page for adding a new connection group.
 
@@ -535,7 +528,7 @@ def connection_new():
 
                 log = TaskLog(
                     status_id=7,
-                    message=session.get("user_full_name")
+                    message=current_user.full_name
                     + ": Connection Sftp added. ("
                     + str(me.id)
                     + " "
@@ -561,7 +554,7 @@ def connection_new():
                     connection_id=me.id,
                     name=form["ssh" + ssh + "-name"],
                     address=form["ssh" + ssh + "-addr"],
-                    path=form["ssh" + ssh + "-path"],
+                    port=form["ssh" + ssh + "-port"],
                     username=form["ssh" + ssh + "-user"],
                     password=em_encrypt(
                         form["ssh" + ssh + "-pass"], app.config["PASS_KEY"]
@@ -572,7 +565,7 @@ def connection_new():
 
                 log = TaskLog(
                     status_id=7,
-                    message=session.get("user_full_name")
+                    message=current_user.full_name
                     + ": Connection SSH added. ("
                     + str(me.id)
                     + " "
@@ -609,7 +602,7 @@ def connection_new():
                 db.session.commit()
                 log = TaskLog(
                     status_id=7,
-                    message=session.get("user_full_name")
+                    message=current_user.full_name
                     + ": Connection Ftp added. ("
                     + str(me.id)
                     + " "
@@ -636,9 +629,9 @@ def connection_new():
 
                 smb_conn.connection_id = me.id
                 smb_conn.name = form["smb" + smb + "-name"]
-                smb_conn.server_name = form["smb" + smb + "-server-name"]
-                smb_conn.server_ip = form["smb" + smb + "-server-ip"]
-                smb_conn.share_name = form["smb" + smb + "-share-name"]
+                smb_conn.server_name = form["smb" + smb + "-servername"]
+                smb_conn.server_ip = form["smb" + smb + "-serverip"]
+                smb_conn.share_name = form["smb" + smb + "-sharename"]
                 smb_conn.path = form["smb" + smb + "-path"]
                 smb_conn.username = form["smb" + smb + "-user"]
                 smb_conn.password = em_encrypt(
@@ -649,7 +642,7 @@ def connection_new():
 
                 log = TaskLog(
                     status_id=7,
-                    message=session.get("user_full_name")
+                    message=current_user.full_name
                     + ": Connection Smb added. ("
                     + str(me.id)
                     + " "
@@ -685,7 +678,7 @@ def connection_new():
 
                 log = TaskLog(
                     status_id=7,
-                    message=session.get("user_full_name")
+                    message=current_user.full_name
                     + ": Connection Gpg added. ("
                     + str(me.id)
                     + " "
@@ -726,7 +719,7 @@ def connection_new():
 
                 log = TaskLog(
                     status_id=7,
-                    message=session.get("user_full_name")
+                    message=current_user.full_name
                     + ": Connection Database added. ("
                     + str(me.id)
                     + " "
@@ -742,7 +735,7 @@ def connection_new():
 
         log = TaskLog(
             status_id=7,
-            message=session.get("user_full_name")
+            message=current_user.full_name
             + ": Connection group added. ("
             + str(me.id)
             + " "
@@ -756,8 +749,7 @@ def connection_new():
 
 
 @connection_bp.route("/connection/remove/<connection_id>", methods=["GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_remove(connection_id):
     """Delete a connection group.
 
@@ -775,7 +767,7 @@ def connection_remove(connection_id):
 
     log = TaskLog(
         status_id=7,
-        message=session.get("user_full_name")
+        message=current_user.full_name
         + ": Connection removed. ("
         + str(connection_id)
         + ")",
@@ -788,8 +780,7 @@ def connection_remove(connection_id):
 @connection_bp.route(
     "/connection/<connection_id>/removeSftp/<sftp_id>", methods=["GET"]
 )
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_remove_sftp(connection_id, sftp_id):
     """Delete a SFPT connection from group.
 
@@ -803,7 +794,7 @@ def connection_remove_sftp(connection_id, sftp_id):
     db.session.commit()
     log = TaskLog(
         status_id=7,
-        message=session.get("user_full_name")
+        message=current_user.full_name
         + ": Connection Sftp removed. ("
         + str(sftp_id)
         + ")",
@@ -816,8 +807,7 @@ def connection_remove_sftp(connection_id, sftp_id):
 
 
 @connection_bp.route("/connection/<connection_id>/removeSsh/<ssh_id>", methods=["GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_remove_ssh(connection_id, ssh_id):
     """Delete a SSH connection from group.
 
@@ -831,7 +821,7 @@ def connection_remove_ssh(connection_id, ssh_id):
     db.session.commit()
     log = TaskLog(
         status_id=7,
-        message=session.get("user_full_name")
+        message=current_user.full_name
         + ": Connection Ssh removed. ("
         + str(ssh_id)
         + ")",
@@ -844,8 +834,7 @@ def connection_remove_ssh(connection_id, ssh_id):
 
 
 @connection_bp.route("/connection/<connection_id>/removeSmb/<smb_id>", methods=["GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_remove_smb(connection_id, smb_id):
     """Delete a SMB connection from group.
 
@@ -859,7 +848,7 @@ def connection_remove_smb(connection_id, smb_id):
     db.session.commit()
     log = TaskLog(
         status_id=7,
-        message=session.get("user_full_name")
+        message=current_user.full_name
         + ": Connection Smb removed. ("
         + str(smb_id)
         + ")",
@@ -872,8 +861,7 @@ def connection_remove_smb(connection_id, smb_id):
 
 
 @connection_bp.route("/connection/<connection_id>/removeFtp/<ftp_id>", methods=["GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_remove_ftp(connection_id, ftp_id):
     """Delete a FPT connection from group.
 
@@ -887,9 +875,36 @@ def connection_remove_ftp(connection_id, ftp_id):
     db.session.commit()
     log = TaskLog(
         status_id=7,
-        message=session.get("user_full_name")
+        message=current_user.full_name
         + ": Connection Ftp removed. ("
         + str(ftp_id)
+        + ")",
+    )
+    db.session.add(log)
+    db.session.commit()
+    return redirect(
+        url_for("connection_bp.connection_edit", connection_id=connection_id)
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/removeGpg/<gpg_id>", methods=["GET"])
+@login_required
+def connection_remove_gpg(connection_id, gpg_id):
+    """Delete a FPT connection from group.
+
+    :url: /connection/<connection_id>/removeGpg/<gpg_id>
+    :param ftp_id: id of the FTP connection in question.
+    :param connection_id: id of connection group in question.
+
+    :returns: redirects back to connection page.
+    """
+    ConnectionGpg.query.filter_by(connection_id=connection_id, id=gpg_id).delete()
+    db.session.commit()
+    log = TaskLog(
+        status_id=7,
+        message=current_user.full_name
+        + ": Connection Gpg removed. ("
+        + str(gpg_id)
         + ")",
     )
     db.session.add(log)
@@ -902,8 +917,7 @@ def connection_remove_ftp(connection_id, ftp_id):
 @connection_bp.route(
     "/connection/<connection_id>/removeDatabase/<database_id>", methods=["GET"]
 )
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_remove_database(connection_id, database_id):
     """Delete a database connection from group.
 
@@ -919,7 +933,7 @@ def connection_remove_database(connection_id, database_id):
     db.session.commit()
     log = TaskLog(
         status_id=7,
-        message=session.get("user_full_name")
+        message=current_user.full_name
         + ": Connection Database removed. ("
         + str(database_id)
         + ")",

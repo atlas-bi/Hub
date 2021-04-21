@@ -214,8 +214,15 @@ def seed():
 def seed_demo():
     """Seed info for demo."""
     # demo user
-    if User.query.filter_by(full_name="Mr Cool", user_id="1234").first() is None:
-        db.session.add(User(full_name="Mr Cool", user_id="1234"))
+    if User.query.filter_by(full_name="Mr Cool").first() is None:
+        db.session.add(
+            User(
+                full_name="Mr Cool",
+                first_name="Mr",
+                account_name="mr-cool",
+                email="mr@co.ol",
+            )
+        )
 
     # demo connection group
     if (

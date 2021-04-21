@@ -7,21 +7,25 @@ Extract Management 2.0 Docs
    :hidden:
    :titlesonly:
 
-   Overview <self>
+   Home <self>
+   em/overview.rst
    em/dash.rst
    em/projects.rst
    em/tasks.rst
    em/connections.rst
    em/admin.rst
-   em/development.rst
+
+.. toctree::
+   :caption: Configuration
+   :hidden:
+
+   em/configuration/index
+
+
+.. toctree::
+   :hidden:
+
+   em/development/index
 
 
 .. include:: ../readme.rst
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

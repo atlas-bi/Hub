@@ -21,18 +21,18 @@ import json
 import requests
 from flask import Blueprint
 from flask import current_app as app
-from flask import jsonify, session
+from flask import jsonify
+from flask_login import current_user, login_required
 from sqlalchemy import and_, or_, text
 
-from em_web import db, executor, ldap, redis_client
+from em_web import db, executor, redis_client
 from em_web.model import Task, TaskLog
 
 executors_bp = Blueprint("executors_bp", __name__)
 
 
 @executors_bp.route("/executor/status")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def executor_status():
     """Get list of active executor jobs.
 
@@ -93,7 +93,7 @@ def enable_task(task_id):
     log = TaskLog(
         task_id=task_id,
         status_id=7,
-        message=(session.get("user_full_name") or "none") + ": Task enabled.",
+        message=(current_user.full_name or "none") + ": Task enabled.",
     )
     db.session.add(log)
     db.session.commit()
@@ -103,7 +103,7 @@ def enable_task(task_id):
         log = TaskLog(
             task_id=task_id,
             status_id=7,
-            message=(session.get("user_full_name") or "none") + ": Task scheduled.",
+            message=(current_user.full_name or "none") + ": Task scheduled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -115,7 +115,7 @@ def enable_task(task_id):
             error=1,
             task_id=task_id,
             message=(
-                (session.get("user_full_name") or "none")
+                (current_user.full_name or "none")
                 + ": Failed to schedule task. ("
                 + task_id
                 + ")\n"
@@ -140,7 +140,7 @@ def disable_task(task_id):
         log = TaskLog(
             task_id=task_id,
             status_id=7,
-            message=(session.get("user_full_name") or "none") + ": Task disabled.",
+            message=(current_user.full_name or "none") + ": Task disabled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -151,7 +151,7 @@ def disable_task(task_id):
             status_id=7,
             error=1,
             message=(
-                (session.get("user_full_name") or "none")
+                (current_user.full_name or "none")
                 + ": Failed to disable task. ("
                 + task_id
                 + ")\n"

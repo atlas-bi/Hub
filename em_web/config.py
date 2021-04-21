@@ -15,7 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from pathlib import Path
+
 import redis
+import saml2
+import saml2.saml
 
 
 class Config:
@@ -23,44 +27,50 @@ class Config:
 
     # pylint: disable=too-few-public-methods
 
+    ALLOWED_HOSTS = ["*", "localhost"]
+
     DEBUG = False
     TESTING = False
+    DEMO = False
+
     SECRET_KEY = b"something secret"
     IV_KEY = b"something secret"
     PASS_KEY = b"something secret"
 
-    """
-        redis connection settings
-    """
-
+    # redis sessions
     SESSION_TYPE = "redis"
     SESSION_REDIS = redis.Redis(host="localhost", port=6379)
 
-    """
-        LDAP Connection used for user authentication
-    """
+    # authentication
+    LOGIN_VIEW = "auth_bp.login"
+    REQUIRED_GROUPS = [b"Analytics"]
+    LOGIN_MESSAGE = "Please login to access this page."
+    AUTH_METHOD = "SAML"  # LDAP, SAML, or DEV for no pass.
+    LOGIN_REDIRECT_URL = "/"
+    NOT_AUTHORIZED_URL = "auth_bp.not_authorized"
+
+    # ldap
     LDAP_HOST = "10.0.0.0"  # defaults to localhost
     LDAP_BASE_DN = "OU=People,OU=Employees,DC=Org"
-    LDAP_USER_OBJECT_FILTER = "(sAMAccountName=%s)"
+    LDAP_USER_OBJECT_FILTER = "(|(sAMAccountName=%s)(userPrincipalName=%s))"
     LDAP_USERNAME = "username"
     LDAP_PASSWORD = "password"  # noqa: S105
     LDAP_USE_SSL = True
-    LDAP_LOGIN_VIEW = "auth_bp.login"
+    LDAP_ATTR_MAP = {
+        "account_name": "sAMAccountName",
+        "email": "userPrincipalName",
+        "full_name": "cn",
+        "first_name": "givenName",
+    }
 
-    """
-        Flask-Caching related configs
-    """
+    # cache
     CACHE_TYPE = "simple"
     CACHE_DEFAULT_TIMEOUT = 300
 
-    """
-        primary webapp database
-    """
-
+    # database
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
         user="webapp", pw="nothing", url="localhost", db="em_web"
     )
-
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         "max_overflow": 100,  # how many spare connections we can use?
@@ -81,14 +91,84 @@ class Config:
     EXECUTOR_TYPE = "thread"
     EXECUTOR_MAX_WORKERS = 12
     EXECUTOR_PROPAGATE_EXCEPTIONS = True
-
     REDIS_URL = "redis://127.0.0.1:6379/0"
 
+    # compression
     MINIFY_HTML = True
 
-    DEMO = False
-
+    # migrations
     MIGRATIONS = "migrations"
+
+    # saml config
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    BASE_URL = "https://taskscheduler.me.net/"
+    # pylint: disable=C0301
+    SAML_CONFIG = {
+        "xmlsec_binary": "/usr/bin/xmlsec1",
+        "entityid": BASE_URL + "saml2/metadata/",
+        "allow_unknown_attributes": True,
+        "service": {
+            "sp": {
+                "name": "Atlas of Information Management SP",
+                "name_id_format": saml2.saml.NAMEID_FORMAT_PERSISTENT,
+                "allow_unsolicited": True,
+                "endpoints": {
+                    "assertion_consumer_service": [
+                        (BASE_URL + "saml2/acs/", saml2.BINDING_HTTP_POST),
+                    ],
+                    "single_logout_service": [
+                        (BASE_URL + "saml2/ls/", saml2.BINDING_HTTP_REDIRECT),
+                        (BASE_URL + "saml2/ls/post/", saml2.BINDING_HTTP_POST),
+                    ],
+                },
+                "force_authn": False,
+                "name_id_format_allow_create": True,
+                "required_attributes": ["emailAddress"],
+                "authn_requests_signed": False,
+                "logout_requests_signed": True,
+                "want_assertions_signed": True,
+                "want_response_signed": False,
+            },
+        },
+        "metadata": {
+            "remote": [
+                {
+                    "url": "https://your.org.net/FederationMetadata/2007-06/FederationMetadata.XML",  # noqa: E501
+                    "disable_ssl_certificate_validation": True,
+                },
+            ],
+        },
+        "debug": 1,
+        "key_file": str(BASE_DIR / "publish/cert.key"),  # private part
+        "cert_file": str(BASE_DIR / "publish/cert.crt"),  # public part
+        "encryption_keypairs": [
+            {
+                "key_file": str(BASE_DIR / "publish/cert.key"),  # private part
+                "cert_file": str(BASE_DIR / "publish/cert.crt"),  # public part
+            }
+        ],
+        "contact_person": [
+            {
+                "given_name": "Mr",
+                "sur_name": "Cool",
+                "company": "Hospital",
+                "email_address": "mr@co.ol",
+                "contact_type": "technical",
+            },
+        ],
+        "organization": {
+            "name": [("Hospital", "en")],
+            "display_name": [("Hospital", "en")],
+            "url": [(BASE_URL, "en")],
+        },
+    }
+    SAML_ATTR_MAP = {
+        "account_name": "name",
+        "email": "emailAddress",
+        "last_name": "surname",
+        "first_name": "givenName",
+        "groups": "group",
+    }
 
 
 class DevConfig(Config):
@@ -99,21 +179,22 @@ class DevConfig(Config):
     """
 
     # pylint: disable=too-few-public-methods
+
+    # authentication override
+    AUTH_METHOD = "LDAP"
+
     DEBUG = True
+
     SESSION_COOKIE_SECURE = False
-    MIN_DISK_SPACE = 1 * 1024 * 1024 * 1024
+
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
         user="webapp", pw="nothing", url="localhost", db="em_web_dev"
     )
 
+    # migrations override
     MIGRATIONS = "migrations_dev"
-
-
-#    SQLALCHEMY_ECHO = True  # noqa: E800
-
-#    DEMO = True  # noqa: E800
 
 
 class DevTestConfig(DevConfig):
@@ -125,25 +206,11 @@ class DevTestConfig(DevConfig):
     """
 
     # pylint: disable=too-few-public-methods
-    LDAP_BASE_DN = ""
-
-    # AUTH_USERNAME = "username"  # noqa: E800
-    # AUTH_PASSWORD = "password"  # noqa: S105
-    TEST = True
-
-
-class TestConfig(DevTestConfig):
-    """Configuration overides for testing.
-
-    To Use:
-    FLASK_ENV=test
-    FLASK_DEBUG=1
-    """
-
-    # pylint: disable=too-few-public-methods
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web_test"
-    )
-
+    SQLALCHEMY_DATABASE_URI = "sqlite:///../test.sqlite"
+    SQLALCHEMY_ENGINE_OPTIONS: dict = {}
     MIGRATIONS = "migrations_test"
+
     DEMO = True
+    TEST = True
+    AUTH_METHOD = "DEV"
+    DEBUG = False

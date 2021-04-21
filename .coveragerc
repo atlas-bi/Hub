@@ -11,4 +11,5 @@ omit =
     */confi_text.py
     */smb_fix.py
     */flask_simpleldap.py
+    */seed.py
 show_missing = true

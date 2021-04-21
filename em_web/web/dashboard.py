@@ -24,9 +24,10 @@ import requests
 from error_print import full_stack
 from flask import Blueprint
 from flask import current_app as app
-from flask import flash, jsonify, redirect, render_template, session, url_for
+from flask import flash, jsonify, redirect, render_template, url_for
+from flask_login import current_user, login_required
 
-from em_web import db, ldap
+from em_web import db
 from em_web.model import Project, Task, TaskLog, User
 from em_web.web import submit_executor
 
@@ -36,8 +37,7 @@ dashboard_bp = Blueprint("dashboard_bp", __name__)
 
 
 @dashboard_bp.route("/search")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def search():
     """Search data."""
     my_json = {}
@@ -65,8 +65,7 @@ def search():
 
 
 @dashboard_bp.route("/")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def home():
     """Return default landing page.
 
@@ -75,40 +74,26 @@ def home():
     :url: /
     :returns: html webpage.
     """
-    my_user = User.query.filter_by(user_id=session.get("user_id"))
+    if (
+        db.session.query()
+        .select_from(Project)
+        .add_columns(Project.id)
+        .filter(Project.owner_id == current_user.id)
+        .first()
+    ):
 
-    if my_user.count():
-        user_id = (
-            db.session.query()
-            .select_from(User)
-            .add_columns(User.id)
-            .filter(User.user_id == session.get("user_id"))
-            .first()
-        )[0]
-
-        if (
-            db.session.query()
-            .select_from(Project)
-            .add_columns(Project.id)
-            .filter(Project.owner_id == user_id)
-            .first()
-        ):
-
-            my_user = User.query.filter_by(id=user_id).first()
-
-            return render_template(
-                "pages/project/all.html.j2",
-                title=my_user.full_name + "'s Projects",
-                username=my_user.full_name,
-                user_id=user_id,
-            )
+        return render_template(
+            "pages/project/all.html.j2",
+            title=current_user.full_name + "'s Projects",
+            username=current_user.full_name,
+            user_id=current_user,
+        )
 
     return redirect(url_for("dashboard_bp.dash"))
 
 
 @dashboard_bp.route("/dashboard")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash():
     """Dashboard page.
 
@@ -122,8 +107,7 @@ def dash():
 
 
 @dashboard_bp.route("/schedule")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def active_schedule():
     """Graph showing current run schedule for next 12 hrs.
 
@@ -159,8 +143,7 @@ def active_schedule():
 
 
 @dashboard_bp.route("/dash/errorGauge")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_error_gauge():
     """Guage showing number of errored tasks.
 
@@ -219,8 +202,7 @@ def dash_error_gauge():
 
 
 @dashboard_bp.route("/dash/runGauge")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_run_gauge():
     """Guage showing number of tasks run.
 
@@ -254,8 +236,7 @@ def dash_run_gauge():
 
 
 @dashboard_bp.route("/dash/orphans/delete")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_orphans_delete():
     """Button to delete any jobs without a linked tasks.
 
@@ -291,8 +272,7 @@ def dash_orphans_delete():
 
 
 @dashboard_bp.route("/dash/errored/run")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_errored_run():
     """Button to run all errored tasks.
 
@@ -305,8 +285,7 @@ def dash_errored_run():
 
 
 @dashboard_bp.route("/dash/active/run")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_active_run():
     """Button to run all errored tasks.
 
@@ -319,8 +298,7 @@ def dash_active_run():
 
 
 @dashboard_bp.route("/dash/errored/schedule")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_errored_schedule():
     """Button to schedule all errored tasks.
 
@@ -333,8 +311,7 @@ def dash_errored_schedule():
 
 
 @dashboard_bp.route("/dash/scheduled/run")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_scheduled_run():
     """Button to run all scheduled tasks.
 
@@ -347,8 +324,7 @@ def dash_scheduled_run():
 
 
 @dashboard_bp.route("/dash/scheduled/reschedule")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_scheduled_reschedule():
     """Button to reschedule all scheduled tasks.
 
@@ -361,8 +337,7 @@ def dash_scheduled_reschedule():
 
 
 @dashboard_bp.route("/dash/scheduled/disable")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_scheduled_disable():
     """Button to disable all scheduled tasks.
 
@@ -383,7 +358,7 @@ def add_user_log(message, error_code):
     log = TaskLog(
         status_id=7,
         error=error_code,
-        message=(session.get("user_full_name") or "none") + ": " + message,
+        message=(current_user.full_name or "none") + ": " + message,
     )
     db.session.add(log)
     db.session.commit()

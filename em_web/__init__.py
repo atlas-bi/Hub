@@ -16,9 +16,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import logging
 import sys
 from pathlib import Path
+
+from flask import Flask, render_template
+from flask.cli import with_appcontext
 
 from em_web.extensions import (
     cache,
@@ -26,16 +28,13 @@ from em_web.extensions import (
     db,
     executor,
     htmlmin,
-    ldap,
+    login_manager,
     migrate,
     redis_client,
     sess,
     toolbar,
     web_assets,
 )
-
-from flask import Flask, render_template  # isort:skip
-from flask.cli import with_appcontext  # isort:skip
 
 sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
 from error_print import full_stack  # isort:skip
@@ -50,26 +49,22 @@ def create_app():
     app = Flask(__name__)
 
     if app.config["ENV"] == "development":
-        logging.info("loading dev config")
         app.config.from_object("em_web.config.DevConfig")
 
-    elif app.config["ENV"] == "test" and app.config["DEBUG"]:
-        logging.info("loading test config")
+    elif app.config["ENV"] == "test":
         app.config.from_object("em_web.config.TestConfig")
 
-    elif app.config["ENV"] == "test":
-        logging.info("loading dev test config")
-        app.config.from_object("em_web.config.DevTestConfig")
-
     else:
-        logging.info("loading prod config")
         app.config.from_object("em_web.config.Config")
 
     compress.init_app(app)
     web_assets.init_app(app)
 
     # auth
-    ldap.init_app(app)
+    login_manager.init_app(app)
+    login_manager.login_view = app.config["LOGIN_VIEW"]
+    login_manager.login_message = app.config["LOGIN_MESSAGE"]
+
     sess.init_app(app)
 
     # database
@@ -100,10 +95,12 @@ def create_app():
             executors,
             filters,
             project,
+            saml_auth,
             table,
             task,
         )
 
+        app.register_blueprint(saml_auth.login_bp)
         app.register_blueprint(admin.admin_bp)
         app.register_blueprint(auth.auth_bp)
         app.register_blueprint(connection.connection_bp)
@@ -123,6 +120,41 @@ def create_app():
 
 
 app = create_app()
+
+
+@app.cli.command("create_db")
+@with_appcontext
+def create_db():
+    """Add command to create the test database."""
+    if app.config["ENV"] == "test":
+
+        # pylint: disable=W0611
+        from em_web.model import (  # noqa: F401
+            Connection,
+            ConnectionDatabase,
+            ConnectionDatabaseType,
+            ConnectionFtp,
+            ConnectionGpg,
+            ConnectionSftp,
+            ConnectionSmb,
+            ConnectionSsh,
+            Login,
+            LoginType,
+            Project,
+            QuoteLevel,
+            Task,
+            TaskDestinationFileType,
+            TaskFile,
+            TaskLog,
+            TaskProcessingType,
+            TaskSourceQueryType,
+            TaskSourceType,
+            TaskStatus,
+            User,
+        )
+
+        db.create_all()
+        db.session.commit()
 
 
 @app.cli.command("seed")

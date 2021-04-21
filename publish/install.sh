@@ -264,7 +264,7 @@ fmt_green "Checking online status - https://$DNS/login"
 fmt_yellow "$(curl -sS "https://$DNS/login" --insecure -I)"
 
 TITLE=$(curl -sS "https://$DNS/login" --insecure -so - | grep -iPo "(?<=<title>)(.*)(?=</title>)")
-if [[ $TITLE == "Extract Management 2.0 - Login" ]];
+if [[ $TITLE == "Extract Management 2.0 - Login" ]] || [[ $TITLE == "Redirecting..." ]];
 then
     fmt_green "Login page successfully reached!"
 else

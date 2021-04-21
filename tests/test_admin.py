@@ -57,6 +57,32 @@ def test_admin_kill(em_web_authed):
 
 
 """
+    Job tasks
+"""
+
+
+def test_admin_reload_jobs(em_web_authed):
+    page = em_web_authed.get("/admin/reloadJobs", follow_redirects=True)
+    assert page.status_code == 200
+
+    assert "flashes" in page.get_data(as_text=True)
+
+
+def test_admin_reset_tasks(em_web_authed):
+    page = em_web_authed.get("/admin/resetTasks", follow_redirects=True)
+    assert page.status_code == 200
+
+    assert "flashes" in page.get_data(as_text=True)
+
+
+def test_admin_clear_logs(em_web_authed):
+    page = em_web_authed.get("/admin/clearlog", follow_redirects=True)
+    assert page.status_code == 200
+
+    assert "flashes" in page.get_data(as_text=True)
+
+
+"""
     Server Tasks
 """
 

@@ -96,11 +96,14 @@ myst-parser = { version = "^0.13.5", optional = true }
 colorama = { version = "^0.4.4", optional = true }
 sphinx-panels = { version = "^0.5.2", optional = true }
 pyScss = { git = "https://github.com/Kronuz/pyScss.git", rev = "6bf001e"} #^1.3.7"
+pysaml2 = "^6.5.1"
+Flask-Login = "^0.5.0"
+is-safe-url = "^1.0"
 
 
 [tool.poetry.extras]
 test = ["tox", "Pygments", "pytest-cov", "pytest", "pytest-flask", "toml", "coverage", "Flask-DebugToolbar"]
-docs = ["Sphinx", "Pygments", "furo", "sphinx-copybutton", "sphinx-inline-tabs", "myst-parser", "colorama", "sphinx-panels"]
+docs = ["Sphinx", "Pygments", "furo", "sphinx-copybutton", "sphinx-inline-tabs", "myst-parser", "colorama", "sphinx-panels", "sphinx-autoapi"]
 
 
 [tool.poetry.dev-dependencies]
@@ -108,6 +111,7 @@ Flask-DebugToolbar = "^0.11.0"
 tox = "^3.20.1"
 pre-commit = "^2.9.3"
 toml = "^0.10.2"
+pytest = "^6.2.3"
 
 
 [build-system]
@@ -171,7 +175,6 @@ exclude = '''
       | tests/data
 
       # em2
-      | 'flask_simpleldap.py'
       | migrations
       | migrations_dev
       | temp
@@ -182,7 +185,6 @@ quiet = true
 
 [tool.isort]
 profile = "black"
-skip = 'flask_simpleldap.py'
 quiet = true
 sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
@@ -192,6 +194,7 @@ exclude = '''
 (
     /pages/task/details.html.j2
     | /pages/connection/all.html.j2
+    | /saml_test.html.j2
 )
 '''
 quiet = true

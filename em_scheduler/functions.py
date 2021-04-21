@@ -61,6 +61,7 @@ def scheduler_task_runner(task_id):
     except BaseException as e:
         print("failed to run job.")  # noqa: T001
         print(str(e))  # noqa: T001
+        raise e
 
 
 def scheduler_add_task(task_id):

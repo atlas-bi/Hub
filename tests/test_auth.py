@@ -5,6 +5,7 @@ import os
 
 import pytest
 from flask import g, url_for
+from flask_login import current_user
 
 
 def test_index(em_web_app):
@@ -23,8 +24,6 @@ def test_index(em_web_app):
 def login(em_web_app, username, password):
     assert em_web_app.get("/login").status_code == 200
 
-    print(username, password)
-
     return em_web_app.post(
         url_for("auth_bp.login"),
         data=dict(user=username, password=password),
@@ -41,12 +40,14 @@ def test_login_logout(em_web_app):
     """Make sure login and logout works."""
 
     if not em_web_app.application.config["TEST"]:
-        username = em_web_app.application.config["AUTH_USERNAME"]
-        password = em_web_app.application.config["AUTH_PASSWORD"]
+        username = user = "mr-cool"
+        password = ""
 
         rv = login(em_web_app, username, password)
         assert rv.status_code == 200
         assert b"Extract Management 2.0 - Dashboard" in rv.data
+
+        current_user.get_id()
 
         # verify we stay logged in
         rv = em_web_app.get("/login", follow_redirects=True)
@@ -62,3 +63,8 @@ def test_login_logout(em_web_app):
 
         rv = login(em_web_app, username, password + "x")
         assert b"Invalid login, please try again!" in rv.data
+
+
+def test_not_authorized(em_web_app):
+    rv = em_web_app.get("/not_authorized", follow_redirects=True)
+    assert rv.status_code == 200

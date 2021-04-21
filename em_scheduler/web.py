@@ -72,7 +72,7 @@ def schedule():
 
     active_schedule = []
     for job in scheduler.get_jobs():
-        if not job.next_run_time and len(job.args) > 0:
+        if not hasattr(job, "next_run_time") or job.next_run_time is None and job.args:
             continue
         job_date = job.next_run_time
 

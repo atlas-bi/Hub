@@ -23,9 +23,10 @@ from pathlib import Path
 import requests
 from flask import Blueprint
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, session, url_for
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 
-from em_web import db, ldap
+from em_web import db
 from em_web.model import Task, TaskLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
@@ -35,8 +36,7 @@ admin_bp = Blueprint("admin_bp", __name__)
 
 
 @admin_bp.route("/admin")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin():
     """Admin home page.
 
@@ -50,8 +50,7 @@ def admin():
 
 
 @admin_bp.route("/admin/emptyScheduler")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_empty_scheduler():
     """Remove all jobs from scheduler.
 
@@ -81,8 +80,7 @@ def admin_empty_scheduler():
 
 
 @admin_bp.route("/admin/reloadJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_reload_scheduler():
     """Emtpy scheduler and re-add all enabled jobs."""
     # pylint: disable=broad-except
@@ -119,8 +117,7 @@ def admin_reload_scheduler():
 
 
 @admin_bp.route("/admin/resetTasks")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_reset_tasks():
     """Reset all tasks to complete.
 
@@ -139,8 +136,7 @@ def admin_reset_tasks():
 
 
 @admin_bp.route("/admin/whoami")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_whoami():
     """Run `whoami` command on server.
 
@@ -175,8 +171,7 @@ def admin_whoami():
 
 
 @admin_bp.route("/admin/reloadDaemon")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_reload_daemon():
     """Reload web service on server.
 
@@ -215,8 +210,7 @@ def admin_reload_daemon():
 
 
 @admin_bp.route("/admin/restartDaemon")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_restart_daemon():
     """Restart web service on server.
 
@@ -254,8 +248,7 @@ def admin_restart_daemon():
 
 
 @admin_bp.route("/admin/clearlog")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_clear_log():
     """Clear all logs.
 
@@ -270,8 +263,7 @@ def admin_clear_log():
 
 
 @admin_bp.route("/admin/pauseJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_pause_jobs():
     """Stop all jobs from future runs.
 
@@ -305,8 +297,7 @@ def admin_pause_jobs():
 
 
 @admin_bp.route("/admin/resumeJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_resume_jobs():
     """Resume all paused jobs.
 
@@ -342,8 +333,7 @@ def admin_resume_jobs():
 
 
 @admin_bp.route("/admin/stopJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_stop_jobs():
     """Gracefully shutdown scheduler.
 
@@ -380,8 +370,7 @@ def admin_stop_jobs():
 
 
 @admin_bp.route("/admin/killJobs")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def admin_kill_jobs():
     """Kill the scheduler.
 
@@ -423,7 +412,7 @@ def add_user_log(message, error_code):
     log = TaskLog(
         status_id=7,
         error=error_code,
-        message=(session.get("user_full_name") or "none") + ": " + message,
+        message=(current_user.full_name or "none") + ": " + message,
     )
     db.session.add(log)
     db.session.commit()

@@ -33,11 +33,12 @@ import requests
 import urllib3
 from flask import Blueprint
 from flask import current_app as app
-from flask import jsonify, request, session
+from flask import jsonify, request
+from flask_login import current_user, login_required
 from RelativeToNow import relative_to_now
 from sqlalchemy import and_, text
 
-from em_web import db, ldap
+from em_web import db
 from em_web.model import (
     ConnectionDatabase,
     ConnectionFtp,
@@ -58,8 +59,7 @@ table_bp = Blueprint("table_bp", __name__)
 
 
 @table_bp.route("/table/project/<my_type>")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_list(my_type="all"):
     """Build json dataset for ajax tables.
 
@@ -109,7 +109,7 @@ def project_list(my_type="all"):
         projects = projects.filter(User.id == int(my_type))
 
     elif my_type != "all":
-        projects = projects.filter(User.user_id == session.get("user_id"))
+        projects = projects.filter(User.id == current_user.id)
 
     me = [{"head": '["Name","Owner","Last Run","Next Run","Tasks","Enabled"]'}]
 
@@ -173,7 +173,7 @@ def project_list(my_type="all"):
                 if proj["Last Run"]
                 else "",
                 "Next Run": datetime.datetime.strftime(
-                    proj["Next Run"], " %m/%-d%y %H:%M"
+                    proj["Next Run"], " %m/%-d/%y %H:%M"
                 )
                 if proj["Next Run"]
                 else "",
@@ -192,8 +192,7 @@ def project_list(my_type="all"):
 
 
 @table_bp.route("/table/tasklog/userevents")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def table_tasklog_userevents():
     """Table of all user events.
 
@@ -222,7 +221,7 @@ def table_tasklog_userevents():
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .join(Task, Task.id == TaskLog.task_id)
+        .outerjoin(Task, Task.id == TaskLog.task_id)
         .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
         .filter(TaskLog.status_id == 7)
         .add_columns(*cols.values())
@@ -265,7 +264,8 @@ def table_tasklog_userevents():
                     "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log["Status Date"]
-                else "None",
+                and isinstance(log["Status Date"], datetime.datetime)
+                else (log["Status Date"] if log["Status Date"] else "None"),
                 "Message": log["Message"],
                 "class": "error" if log["Status Id"] == 2 or log["Error"] == 1 else "",
             }
@@ -275,8 +275,7 @@ def table_tasklog_userevents():
 
 
 @table_bp.route("/table/user/auth")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def table_user_auth():
     """Table of all user login events.
 
@@ -334,8 +333,7 @@ def table_user_auth():
 
 
 @table_bp.route("/table/connection/<connection_id>/tasks")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def connection_task(connection_id):
     """Get a table of any tasks associated with the connection.
 
@@ -522,8 +520,7 @@ def connection_task(connection_id):
 
 
 @table_bp.route("/table/jobs/orphans")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def table_jobs_orphans():
     """Get a table of any jobs without a linked task.
 
@@ -586,8 +583,7 @@ def table_jobs_orphans():
 
 
 @table_bp.route("/table/tasks/<task_type>")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_tasks(task_type):
     """Get a table of any jobs marked error.
 
@@ -733,8 +729,7 @@ def dash_tasks(task_type):
 
 
 @table_bp.route("/table/tasks/<my_type>/list")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def task_list(my_type):
     """Build json dataset for ajax tables.
 
@@ -792,7 +787,7 @@ def task_list(my_type):
             .outerjoin(Project, Project.id == Task.project_id)
             .outerjoin(User, User.id == Project.owner_id)
             .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-            .filter(User.user_id == session.get("user_id"))
+            .filter(User.id == current_user.id)
             .add_columns(*cols.values())
             .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
@@ -856,8 +851,7 @@ def task_list(my_type):
 
 
 @table_bp.route("/table/project/<project_id>/task")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_task_all(project_id):
     """Build json dataset for ajax tables of tasks for a project.
 
@@ -944,8 +938,7 @@ def project_task_all(project_id):
 
 
 @table_bp.route("/table/project/<project_id>/tasklog")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_task_log_all(project_id):
     """Build project tasklog json dataset for ajax tables.
 
@@ -1019,7 +1012,8 @@ def project_task_log_all(project_id):
                     "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log["Status Date"]
-                else "None",
+                and isinstance(log["Status Date"], datetime.datetime)
+                else (log["Status Date"] if log["Status Date"] else "None"),
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": html.escape(log["Message"]),
                 "class": "error" if log["Status Id"] == 2 or log["Error"] == 1 else "",
@@ -1030,8 +1024,7 @@ def project_task_log_all(project_id):
 
 
 @table_bp.route("/table/task/<task_id>/log")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def task_log(task_id):
     """Build tasklog json dataset for ajax tables.
 
@@ -1099,7 +1092,8 @@ def task_log(task_id):
                     "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log["Status Date"]
-                else "None",
+                and isinstance(log["Status Date"], datetime.datetime)
+                else (log["Status Date"] if log["Status Date"] else "None"),
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": html.escape(log["Message"]),
                 "class": "error" if log["Status Id"] == 2 or log["Error"] == 1 else "",
@@ -1110,8 +1104,7 @@ def task_log(task_id):
 
 
 @table_bp.route("/table/tasks/log")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_log():
     """Get a table of all task logs.
 
@@ -1198,7 +1191,8 @@ def dash_log():
                     "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log["Status Date"]
-                else "None",
+                and isinstance(log["Status Date"], datetime.datetime)
+                else (log["Status Date"] if log["Status Date"] else "None"),
                 "my_date_sort": log["Status Date"],
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": (
@@ -1221,8 +1215,7 @@ def dash_log():
 
 
 @table_bp.route("/table/tasks/errorLog")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def dash_error_log():
     """Get a table of all task error logs.
 
@@ -1310,7 +1303,8 @@ def dash_error_log():
                     "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log["Status Date"]
-                else "None",
+                and isinstance(log["Status Date"], datetime.datetime)
+                else (log["Status Date"] if log["Status Date"] else "None"),
                 "my_date_sort": log["Status Date"],
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": (
@@ -1333,8 +1327,7 @@ def dash_error_log():
 
 
 @table_bp.route("/table/task/<task_id>/files")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def get_task_files(task_id):
     """Build backup files associated with task as json dataset.
 

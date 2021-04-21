@@ -16,41 +16,31 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import Blueprint
+from flask import Blueprint, abort
 from flask import current_app as app
-from flask import redirect, render_template, request, session, url_for
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+from is_safe_url import is_safe_url
 
-from em_web import db, executor, ldap
+from em_web import db, executor
 from em_web.model import Login, User
+
+from .ldap_auth import LDAP
+from .saml_auth import SAML
 
 auth_bp = Blueprint("auth_bp", __name__)
 
 
+@app.login_manager.user_loader
+def load_user(user_id):
+    """Get user."""
+    return User.query.filter_by(id=user_id).first()
 
-def before_request():
-    """Validate user and reloads auth before each request."""
-    if "username" in session and not app.config.get("TEST"):
-        session["user"] = ldap.get_object_details(
-            user=session.get("username"), dn_only=False
-        )
-        if session.get("user"):
-            session["user_id"] = (
-                session.get("user").get("employeeID")
-                or session.get("user").get("sAMAccountName")
-            )[0].decode("utf-8")
-            session["user_full_name"] = (
-                session.get("user").get("name")[0].decode("utf-8")
-            )
-            session["ldap_groups"] = ldap.get_user_groups(user=session.get("username"))
 
-        # if user does not exist, save their data
-        me = User.query.filter_by(user_id=session.get("user_id")).count()
-        if me < 1:
-            me = User(
-                user_id=session.get("user_id"), full_name=session.get("user_full_name")
-            )
-            db.session.add(me)
-            db.session.commit()
+@auth_bp.route("/not_authorized")
+def not_authorized():
+    """Return not authorized template."""
+    return render_template("not_authorized.html.j2", title="Not Authorized")
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
@@ -60,50 +50,120 @@ def login():
     :url: /login
     :returns: webpage
     """
-    if session.get("user"):
+    if current_user.get_id():
         return redirect(url_for("dashboard_bp.dash"))
 
     if request.method == "POST":
         user = request.form.get("user")
         password = request.form.get("password")
-        test = ldap.bind_user(user, password)
 
-        if test is None or password == "":  # noqa: S105
-            executor.submit(log_login, request.form["user"], 3)
-            return render_template(
-                "pages/login.html.j2", message="Invalid login, please try again!"
+        if app.config["AUTH_METHOD"] == "LDAP":
+            ldap = LDAP(app)
+            ldap_details = ldap.bind_user(user, password)
+
+            if ldap_details is None or password == "":  # noqa: S105
+                executor.submit(log_login, request.form["user"], 3)
+
+                flash("Invalid login, please try again!")
+                return render_template("pages/login.html.j2")
+
+            # require specific user group
+            if "REQUIRED_GROUPS" in app.config and not set(
+                app.config["REQUIRED_GROUPS"]
+            ).issubset(set(ldap.get_user_groups(user=user.lower()))):
+                executor.submit(log_login, request.form["user"], 3)
+
+                flash(
+                    "You must be part of the %s group(s) to use this site."
+                    % app.config["REQUIRED_GROUPS"]
+                )
+                return render_template("pages/login.html.j2")
+
+            executor.submit(log_login, request.form["user"], 1)
+
+            user = User.query.filter(
+                (User.account_name == user.lower()) | (User.email == user.lower())
+            ).first()
+
+            # if user isn't existing, create
+            if not user:
+                user = User()
+
+            # update user attributes
+            user.account_name = (
+                ldap_details.get(app.config["LDAP_ATTR_MAP"]["account_name"])[0]
+                .decode("utf-8")
+                .lower()
             )
+            user.email = (
+                ldap_details.get(app.config["LDAP_ATTR_MAP"]["email"])[0]
+                .decode("utf-8")
+                .lower()
+            )
+            user.full_name = ldap_details.get(app.config["LDAP_ATTR_MAP"]["full_name"])[
+                0
+            ].decode("utf-8")
+            user.first_name = ldap_details.get(
+                app.config["LDAP_ATTR_MAP"]["first_name"]
+            )[0].decode("utf-8")
 
-        session["username"] = request.form.get("user").lower()
-        session["user"] = ldap.get_object_details(
-            user=session.get("username"), dn_only=False
-        )
-        session["user_id"] = (
-            session.get("user").get("employeeID")
-            or session.get("user").get("sAMAccountName")
-        )[0].decode("utf-8")
-        session["user_full_name"] = session.get("user").get("name")[0].decode("utf-8")
-        session["ldap_groups"] = ldap.get_user_groups(user=session.get("username"))
+            db.session.add(user)
+            db.session.commit()
 
-        executor.submit(log_login, session.get("user_full_name"), 1)
-        return redirect("/")
+            login_user(user, remember=True)
+
+            next_url = request.args.get("next", default="/")
+
+            if not is_safe_url(next_url, app.config["ALLOWED_HOSTS"]):
+                return abort(400)
+
+            return redirect(next_url)
+
+        if app.config["AUTH_METHOD"] == "DEV":
+            user = User.query.filter(
+                (User.account_name == user.lower()) | (User.email == user.lower())
+            ).first()
+
+            login_user(user, remember=True)
+            next_url = request.args.get("next", default="/")
+
+            if not is_safe_url(next_url, app.config["ALLOWED_HOSTS"]):
+                return abort(400)
+
+            return redirect(next_url)
+
+        # if login methods fail, add flash message
+        flash("Invalid login, please try again!")
+
+    # saml does not have a login page but redirects to idp
+    if app.config["AUTH_METHOD"] == "SAML":
+        saml = SAML(app)
+        saml_client = saml.saml_client_for()
+        # pylint: disable=W0612
+        reqid, info = saml_client.prepare_for_authenticate()
+
+        redirect_url = None
+        # Select the IdP URL to send the AuthN request to
+        for key, value in info["headers"]:
+            if key == "Location":
+                redirect_url = value
+
+        return redirect(redirect_url)
 
     return render_template("pages/login.html.j2", title="Login")
 
 
 @auth_bp.route("/logout")
+@login_required
 def logout():
     """User logout page.
 
     :url: /logout
     :returns: webpage
     """
-    executor.submit(log_login, session.get("username") or "undefined", 2)
-    session.pop("username", None)
-    session.pop("user", None)
-    session.pop("user_id", None)
-    session.pop("user_full_name", None)
-    session.pop("ldap_groups", None)
+    executor.submit(log_login, current_user.account_name or "undefined", 2)
+    logout_user()
+
     return render_template("pages/logout.html.j2", title="Logout")
 
 
@@ -116,12 +176,3 @@ def log_login(name, type_id):
     me = Login(username=name, type_id=type_id)
     db.session.add(me)
     db.session.commit()
-
-    # if user does not exist, save their data
-    me = User.query.filter_by(user_id=session.get("user_id")).count()
-    if me < 1 and type_id == 1:
-        me = User(
-            user_id=session.get("user_id"), full_name=session.get("user_full_name")
-        )
-        db.session.add(me)
-        db.session.commit()

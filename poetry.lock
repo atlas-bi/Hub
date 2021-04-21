@@ -72,7 +72,7 @@ name = "atomicwrites"
 version = "1.4.0"
 description = "Atomic file writes."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
@@ -80,7 +80,7 @@ name = "attrs"
 version = "20.3.0"
 description = "Classes Without Boilerplate"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.extras]
@@ -288,6 +288,17 @@ optional = true
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "elementpath"
+version = "2.2.1"
+description = "XPath 1.0/2.0 parsers and selectors for ElementTree and lxml"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+dev = ["tox", "coverage", "lxml", "xmlschema (>=1.2.3,<1.3.0)", "sphinx"]
+
+[[package]]
 name = "filelock"
 version = "3.0.12"
 description = "A platform independent file lock."
@@ -410,6 +421,17 @@ python-versions = "*"
 [package.dependencies]
 Flask = "*"
 python-ldap = "*"
+
+[[package]]
+name = "flask-login"
+version = "0.5.0"
+description = "User session management for Flask"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Flask = "*"
 
 [[package]]
 name = "flask-migrate"
@@ -585,7 +607,15 @@ name = "iniconfig"
 version = "1.1.1"
 description = "iniconfig: brain-dead simple config-ini parsing"
 category = "main"
-optional = true
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "is-safe-url"
+version = "1.0"
+description = "Django's is_safe_url() bundled as a standalone package."
+category = "main"
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -898,12 +928,50 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "pyopenssl"
+version = "20.0.1"
+description = "Python wrapper module around the OpenSSL library"
+category = "main"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
+
+[package.dependencies]
+cryptography = ">=3.2"
+six = ">=1.5.2"
+
+[package.extras]
+docs = ["sphinx", "sphinx-rtd-theme"]
+test = ["flaky", "pretend", "pytest (>=3.0.1)"]
+
+[[package]]
 name = "pyparsing"
 version = "2.4.7"
 description = "Python parsing module"
 category = "main"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
+name = "pysaml2"
+version = "6.5.1"
+description = "Python implementation of SAML Version 2 Standard"
+category = "main"
+optional = false
+python-versions = "<4,>=3.6"
+
+[package.dependencies]
+cryptography = ">=1.4"
+defusedxml = "*"
+importlib-resources = "*"
+pyOpenSSL = "*"
+python-dateutil = "*"
+pytz = "*"
+requests = ">=1.0.0"
+six = "*"
+xmlschema = "*"
+
+[package.extras]
+s2repoze = ["paste", "zope.interface", "repoze.who"]
 
 [[package]]
 name = "pyScss"
@@ -936,10 +1004,10 @@ pyasn1 = "*"
 
 [[package]]
 name = "pytest"
-version = "6.2.2"
+version = "6.2.3"
 description = "pytest: simple powerful testing with Python"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -1453,6 +1521,22 @@ optional = true
 python-versions = "*"
 
 [[package]]
+name = "xmlschema"
+version = "1.6.0"
+description = "An XML Schema validator and decoder"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+elementpath = ">=2.2.1,<3.0.0"
+
+[package.extras]
+codegen = ["elementpath (>=2.2.1,<3.0.0)", "jinja2"]
+dev = ["tox", "coverage", "lxml", "elementpath (>=2.2.1,<3.0.0)", "memory-profiler", "sphinx", "sphinx-rtd-theme", "jinja2"]
+docs = ["elementpath (>=2.1.2,<3.0.0)", "sphinx", "sphinx-rtd-theme", "jinja2"]
+
+[[package]]
 name = "xmlsec"
 version = "1.3.9"
 description = "Python bindings for the XML Security Library"
@@ -1482,7 +1566,7 @@ test = ["tox", "Pygments", "pytest-cov", "pytest", "pytest-flask", "toml", "cove
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6.1,<4.0"
-content-hash = "23fcf9b59359588be5c0d9987d123b2224175561a3d8824ce7e998f6b8963b6e"
+content-hash = "9ed4870255784fb7d4869d4d4a33fc6c26dd13e54543a9e4d879c2444c192405"
 
 [metadata.files]
 alabaster = [
@@ -1721,6 +1805,10 @@ docutils = [
     {file = "docutils-0.16-py2.py3-none-any.whl", hash = "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af"},
     {file = "docutils-0.16.tar.gz", hash = "sha256:c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"},
 ]
+elementpath = [
+    {file = "elementpath-2.2.1-py3-none-any.whl", hash = "sha256:5a00899c22623e0a1c1cd0f05d27cc73b77287a6d645fb6c2ee725d87b29806f"},
+    {file = "elementpath-2.2.1.tar.gz", hash = "sha256:c7b996c5624926f329f4379fbcffd5787629e08b2f8d7159d23525e9243ba637"},
+]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
     {file = "filelock-3.0.12.tar.gz", hash = "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59"},
@@ -1759,6 +1847,10 @@ flask-htmlmin = [
 ]
 flask-ldap = [
     {file = "Flask-LDAP-0.1.6.tar.gz", hash = "sha256:77fabb54257c09dba881181dd4bd687dbad6cbdc8ddd39215b04fe8f9d69ae4e"},
+]
+flask-login = [
+    {file = "Flask-Login-0.5.0.tar.gz", hash = "sha256:6d33aef15b5bcead780acc339464aae8a6e28f13c90d8b1cf9de8b549d1c0b4b"},
+    {file = "Flask_Login-0.5.0-py2.py3-none-any.whl", hash = "sha256:7451b5001e17837ba58945aead261ba425fdf7b4f0448777e597ddab39f4fba0"},
 ]
 flask-migrate = [
     {file = "Flask-Migrate-2.7.0.tar.gz", hash = "sha256:ae2f05671588762dd83a21d8b18c51fe355e86783e24594995ff8d7380dffe38"},
@@ -1857,6 +1949,10 @@ importlib-resources = [
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
+]
+is-safe-url = [
+    {file = "is_safe_url-1.0-py3-none-any.whl", hash = "sha256:0d55e554974039deec7f9a395aab1e488abac811006d17f930607c43e6d3948e"},
+    {file = "is_safe_url-1.0.tar.gz", hash = "sha256:d776186f6877211daefde6a18da1df520de985a582b293e7aa24ea1df1cd5abb"},
 ]
 isodate = [
     {file = "isodate-0.6.0-py2.py3-none-any.whl", hash = "sha256:aa4d33c06640f5352aca96e4b81afd8ab3b47337cc12089822d6f322ac772c81"},
@@ -2173,17 +2269,25 @@ pyodbc = [
     {file = "pyodbc-4.0.30-cp39-cp39-win_amd64.whl", hash = "sha256:b149b0c2d11833bbd5355a8fe5a8b41fba5518dacdc613a0218fd77c2969a4f5"},
     {file = "pyodbc-4.0.30.tar.gz", hash = "sha256:852b5deeeb3366af8b4408efed993501708be45d221881bce60c9aac54be726a"},
 ]
+pyopenssl = [
+    {file = "pyOpenSSL-20.0.1-py2.py3-none-any.whl", hash = "sha256:818ae18e06922c066f777a33f1fca45786d85edfe71cd043de6379337a7f274b"},
+    {file = "pyOpenSSL-20.0.1.tar.gz", hash = "sha256:4c231c759543ba02560fcd2480c48dcec4dae34c9da7d3747c508227e0624b51"},
+]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
+]
+pysaml2 = [
+    {file = "pysaml2-6.5.1-py2.py3-none-any.whl", hash = "sha256:f79d7b2a416f1b187643a459b2abc24ae049b663e4c15f0adb93b2f3245ede3e"},
+    {file = "pysaml2-6.5.1.tar.gz", hash = "sha256:6dc798aae0e2d43425cd3c720da1aea1b99e52c7e7d87d3666c8854f35e862f6"},
 ]
 pyScss = []
 pysmb = [
     {file = "pysmb-1.2.6.zip", hash = "sha256:f16e5e796b9dcc1d17ee76f87d53dd471f205fa19b4045eeda5bc7558a57d579"},
 ]
 pytest = [
-    {file = "pytest-6.2.2-py3-none-any.whl", hash = "sha256:b574b57423e818210672e07ca1fa90aaf194a4f63f3ab909a2c67ebb22913839"},
-    {file = "pytest-6.2.2.tar.gz", hash = "sha256:9d1edf9e7d0b84d72ea3dbcdfd22b35fb543a5e8f2a60092dd578936bf63d7f9"},
+    {file = "pytest-6.2.3-py3-none-any.whl", hash = "sha256:6ad9c7bdf517a808242b998ac20063c41532a570d088d77eec1ee12b0b5574bc"},
+    {file = "pytest-6.2.3.tar.gz", hash = "sha256:671238a46e4df0f3498d1c3270e5deb9b32d25134c99b7d75370a68cfbe9b634"},
 ]
 pytest-cov = [
     {file = "pytest-cov-2.11.1.tar.gz", hash = "sha256:359952d9d39b9f822d9d29324483e7ba04a3a17dd7d05aa6beb7ea01e359e5f7"},
@@ -2429,6 +2533,10 @@ werkzeug = [
 ]
 wrapt = [
     {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},
+]
+xmlschema = [
+    {file = "xmlschema-1.6.0-py3-none-any.whl", hash = "sha256:bbc89616eeaaa827d8b4bc5dc0aa4b695d9980efd6cc5eb887711b88fdaf6241"},
+    {file = "xmlschema-1.6.0.tar.gz", hash = "sha256:e951efc5ab3f251973f92cba7a7026adb32a4cd844d3425133d23eb269de4f8f"},
 ]
 xmlsec = [
     {file = "xmlsec-1.3.9-cp27-cp27m-win32.whl", hash = "sha256:f59698cc0366395ca79b48b080674973541aae290670c57d88f05d939a4c00da"},

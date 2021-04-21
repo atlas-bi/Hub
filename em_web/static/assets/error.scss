@@ -1,5 +1,5 @@
-..
-    Atlas of Information Management
+/*
+    Extract Management 2.0
     Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
 
     This program is free software: you can redistribute it and/or modify
@@ -14,21 +14,12 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
-****
-Dash
-****
+@import "include/color";
+@import "include/font";
+@import "include/layout";
 
-EM2's dashboard is designed to give an admin a quick overview of the upcoming run schedule, listing of any failed jobs, and also recent run history.
-
-Tables
-######
-
-EM2 is full of tables. These tables load through Ajax and run sql queries on the server. This enables us to load tables for millions of rows with minimal delay.
-
-Tables can be sorted "globally" using the dropdown selector, or the 10 rows displayed on the screen can also be sorted by clicking on the headers.
-
-Table can by "auto reloaded", refreshed, copied, or downloaded.
-
-.. image:: ../images/em2-table.png
-  :alt: Demo Image
+body > div {
+  padding: 50px;
+}

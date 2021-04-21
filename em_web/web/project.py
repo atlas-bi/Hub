@@ -21,18 +21,18 @@ import datetime
 import requests
 from flask import Blueprint
 from flask import current_app as app
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from sqlalchemy import func, text
 
-from em_web import cache, db, ldap
+from em_web import cache, db
 from em_web.model import Project, Task, TaskFile, TaskLog, User
 
 project_bp = Blueprint("project_bp", __name__)
 
 
 @project_bp.route("/project")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project():
     """List all projects.
 
@@ -57,8 +57,7 @@ def project():
 
 @project_bp.route("/project/user", defaults={"user_id": None})
 @project_bp.route("/project/user/<user_id>")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_user(user_id):
     """List projects for a specific user.
 
@@ -67,7 +66,7 @@ def project_user(user_id):
 
     :returns: html page for projects. If no projects exist then redirect to new project page.
     """
-    my_user = User.query.filter_by(user_id=session.get("user_id"))
+    my_user = User.query.filter_by(id=current_user.id)
 
     if my_user.count():
         user_id = (
@@ -76,7 +75,7 @@ def project_user(user_id):
                 db.session.query()
                 .select_from(User)
                 .add_columns(User.id)
-                .filter(User.user_id == session.get("user_id"))
+                .filter(User.id == current_user.id)
                 .first()
             )[0]
         )
@@ -102,8 +101,7 @@ def project_user(user_id):
 
 
 @project_bp.route("/project/<project_id>", methods=["GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_get(project_id):
     """Project detail page.
 
@@ -121,8 +119,7 @@ def project_get(project_id):
 
 
 @project_bp.route("/project/<project_id>/edit", methods=["GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_edit_get(project_id):
     """Project editor page.
 
@@ -142,8 +139,7 @@ def project_edit_get(project_id):
 
 
 @project_bp.route("/project/<project_id>/edit", methods=["POST"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_edit_post(project_id):
     """Save project edits.
 
@@ -160,13 +156,13 @@ def project_edit_post(project_id):
     if not me:
         return redirect(url_for("project_bp.project_get", project_id=project_id))
 
-    if User.query.filter_by(user_id=session.get("user_id")).count():
-        updater = User.query.filter_by(user_id=session.get("user_id")).first()
-        updater.full_name = session.get("user_full_name") or "none"
+    if User.query.filter_by(id=current_user.id).count():
+        updater = User.query.filter_by(id=current_user.id).first()
+        updater.full_name = current_user.full_name or "none"
     else:
         updater = User(
-            user_id=session.get("user_id"),
-            full_name=(session.get("user_full_name") or "none"),
+            id=current_user.id,
+            full_name=(current_user.full_name or "none"),
         )
 
     form = request.form
@@ -287,7 +283,7 @@ def project_edit_post(project_id):
         log = TaskLog(
             task_id=task.id,
             status_id=7,
-            message=(session.get("user_full_name") or "none") + ": Task rescheduled.",
+            message=(current_user.full_name or "none") + ": Task rescheduled.",
         )
         db.session.add(log)
         db.session.commit()
@@ -297,8 +293,7 @@ def project_edit_post(project_id):
 
 
 @project_bp.route("/project/new", methods=["GET"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 @cache.cached(timeout=120)
 def project_new_form():
     """Create a new project page.
@@ -315,8 +310,7 @@ def project_new_form():
 
 
 @project_bp.route("/project/new", methods=["POST"])
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_new():
     """Save a new project.
 
@@ -334,13 +328,13 @@ def project_new():
     project_params = form.get("globalParams") or ""
 
     # create owner record
-    if User.query.filter_by(user_id=session.get("user_id")).count():
-        owner = User.query.filter_by(user_id=session.get("user_id")).first()
-        owner.full_name = session.get("user_full_name") or "none"
+    if User.query.filter_by(id=current_user.id).count():
+        owner = User.query.filter_by(id=current_user.id).first()
+        owner.full_name = current_user.full_name or "none"
     else:
         owner = User(
-            user_id=session.get("user_id"),
-            full_name=(session.get("user_full_name") or "none"),
+            id=current_user.id,
+            full_name=(current_user.full_name or "none"),
         )
 
     db.session.add(owner)
@@ -423,8 +417,7 @@ def project_new():
 
 
 @project_bp.route("/project/<project_id>/delete")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def project_delete(project_id):
     """Delete a project.
 
@@ -453,7 +446,7 @@ def project_delete(project_id):
             log = TaskLog(
                 task_id=task,
                 status_id=7,
-                message=(session.get("user_full_name") or "none") + ": Task deleted.",
+                message=(current_user.full_name or "none") + ": Task deleted.",
             )
             db.session.add(log)
             db.session.commit()
@@ -463,7 +456,7 @@ def project_delete(project_id):
                 task_id=task,
                 status_id=7,
                 error=1,
-                message=(session.get("user_full_name") or "none")
+                message=(current_user.full_name or "none")
                 + ": Failed to delete task.\n"
                 + str(e),
             )
@@ -495,8 +488,7 @@ def project_delete(project_id):
 
 
 @project_bp.route("/project/<project_id>/disable")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def disable_all_project_tasks(project_id):
     """Disable all tasks in a project.
 
@@ -517,7 +509,7 @@ def disable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=(session.get("user_full_name") or "none") + ": Task disabled.",
+                message=(current_user.full_name or "none") + ": Task disabled.",
             )
             db.session.add(log)
             db.session.commit()
@@ -527,7 +519,7 @@ def disable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=(session.get("user_full_name") or "none")
+                message=(current_user.full_name or "none")
                 + ": Failed to disable task.\n"
                 + str(e),
             )
@@ -538,8 +530,7 @@ def disable_all_project_tasks(project_id):
 
 
 @project_bp.route("/project/<project_id>/enable")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def enable_all_project_tasks(project_id):
     """Enable all tasks in a project.
 
@@ -557,7 +548,7 @@ def enable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=(session.get("user_full_name") or "none") + ": Task enabled.",
+                message=(current_user.full_name or "none") + ": Task enabled.",
             )
             db.session.add(log)
             db.session.commit()
@@ -567,7 +558,7 @@ def enable_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=(session.get("user_full_name") or "none")
+                message=(current_user.full_name or "none")
                 + ": Failed to enable task.\n"
                 + str(e),
             )
@@ -578,8 +569,7 @@ def enable_all_project_tasks(project_id):
 
 
 @project_bp.route("/project/<project_id>/run")
-# @ldap.login_required
-# @ldap.group_required(["Analytics"])
+@login_required
 def run_all_project_tasks(project_id):
     """Run all tasks in a project.
 
@@ -596,8 +586,7 @@ def run_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=(session.get("user_full_name") or "none")
-                + ": Task manually run.",
+                message=(current_user.full_name or "none") + ": Task manually run.",
             )
             db.session.add(log)
             db.session.commit()
@@ -606,7 +595,7 @@ def run_all_project_tasks(project_id):
             log = TaskLog(
                 task_id=task.id,
                 status_id=7,
-                message=(session.get("user_full_name") or "none")
+                message=(current_user.full_name or "none")
                 + ": Failed to run task.\n"
                 + str(e),
             )

@@ -83,8 +83,7 @@ web_assets.register("css_demo", css_demo)
 
 css_error = Bundle(
     "./assets/base.scss",
-    "./assets/head.scss",
-    "./assets/nav.scss",
+    "./assets/error.scss",
     filters="pyscss,rcssmin",
     output="css/error.min.css",
 )

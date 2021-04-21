@@ -15,20 +15,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-****
-Dash
-****
 
-EM2's dashboard is designed to give an admin a quick overview of the upcoming run schedule, listing of any failed jobs, and also recent run history.
+**************
+Setting Up EM2
+**************
 
-Tables
-######
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+   :hidden:
 
-EM2 is full of tables. These tables load through Ajax and run sql queries on the server. This enables us to load tables for millions of rows with minimal delay.
+   installation
+   auth
 
-Tables can be sorted "globally" using the dropdown selector, or the 10 rows displayed on the screen can also be sorted by clicking on the headers.
 
-Table can by "auto reloaded", refreshed, copied, or downloaded.
+Getting Started
+~~~~~~~~~~~~~~~
 
-.. image:: ../images/em2-table.png
-  :alt: Demo Image
+EM2's configuration files are in three places:
+
+* ``em_web/config.py``
+* ``em_scheduler/config.py``
+* ``em_runner/config.py``
+
+These files need to be updated with parameters specific to you.
+
+Tips
+~~~~
+
+If you use hostnames vs IP addresses in your config files be sure to update hosts file ``nano /etc/hosts`` to include the ip address of any internal domain hosts you will use. For example, LDAP server, GIT server, any databases you plan to query, etc.
