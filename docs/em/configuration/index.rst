@@ -40,6 +40,19 @@ EM2's configuration files are in three places:
 
 These files need to be updated with parameters specific to you.
 
+Creating Database
+~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    flask db init
+    flask db migrate
+    flask db upgrade
+    flask cli seed
+
+    # add demo data in needed
+    # flask cli seed_demo
+
 Tips
 ~~~~
 

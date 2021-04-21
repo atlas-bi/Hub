@@ -5,17 +5,17 @@ jobs:
   include:
     - python: 3.7
       env: TOXV=py37
+    - python: 3.8
+      env: TOXV=py38
+    - python: 3.9
+      env: TOXV=py39
 services:
   - redis
 before_install:
-  - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl sqlite3
-  - pip install tox-travis poetry codecov flask
+  - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+  - pip install tox-travis poetry codecov
   - python --version
 script:
-  - poetry install
-  - export FLASK_APP=em_web; export FLASK_ENV=test; flask --help
-  - export FLASK_APP=em_web; export FLASK_ENV=test; poetry run flask run
-  - export FLASK_APP=em_web; export FLASK_ENV=test; poetry run flask cli create_db
-  
+  - tox -e clean,$TOXV,cov
 after_success:
   - codecov

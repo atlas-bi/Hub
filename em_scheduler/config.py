@@ -95,8 +95,7 @@ class TestConfig(Config):
 
     # pylint: disable=too-few-public-methods
 
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web_test"
-    )
+    SQLALCHEMY_DATABASE_URI = "sqlite:///../test.sqlite"
+    SQLALCHEMY_ENGINE_OPTIONS: dict = {}
 
     MIGRATIONS = "migrations_test"

@@ -197,7 +197,7 @@ class DevConfig(Config):
     MIGRATIONS = "migrations_dev"
 
 
-class DevTestConfig(DevConfig):
+class TestConfig(DevConfig):
     """Configuration overrides for dev testing.
 
     To Use:
