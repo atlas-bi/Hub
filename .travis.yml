@@ -12,6 +12,7 @@ before_install:
   - pip install tox-travis poetry codecov flask
   - python --version
 script:
+  - poetry install
   - export FLASK_APP=em_web; export FLASK_ENV=test; flask --help
   - export FLASK_APP=em_web; export FLASK_ENV=test; poetry run flask run
   - export FLASK_APP=em_web; export FLASK_ENV=test; poetry run flask cli create_db
