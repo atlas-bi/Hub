@@ -4,17 +4,20 @@ dist: bionic
 jobs:
   include:
     - python: 3.7
-      env: TOXV=py37
-    - env: FLASK_APP=em_web
-    - env: FLASK_ENV=test
+      env: 
+       - TOXV=py37
+       - FLASK_APP=em_web
+       - FLASK_ENV=test
     - python: 3.8
-      env: TOXV=py38
-    - env: FLASK_APP=em_web
-    - env: FLASK_ENV=test
+      env: 
+       - TOXV=py38
+       - FLASK_APP=em_web
+       - FLASK_ENV=test
     - python: 3.9
-      env: TOXV=py39
-    - env: FLASK_APP=em_web
-    - env: FLASK_ENV=test
+      env: 
+       - TOXV=py39
+       - FLASK_APP=em_web
+       - FLASK_ENV=test
 services:
   - redis
 before_install:
