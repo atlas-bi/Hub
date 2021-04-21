@@ -146,7 +146,6 @@ py39:
     - python --version
     - redis-server --daemonize yes
     - cd /builds/extract-management/extract-management-site/
-    - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
   script:
     - echo $FLASK_ENV
     - echo $FLASK_DEBUG
@@ -170,7 +169,6 @@ py38:
     - python --version
     - redis-server --daemonize yes
     - cd /builds/extract-management/extract-management-site/
-    - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
   script:
     - echo $FLASK_ENV
     - echo $FLASK_DEBUG
@@ -189,7 +187,6 @@ py37:
     - python --version
     - redis-server --daemonize yes
     - cd /builds/extract-management/extract-management-site/
-    - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
   script:
     - echo $FLASK_ENV
     - echo $FLASK_DEBUG
@@ -210,7 +207,6 @@ pages:
     - python --version
     - redis-server --daemonize yes
     - cd /builds/extract-management/extract-management-site/
-    - su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
   script:
     - tox -e docs
     - mv docs/_build/ public/
@@ -281,6 +277,6 @@ github:
     - git status
     - git branch -m master main
     - git push -u origin main
-  artifacts:
-    paths:
-    - $CI_PROJECT_DIR
+  needs:
+    - job: py_secret_detection
+      artifacts: false

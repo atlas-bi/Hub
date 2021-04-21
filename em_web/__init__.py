@@ -19,9 +19,6 @@
 import sys
 from pathlib import Path
 
-from flask import Flask, render_template
-from flask.cli import with_appcontext
-
 from em_web.extensions import (
     cache,
     compress,
@@ -35,6 +32,8 @@ from em_web.extensions import (
     toolbar,
     web_assets,
 )
+
+from flask import Flask, render_template  # isort:skip
 
 sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
 from error_print import full_stack  # isort:skip
@@ -86,6 +85,7 @@ def create_app():
     with app.app_context():
 
         # pylint: disable=W0611
+        from em_web import cli
         from em_web.web import assets  # noqa: F401
         from em_web.web import (
             admin,
@@ -110,6 +110,7 @@ def create_app():
         app.register_blueprint(table.table_bp)
         app.register_blueprint(executors.executors_bp)
         app.register_blueprint(filters.filters_bp)
+        app.register_blueprint(cli.cli_bp)
 
         if app.config["DEBUG"]:
             toolbar.init_app(app)
@@ -120,59 +121,6 @@ def create_app():
 
 
 app = create_app()
-
-
-@app.cli.command("create_db")
-@with_appcontext
-def create_db():
-    """Add command to create the test database."""
-    if app.config["ENV"] == "test":
-
-        # pylint: disable=W0611
-        from em_web.model import (  # noqa: F401
-            Connection,
-            ConnectionDatabase,
-            ConnectionDatabaseType,
-            ConnectionFtp,
-            ConnectionGpg,
-            ConnectionSftp,
-            ConnectionSmb,
-            ConnectionSsh,
-            Login,
-            LoginType,
-            Project,
-            QuoteLevel,
-            Task,
-            TaskDestinationFileType,
-            TaskFile,
-            TaskLog,
-            TaskProcessingType,
-            TaskSourceQueryType,
-            TaskSourceType,
-            TaskStatus,
-            User,
-        )
-
-        db.create_all()
-        db.session.commit()
-
-
-@app.cli.command("seed")
-@with_appcontext
-def db_seed():
-    """Add command to seed the database."""
-    from .seed import seed
-
-    seed()
-
-
-@app.cli.command("seed_demo")
-@with_appcontext
-def db_seed_demo():
-    """Add command to seed the database for a demo."""
-    from .seed import seed_demo
-
-    seed_demo()
 
 
 @app.errorhandler(404)

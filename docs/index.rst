@@ -27,5 +27,9 @@ Extract Management 2.0 Docs
 
    em/development/index
 
+.. toctree::
+   :hidden:
+
+   em/updates/index
 
 .. include:: ../readme.rst
