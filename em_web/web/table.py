@@ -175,8 +175,8 @@ def project_list(my_type="all"):
                 "Next Run": datetime.datetime.strftime(
                     proj["Next Run"], " %m/%-d/%y %H:%M"
                 )
-                if proj["Next Run"]
-                else "",
+                if proj["Next Run"] and isinstance(proj["Next Run"], datetime.datetime)
+                else (proj["Next Run"] if proj["Next Run"] else "None"),
                 "Tasks": "<strong>%s</strong> %s" % (proj["Tasks"] or 0, task_message),
                 "Enabled": "<a class='em-link' href=/project/"
                 + str(proj["Project Id"])
@@ -323,7 +323,8 @@ def table_user_auth():
                     "%a, %b %-d, %Y %H:%M:%S.%f",
                 )
                 if log["Login Date"]
-                else "None",
+                and isinstance(log["Login Date"], datetime.datetime)
+                else (log["Login Date"] if log["Login Date"] else "None"),
                 "Action": log["Login Type"] if log["Login Type"] else "None",
                 "class": "error" if log["Login Type Id"] == 3 else "",
             }
@@ -498,8 +499,8 @@ def connection_task(connection_id):
                 "Last Run": datetime.datetime.strftime(
                     task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
                 )
-                if task["Last Run"]
-                else "Never",
+                if task["Last Run"] and isinstance(task["Last Run"], datetime.datetime)
+                else (task["Last Run"] if task["Last Run"] else "Never"),
                 "Run Now": "<a class='em-link' href='/task/"
                 + str(task["Task Id"])
                 + "/run'>Run Now</a>",
@@ -507,8 +508,8 @@ def connection_task(connection_id):
                 "Next Run": datetime.datetime.strftime(
                     task["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
                 )
-                if task["Next Run"]
-                else "N/A",
+                if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+                else (task["Next Run"] if task["Next Run"] else "None"),
                 "class": "error"
                 if task["Status Id"] == 2
                 or (not task["Next Run"] and task["Enabled"] == 1)
@@ -695,8 +696,8 @@ def dash_tasks(task_type):
                 "Next Run": datetime.datetime.strftime(
                     task["Next Run"], "%m/%-d/%y %H:%M"
                 )
-                if task["Next Run"]
-                else "",
+                if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+                else (task["Next Run"] if task["Next Run"] else "None"),
                 "Enabled": (
                     (
                         "<a class='em-link' href='/task/"
@@ -823,8 +824,8 @@ def task_list(my_type):
             + (" - " + task["Project Name"] if task["Project Name"] else ""),
             "Last Run": relative_to_now(task["Last Run"]) if task["Last Run"] else "",
             "Next Run": datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
-            if task["Next Run"]
-            else "",
+            if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+            else (task["Next Run"] if task["Next Run"] else ""),
             "Enabled": "<a class='em-link' href=/task/"
             + str(task["Task Id"])
             + "/disable>Disable</a>"
@@ -929,8 +930,8 @@ def project_task_all(project_id):
                 "Next Run": datetime.datetime.strftime(
                     task["Next Run"], "%m/%-d/%y %H:%M"
                 )
-                if task["Next Run"]
-                else "",
+                if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+                else (task["Next Run"] if task["Next Run"] else ""),
             }
         )
 
@@ -1392,7 +1393,8 @@ def get_task_files(task_id):
                             "%a, %b %-d, %Y %H:%M:%S.%f",
                         )
                         if my_file["Created"]
-                        else "N/A"
+                        and isinstance(my_file["Created"], datetime.datetime)
+                        else (my_file["Created"] if my_file["Created"] else "N/A")
                     ),
                     "File Size": my_file["File Size"],
                     "md5 Hash": my_file["md5 Hash"],
