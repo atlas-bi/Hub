@@ -5,17 +5,22 @@ jobs:
   include:
     - python: 3.7
       env: TOXV=py37
+    - env: FLASK_APP=em_web
+    - env: FLASK_ENV=test
     - python: 3.8
       env: TOXV=py38
+    - env: FLASK_APP=em_web
+    - env: FLASK_ENV=test
     - python: 3.9
       env: TOXV=py39
+    - env: FLASK_APP=em_web
+    - env: FLASK_ENV=test
 services:
   - redis
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
   - pip install tox-travis poetry codecov
-  - python --version
 script:
- - export FLASK_APP=em_web; export FLASK_ENV=test;tox -e clean,$TOXV,cov
+ - tox -e clean,$TOXV,cov
 after_success:
   - codecov
