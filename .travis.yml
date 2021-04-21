@@ -13,6 +13,6 @@ before_install:
   - python --version
 script:
   - export FLASK_APP=em_web; export FLASK_ENV=test; flask --help
-  - export FLASK_APP=em_web; export FLASK_ENV=test; flask cli create_db
+  - export FLASK_APP=em_web; export FLASK_ENV=test; poetry run flask cli create_db
 after_success:
   - codecov
