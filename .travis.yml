@@ -16,6 +16,6 @@ before_install:
   - pip install tox-travis poetry codecov flask
   - python --version
 script:
- - tox -e clean,$TOXV,cov
+ - poetry run tox -e clean,$TOXV,cov
 after_success:
   - codecov
