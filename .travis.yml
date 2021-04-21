@@ -13,9 +13,9 @@ services:
   - redis
 before_install:
   - sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
-  - pip install tox-travis poetry tox codecov
+  - pip install tox-travis poetry codecov
   - python --version
 script:
- - export FLASK_APP = em_web; export FLASK_ENV=test;tox -e clean,$TOXV,cov
+ - export FLASK_APP=em_web; export FLASK_ENV=test;tox -e clean,$TOXV,cov
 after_success:
   - codecov
