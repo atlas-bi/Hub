@@ -107,3 +107,8 @@ Atlas was created by the Riverside Healthcare Analytics team -
 .. |climage| image:: https://api.codeclimate.com/v1/badges/7dffbd981397d1152b59/maintainability
    :target: https://codeclimate.com/github/Riverside-Healthcare/extract_management/maintainability
    :alt: Maintainability
+
+
+.. image:: https://api.codacy.com/project/badge/Grade/92e5856c0f014507bd1bf3da5172bc77
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/gh/Riverside-Healthcare/extract_management?utm_source=github.com&utm_medium=referral&utm_content=Riverside-Healthcare/extract_management&utm_campaign=Badge_Grade_Settings
