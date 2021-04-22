@@ -19,13 +19,15 @@
 import datetime
 import html
 import json
+import logging
 import os
 import zipfile
 
 import requests
+import urllib3
 from flask import Blueprint, Response
 from flask import current_app as app
-from flask import jsonify, redirect, render_template, request, send_file, url_for
+from flask import flash, jsonify, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required
 from RelativeToNow import relative_to_now
 from sqlalchemy import and_, func, text
@@ -69,23 +71,28 @@ def task_endretry(task_id):
     clear any scheduled jobs that do not belong to
     the primary schedule.
     """
-    redis_client.delete("runner_" + str(task_id) + "_attempt")
-    task = Task.query.filter_by(id=task_id).first()
+    try:
+        redis_client.delete("runner_" + str(task_id) + "_attempt")
+        task = Task.query.filter_by(id=task_id).first()
 
-    if task.enabled == 1:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task_id))
-    else:
-        task.next_run = None
+        if task.enabled == 1:
+            requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task_id))
+        else:
+            task.next_run = None
+            db.session.commit()
+            requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task_id))
+
+        log = TaskLog(
+            status_id=7,
+            task_id=task_id,
+            message="%s: Task retry canceled." % (current_user.full_name or "none"),
+        )
+        db.session.add(log)
         db.session.commit()
-        requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task_id))
 
-    log = TaskLog(
-        status_id=7,
-        task_id=task_id,
-        message="%s: Task retry canceled." % (current_user.full_name or "none"),
-    )
-    db.session.add(log)
-    db.session.commit()
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
+        logging.error({"empty_msg": "Error - EM_Scheduler offline."})
+        flash("Error - EM_Scheduler offline.")
 
     return redirect(url_for("task_bp.get_task", task_id=task_id))
 
@@ -508,6 +515,9 @@ def task_new(project_id):
             else None
         )
 
+    else:
+        tme.source_type_id = None
+
         # query options
     if "sourceQueryType" in form:
         tme.source_query_type_id = form["sourceQueryType"]
@@ -589,9 +599,14 @@ def task_new(project_id):
     tme.destination_quote_level_id = form["quoteLevel"] if "quoteLevel" in form else 3
 
     tme.destination_file_type_id = (
-        form["fileType"] if str(form["fileType"]) != "none" else None
+        form["fileType"]
+        if "fileType" in form and str(form["fileType"]) != "none"
+        else None
     )
-    tme.destination_file_name = form["destinationFileName"]
+
+    tme.destination_file_name = (
+        form["destinationFileName"] if "destinationFileName" in form else form["name"]
+    )
 
     tme.destination_create_zip = (
         1
@@ -608,7 +623,7 @@ def task_new(project_id):
         else None
     )
 
-    if form["fileType"] == "2" or form["fileType"] == "4":
+    if "fileType" in form and (form["fileType"] == "2" or form["fileType"] == "4"):
         tme.destination_file_delimiter = (
             form["fileDelimiter"] if "fileDelimiter" in form else None
         )
@@ -622,7 +637,8 @@ def task_new(project_id):
 
     tme.destination_ignore_delimiter = (
         1
-        if (form["fileType"] == "2" or form["fileType"] == "4")
+        if "fileType" in form
+        and (form["fileType"] == "2" or form["fileType"] == "4")
         and "task_ignore_file_delimiter" in form
         and str(form["task_ignore_file_delimiter"]) == "1"
         else None
@@ -1288,6 +1304,9 @@ def task_edit_post(task_id):
             else None
         )
 
+    else:
+        tme.source_type_id = None
+
         # query options
     if "sourceQueryType" in form:
         tme.source_query_type_id = form["sourceQueryType"]
@@ -1369,9 +1388,13 @@ def task_edit_post(task_id):
     tme.destination_quote_level_id = form["quoteLevel"] if "quoteLevel" in form else 3
 
     tme.destination_file_type_id = (
-        form["fileType"] if str(form["fileType"]) != "none" else None
+        form["fileType"]
+        if "fileType" in form and str(form["fileType"]) != "none"
+        else None
     )
-    tme.destination_file_name = form["destinationFileName"]
+    tme.destination_file_name = (
+        form["destinationFileName"] if "destinationFileName" in form else form["name"]
+    )
 
     tme.destination_create_zip = (
         1
@@ -1388,7 +1411,7 @@ def task_edit_post(task_id):
         else None
     )
 
-    if form["fileType"] == "2" or form["fileType"] == "4":
+    if "fileType" in form and (form["fileType"] == "2" or form["fileType"] == "4"):
         tme.destination_file_delimiter = (
             form["fileDelimiter"] if "fileDelimiter" in form else None
         )
@@ -1401,7 +1424,8 @@ def task_edit_post(task_id):
 
     tme.destination_ignore_delimiter = (
         1
-        if (form["fileType"] == "2" or form["fileType"] == "4")
+        if "fileType" in form
+        and (form["fileType"] == "2" or form["fileType"] == "4")
         and "task_ignore_file_delimiter" in form
         and str(form["task_ignore_file_delimiter"]) == "1"
         else None
@@ -2378,6 +2402,7 @@ def task_database_source():
     :returns: html page.
     """
     org = request.args.get("org", default=1, type=int)
+
     dest = (
         ConnectionDatabase.query.filter_by(connection_id=org)
         .order_by(ConnectionDatabase.name)
@@ -2404,6 +2429,7 @@ def task_reset(task_id):
     :returns: redirects to task details.
     """
     task = Task.query.filter_by(id=task_id).first()
+
     task.status_id = 4
     db.session.commit()
 

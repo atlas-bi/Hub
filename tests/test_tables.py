@@ -65,3 +65,14 @@ def test_table_all_tasks_log(em_web_authed):
 
 def test_table_tasks_error_log(em_web_authed):
     assert em_web_authed.get("/table/tasks/errorLog").status_code == 200
+
+
+def test_table_tasks_files(em_web_authed):
+    from em_web.model import Task
+
+    task = Task.query.first()
+    if task:
+        assert (
+            em_web_authed.get("/table/task/" + str(task.id) + "/files").status_code
+            == 200
+        )

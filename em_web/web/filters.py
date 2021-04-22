@@ -71,6 +71,9 @@ def to_time(my_num):
     if my_num is None:
         return "*"
 
+    if not isinstance(my_num, int):
+        return my_num
+
     if my_num > 9:
         return my_num
 
@@ -85,6 +88,9 @@ def num_st(my_num):
 
     :returns: number with pronunciation text.
     """
+    if not isinstance(my_num, int):
+        return my_num
+
     my_dict = {
         0: "th",
         1: "st",
@@ -98,6 +104,9 @@ def num_st(my_num):
         9: "th",
     }
 
+    # special case for 11
+    if my_num == 11:
+        return "11th"
     return str(my_num) + my_dict.get(my_num % 10)
 
 
@@ -174,7 +183,12 @@ def num_str(num):
 
     :returns: string representation of the number
     """
-    return num2words(num, to="ordinal")
+    try:
+        return num2words(num, to="ordinal")
+
+    # pylint: disable=W0612,W0703
+    except BaseException as e:  # noqa: F841
+        return num
 
 
 @filters_bp.app_template_filter("year")
@@ -197,10 +211,13 @@ def datetime_format(my_date):
 
     :returns: formatted date string
     """
-    return datetime.datetime.strftime(
-        my_date,
-        "%a, %b %-d, %Y %H:%M:%S.%f",
-    )
+    if isinstance(my_date, datetime.datetime):
+        return datetime.datetime.strftime(
+            my_date,
+            "%a, %b %-d, %Y %H:%M:%S.%f",
+        )
+
+    return my_date
 
 
 @filters_bp.app_template_filter("decrypt")

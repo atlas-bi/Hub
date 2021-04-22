@@ -17,6 +17,7 @@
 
 
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -138,7 +139,7 @@ def active_schedule():
 
     # pylint: disable=broad-except
     except BaseException as e:
-        print(e)  # noqa: T001
+        logging.error(str(e))
         return "", 200
 
 
@@ -150,55 +151,61 @@ def dash_error_gauge():
     :url: /dash/errorGauge
     :returns: html webpage.
     """
-    success = db.session.execute(
-        """
-        select
-            case when success > 0 and error > 0
-                     then 1.00 - round(cast(error as decimal) / cast(success as decimal),2)
-                 when error > 0 or success = 0
-                     then 0
-             else 1 end accuracy
-        from
-            (
-                select
-                    count(1) error
-                from (
+    try:
+        success = db.session.execute(
+            """
+            select
+                case when success > 0 and error > 0
+                         then 1.00 - round(cast(error as decimal) / cast(success as decimal),2)
+                     when error > 0 or success = 0
+                         then 0
+                 else 1 end accuracy
+            from
+                (
                     select
-                        1
+                        count(1) error
+                    from (
+                        select
+                            1
+                        from
+                            task_log t
+                        where
+                            status_date > now() - interval '72 hour'
+                        and task_id is not null
+                        and job_id is not null
+                        and error=1
+                        group by task_id
+                    ) as t
+                ) as e
+                , (
+                    select
+                        count(1) success
                     from
                         task_log t
                     where
                         status_date > now() - interval '72 hour'
                     and task_id is not null
                     and job_id is not null
-                    and error=1
-                    group by task_id
-                ) as t
-            ) as e
-            , (
-                select
-                    count(1) success
-                from
-                    task_log t
-                where
-                    status_date > now() - interval '72 hour'
-                and task_id is not null
-                and job_id is not null
-                and message = 'Completed task.'
-                and status_id = 8 -- runner
-              ) as s
-        """
-    )
+                    and message = 'Completed task.'
+                    and status_id = 8 -- runner
+                  ) as s
+            """
+        )
 
-    names = [row[0] for row in success]
+        names = [row[0] for row in success]
 
-    return render_template(
-        "pages/dashboard/gauge.html.j2",
-        value_value=names[0],
-        value=str(round((names[0] * 100), 0)) + "%",
-        value_title="Successful Runs",
-        value_subtitle="(last 72 hrs)",
-    )
+        return render_template(
+            "pages/dashboard/gauge.html.j2",
+            value_value=names[0],
+            value=str(round((names[0] * 100), 0)) + "%",
+            value_title="Successful Runs",
+            value_subtitle="(last 72 hrs)",
+        )
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        logging.error(str(e))
+        return ""
 
 
 @dashboard_bp.route("/dash/runGauge")
@@ -209,30 +216,36 @@ def dash_run_gauge():
     :url: /dash/runGauge
     :returns: html webpage.
     """
-    runs = db.session.execute(
-        """
-        select
-            count(1)
-        from
-            task_log t
-        where
-            status_date > now() - interval '72 hour'
-        and task_id is not null
-        and job_id is not null
-        and message = 'Completed task.'
-        and status_id = 8 -- runner
-        """
-    )
+    try:
+        runs = db.session.execute(
+            """
+            select
+                count(1)
+            from
+                task_log t
+            where
+                status_date > now() - interval '72 hour'
+            and task_id is not null
+            and job_id is not null
+            and message = 'Completed task.'
+            and status_id = 8 -- runner
+            """
+        )
 
-    names = [row[0] for row in runs]
+        names = [row[0] for row in runs]
 
-    return render_template(
-        "pages/dashboard/gauge.html.j2",
-        value_value=1,
-        value=str(names[0]),
-        value_title="Total Runs",
-        value_subtitle="(last 72 hrs)",
-    )
+        return render_template(
+            "pages/dashboard/gauge.html.j2",
+            value_value=1,
+            value=str(names[0]),
+            value_title="Total Runs",
+            value_subtitle="(last 72 hrs)",
+        )
+
+    # pylint: disable=W0703
+    except BaseException as e:
+        logging.error(str(e))
+        return ""
 
 
 @dashboard_bp.route("/dash/orphans/delete")

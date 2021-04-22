@@ -18,7 +18,7 @@
 
 from flask import Blueprint, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request
 from flask_login import current_user, login_required, login_user, logout_user
 from is_safe_url import is_safe_url
 
@@ -51,7 +51,12 @@ def login():
     :returns: webpage
     """
     if current_user.get_id():
-        return redirect(url_for("dashboard_bp.dash"))
+        next_url = request.args.get("next", default="/")
+
+        if not is_safe_url(next_url, app.config["ALLOWED_HOSTS"]):
+            return abort(400)
+
+        return redirect(next_url)
 
     if request.method == "POST":
         user = request.form.get("user")
@@ -124,7 +129,11 @@ def login():
                 (User.account_name == user.lower()) | (User.email == user.lower())
             ).first()
 
-            login_user(user, remember=True)
+            if user:
+                login_user(user, remember=True)
+            else:
+                flash("Invalid login, please try again!")
+
             next_url = request.args.get("next", default="/")
 
             if not is_safe_url(next_url, app.config["ALLOWED_HOSTS"]):

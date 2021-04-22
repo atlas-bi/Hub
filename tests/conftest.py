@@ -12,6 +12,11 @@ from em_web import create_app as em_web_create_app
 
 
 @pytest.fixture
+def em_web_cli_app():
+    yield em_web_create_app()
+
+
+@pytest.fixture
 def em_web_app():
     app = em_web_create_app()
     with app.test_client() as client:

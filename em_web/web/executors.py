@@ -17,8 +17,10 @@
 
 
 import json
+import logging
 
 import requests
+import urllib3
 from flask import Blueprint
 from flask import current_app as app
 from flask import jsonify
@@ -165,83 +167,121 @@ def disable_task(task_id):
 # pylint: disable=W0613
 def rescheduled_scheduled_tasks(*args):
     """Rescheduling scheduled tasks."""
-    ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
+    try:
+        ids = json.loads(
+            requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text
+        )
 
-    tasks = Task.query.filter(Task.id.in_(ids)).filter_by(enabled=1).all()
+        tasks = Task.query.filter(Task.id.in_(ids)).filter_by(enabled=1).all()
 
-    for task in tasks:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task.id))
+        for task in tasks:
+            requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task.id))
+
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
+        logging.error({"empty_msg": "Error - EM_Scheduler offline."})
 
 
 # pylint: disable=W0613
 def run_scheduled_tasks(*args):
     """Running all scheduled tasks."""  # noqa: D401
-    ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
+    try:
+        ids = json.loads(
+            requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text
+        )
 
-    tasks = Task.query.filter(Task.id.in_(ids)).filter_by(enabled=1).all()
+        tasks = Task.query.filter(Task.id.in_(ids)).filter_by(enabled=1).all()
 
-    for task in tasks:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task.id))
+        for task in tasks:
+            requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task.id))
+
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
+        logging.error({"empty_msg": "Error - EM_Scheduler offline."})
 
 
 # pylint: disable=W0613
 def disabled_scheduled_tasks(*args):
     """Disabling scheduled tasks."""
-    ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
+    try:
+        ids = json.loads(
+            requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text
+        )
 
-    tasks = Task.query.filter(Task.id.in_(ids)).filter_by(enabled=1).all()
+        tasks = Task.query.filter(Task.id.in_(ids)).filter_by(enabled=1).all()
 
-    for task in tasks:
-        task.enabled = 0
-        db.session.commit()
+        for task in tasks:
+            task.enabled = 0
+            db.session.commit()
 
-        requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task.id))
+            requests.get(app.config["SCHEUDULER_HOST"] + "/delete/" + str(task.id))
+
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
+        logging.error({"empty_msg": "Error - EM_Scheduler offline."})
 
 
 # pylint: disable=W0613
 def schedule_errored_tasks(*args):
     """Scheduling all errored tasks."""
-    ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
+    try:
+        ids = json.loads(
+            requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text
+        )
 
-    tasks = (
-        db.session.query()
-        .select_from(Task)
-        .filter(or_(Task.status_id == 2, and_(Task.id.notin_(ids), Task.enabled == 1)))
-        .add_columns(text("task.id"))
-        .all()
-    )
+        tasks = (
+            db.session.query()
+            .select_from(Task)
+            .filter(
+                or_(Task.status_id == 2, and_(Task.id.notin_(ids), Task.enabled == 1))
+            )
+            .add_columns(text("task.id"))
+            .all()
+        )
 
-    for task in tasks:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task[0]))
+        for task in tasks:
+            requests.get(app.config["SCHEUDULER_HOST"] + "/add/" + str(task[0]))
+
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
+        logging.error({"empty_msg": "Error - EM_Scheduler offline."})
 
 
 # pylint: disable=W0613
 def run_errored_tasks(*args):
     """Running all errored tasks."""  # noqa: D401
-    ids = json.loads(requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text)
+    try:
+        ids = json.loads(
+            requests.get(app.config["SCHEUDULER_HOST"] + "/scheduled").text
+        )
 
-    tasks = (
-        db.session.query()
-        .select_from(Task)
-        .filter(or_(Task.status_id == 2, and_(Task.id.notin_(ids), Task.enabled == 1)))
-        .add_columns(text("task.id"))
-        .all()
-    )
+        tasks = (
+            db.session.query()
+            .select_from(Task)
+            .filter(
+                or_(Task.status_id == 2, and_(Task.id.notin_(ids), Task.enabled == 1))
+            )
+            .add_columns(text("task.id"))
+            .all()
+        )
 
-    for task in tasks:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task[0]))
+        for task in tasks:
+            requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task[0]))
+
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
+        logging.error({"empty_msg": "Error - EM_Scheduler offline."})
 
 
 # pylint: disable=W0613
 def run_active_tasks(*args):
     """Rerun all running tasks."""
-    tasks = (
-        db.session.query()
-        .select_from(Task)
-        .filter(or_(Task.status_id == 1, Task.enabled == 1))  # 1 = running
-        .add_columns(text("task.id"))
-        .all()
-    )
+    try:
+        tasks = (
+            db.session.query()
+            .select_from(Task)
+            .filter(or_(Task.status_id == 1, Task.enabled == 1))  # 1 = running
+            .add_columns(text("task.id"))
+            .all()
+        )
 
-    for task in tasks:
-        requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task[0]))
+        for task in tasks:
+            requests.get(app.config["SCHEUDULER_HOST"] + "/run/" + str(task[0]))
+
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
+        logging.error({"empty_msg": "Error - EM_Scheduler offline."})

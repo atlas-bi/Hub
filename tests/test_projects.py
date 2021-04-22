@@ -73,6 +73,56 @@ def test_create_project(em_web_authed):
         == 200
     )
 
+    # edit the project
+
+    assert (
+        em_web_authed.get(
+            "/project/" + str(project.id) + "/edit", follow_redirects=True
+        ).status_code
+        == 200
+    )
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    response = em_web_authed.post(
+        "/project/" + str(project.id) + "/edit",
+        data={
+            "project_name": "test project",
+            "project_desc": "my project description",
+            "project_cron": "1",
+            "project_cron_year": "1",
+            "project_cron_mnth": "1",
+            "project_cron_week": "1",
+            "project_cron_day": "1",
+            "project_cron_wday": "1",
+            "project_cron_hour": "1",
+            "project_cron_min": "1",
+            "project_cron_sec": "1",
+            "project_cron_sdate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_cron_edate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_intv": "1",
+            "project_intv_intv": "w",
+            "project_intv_value": "1",
+            "project_intv_sdate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_intv_edate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_ooff": "1",
+            "project_ooff_date": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_globalParams": "@this-is-cool",
+        },
+        follow_redirects=True,
+        headers=headers,
+    )
+
+    assert response.status_code == 200
+
+    # run the project
+    assert (
+        em_web_authed.get(
+            "/project/" + str(project.id) + "/run", follow_redirects=True
+        ).status_code
+        == 200
+    )
+
     # delete the project
     assert (
         em_web_authed.get(
@@ -82,3 +132,38 @@ def test_create_project(em_web_authed):
     )
 
     assert Project.query.filter(id == project_id).count() < 1
+
+
+def test_create_project_ui(em_web_authed):
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    response = em_web_authed.post(
+        "/project/new",
+        headers=headers,
+        data={
+            "project_name": "test project",
+            "project_desc": "my project description",
+            "project_cron": "1",
+            "project_cron_year": "1",
+            "project_cron_mnth": "1",
+            "project_cron_week": "1",
+            "project_cron_day": "1",
+            "project_cron_wday": "1",
+            "project_cron_hour": "1",
+            "project_cron_min": "1",
+            "project_cron_sec": "1",
+            "project_cron_sdate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_cron_edate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_intv": "1",
+            "project_intv_intv": "w",
+            "project_intv_value": "1",
+            "project_intv_sdate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_intv_edate": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_ooff": "1",
+            "project_ooff_date": datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M"),
+            "project_globalParams": "@this-is-cool",
+        },
+        follow_redirects=True,
+    )
+
+    assert response.status_code == 200

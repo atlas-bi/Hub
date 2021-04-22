@@ -82,7 +82,7 @@
                     <span class="em-gridValue">{{ t.source_type.name }}</span>
 
                     <!-- source database -->
-                    {% if t.source_type_id == 1 and t.source_database_id %}
+                    {% if t.source_type_id == 1 and t.source_database_conn %}
                         </div>
                             <div class="em-code">
                                 <a class="em-link" title="open connection" href="/connection/{{ t.source_database_conn.connection.id }}">{{ t.source_database_conn.connection.name }} - {{ t.source_database_conn.name }}</a>
@@ -94,7 +94,7 @@
                     {% endif %}
 
                     <!-- source SFTP -->
-                    {% if t.source_type_id == 3 and t.source_sftp_id %}
+                    {% if t.source_type_id == 3 and t.source_sftp_conn %}
                         <span class="em-gridName">Filename</span>
                         <span class="em-gridValue">{{ t.source_sftp_file }}</span>
                         <span class="em-gridName">Delimiter</span>
@@ -117,7 +117,7 @@
                     {% endif %}
 
                     <!-- source FTP -->
-                    {% if t.source_type_id == 4 and t.source_ftp_id %}
+                    {% if t.source_type_id == 4 and t.source_ftp_conn %}
 
                             <span class="em-gridName">Filename</span>
                             <span class="em-gridValue">{{ t.source_ftp_file }}</span>
@@ -143,7 +143,7 @@
                     {% endif %}
 
                     <!-- source SMB -->
-                    {% if t.source_type_id == 2 and t.source_smb_id != None %}
+                    {% if t.source_type_id == 2 and t.source_smb_conn != None %}
 
                             <span class="em-gridName">Filename</span>
                             <span class="em-gridValue">{{ t.source_smb_file }}</span>
@@ -522,7 +522,7 @@
                         {% endif %}
 
                         <!-- ftp output -->
-                        {% if t.destination_ftp_id and t.destination_ftp %}
+                        {% if t.destination_ftp_id and t.destination_ftp_conn %}
                             </div>
 
                             <h3>FTP</h3>
@@ -548,7 +548,7 @@
                         {% endif %}
 
                         <!-- smb output -->
-                        {% if t.destination_smb_id and t.destination_smb %}
+                        {% if t.destination_smb_id and t.destination_smb_conn %}
                             </div>
 
                             <h3>SMB</h3>
