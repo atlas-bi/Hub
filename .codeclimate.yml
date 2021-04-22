@@ -9,7 +9,6 @@ exclude_patterns:
 - "docker/"
 - "docs/"
 - "docs/"
-- "em_web/scripts/"
 - "config/"
 - "db/"
 - "dist/"

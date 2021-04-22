@@ -1,9 +1,9 @@
 [run]
 parallel = true
-source =
-    em_web
-    em_runner
-    em_scheduler
+include =
+    em_web/*
+    em_runner/*
+    em_scheduler/*
 
 
 [report]
