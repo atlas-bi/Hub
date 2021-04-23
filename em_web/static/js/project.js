@@ -909,17 +909,17 @@
       p.querySelector(".task-query-location").style.display = "none";
       p.querySelector(".task-sourceSsh").style.display = "none";
 
-      if (t.value == 1) {
+      if (t.value === 1) {
         p.querySelector(".task-sourceDatabase").style.removeProperty("display");
         p.querySelector(".task-query-location").style.removeProperty("display");
-      } else if (t.value == 2) {
+      } else if (t.value === 2) {
         p.querySelector(".task-sourceSmb").style.removeProperty("display");
-      } else if (t.value == 3) {
+      } else if (t.value === 3) {
         p.querySelector(".task-sourceSftp").style.removeProperty("display");
-      } else if (t.value == 4) {
+      } else if (t.value === 4) {
         p.querySelector(".task-sourceFtp").style.removeProperty("display");
-      } else if (t.value == 5) {
-      } else if (t.value == 6) {
+      } else if (t.value === 5) {
+      } else if (t.value === 6) {
         p.querySelector(".task-sourceSsh").style.removeProperty("display");
         p.querySelector(".task-query-location").style.removeProperty("display");
       }
@@ -934,19 +934,19 @@
       p.querySelector(".task-sourceURL").style.display = "none";
       p.querySelector(".task-sourceCode").style.display = "none";
 
-      if (t.value == 1) {
+      if (t.value === 1) {
         p.querySelector(".task-sourceGit").style.removeProperty("display");
-      } else if (t.value == 2) {
+      } else if (t.value === 2) {
         p.querySelector(".task-sourceSmbQuery").style.removeProperty("display");
-      } else if (t.value == 3) {
+      } else if (t.value === 3) {
         p.querySelector(".task-sourceURL").style.removeProperty("display");
-      } else if (t.value == 4) {
+      } else if (t.value === 4) {
         p.querySelector(".task-sourceCode").style.removeProperty("display");
-      } else if (t.value == 5) {
+      } else if (t.value === 5) {
         p.querySelector(".task-sourceSftpQuery").style.removeProperty(
           "display"
         );
-      } else if (t.value == 6) {
+      } else if (t.value === 6) {
         p.querySelector(".task-sourceFtpQuery").style.removeProperty("display");
       }
     } else if (e.target.closest('select[name="processingType"]')) {
@@ -963,17 +963,17 @@
         "display"
       );
 
-      if (t.value == 1) {
+      if (t.value === 1) {
         p.querySelector(".task-processingSmb").style.removeProperty("display");
-      } else if (t.value == 2) {
+      } else if (t.value === 2) {
         p.querySelector(".task-processingSftp").style.removeProperty("display");
-      } else if (t.value == 3) {
+      } else if (t.value === 3) {
         p.querySelector(".task-processingFtp").style.removeProperty("display");
-      } else if (t.value == 4) {
+      } else if (t.value === 4) {
         p.querySelector(".task-processingGit").style.removeProperty("display");
-      } else if (t.value == 5) {
+      } else if (t.value === 5) {
         p.querySelector(".task-processingUrl").style.removeProperty("display");
-      } else if (t.value == 6) {
+      } else if (t.value === 6) {
         p.querySelector(".task-processingCode").style.removeProperty("display");
         p.querySelector(".task-processingCommand").style.display = "none";
       }
@@ -982,7 +982,7 @@
       p = t.closest("div");
       p.querySelector(".task-delimiter").style.display = "none";
 
-      if (t.value == 2 || t.value == 4) {
+      if (t.value === 2 || t.value === 4) {
         p.querySelector(".task-delimiter").style.removeProperty("display");
       }
     }
