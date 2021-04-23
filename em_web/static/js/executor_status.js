@@ -30,14 +30,14 @@
         box.style.removeProperty("height");
         myTimeout = Math.min(myTimeout + 3000, 10000);
       } else {
-        var job_text = "";
+        var jobText = "";
         for (var key in jobs) {
-          job_text += jobs[key] + "&nbsp;";
+          jobText += jobs[key] + "&nbsp;";
         }
 
         box.style.height = "64px";
 
-        box.querySelector(".em-statusMessage").innerHTML = job_text;
+        box.querySelector(".em-statusMessage").innerHTML = jobText;
         myTimeout = 1000;
       }
     };

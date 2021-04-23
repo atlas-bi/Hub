@@ -47,7 +47,9 @@
       r = [];
 
     while (o) {
-      if (o !== el && o.nodeType === Node.ELEMENT_NODE) r.push(o);
+      if (o !== el && o.nodeType === Node.ELEMENT_NODE) {
+        r.push(o);
+      }
       o = o.nextElementSibling || o.nextSibling;
     }
 

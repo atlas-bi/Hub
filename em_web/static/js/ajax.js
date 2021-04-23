@@ -44,18 +44,21 @@ var ajaxContent = function () {
         js[x].parentElement.removeChild(js[x]);
       }
 
-      if (el.closest(".clps-o"))
+      if (el.closest(".clps-o")) {
         el.closest(".clps-o").dispatchEvent(
           new Event("change", {
             bubbles: true,
           })
         );
+      }
     };
   }
 
   var stuff = document.getElementsByClassName("em-ajaxContent");
   for (var x = 0; x < stuff.length; x++) {
-    if (stuff[x].hasAttribute("data-src")) load(stuff[x]);
+    if (stuff[x].hasAttribute("data-src")) {
+      load(stuff[x]);
+    }
   }
 };
 

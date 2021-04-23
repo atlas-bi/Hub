@@ -21,7 +21,7 @@
   var d = document;
 
   var myTextArea = d.querySelector('textarea[name="sourceCode"]');
-  if (myTextArea)
+  if (myTextArea) {
     var mySourceCodeMirror = CodeMirror.fromTextArea(myTextArea, {
       theme: "nord",
       mode: "sql",
@@ -34,8 +34,9 @@
       enableCodeFormatting: true,
       scrollbarStyle: "overlay",
     });
-  myProcessingTextArea = d.querySelector('textarea[name="processingCode"]');
-  if (myProcessingTextArea)
+  }
+  var myProcessingTextArea = d.querySelector('textarea[name="processingCode"]');
+  if (myProcessingTextArea) {
     var myProcessingCodeMirror = CodeMirror.fromTextArea(myProcessingTextArea, {
       theme: "nord",
       mode: "python",
@@ -48,13 +49,14 @@
       enableCodeFormatting: true,
       scrollbarStyle: "overlay",
     });
+  }
 
   d.addEventListener("click", function (e) {
-    var i, ipt;
+    var i, ipt, q;
     if (e.target.closest("#project_cron_check")) {
       i = e.target.closest("#project_cron_check");
       ipt = d.querySelector('input[name="project_cron"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
       } else {
@@ -64,7 +66,7 @@
     } else if (e.target.closest("#project_intv_check")) {
       i = e.target.closest("#project_intv_check");
       ipt = d.querySelector('input[name="project_intv"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
       } else {
@@ -74,7 +76,7 @@
     } else if (e.target.closest("#project_ooff_check")) {
       i = e.target.closest("#project_ooff_check");
       ipt = d.querySelector('input[name="project_ooff"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -86,7 +88,7 @@
     } else if (e.target.closest(".task_ooff_check")) {
       i = e.target.closest(".task_ooff_check");
       ipt = d.querySelector('input[name="task-ooff"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -98,7 +100,7 @@
     } else if (e.target.closest("#project_take_ownership")) {
       i = e.target.closest("#project_take_ownership");
       ipt = d.querySelector('input[name="project_ownership"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -110,7 +112,7 @@
     } else if (e.target.closest(".task_overwrite_smb_if_exists")) {
       i = e.target.closest(".task_overwrite_smb_if_exists");
       ipt = d.querySelector('input[name="task_overwrite_smb"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -122,7 +124,7 @@
     } else if (e.target.closest(".task_overwrite_sftp_if_exists")) {
       i = e.target.closest(".task_overwrite_sftp_if_exists");
       ipt = d.querySelector('input[name="task_overwrite_sftp"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -134,7 +136,7 @@
     } else if (e.target.closest(".task_overwrite_ftp_if_exists")) {
       i = e.target.closest(".task_overwrite_ftp_if_exists");
       ipt = d.querySelector('input[name="task_overwrite_ftp"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -146,7 +148,7 @@
     } else if (e.target.closest(".task_save_sftp")) {
       i = e.target.closest(".task_save_sftp");
       ipt = d.querySelector('input[name="task_save_sftp"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -158,7 +160,7 @@
     } else if (e.target.closest(".task_file_gpg")) {
       i = e.target.closest(".task_file_gpg");
       ipt = d.querySelector('input[name="task_file_gpg"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -170,7 +172,7 @@
     } else if (e.target.closest(".task_save_ftp")) {
       i = e.target.closest(".task_save_ftp");
       ipt = d.querySelector('input[name="task_save_ftp"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -182,7 +184,7 @@
     } else if (e.target.closest(".task_save_smb")) {
       i = e.target.closest(".task_save_smb");
       ipt = d.querySelector('input[name="task_save_smb"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -194,7 +196,7 @@
     } else if (e.target.closest(".send_completion_email_check")) {
       i = e.target.closest(".send_completion_email_check");
       ipt = d.querySelector('input[name="task_send_completion_email"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -206,7 +208,7 @@
     } else if (e.target.closest(".task_smb_ignore_delimiter")) {
       i = e.target.closest(".task_smb_ignore_delimiter");
       ipt = d.querySelector('input[name="task_smb_ignore_delimiter"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -218,7 +220,7 @@
     } else if (e.target.closest(".task_sftp_ignore_delimiter")) {
       i = e.target.closest(".task_sftp_ignore_delimiter");
       ipt = d.querySelector('input[name="task_sftp_ignore_delimiter"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -230,7 +232,7 @@
     } else if (e.target.closest(".task_ftp_ignore_delimiter")) {
       i = e.target.closest(".task_ftp_ignore_delimiter");
       ipt = d.querySelector('input[name="task_ftp_ignore_delimiter"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -242,7 +244,7 @@
     } else if (e.target.closest(".task_ignore_file_delimiter")) {
       i = e.target.closest(".task_ignore_file_delimiter");
       ipt = d.querySelector('input[name="task_ignore_file_delimiter"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -254,7 +256,7 @@
     } else if (e.target.closest(".send_completion_email_log_check")) {
       i = e.target.closest(".send_completion_email_log_check");
       ipt = d.querySelector('input[name="task_send_completion_email_log"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -266,7 +268,7 @@
     } else if (e.target.closest(".send_output_check")) {
       i = e.target.closest(".send_output_check");
       ipt = d.querySelector('input[name="task_send_output"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -278,7 +280,7 @@
     } else if (e.target.closest(".task_embed_output")) {
       i = e.target.closest(".task_embed_output");
       ipt = d.querySelector('input[name="task_embed_output"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -290,7 +292,7 @@
     } else if (e.target.closest(".send_error_email_check")) {
       i = e.target.closest(".send_error_email_check");
       ipt = d.querySelector('input[name="task_send_error_email"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -302,7 +304,7 @@
     } else if (e.target.closest(".task_dont_send_empty")) {
       i = e.target.closest(".task_dont_send_empty");
       ipt = d.querySelector('input[name="task_dont_send_empty"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -314,7 +316,7 @@
     } else if (e.target.closest(".task_include_query_headers")) {
       i = e.target.closest(".task_include_query_headers");
       ipt = d.querySelector('input[name="task_include_query_headers"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         // remove required attr on inputs
@@ -326,7 +328,7 @@
     } else if (e.target.closest(".task_create_zip")) {
       i = e.target.closest(".task_create_zip");
       ipt = d.querySelector('input[name="task_create_zip"]');
-      if (i.getAttribute("checked") == "checked") {
+      if (i.getAttribute("checked") === "checked") {
         i.removeAttribute("checked");
         ipt.value = 0;
         document.querySelector(".task-destinationZip").style.display = "None";
@@ -366,7 +368,7 @@
               .replace(/data-task="1"/gm, 'data-task="' + task + '"')
           );
         // update titles
-        drop = document.querySelectorAll(".em-drop[data-task]");
+        var drop = document.querySelectorAll(".em-drop[data-task]");
         for (var x = 0; x < drop.length; x++) {
           drop[x].innerHTML =
             "Stop " +
@@ -378,7 +380,7 @@
   });
 
   d.addEventListener("change", function (e) {
-    var t, p;
+    var t, p, q;
     if (e.target.closest('select[name="smb_destination"]')) {
       t = e.target.closest('select[name="smb_destination"]');
       if (t.value == "none") {

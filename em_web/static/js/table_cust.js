@@ -3,7 +3,7 @@
     // custom modifications to table cells happens here.
     var tmpDiv, href;
 
-    if (cellValue.indexOf("Enable") != -1) {
+    if (cellValue.indexOf("Enable") !== -1) {
       tmpDiv = document.createElement("div");
       tmpDiv.innerHTML = cellValue;
       href = tmpDiv.getElementsByTagName("a")[0].getAttribute("href");
@@ -14,7 +14,7 @@
       );
     }
 
-    if (cellValue.indexOf("Disable") != -1) {
+    if (cellValue.indexOf("Disable") !== -1) {
       tmpDiv = document.createElement("div");
       tmpDiv.innerHTML = cellValue;
       href = tmpDiv.getElementsByTagName("a")[0].getAttribute("href");

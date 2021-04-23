@@ -65,3 +65,23 @@ exclude_patterns:
 - "**/vendor/"
 - "**/*_test.go"
 - "**/*.d.ts"
+
+plugins:
+  bandit:
+    enabled: true
+  eslint:
+    enabled: true
+  csslint:
+    enabled: true
+  pylint:
+    enabled: true
+  radon:
+    enabled: true
+  scss-lint:
+    enabled: true
+  shell-check:
+    enabled: true
+  sonar-python:
+    enabled: true
+  stylelint:
+    enabled: true

@@ -30,8 +30,9 @@
           '"]'
       );
 
-      if (!t.classList.contains("em-inputPassword"))
+      if (!t.classList.contains("em-inputPassword")) {
         t.classList.add("em-inputPassword");
+      }
 
       t.type = t.type === "text" ? "password" : "text";
     } else if (e.target.closest(".em-inputPlainCopy")) {

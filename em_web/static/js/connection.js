@@ -59,6 +59,7 @@
   var t, q;
 
   d.addEventListener("click", function (e) {
+    var sftp, smb, gpg,ssh, ftp, database;
     if (e.target.closest("#connections-addSftp")) {
       t = e.target.closest("#connections-addSftp");
       //get teamplate
@@ -72,7 +73,6 @@
       q.send();
 
       q.onload = function () {
-        var sftp, smb, gpg,ssh, ftp, database;
         if (d.querySelectorAll(".em-drop[data-sftp]").length > 0) {
           sftp = Math.max.apply(
             Math,

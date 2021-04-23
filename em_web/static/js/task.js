@@ -42,7 +42,7 @@
         for (var x = 0; x < els.length; x++) {
           els[x].innerHTML = data[key];
 
-          if (key == "status") {
+          if (key === "status") {
             els[x].classList.remove("em-error");
             els[x].classList.remove("em-success");
             els[x].classList.remove("em-running");
