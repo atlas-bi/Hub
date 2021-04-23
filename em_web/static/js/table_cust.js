@@ -1,12 +1,12 @@
-(function (rhc_table, $, undefined) {
-  rhc_table.cell_processor = function (cell_value) {
+(function (rhcTable, $, undefined) {
+  rhcTable.cell_processor = function (cellValue) {
     // custom modifications to table cells happens here.
-    var tmp_div, href;
+    var tmpDiv, href;
 
-    if (cell_value.indexOf("Enable") != -1) {
-      tmp_div = document.createElement("div");
-      tmp_div.innerHTML = cell_value;
-      href = tmp_div.getElementsByTagName("a")[0].getAttribute("href");
+    if (cellValue.indexOf("Enable") != -1) {
+      tmpDiv = document.createElement("div");
+      tmpDiv.innerHTML = cellValue;
+      href = tmpDiv.getElementsByTagName("a")[0].getAttribute("href");
       return (
         '<label class="em-switch"><input action="' +
         href +
@@ -14,10 +14,10 @@
       );
     }
 
-    if (cell_value.indexOf("Disable") != -1) {
-      tmp_div = document.createElement("div");
-      tmp_div.innerHTML = cell_value;
-      href = tmp_div.getElementsByTagName("a")[0].getAttribute("href");
+    if (cellValue.indexOf("Disable") != -1) {
+      tmpDiv = document.createElement("div");
+      tmpDiv.innerHTML = cellValue;
+      href = tmpDiv.getElementsByTagName("a")[0].getAttribute("href");
       return (
         '<label class="em-switch"><input action="' +
         href +
@@ -25,6 +25,6 @@
       );
     }
 
-    return cell_value;
+    return cellValue;
   };
-})((window.rhc_table = window.rhc_table || {}));
+})((window.rhcTable = window.rhcTable || {}));

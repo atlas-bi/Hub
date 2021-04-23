@@ -16,14 +16,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-ajaxContent = function () {
-  var stuff = document.getElementsByClassName("em-ajaxContent");
-  for (var x = 0; x < stuff.length; x++) {
-    if (stuff[x].hasAttribute("data-src")) load(stuff[x]);
-  }
+var ajaxContent = function () {
 
   function load(el, dest) {
-    if (typeof dest == "undefined") dest = el;
+    if (typeof dest == "undefined") {
+      dest = el;
+    }
+
     var q = new XMLHttpRequest();
     q.open("get", el.getAttribute("data-src"), true);
     q.send();
@@ -33,7 +32,7 @@ ajaxContent = function () {
 
       // find and execute any javascript
 
-      js = Array.prototype.slice.call(
+      var js = Array.prototype.slice.call(
         el.querySelectorAll('script:not([type="application/json"])')
       );
       for (var x = 0; x < js.length; x++) {
@@ -53,6 +52,11 @@ ajaxContent = function () {
         );
     };
   }
+
+  var stuff = document.getElementsByClassName("em-ajaxContent");
+  for (var x = 0; x < stuff.length; x++) {
+    if (stuff[x].hasAttribute("data-src")) load(stuff[x]);
+  }
 };
 
 ajaxContent();
@@ -68,7 +72,7 @@ ajaxContent();
       q.send();
 
       // change from enable to disable and vise versa
-      if (action.indexOf("enable") != -1) {
+      if (action.indexOf("enable") !== -1) {
         target.setAttribute("action", action.replace("enable", "disable"));
       } else {
         target.setAttribute("action", action.replace("disable", "enable"));

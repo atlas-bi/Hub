@@ -19,8 +19,8 @@
 window.addEventListener("load", function () {
   var q = new XMLHttpRequest();
 
-  var search_block = document.querySelector(".block-search");
-  var results_div = search_block.querySelector(".search-results");
+  var searchBlock = document.querySelector(".block-search");
+  var resultsDiv = searchBlock.querySelector(".search-results");
 
   q.open("get", "/search", true);
   q.send();
@@ -28,12 +28,12 @@ window.addEventListener("load", function () {
   q.onload = function () {
     var search = JSON.parse(q.responseText);
 
-    var search_input = document.getElementById("nav-search");
-    search_input.classList.remove("disabled");
-    search_input.addEventListener("input", function (e) {
-      if (this.value == "") {
-        search_block.classList.remove("search-open");
-        results_div.innerHTML = "";
+    var searchInput = document.getElementById("nav-search");
+    searchInput.classList.remove("disabled");
+    searchInput.addEventListener("input", function (e) {
+      if (this.value === "") {
+        searchBlock.classList.remove("search-open");
+        resultsDiv.innerHTML = "";
         return;
       }
 
@@ -45,8 +45,8 @@ window.addEventListener("load", function () {
       for (var key in search) {
         for (var subkey in search[key]) {
           // if we have a match
-          var s_match = search[key][subkey].match(regex);
-          if (s_match) {
+          var sMatch = search[key][subkey].match(regex);
+          if (sMatch) {
             output +=
               '<div class="search-result">' +
               key +
@@ -64,12 +64,12 @@ window.addEventListener("load", function () {
         }
       }
 
-      if (count == 0) {
+      if (count === 0) {
         output += "<p>Nothing found.</p>";
       }
 
-      results_div.innerHTML = output;
-      search_block.classList.add("search-open");
+      resultsDiv.innerHTML = output;
+      searchBlock.classList.add("search-open");
     });
   };
 });

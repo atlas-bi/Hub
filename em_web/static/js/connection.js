@@ -17,9 +17,9 @@
 */
 
 (function () {
-  myTextArea = document.querySelectorAll("textarea.database_connection_string");
+  var myTextArea = document.querySelectorAll("textarea.database_connection_string");
   for (var x = 0; x < myTextArea.length; x++) {
-    if (myTextArea[x])
+    if (myTextArea[x]) {
       var myCodeMirror = CodeMirror.fromTextArea(myTextArea[x], {
         theme: "nord",
         mode: "shell",
@@ -32,6 +32,7 @@
         enableCodeFormatting: true,
         scrollbarStyle: "overlay",
       });
+    }
   }
 
   document.addEventListener("click", function (e) {
@@ -55,7 +56,7 @@
 
 (function () {
   var d = document;
-  var t;
+  var t, q;
 
   d.addEventListener("click", function (e) {
     if (e.target.closest("#connections-addSftp")) {
@@ -71,6 +72,7 @@
       q.send();
 
       q.onload = function () {
+        var sftp, smb, gpg,ssh, ftp, database;
         if (d.querySelectorAll(".em-drop[data-sftp]").length > 0) {
           sftp = Math.max.apply(
             Math,

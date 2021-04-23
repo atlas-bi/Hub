@@ -20,7 +20,6 @@
 from base64 import b64decode, b64encode
 
 from cryptography.fernet import Fernet
-from flask import current_app as app
 
 
 def em_encrypt(text, key):

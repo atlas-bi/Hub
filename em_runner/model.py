@@ -714,7 +714,7 @@ class Task(db.Model):
 
     est_duration: int
 
-    """ general information """
+    # general information
     id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String(1000), nullable=True)
     project_id = db.Column(

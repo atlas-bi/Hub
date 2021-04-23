@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 (function () {
-  var my_timeout = 1000;
+  var myTimeout = 1000;
   function executorStatus() {
     var q = new XMLHttpRequest();
     q.open("get", "/executor/status", true);
@@ -28,7 +28,7 @@
 
       if (Object.keys(jobs).length < 1) {
         box.style.removeProperty("height");
-        my_timeout = Math.min(my_timeout + 3000, 10000);
+        myTimeout = Math.min(myTimeout + 3000, 10000);
       } else {
         var job_text = "";
         for (var key in jobs) {
@@ -38,11 +38,11 @@
         box.style.height = "64px";
 
         box.querySelector(".em-statusMessage").innerHTML = job_text;
-        my_timeout = 1000;
+        myTimeout = 1000;
       }
     };
 
-    setTimeout(executorStatus, my_timeout);
+    setTimeout(executorStatus, myTimeout);
   }
 
   executorStatus();

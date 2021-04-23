@@ -22,28 +22,6 @@
   #el
   */
   var d = document;
-  d.addEventListener("click", function (e) {
-    var el,
-      d = document;
-    if (e.target.closest('[data-toggle="clps"]')) {
-      el = d.getElementById(
-        e.target
-          .closest("[data-toggle]")
-          .getAttribute("data-target")
-          .replace("#", "")
-      );
-
-      if (el == null) {
-        return;
-      }
-
-      if (el.style.maxHeight || el.classList.contains("clps-o")) {
-        c(el);
-      } else {
-        o(el);
-      }
-    }
-  });
 
   function h(el) {
     el.style.maxHeight = el.scrollHeight + 20 + "px";
@@ -73,7 +51,9 @@
       o = o.nextElementSibling || o.nextSibling;
     }
 
-    for (var x = 0; x < r.length; x++) c(r[x]);
+    for (var x = 0; x < r.length; x++) {
+      c(r[x]);
+    }
 
     // after animation finished add max-height back
     window.setTimeout(function () {
@@ -87,6 +67,29 @@
       }
     }, 300);
   }
+
+  d.addEventListener("click", function (e) {
+    var el,
+      d = document;
+    if (e.target.closest('[data-toggle="clps"]')) {
+      el = d.getElementById(
+        e.target
+          .closest("[data-toggle]")
+          .getAttribute("data-target")
+          .replace("#", "")
+      );
+
+      if (el == null) {
+        return;
+      }
+
+      if (el.style.maxHeight || el.classList.contains("clps-o")) {
+        c(el);
+      } else {
+        o(el);
+      }
+    }
+  });
 
   d.addEventListener("change", function (e) {
     if (e.target.closest(".clps-o")) {

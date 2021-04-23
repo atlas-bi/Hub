@@ -26,16 +26,16 @@
   };
 
   var d = document,
-    task_id = d.querySelector("h1.em-title[task_id]").getAttribute("task_id");
+    taskId = d.querySelector("h1.em-title[task_id]").getAttribute("task_id");
 
   function taskHello() {
     var q = new XMLHttpRequest();
-    q.open("get", "/task/{}/hello".format(task_id), true);
+    q.open("get", "/task/{}/hello".format(taskId), true);
     q.send();
     q.onload = function () {
-      data = JSON.parse(q.responseText);
+      var data = JSON.parse(q.responseText);
       for (var key in data) {
-        els = Array.prototype.slice.call(
+        var els = Array.prototype.slice.call(
           d.querySelectorAll(".hello_{}".format(key))
         );
 

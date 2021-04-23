@@ -22,7 +22,7 @@
       e.target.closest(".em-showPass") &&
       e.target.closest(".em-showPass").hasAttribute("data-toggle") &&
       e.target.closest(".em-showPass").hasAttribute("data-target") &&
-      e.target.closest(".em-showPass").getAttribute("data-toggle") == "password"
+      e.target.closest(".em-showPass").getAttribute("data-toggle") === "password"
     ) {
       var t = document.querySelector(
         'input[name="' +
@@ -33,7 +33,7 @@
       if (!t.classList.contains("em-inputPassword"))
         t.classList.add("em-inputPassword");
 
-      t.type = t.type == "text" ? "password" : "text";
+      t.type = t.type === "text" ? "password" : "text";
     } else if (e.target.closest(".em-inputPlainCopy")) {
       e.preventDefault();
       var txt = document.createElement("textarea");

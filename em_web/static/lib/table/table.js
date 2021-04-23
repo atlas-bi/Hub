@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-(function (rhc_table, $, undefined) {
+(function (rhcTable, $, undefined) {
   var tables = document.getElementsByClassName("em-ajaxTable");
 
   for (var x = 0; x < tables.length; x++) {
@@ -287,8 +287,8 @@
         for (x = 0; x < head.length; x++) {
           var cell_value = (arr[key][head[x]] || "").toString();
 
-          if (rhc_table.cell_processor !== undefined) {
-            cell_value = rhc_table.cell_processor(cell_value);
+          if (rhcTable.cell_processor !== undefined) {
+            cell_value = rhcTable.cell_processor(cell_value);
           }
 
           r[++j] = "<td><div>" + cell_value + "</div></td>";
@@ -494,4 +494,4 @@
 
       return i;
     };
-})((window.rhc_table = window.rhc_table || {}));
+})((window.rhcTable = window.rhcTable || {}));

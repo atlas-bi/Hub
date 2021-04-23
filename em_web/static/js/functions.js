@@ -22,7 +22,7 @@
  * @author McShaman (http://stackoverflow.com/users/788657/mcshaman)
  * @source http://stackoverflow.com/questions/14766951/convert-digits-into-words-with-javascript
  */
-function numberToEnglish(n, custom_join_character) {
+function numberToEnglish(n, customJoinCharacter) {
   var string = n.toString(),
     units,
     tens,
@@ -37,7 +37,7 @@ function numberToEnglish(n, custom_join_character) {
     word,
     words;
 
-  var and = custom_join_character || "and";
+  var and = customJoinCharacter || "and";
 
   /* Is number zero? */
   if (parseInt(string) === 0) {
@@ -176,7 +176,7 @@ function numberToEnglish(n, custom_join_character) {
       e.target.closest(".em-eraseInput") &&
       e.target.closest(".em-eraseInput").hasAttribute("data-toggle") &&
       e.target.closest(".em-eraseInput").hasAttribute("data-target") &&
-      e.target.closest(".em-eraseInput").getAttribute("data-toggle") == "erasor"
+      e.target.closest(".em-eraseInput").getAttribute("data-toggle") === "erasor"
     ) {
       var t = document.querySelector(
         'input[name="' +

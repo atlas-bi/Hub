@@ -20,7 +20,7 @@
   // on click of checkbox change input value
   var d = document;
 
-  myTextArea = d.querySelector('textarea[name="sourceCode"]');
+  var myTextArea = d.querySelector('textarea[name="sourceCode"]');
   if (myTextArea)
     var mySourceCodeMirror = CodeMirror.fromTextArea(myTextArea, {
       theme: "nord",
@@ -351,7 +351,7 @@
       q.send();
 
       q.onload = function () {
-        task = d
+        var task = d
           .querySelectorAll(".em-drop[data-task]")
           [d.querySelectorAll(".em-drop[data-task]").length - 1].getAttribute(
             "data-task"
