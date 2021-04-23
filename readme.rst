@@ -17,7 +17,7 @@
 
 
 
-|python-version| |travis| |codecov| |climage|
+|python-version| |travis| |codecov| |codacy| |codeql| |climate| |github|
 
 Extract Management 2.0
 ======================
@@ -102,8 +102,18 @@ Atlas was created by the Riverside Healthcare Analytics team -
     :target: https://travis-ci.com/Riverside-Healthcare/extract_management
 
 .. |codecov| image:: https://codecov.io/gh/Riverside-Healthcare/extract_management/branch/main/graph/badge.svg
-  :target: https://codecov.io/gh/Riverside-Healthcare/extract_management
+   :target: https://codecov.io/gh/Riverside-Healthcare/extract_management
 
-.. |climage| image:: https://api.codeclimate.com/v1/badges/7dffbd981397d1152b59/maintainability
+.. |codacy| image:: https://app.codacy.com/project/badge/Grade/37f4bf4e23c14d928ee0effde32cc5f1
+   :target: https://www.codacy.com/gh/Riverside-Healthcare/extract_management/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/extract_management&amp;utm_campaign=Badge_Grade
+
+.. |climate| image:: https://api.codeclimate.com/v1/badges/7dffbd981397d1152b59/maintainability
    :target: https://codeclimate.com/github/Riverside-Healthcare/extract_management/maintainability
    :alt: Maintainability
+
+.. |codeql| image:: https://github.com/Riverside-Healthcare/extract_management/workflows/CodeQL/badge.svg
+   :target: https://github.com/Riverside-Healthcare/extract_management/actions/workflows/codeql-analysis.yml
+   :alt: CodeQL
+
+.. |github| image:: https://github.com/Riverside-Healthcare/extract_management/workflows/CI/badge.svg
+   :target: https://github.com/Riverside-Healthcare/extract_management/actions

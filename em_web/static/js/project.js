@@ -366,7 +366,7 @@
               .replace(/data-task="1"/gm, 'data-task="' + task + '"')
           );
         // update titles
-        drop = document.querySelectorAll(".em-drop[data-task");
+        drop = document.querySelectorAll(".em-drop[data-task]");
         for (var x = 0; x < drop.length; x++) {
           drop[x].innerHTML =
             "Stop " +
