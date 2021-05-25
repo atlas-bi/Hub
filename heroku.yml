@@ -3,6 +3,7 @@ build:
     web: nodb.Dockerfile
 
 release:
+  image: web
   command:
   - ./release-tasks.sh
 
