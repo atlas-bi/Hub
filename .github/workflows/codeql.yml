@@ -1,4 +1,4 @@
-name: CodeQL
+name: codeQL
 
 on:
   push:
@@ -16,6 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        language: [javascript, python]
 
     steps:
     - name: Checkout repository

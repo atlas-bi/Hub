@@ -63,6 +63,7 @@ class Config:
                 run_times_key="em_running",
                 host=redis_url.hostname,
                 port=redis_url.port,
+                password=redis_url.password,
             )
         }
     else:

@@ -17,7 +17,6 @@
 
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 
 import redis
 import saml2
@@ -45,10 +44,9 @@ class Config:
     SESSION_TYPE = "redis"
 
     if os.environ.get("REDIS_URL"):
-        redis_url = urlparse(os.environ.get("REDIS_URL"))
-        SESSION_REDIS = redis.Redis(host=redis_url.hostname, port=redis_url.port)  # type: ignore
+        SESSION_REDIS = redis.Redis.from_url(os.environ.get("REDIS_URL"))  # type: ignore
     else:
-        SESSION_REDIS = redis.Redis(host="localhost", port=6379)
+        SESSION_REDIS = redis.Redis(host="localhost", port=6379)  # type: ignore
 
     # authentication
     LOGIN_VIEW = "auth_bp.login"
@@ -212,10 +210,9 @@ class DevConfig(Config):
     MIGRATIONS = "migrations_dev"
 
     if os.environ.get("REDIS_URL"):
-        redis_url = urlparse(os.environ.get("REDIS_URL"))
-        SESSION_REDIS = redis.Redis(host=redis_url.hostname, port=redis_url.port)  # type: ignore
+        SESSION_REDIS = redis.Redis.from_url(os.environ.get("REDIS_URL"))  # type: ignore
     else:
-        SESSION_REDIS = redis.Redis(host="redis", port=6379)
+        SESSION_REDIS = redis.Redis(host="redis", port=6379)  # type: ignore
     REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
 
 
