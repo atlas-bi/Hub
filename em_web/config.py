@@ -79,8 +79,8 @@ class Config:
         "DATABASE_URL",
         "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
             user="webapp", pw="nothing", url="localhost", db="em_web"
-        ).replace("postgres://", "postgresql+psycopg2://", 1),
-    )
+        ),
+    ).replace("postgres://", "postgresql+psycopg2://", 1)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         "max_overflow": 100,  # how many spare connections we can use?
@@ -204,8 +204,8 @@ class DevConfig(Config):
         "DATABASE_URL",
         "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
             user="webapp", pw="nothing", url="localhost", db="em_web_dev"
-        ).replace("postgres://", "postgresql+psycopg2://", 1),
-    )
+        ),
+    ).replace("postgres://", "postgresql+psycopg2://", 1)
 
     # migrations override
     MIGRATIONS = "migrations_dev"
