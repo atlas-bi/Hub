@@ -37,8 +37,7 @@ RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
 
 RUN cp em_web/model.py em_scheduler/ && cp em_web/model.py em_runner/
 
-ENV FLASK_ENV=test \
-    FLASK_DEBUG=True \
+ENV FLASK_DEBUG=True \
     FLASK_APP=em_web
 
 CMD (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT
