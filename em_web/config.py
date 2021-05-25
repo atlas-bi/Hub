@@ -191,7 +191,7 @@ class DevConfig(Config):
     # pylint: disable=too-few-public-methods
 
     # authentication override
-    AUTH_METHOD = "LDAP"
+    AUTH_METHOD = "DEV"
 
     DEBUG = True
 
