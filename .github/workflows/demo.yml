@@ -19,4 +19,4 @@ jobs:
         api_key: ${{ secrets.HEROKU_API_KEY }}
         app_name: ${{ secrets.HEROKU_APP_NAME }}
         email: ${{ secrets.HEROKU_EMAIL }}
-        dockerfile_name: nodb.Docerfile
+        dockerfile_name: nodb.Dockerfile
