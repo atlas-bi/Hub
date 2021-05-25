@@ -34,7 +34,7 @@ Tasks can run at any time and on any schedule.
 Documentation
 -------------
 
-Check out our `documentation site <https://riverside-healthcare.github.io/extract_management/>`_.
+Check out our `documentation site <https://docs.extract.management>`_.
 
 Demo
 ----
@@ -67,9 +67,9 @@ EM2 can be run locally. We use pyenv and poetry to manage the project dependenci
     flask db init
     flask db migrate
     flask db upgrade
-    flask seed
+    flask cli seed
     # if you want some basic demo information added
-    flask seed_demo
+    flask cli seed_demo
 
 Finally, to run the three site, you will need to run each command in a separate termimal session:
 

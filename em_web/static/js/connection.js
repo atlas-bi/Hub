@@ -17,7 +17,9 @@
 */
 
 (function () {
-  var myTextArea = document.querySelectorAll("textarea.database_connection_string");
+  var myTextArea = document.querySelectorAll(
+    "textarea.database_connection_string"
+  );
   for (var x = 0; x < myTextArea.length; x++) {
     if (myTextArea[x]) {
       var myCodeMirror = CodeMirror.fromTextArea(myTextArea[x], {
@@ -59,7 +61,7 @@
   var t, q;
 
   d.addEventListener("click", function (e) {
-    var sftp, smb, gpg,ssh, ftp, database;
+    var sftp, smb, gpg, ssh, ftp, database;
     if (e.target.closest("#connections-addSftp")) {
       t = e.target.closest("#connections-addSftp");
       //get teamplate

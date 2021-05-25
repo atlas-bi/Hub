@@ -1989,6 +1989,7 @@ def get_task_file_download(file_id):
             )
 
         # otherwise, stream it.
+        # pylint: disable=R1732
         file_handle = open(source_file, "r")  # noqa:SIM115
 
         return Response(

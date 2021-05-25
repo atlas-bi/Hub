@@ -344,7 +344,7 @@ class Smb:
                 task_id=self.task.id,
                 job_id=self.job_hash,
                 status_id=10,  # 10 = SMB
-                message="File succefully loaded from server "
+                message="File successfully loaded from server "
                 + re.sub(r":.+?(?=@)", "", self.file_path),
             )
             db.session.add(log)

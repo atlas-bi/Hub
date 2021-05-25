@@ -1,24 +1,33 @@
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
-    hooks:
-      - id: pretty-format-json
-        args: [--autofix]
-      - id: check-json
-        exclude: package-lock.json
-      - id: check-toml
-      - id: check-yaml
-      - id: end-of-file-fixer
-        exclude: migrations* | docs*
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.7.0
-    hooks:
-    - id: isort
-      exclude: migrations* | docs*
-      additional_dependencies: [toml]
-  - repo: https://github.com/ambv/black
-    rev: stable
-    hooks:
-    - id: black
-      language_version: python3.9
-      exclude: migrations* | docs*
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.4.0
+  hooks:
+  - id: pretty-format-json
+    args: [--autofix]
+  - id: check-json
+    exclude: package-lock.json
+  - id: check-toml
+  - id: check-yaml
+  - id: end-of-file-fixer
+    exclude: migrations* | docs*
+- repo: https://github.com/timothycrosley/isort
+  rev: 5.7.0
+  hooks:
+  - id: isort
+    exclude: migrations* | docs*
+    additional_dependencies: [toml]
+- repo: https://github.com/ambv/black
+  rev: stable
+  hooks:
+  - id: black
+    language_version: python3.9
+    exclude: migrations* | docs*
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: befdfee
+  hooks:
+  - id: pretty-format-toml
+    args: [--autofix]
+  - id: pretty-format-ini
+    args: [--autofix]
+  - id: pretty-format-yaml
+    args: [--autofix, --indent, '2']

@@ -22,7 +22,8 @@
       e.target.closest(".em-showPass") &&
       e.target.closest(".em-showPass").hasAttribute("data-toggle") &&
       e.target.closest(".em-showPass").hasAttribute("data-target") &&
-      e.target.closest(".em-showPass").getAttribute("data-toggle") === "password"
+      e.target.closest(".em-showPass").getAttribute("data-toggle") ===
+        "password"
     ) {
       var t = document.querySelector(
         'input[name="' +

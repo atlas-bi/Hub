@@ -43,7 +43,7 @@
             max retries
         -->
         <div class="em-inputTtl">Max Retry Attempts</div>
-        <input class="em-input" type="number" name="task-retry" value="{% if t and t.max_retries is not none %}{{ t.max_retries }}{% else %}0{% endif %}" />
+        <input class="em-input" type="number" name="task-retry" value="{% if t and t.max_retries is not none %}{{ t.max_retries }}{% else %}1{% endif %}" />
 
         <!--
             data source
@@ -86,12 +86,12 @@
                 </div>
                 <div class="em-checkbox">
                     <label class="checkbox-container">
-                        <input type="checkbox" class="task_include_query_headers" {% if t and t.source_query_include_header == 1 %} checked="checked"{% endif %}/>
+                        <input type="checkbox" class="task_include_query_headers" {% if not t or (t and t.source_query_include_header == 1) %} checked="checked"{% endif %}/>
                         <span class="checkmark"></span>
                     </label>
                     Include Query Headers?
                 </div>
-                <input type="hidden" name="task_include_query_headers" value="{% if t and t.source_query_include_header == 1 %}1{% else %}0{% endif %}" />
+                <input type="hidden" name="task_include_query_headers" value="{% if not t or (t and t.source_query_include_header == 1) %}1{% else %}0{% endif %}" />
             </section>
 
             <!--

@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
+from urllib.parse import urlparse
 
 from apscheduler.jobstores.redis import RedisJobStore
 
@@ -35,8 +37,11 @@ class Config:
         primary webapp database
     """
 
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="webapp", pw="nothing", url="localhost", db="em_web"
+        ),
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -49,11 +54,26 @@ class Config:
         scheduler settings
     """
 
-    SCHEDULER_JOBSTORES = {
-        "default": RedisJobStore(
-            jobs_key="em_jobs", run_times_key="em_running", host="127.0.0.1", port=6379
-        )
-    }
+    if os.environ.get("REDIS_URL"):
+        redis_url = urlparse(os.environ.get("REDIS_URL"))
+
+        SCHEDULER_JOBSTORES = {
+            "default": RedisJobStore(
+                jobs_key="em_jobs",
+                run_times_key="em_running",
+                host=redis_url.hostname,
+                port=redis_url.port,
+            )
+        }
+    else:
+        SCHEDULER_JOBSTORES = {
+            "default": RedisJobStore(
+                jobs_key="em_jobs",
+                run_times_key="em_running",
+                host="127.0.0.1",
+                port=6379,
+            )
+        }
 
     SCHEDULER_EXECUTORS = {
         "default": {
@@ -84,8 +104,11 @@ class DevConfig(Config):
     SESSION_COOKIE_SECURE = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web_dev"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="webapp", pw="nothing", url="localhost", db="em_web_dev"
+        ),
     )
     MIGRATIONS = "migrations_dev"
 

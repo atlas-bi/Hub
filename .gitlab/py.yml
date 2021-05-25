@@ -1,0 +1,42 @@
+.base:
+  interruptible: true
+  before_script:
+  - apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev
+    # ldap
+  - apt-get install -y --no-install-recommends libsasl2-dev libldap2-dev libssl-dev
+    # xmlsec1
+  - apt-get install -y --no-install-recommends libxmlsec1-dev pkg-config
+  - pip install --no-cache-dir tox
+  script:
+  - tox -e clean,$PYVR,cov
+  services:
+  - redis:latest
+  variables:
+    PYTHONDONTWRITEBYTECODE: 1
+
+
+py39:
+  extends: .base
+  stage: test
+  image: python:3.9
+  variables:
+    PYVR: py39
+  coverage: /^TOTAL.*\s+(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
+py38:
+  extends: .base
+  stage: test
+  image: python:3.8
+  variables:
+    PYVR: py38
+
+py37:
+  extends: .base
+  stage: test
+  image: python:3.7
+  variables:
+    PYVR: py37

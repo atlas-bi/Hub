@@ -287,8 +287,8 @@
         for (x = 0; x < head.length; x++) {
           var cell_value = (arr[key][head[x]] || "").toString();
 
-          if (rhcTable.cell_processor !== undefined) {
-            cell_value = rhcTable.cell_processor(cell_value);
+          if (rhcTable.cellProcessor !== undefined) {
+            cell_value = rhcTable.cellProcessor(cell_value);
           }
 
           r[++j] = "<td><div>" + cell_value + "</div></td>";

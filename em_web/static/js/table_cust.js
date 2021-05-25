@@ -1,5 +1,5 @@
 (function (rhcTable, $, undefined) {
-  rhcTable.cell_processor = function (cellValue) {
+  rhcTable.cellProcessor = function (cellValue) {
     // custom modifications to table cells happens here.
     var tmpDiv, href;
 

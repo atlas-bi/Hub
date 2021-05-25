@@ -17,7 +17,6 @@
 */
 
 var ajaxContent = function () {
-
   function load(el, dest) {
     if (typeof dest == "undefined") {
       dest = el;

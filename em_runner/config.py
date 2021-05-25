@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
+
 
 class Config:
     """All configuration set here. For dev there are overrides below."""
@@ -70,8 +72,11 @@ class Config:
         primary webapp database
     """
 
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="webapp", pw="nothing", url="localhost", db="em_web"
+        ),
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -99,8 +104,11 @@ class DevConfig(Config):
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     MIGRATIONS = "migrations_dev"
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web_dev"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="webapp", pw="nothing", url="localhost", db="em_web_dev"
+        ),
     )
 
 

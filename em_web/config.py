@@ -15,7 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 import redis
 import saml2
@@ -41,7 +43,12 @@ class Config:
 
     # redis sessions
     SESSION_TYPE = "redis"
-    SESSION_REDIS = redis.Redis(host="localhost", port=6379)
+
+    if os.environ.get("REDIS_URL"):
+        redis_url = urlparse(os.environ.get("REDIS_URL"))
+        SESSION_REDIS = redis.Redis(host=redis_url.hostname, port=redis_url.port)  # type: ignore
+    else:
+        SESSION_REDIS = redis.Redis(host="localhost", port=6379)
 
     # authentication
     LOGIN_VIEW = "auth_bp.login"
@@ -70,8 +77,11 @@ class Config:
     CACHE_DEFAULT_TIMEOUT = 300
 
     # database
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="webapp", pw="nothing", url="localhost", db="em_web"
+        ),
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -83,7 +93,7 @@ class Config:
 
     RUNNER_HOST = "http://127.0.0.1:5002/api"
 
-    WEB_HOST = "0.0.0.0"  # noqa: S104
+    WEB_HOST = "http://127.0.0.1"  # noqa: S104
 
     """
         process executor. must be thread type, not process, otherwise we cannot
@@ -93,7 +103,7 @@ class Config:
     EXECUTOR_TYPE = "thread"
     EXECUTOR_MAX_WORKERS = 12
     EXECUTOR_PROPAGATE_EXCEPTIONS = True
-    REDIS_URL = "redis://127.0.0.1:6379/0"
+    REDIS_URL = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0")
 
     # compression
     MINIFY_HTML = True
@@ -191,12 +201,22 @@ class DevConfig(Config):
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="webapp", pw="nothing", url="localhost", db="em_web_dev"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="webapp", pw="nothing", url="localhost", db="em_web_dev"
+        ),
     )
 
     # migrations override
     MIGRATIONS = "migrations_dev"
+
+    if os.environ.get("REDIS_URL"):
+        redis_url = urlparse(os.environ.get("REDIS_URL"))
+        SESSION_REDIS = redis.Redis(host=redis_url.hostname, port=redis_url.port)  # type: ignore
+    else:
+        SESSION_REDIS = redis.Redis(host="redis", port=6379)
+    REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
 
 
 class TestConfig(DevConfig):

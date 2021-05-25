@@ -2,13 +2,11 @@ FROM python:3.9
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
-	PYTHONUNBUFFERED=1 \
+    PYTHONUNBUFFERED=1 \
     REMOTE=https://github.com/Riverside-Healthcare/extract_management.git
 
 RUN apt-get update -qq \
-     && apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config postgresql postgresql-contrib > /dev/null
-
-RUN su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+     && apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config postgresql-contrib > /dev/null
 
 RUN apt-get install -y -qq \
     build-essential \
@@ -27,8 +25,7 @@ RUN apt-get install -y -qq \
     libsasl2-dev \
     libxml2-dev \
     libxmlsec1-dev \
-    libxmlsec1-dev \
-    redis-server
+    libxmlsec1-dev
 
 WORKDIR /app
 
@@ -44,6 +41,4 @@ ENV FLASK_ENV=test \
     FLASK_DEBUG=True \
     FLASK_APP=em_web
 
-RUN /etc/init.d/postgresql start && flask db init && flask db migrate && flask db upgrade && flask cli seed && flask cli seed_demo
-
-CMD (redis-server &) && (/etc/init.d/postgresql start &) && (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT
+CMD (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

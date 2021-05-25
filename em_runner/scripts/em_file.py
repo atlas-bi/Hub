@@ -117,10 +117,10 @@ class File:
         )
 
         quote_levels = {
-            1: 2,  # "csv.QUOTE_NONE",
+            1: 3,  # "csv.QUOTE_NONE",
             2: 1,  # "csv.QUOTE_ALL",
             3: 0,  # "csv.QUOTE_MINIMAL",
-            4: 3,  # "csv.QUOTE_NONNUMERIC",
+            4: 2,  # "csv.QUOTE_NONNUMERIC",
         }
 
         return quote_levels[task_level]
@@ -365,13 +365,12 @@ class File:
                     + ".zip"
                 )
 
-                zip_file = zipfile.ZipFile(self.base_path + self.zip_name, "w")
-                zip_file.write(
-                    self.file_path,
-                    compress_type=zipfile.ZIP_DEFLATED,
-                    arcname=self.file_name,
-                )
-                zip_file.close()
+                with zipfile.ZipFile(self.base_path + self.zip_name, "w") as zip_file:
+                    zip_file.write(
+                        self.file_path,
+                        compress_type=zipfile.ZIP_DEFLATED,
+                        arcname=self.file_name,
+                    )
 
                 log = TaskLog(
                     task_id=self.task.id,

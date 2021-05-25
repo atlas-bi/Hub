@@ -5,50 +5,54 @@ variables:
   FLASK_APP: em_web
 
 stages:
-  - static
-  - test
-  - deploy
-  - docs
+- static
+- test
+- deploy
+- docs
 
 include:
-  - template: Code-Quality.gitlab-ci.yml
-#  - template: Security/SAST.gitlab-ci.yml
-  - template: Security/Secret-Detection.gitlab-ci.yml
+- template: Code-Quality.gitlab-ci.yml
+- template: Security/Secret-Detection.gitlab-ci.yml
+- local: /.gitlab/py.yml
 
 code_quality:
+  interruptible: true
   services:
   tags:
-    - cq-sans-dind
+  - cq-sans-dind
   before_script:
-    - echo "nothing to do.."
+  - echo "nothing to do.."
   artifacts:
     paths:
-      - gl-code-quality-report.json
+    - gl-code-quality-report.json
 
 metrics:
+  interruptible: true
   before_script:
-    - echo "nothing to do.."
+  - echo "nothing to do.."
   script:
-    - echo 'metric_name metric_value' > metrics.txt
+  - echo 'metric_name metric_value' > metrics.txt
   artifacts:
     reports:
       metrics: metrics.txt
 
 secret_detection:
+  interruptible: true
   before_script:
-    - git config --global http.sslVerify false
+  - git config --global http.sslVerify false
 
 py_secret_detection:
+  interruptible: true
   stage: test
   image: python:3.9
   before_script:
-    - python -m pip install detect-secrets
+  - python -m pip install detect-secrets
   script:
-    - detect-secrets scan --exclude-files "flask_simpleldap.py" --exclude-files "poetry.lock" --exclude-files 'migrations-dev' --exclude-files 'migrations' --exclude-files "seed.py" --exclude-files '.*\.html.j2$' --exclude-files '.*\.rst$' --exclude-files 'package-lock.json$' --exclude-files 'Dockerfile' > .secrets.baseline
-    - cat .secrets.baseline
+  - detect-secrets scan --exclude-files "flask_simpleldap.py" --exclude-files "poetry.lock" --exclude-files 'migrations-dev' --exclude-files 'migrations' --exclude-files "seed.py" --exclude-files '.*\.html.j2$' --exclude-files '.*\.rst$' --exclude-files 'package-lock.json$' --exclude-files 'Dockerfile' > .secrets.baseline
+  - cat .secrets.baseline
   artifacts:
     paths:
-      - .secrets.baseline
+    - .secrets.baseline
 
 # sast:
 #   stage: test
@@ -58,210 +62,184 @@ py_secret_detection:
 lint:
   stage: static
   image: python:3.9
+  interruptible: true
   except:
-    - public
+  - public
   before_script:
-    - python -m pip install --disable-pip-version-check --quiet tox
+  - python -m pip install --disable-pip-version-check --quiet tox
   script:
-    - export LINT=$(tox -e lint)
-    - echo -e "$LINT"
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo
-      "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red
-    - echo $LINT | grep -q "commands succeeded" && exit 0 || exit 1
+  - export LINT=$(tox -e lint)
+  - echo -e "$LINT"
+  - python -m pip install --disable-pip-version-check --quiet anybadge
+  - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red
+  - echo $LINT | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
-      - lint.svg
+    - lint.svg
+    when: always
+    expire_in: 4 weeks
+
+maintainability:
+  stage: static
+  needs: []
+  image: python:3.8-slim
+  interruptible: true
+  before_script:
+  - pip install --no-cache-dir anybadge tox
+  script:
+  - export LINT=$(tox -e radon); echo -e "$LINT"
+  - "export MI=$(echo $LINT | grep -o 'Average complexity: .' | sed -e 's/Average complexity: //')"
+  - anybadge -l maintainability -v $MI -f maintainability.svg F=red C=red D=red C=orange B=yellow A=green
+  artifacts:
+    paths:
+    - maintainability.svg
     when: always
     expire_in: 4 weeks
 
 web:
   image: christopherpickering/extract-management-2-static-test
   stage: static
+  interruptible: true
   except:
-    - public
+  - public
   before_script:
-    - rm -rf package-lock.json
-    - rm -rf node_modules
+  - rm -rf package-lock.json
+  - rm -rf node_modules
   script:
-    - export STATIC=$(tox -e static)
-    - echo -e "$STATIC"
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo
-      "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
-    - echo $STATIC | grep -q "commands succeeded" && exit 0 || exit 1
+  - export STATIC=$(tox -e static)
+  - echo -e "$STATIC"
+  - python -m pip install --disable-pip-version-check --quiet anybadge
+  - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
+  - echo $STATIC | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
-      - web.svg
+    - web.svg
     when: always
     expire_in: 4 weeks
 
 html:
   image: christopherpickering/extract-management-2-static-test
   stage: static
+  interruptible: true
   except:
-    - public
+  - public
   before_script:
-    - rm -rf package-lock.json
-    - rm -rf node_modules
+  - rm -rf package-lock.json
+  - rm -rf node_modules
   script:
-    - export HTML=$(tox -e html)
-    - echo -e $HTML
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $HTML | grep -q "commands succeeded" && echo
-      "succeeded" || echo "failed") -f html.svg succeeded=green failed=red
-    - echo $HTML | grep -q "commands succeeded" && exit 0 || exit 1
+  - export HTML=$(tox -e html)
+  - echo -e "$HTML"
+  - python -m pip install --disable-pip-version-check --quiet anybadge
+  - anybadge -l $CI_JOB_NAME -v $(echo $HTML | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f html.svg succeeded=green failed=red
+  - echo $HTML | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
-      - html.svg
+    - html.svg
     when: always
     expire_in: 4 weeks
 
 typing:
   image: python:3.9-slim
   stage: static
+  interruptible: true
   except:
-    - public
+  - public
   before_script:
-    - python -m pip install --disable-pip-version-check --quiet tox
+  - python -m pip install --disable-pip-version-check --quiet tox
   script:
-    - export TYPING=$(tox -e typing)
-    - echo -e "$TYPING"
-    - python -m pip install --disable-pip-version-check --quiet anybadge
-    - anybadge -l $CI_JOB_NAME -v $(echo $TYPING | grep -q "commands succeeded" && echo
-      "succeeded" || echo "failed") -f typing.svg succeeded=green failed=red
-    - echo $TYPING | grep -q "commands succeeded" && exit 0 || exit 1
+  - export TYPING=$(tox -e typing)
+  - echo -e "$TYPING"
+  - python -m pip install --disable-pip-version-check --quiet anybadge
+  - anybadge -l $CI_JOB_NAME -v $(echo $TYPING | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f typing.svg succeeded=green failed=red
+  - echo $TYPING | grep -q "commands succeeded" && exit 0 || exit 1
   artifacts:
     paths:
-      - typing.svg
+    - typing.svg
     when: always
     expire_in: 4 weeks
-
-py39:
-  stage: test
-  image: christopherpickering/extract-management-2-python39-test
-  before_script:
-    - python --version
-    - redis-server --daemonize yes
-    - cd /builds/extract-management/extract-management-site/
-  script:
-    - echo $FLASK_ENV
-    - echo $FLASK_DEBUG
-    - echo $FLASK_APP
-    - tox -e clean,py39,cov
-  coverage: "/^TOTAL.*\\s+(\\d+\\%)$/"
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml
-
-py38:
-  stage: test
-  image: christopherpickering/extract-management-2-python38-test
-  before_script:
-    - python --version
-    - redis-server --daemonize yes
-    - cd /builds/extract-management/extract-management-site/
-  script:
-    - echo $FLASK_ENV
-    - echo $FLASK_DEBUG
-    - echo $FLASK_APP
-    - tox -e clean,py38,cov
-
-py37:
-  stage: test
-  image: christopherpickering/extract-management-2-python37-test
-  before_script:
-    - python --version
-    - redis-server --daemonize yes
-    - cd /builds/extract-management/extract-management-site/
-  script:
-    - echo $FLASK_ENV
-    - echo $FLASK_DEBUG
-    - echo $FLASK_APP
-    - tox -e clean,py37,cov
 
 pages:
   image: christopherpickering/extract-management-2-python39-test
   stage: docs
+  interruptible: true
   except:
-    - public
+  - public
   needs:
-   - py39
+  - py39
   before_script:
-    - python --version
-    - redis-server --daemonize yes
-    - cd /builds/extract-management/extract-management-site/
+  - python --version
+  - redis-server --daemonize yes
+  - cd /builds/extract-management/extract-management-site/
   script:
-    - tox -e docs
-    - mv docs/_build/ public/
+  - tox -e docs
+  - mv docs/_build/ public/
   artifacts:
     paths:
-      - public
+    - public
   only:
-    - master
+  - master
 
 public:
   stage: deploy
   image: python:3.9
   needs:
-    - job: py39
-      artifacts: false
+  - job: py39
+    artifacts: false
   only:
-    - master
+  - master
   except:
-    - public
+  - public
   before_script:
-    - apt-get install -y git
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - mkdir -p ~/.ssh
-    - ssh-keyscan github.com >> ~/.ssh/known_hosts
-    - echo "$github_priv_key" | tr -d '\r' | ssh-add -
-    - git config --global user.email "$GITLAB_USER_EMAIL"
-    - git config --global user.name "$GITLAB_USER_NAME"
-    - shopt -s dotglob # include dotfiles in mv
+  - apt-get install -y git
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
+  - eval $(ssh-agent -s)
+  - mkdir -p ~/.ssh
+  - ssh-keyscan github.com >> ~/.ssh/known_hosts
+  - echo "$github_priv_key" | tr -d '\r' | ssh-add -
+  - git config --global user.email "$GITLAB_USER_EMAIL"
+  - git config --global user.name "$GITLAB_USER_NAME"
+  - shopt -s dotglob   # include dotfiles in mv
   script:
-    - cd public-publish && python build_em_public.py
-    - cd $CI_PROJECT_DIR
-    - git init
-    - git remote add origin https://oauth2:${CI_PUSH_TOKEN}@$CI_SERVER_HOST/$CI_PROJECT_PATH.git
-    - git config user.email "$GITLAB_USER_EMAIL"
-    - git config user.name "$GITLAB_USER_NAME"
-    - git add . && git commit -m '[skip ci] public update'
-    - export GIT_SSL_NO_VERIFY=1 && git push --force --follow-tags origin HEAD:public
+  - cd public-publish && python build_em_public.py
+  - cd $CI_PROJECT_DIR
+  - git init
+  - git remote add origin https://oauth2:${CI_PUSH_TOKEN}@$CI_SERVER_HOST/$CI_PROJECT_PATH.git
+  - git config user.email "$GITLAB_USER_EMAIL"
+  - git config user.name "$GITLAB_USER_NAME"
+  - git add . && git commit -m '[skip ci] public update'
+  - export GIT_SSL_NO_VERIFY=1 && git push --force --follow-tags origin HEAD:public
     # list changes
-    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/extract_management.git && git pull origin main
-    - git rm -rf . ; git clean -fxd # remove pub files, except git
-    - cd $CI_PROJECT_DIR && rm -rf .git
-    - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
-    - git status
+  - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/extract_management.git && git pull origin main
+  - git rm -rf . ; git clean -fxd   # remove pub files, except git
+  - cd $CI_PROJECT_DIR && rm -rf .git
+  - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
+  - git status
 
 github:
   when: manual
   only:
-    - public # public branch
+  - public   # public branch
   stage: deploy
   image: python:3.9
   before_script:
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - mkdir -p ~/.ssh
-    - ssh-keyscan github.com >> ~/.ssh/known_hosts
-    - echo "$github_priv_key" | tr -d '\r' | ssh-add -
-    - git config --global user.email "$GITLAB_USER_EMAIL"
-    - git config --global user.name "$GITLAB_USER_NAME"
-    - shopt -s dotglob # include dotfiles in mv
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
+  - eval $(ssh-agent -s)
+  - mkdir -p ~/.ssh
+  - ssh-keyscan github.com >> ~/.ssh/known_hosts
+  - echo "$github_priv_key" | tr -d '\r' | ssh-add -
+  - git config --global user.email "$GITLAB_USER_EMAIL"
+  - git config --global user.name "$GITLAB_USER_NAME"
+  - shopt -s dotglob   # include dotfiles in mv
   script:
-    - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/extract_management.git && git pull origin main
-    - git rm -rf . ; git clean -fxd # remove pub files, except git
-    - cd $CI_PROJECT_DIR && rm -rf .git
-    - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
-    - git status
-    - git add . && git commit -m "$MESSAGE"
-    - git status
-    - git branch -m master main
-    - git push -u origin main
+  - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/extract_management.git && git pull origin main
+  - git rm -rf . ; git clean -fxd   # remove pub files, except git
+  - cd $CI_PROJECT_DIR && rm -rf .git
+  - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
+  - git status
+  - git add . && git commit -m "$MESSAGE"
+  - git status
+  - git branch -m master main
+  - git push -u origin main
   needs:
-    - job: py_secret_detection
-      artifacts: false
+  - job: py_secret_detection
+    artifacts: false

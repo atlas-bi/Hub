@@ -176,7 +176,8 @@ function numberToEnglish(n, customJoinCharacter) {
       e.target.closest(".em-eraseInput") &&
       e.target.closest(".em-eraseInput").hasAttribute("data-toggle") &&
       e.target.closest(".em-eraseInput").hasAttribute("data-target") &&
-      e.target.closest(".em-eraseInput").getAttribute("data-toggle") === "erasor"
+      e.target.closest(".em-eraseInput").getAttribute("data-toggle") ===
+        "erasor"
     ) {
       var t = document.querySelector(
         'input[name="' +
