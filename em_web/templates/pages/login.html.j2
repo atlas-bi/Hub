@@ -41,7 +41,13 @@
                     {% endif %}
 
                     <div class="login-inputGrp">
-                        <div class="login-inputTtl" >Username/Email (<em>ex</em>: joe-cool/joe@co.ol)</div>
+                        <div class="login-inputTtl" >
+                            {% if config['DEMO'] %}
+                                Login to demo as user: mr-cool, pass: 123
+                            {% else %}
+                                Username/Email (<em>ex</em>: joe-cool/joe@co.ol)
+                            {% endif %}
+                        </div>
                         <input class="login-input" name="user" autocomplete="off" />
                     </div>
                     <div class="login-inputGrp">
