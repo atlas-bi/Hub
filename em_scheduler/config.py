@@ -64,6 +64,7 @@ class Config:
                 host=redis_url.hostname,
                 port=redis_url.port,
                 password=redis_url.password,
+                username=redis_url.username,
             )
         }
     else:

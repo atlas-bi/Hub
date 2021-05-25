@@ -194,6 +194,7 @@ class DevConfig(Config):
     AUTH_METHOD = "DEV"
 
     DEBUG = False
+    DEMO = True
 
     SESSION_COOKIE_SECURE = False
 
@@ -214,7 +215,7 @@ class DevConfig(Config):
     else:
         SESSION_REDIS = redis.Redis(host="redis", port=6379)  # type: ignore
     REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
-    DEMO = True
+
 
 class TestConfig(DevConfig):
     """Configuration overrides for dev testing.

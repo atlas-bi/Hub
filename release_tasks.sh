@@ -4,7 +4,8 @@ export FLASK_DEBUG=True
 export FLASK_APP=em_web
 
 psql --command "CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';"
-createdb -O webapp em_web_test
+dropdb em_web_dev
+createdb -O webapp em_web_dev
 
 flask db init
 flask db migrate

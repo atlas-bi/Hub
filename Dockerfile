@@ -40,7 +40,7 @@ RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
 
 RUN cp em_web/model.py em_scheduler/ && cp em_web/model.py em_runner/
 
-ENV FLASK_ENV=test \
+ENV FLASK_ENV=development \
     FLASK_DEBUG=True \
     FLASK_APP=em_web
 

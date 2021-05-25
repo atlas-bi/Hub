@@ -75,7 +75,7 @@ def create_app():
     if app.config["ENV"] == "test":
         app.config.from_object("em_scheduler.config.TestConfig")
 
-    elif app.config["DEBUG"]:
+    elif app.config["ENV"] == "development":
         app.config.from_object("em_scheduler.config.DevConfig")
 
     else:
