@@ -41,7 +41,7 @@ class Config:
         "DATABASE_URL",
         "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
             user="webapp", pw="nothing", url="localhost", db="em_web"
-        ).replace("postgres://", "postgresql://", 1),
+        ).replace("postgres://", "postgresql+psycopg2://", 1),
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -110,7 +110,7 @@ class DevConfig(Config):
         "DATABASE_URL",
         "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
             user="webapp", pw="nothing", url="localhost", db="em_web_dev"
-        ).replace("postgres://", "postgresql://", 1),
+        ).replace("postgres://", "postgresql+psycopg2://", 1),
     )
     MIGRATIONS = "migrations_dev"
 
