@@ -13,6 +13,12 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
+    - name: Reset database
+      uses: weareangular/heroku-gh-actions@master
+      with:
+        args: pg:reset DATABASE
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
     - name: Deploy to Heroku
       uses: gonuit/heroku-docker-deploy@v1.3.3
       with:
