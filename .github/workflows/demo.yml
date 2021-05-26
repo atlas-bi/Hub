@@ -16,7 +16,7 @@ jobs:
     - name: Reset database
       uses: weareangular/heroku-gh-actions@master
       with:
-        args: pg:reset DATABASE --app ${{ secrets.HEROKU_APP_NAME }} --confirm=y
+        args: pg:reset DATABASE --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
     - name: Deploy to Heroku
