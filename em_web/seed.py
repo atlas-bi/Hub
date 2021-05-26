@@ -327,7 +327,10 @@ def seed_demo():
         Task.query.filter_by(
             name="Task 1",
             source_type_id=1,
-            source_code="select " "1" "",
+            source_code="Declare @Today Date = GetDate();\
+SELECT * \
+FROM Animals \
+WHERE @Today = 'Yesterday'; ",
             destination_ftp=1,
             destination_ftp_id=1,
             project_id=1,
@@ -337,6 +340,7 @@ def seed_demo():
             destination_file_name="test_%d_%m",
             destination_file_type_id=2,
             destination_file_delimiter="|",
+            query_params="@Today = 'Yesterday'",
         ).first()
         is None
     ):

@@ -39,25 +39,23 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-
-                    <div class="login-inputGrp">
-                        <div class="login-inputTtl" >
-                            {% if config['DEMO'] %}
-                                Login to demo as user: mr-cool, pass: 123
-                            {% else %}
-                                Username/Email (<em>ex</em>: joe-cool/joe@co.ol)
-                            {% endif %}
+                    {% if config['DEMO'] %}
+                        <input class="login-input" name="user" autocomplete="off" type="hidden" user="mr-cool" />
+                        <button class="login-btn" type="submit" value="Submit">Log In To the Demo</button>
+                    {% else %}
+                        <div class="login-inputGrp">
+                            <div class="login-inputTtl">Username/Email (<em>ex</em>: joe-cool/joe@co.ol)</div>
+                            <input class="login-input" name="user" autocomplete="off" />
                         </div>
-                        <input class="login-input" name="user" autocomplete="off" />
-                    </div>
-                    <div class="login-inputGrp">
-                        <div class="login-inputTtl">Password (<em>ex</em>: d0n't4g@!)</div>
-                        <input class="login-input"  type="password" name="password" />
-                    </div>
-                    <button class="login-btn" type="submit" value="Submit">Log In</button>
-                    <div class="login-subTtl">
-                        <em>Note: you must be part of the analytics team to access this website.</em>
-                    </div>
+                        <div class="login-inputGrp">
+                            <div class="login-inputTtl">Password (<em>ex</em>: d0n't4g@!)</div>
+                            <input class="login-input"  type="password" name="password" />
+                        </div>
+                        <button class="login-btn" type="submit" value="Submit">Log In</button>
+                        <div class="login-subTtl">
+                            <em>Note: you must be part of the analytics team to access this website.</em>
+                        </div>
+                    {% endif %}
                 </form>
                 <div class="login-copy">&#169; <script>document.write(new Date().getFullYear())</script> Riverside Healthcare</div>
             </div>

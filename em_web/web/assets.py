@@ -80,6 +80,12 @@ css_demo = Bundle(
 )
 web_assets.register("css_demo", css_demo)
 
+js = Bundle(
+    "./js/demo.js",
+    filters="jsmin",
+    output="js/demo.min.js",
+)
+web_assets.register("js_demo", js)
 
 css_error = Bundle(
     "./assets/base.scss",

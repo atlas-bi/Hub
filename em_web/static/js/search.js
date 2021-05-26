@@ -20,6 +20,9 @@ window.addEventListener("load", function () {
   var q = new XMLHttpRequest();
 
   var searchBlock = document.querySelector(".block-search");
+  if (!searchBlock) {
+    return !1;
+  }
   var resultsDiv = searchBlock.querySelector(".search-results");
 
   q.open("get", "/search", true);

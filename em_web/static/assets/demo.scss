@@ -23,7 +23,7 @@
 .demo-banner {
   width: $page-width;
   margin: auto;
-  color: $color-font-light;
+  color: $color-font;
   > p {
     font-size: $font-size-med;
   }
@@ -37,11 +37,6 @@
       text-decoration: none;
     }
   }
-  strong {
-    margin-bottom: $margin-xsmall;
-    display: block;
-    font-size: $font-size-lg;
-  }
 }
 
 .demo-bannerLiner {
@@ -49,4 +44,46 @@
   padding: $padding-small;
   border-radius: $border-radius-med;
   border: $border-med solid $color-blue;
+  .demo-collapse {
+    width: 100%;
+    outline: none;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: $color-blue;
+    font-size: $font-size-lg;
+    display: block;
+    margin-bottom: $margin-xsmall;
+    cursor: pointer;
+    transition: $transition_dur color;
+    &:hover {
+      color: $color-blue-dark;
+    }
+    .arrow {
+      border: solid $color-border-dark;
+      border-width: 0 4px 4px 0;
+      display: inline-block;
+      padding: 4px;
+      padding-bottom: 4px;
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+      height: 4px;
+      width: 4px;
+      margin-bottom: 4px;
+      margin-right: 20px;
+      transition: $transition_dur -webkit-transform;
+      transition: $transition_dur transform;
+    }
+    &.active {
+      .arrow {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        margin-bottom: 9px;
+      }
+    }
+  }
+  .demo-collapseContent {
+    display: none;
+    overflow: hidden;
+  }
 }

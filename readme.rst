@@ -34,12 +34,12 @@ Tasks can run at any time and on any schedule.
 Documentation
 -------------
 
-Check out our `documentation site <https://docs.extract.management>`_.
+Read the `documentation <https://docs.extract.management>`_.
 
 Demo
 ----
 
-Checkout the `demo site <https://extract-management.herokuapp.com>`_!
+Try out the `demo <https://demo.extract.management>`_!
 
 Run with Docker
 ~~~~~~~~~~~~~~~
