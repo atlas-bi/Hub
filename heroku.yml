@@ -5,6 +5,7 @@ build:
 release:
   image: web
   command:
+  - heroku pg:reset DATABASE
   - ./release_tasks.sh
 
 setup:
