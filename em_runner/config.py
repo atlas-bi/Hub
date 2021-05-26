@@ -94,6 +94,9 @@ class Config:
 
     MIGRATIONS = "migrations"
 
+    if os.environ.get("REDIS_URL"):
+        REDIS_URL = os.environ.get("REDIS_URL")
+
 
 class DevConfig(Config):
     """Configuration overides for development."""
