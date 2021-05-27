@@ -71,9 +71,17 @@ def schedule():
         hour_list.append(datetime.datetime.strftime(now_int, "%-H:00"))
 
     active_schedule = []
+
     for job in scheduler.get_jobs():
-        if not hasattr(job, "next_run_time") or job.next_run_time is None and job.args:
+
+        if (
+            job.id == "job_sync"
+            or not hasattr(job, "next_run_time")
+            or job.next_run_time is None
+            and job.args
+        ):
             continue
+
         job_date = job.next_run_time
 
         while job_date and job_date < tomorrow:
