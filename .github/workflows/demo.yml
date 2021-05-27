@@ -26,3 +26,4 @@ jobs:
         heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
         email: ${{ secrets.HEROKU_EMAIL }}
         dockerfile_name: nodb.Dockerfile
+        docker_options: --no-cache

@@ -34,9 +34,11 @@
 
 
 {% block body_auth %}
-    <h1>Opps, that was an error (lol)</h1>
+    <div>
+        <h1>Opps, that was an error (lol)</h1>
 
-    <p>{{ message }}</p>
-    <h2>Trace</h2>
-    <pre><code class="language-bash" style="white-space: pre-wrap;">{{ trace }}</code></pre>
+        <p>{{ message }}</p>
+        <h2>Trace</h2>
+        <pre><code class="language-bash" style="white-space: pre-wrap;">{{ trace }}</code></pre>
+    </div>
 {% endblock body_auth %}

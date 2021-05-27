@@ -240,7 +240,7 @@ def seed_demo():
         source_code="""powershell  if ((gwmi -class Win32_Processor).LoadPercentage -gt 95){exit 1}""",
         project_id=1,
         source_query_type_id=4,
-        enabled=1,
+        enabled=0,
     )
     # demo sql task
     get_or_create(

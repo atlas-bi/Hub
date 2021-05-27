@@ -29,6 +29,7 @@ class Config:
     # pylint: disable=too-few-public-methods
 
     ALLOWED_HOSTS = ["*", "localhost"]
+    ORG_NAME = "Riverside Healthcare"
 
     DEBUG = False
     TESTING = False
