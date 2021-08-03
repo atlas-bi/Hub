@@ -1,0 +1,20 @@
+docs:
+  image: christopherpickering/extract-management-2-python39-test
+  stage: docs
+  interruptible: true
+  except:
+  - public
+  needs:
+  - py39
+  before_script:
+  - python --version
+  - redis-server --daemonize yes
+  - cd /builds/extract-management/extract-management-site/
+  script:
+  - tox -e docs
+  - mv docs/_build/ public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master

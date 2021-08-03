@@ -1,0 +1,64 @@
+public:
+  stage: deploy
+  image: python:3.9
+  needs:
+  - job: py39
+    artifacts: false
+  only:
+  - master
+  except:
+  - public
+  before_script:
+  - apt-get install -y git
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
+  - eval $(ssh-agent -s)
+  - mkdir -p ~/.ssh
+  - ssh-keyscan github.com >> ~/.ssh/known_hosts
+  - echo "$github_priv_key" | tr -d '\r' | ssh-add -
+  - git config --global user.email "$GITLAB_USER_EMAIL"
+  - git config --global user.name "$GITLAB_USER_NAME"
+  - shopt -s dotglob   # include dotfiles in mv
+  script:
+  - cd public-publish && python build_em_public.py
+  - cd $CI_PROJECT_DIR
+  - git init
+  - git remote add origin https://oauth2:${CI_PUSH_TOKEN}@$CI_SERVER_HOST/$CI_PROJECT_PATH.git
+  - git config user.email "$GITLAB_USER_EMAIL"
+  - git config user.name "$GITLAB_USER_NAME"
+  - git add . && git commit -m '[skip ci] public update'
+  - export GIT_SSL_NO_VERIFY=1 && git push --force --follow-tags origin HEAD:public
+    # list changes
+  - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/extract_management.git && git pull origin main
+  - git rm -rf . ; git clean -fxd   # remove pub files, except git
+  - cd $CI_PROJECT_DIR && rm -rf .git
+  - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
+  - git status
+
+github:
+  when: manual
+  only:
+  - public   # public branch
+  stage: deploy
+  image: python:3.9
+  before_script:
+  - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
+  - eval $(ssh-agent -s)
+  - mkdir -p ~/.ssh
+  - ssh-keyscan github.com >> ~/.ssh/known_hosts
+  - echo "$github_priv_key" | tr -d '\r' | ssh-add -
+  - git config --global user.email "$GITLAB_USER_EMAIL"
+  - git config --global user.name "$GITLAB_USER_NAME"
+  - shopt -s dotglob   # include dotfiles in mv
+  script:
+  - cd ..; rm -rf pub; mkdir pub; cd pub && git init && git remote add origin git@github.com:Riverside-Healthcare/extract_management.git && git pull origin main
+  - git rm -rf . ; git clean -fxd   # remove pub files, except git
+  - cd $CI_PROJECT_DIR && rm -rf .git
+  - cd .. && cd pub && mv $CI_PROJECT_DIR/* .
+  - git status
+  - git add . && git commit -m "$MESSAGE"
+  - git status
+  - git branch -m master main
+  - git push -u origin main
+  needs:
+  - job: py_secret_detection
+    artifacts: false

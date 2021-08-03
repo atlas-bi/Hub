@@ -1,0 +1,20 @@
+web:
+  image: christopherpickering/extract-management-2-static-test
+  stage: static
+  interruptible: true
+  except:
+  - public
+  before_script:
+  - rm -rf package-lock.json
+  - rm -rf node_modules
+  script:
+  - export STATIC=$(tox -e static)
+  - echo -e "$STATIC"
+  - python -m pip install --disable-pip-version-check --quiet anybadge
+  - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f web.svg succeeded=green failed=red
+  - echo $STATIC | grep -q "commands succeeded" && exit 0 || exit 1
+  artifacts:
+    paths:
+    - web.svg
+    when: always
+    expire_in: 4 weeks

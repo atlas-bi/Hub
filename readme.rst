@@ -30,6 +30,20 @@ Extract Management 2.0 is a task scheduling tool for getting data from a source 
 
 Tasks can run at any time and on any schedule.
 
+Possibilities are almost unlimited....
+
+- Run .bat files on windows servers over ssh
+- Read, modify and resend files over FPT or SFTP
+- ZIP and send data
+- Run raw python code to process data and send
+- Run code from FTP/SFTP/SAMB or web source
+- Send output data embeded or attached to email
+- Parameterize sql on the project or task leve
+- Parameterize file names with date parameters
+- Export data as text, csv, excel, delimited, or as a blob
+- Encrypt data before sending
+- Pull and send data from FTP/SFTP/SAMB/SSH
+- Run SSH commands to monitor remote servers
 
 Documentation
 -------------

@@ -166,6 +166,8 @@ class SqlServer:
             db.session.add(log)
             db.session.commit()
 
+            self.__close()
+
             return data_file.name
 
         except BaseException:
@@ -184,5 +186,7 @@ class SqlServer:
             )
             db.session.add(log)
             db.session.commit()
+
+            self.__close()
 
             return False

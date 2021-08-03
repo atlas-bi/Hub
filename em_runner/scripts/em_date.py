@@ -4,6 +4,11 @@ Use to make a string form data parameters.
 Allows input of mathematical operations after a python date parameter, for example,
 %d-1 = yesterday.
 
+Date strings are split on the first recurring parameter and the strings processed
+in groups.
+
+For example, %Y-%d-%m_%Y-%d-%m will be processed in two groups of "%Y-%d-%m".
+
 allowed on
     microseconds
     seconds
@@ -35,6 +40,7 @@ import calendar
 import datetime
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 from dateutil import relativedelta
@@ -187,8 +193,51 @@ class DateParsing:
         :returns: string of date, or input string if error.
 
         """
+
+        def get_repeating_part(parts):
+            """Find and return first duplicate part in array."""
+            my_counter = Counter()
+            for part in parts:
+                my_counter[part] += 1
+                if my_counter[part] > 1:
+                    return part
+
+            return None
+
         try:
-            parts = re.split("`", self.date_string.replace("%", "`%"))
+            parameters = [
+                x.group() for x in re.finditer(r"%[a-zA-Z]", self.date_string)
+            ]
+
+            parts = []
+            # split into parts
+            param = get_repeating_part(parameters)
+            if param:
+                date_string = self.date_string
+                while param:
+                    # split the date string on the first two parameters.
+                    # ex: 'file_name','%y%m_stuff','%y%m_otherstuff_%y%m'
+                    split_parts = date_string.split(param, 2)
+
+                    # join the first to parts and append them to our part list.
+                    parts.append(param.join(split_parts[:2]))
+
+                    # update the date string with our remainder (3rd element in array)
+                    date_string = param + split_parts[2]
+
+                    # update remaining parameters
+                    parameters = [
+                        x.group() for x in re.finditer(r"%[a-zA-Z]", date_string)
+                    ]
+                    param = get_repeating_part(parameters)
+
+                # need to add on the last part, if there are no more duplicate params.
+                # pylint: disable=W0120
+                else:
+                    parts.append(date_string)
+
+            else:
+                parts.append(self.date_string)
 
             self.date_string = ("").join([self.get_date_part(part) for part in parts])
 

@@ -648,28 +648,6 @@ class Runner:
 
                 self.data_file = my_file
 
-                # pylint: disable=W0105
-                """
-                # if self.task.source_sftp_ignore_delimiter == 1:
-                #     my_delimiter = None
-
-                #     self.data_file = my_file
-                # else:
-
-                #     my_delimiter = (
-                #         self.task.source_sftp_delimiter
-                #         if self.task.source_sftp_delimiter != ""
-                #         and self.task.source_sftp_delimiter is not None
-                #         else ","
-                #     )
-
-                #     csv_reader = csv.reader(
-                #         open(my_file, 'r').readlines(),
-                #         delimiter=my_delimiter,
-                #     )
-
-                #     self.data_file = list(csv_reader)
-                """
                 return True
 
             elif self.task.source_type_id == 4:  # ftp file

@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.4.0
+  rev: v4.0.1
   hooks:
   - id: pretty-format-json
     args: [--autofix]
@@ -11,19 +11,19 @@ repos:
   - id: end-of-file-fixer
     exclude: migrations* | docs*
 - repo: https://github.com/timothycrosley/isort
-  rev: 5.7.0
+  rev: 5.8.0
   hooks:
   - id: isort
     exclude: migrations* | docs*
     additional_dependencies: [toml]
 - repo: https://github.com/ambv/black
-  rev: stable
+  rev: 21.6b0
   hooks:
   - id: black
     language_version: python3.9
     exclude: migrations* | docs*
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: befdfee
+  rev: v2.1.0
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
