@@ -1,0 +1,94 @@
+:py:mod:`em_web.web.executors`
+==============================
+
+.. py:module:: em_web.web.executors
+
+.. autoapi-nested-parse::
+
+   Jobs to run through exectutor.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.executors.executor_status
+   em_web.web.executors.submit_executor
+   em_web.web.executors.enable_task
+   em_web.web.executors.disable_task
+   em_web.web.executors.rescheduled_scheduled_tasks
+   em_web.web.executors.run_scheduled_tasks
+   em_web.web.executors.disabled_scheduled_tasks
+   em_web.web.executors.schedule_errored_tasks
+   em_web.web.executors.run_errored_tasks
+   em_web.web.executors.run_active_tasks
+
+
+
+.. py:function:: executor_status()
+
+   Get list of active executor jobs.
+
+   :url: /executor/status
+   :returns: json list of active jobs.
+
+
+.. py:function:: submit_executor(name, *args)
+
+   Task Executor.
+
+   Redis is used to track current executors. When an executor is launched
+   it is added to Redis["executors"].
+
+   The webapp can query /executor/status to get a listing of running
+   tasks.
+
+   :param name: name of function to call
+
+
+.. py:function:: enable_task(task_id)
+
+   Enable task.
+
+
+.. py:function:: disable_task(task_id)
+
+   Disable task.
+
+
+.. py:function:: rescheduled_scheduled_tasks(*args)
+
+   Rescheduling scheduled tasks.
+
+
+.. py:function:: run_scheduled_tasks(*args)
+
+   Running all scheduled tasks.
+
+
+.. py:function:: disabled_scheduled_tasks(*args)
+
+   Disabling scheduled tasks.
+
+
+.. py:function:: schedule_errored_tasks(*args)
+
+   Scheduling all errored tasks.
+
+
+.. py:function:: run_errored_tasks(*args)
+
+   Running all errored tasks.
+
+
+.. py:function:: run_active_tasks(*args)
+
+   Rerun all running tasks.
+
+

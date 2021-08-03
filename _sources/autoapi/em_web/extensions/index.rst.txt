@@ -1,0 +1,31 @@
+:py:mod:`em_web.extensions`
+===========================
+
+.. py:module:: em_web.extensions
+
+.. autoapi-nested-parse::
+
+   EM Web Extensions.
+
+   Set up basic flask items for import in other modules.
+
+   *Items Setup*
+
+   :cache: web asset cache
+   :compress: compress output (gzip etc)
+   :db: database
+   :executor: run process off main thread
+   :htmlmin: html minifier
+   :migrate: sql migrations
+   :redis_client: redis connection
+   :sess: session
+   :toolbar: debug toolbar
+   :web_assets: web asset environ
+
+   Finally, set log level to warning.
+
+   These items can be imported into other
+   scripts after running :obj:`em_web.create_app`
+
+
+

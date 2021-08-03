@@ -1,0 +1,44 @@
+:py:mod:`em_runner.scripts.em_ssh`
+==================================
+
+.. py:module:: em_runner.scripts.em_ssh
+
+.. autoapi-nested-parse::
+
+   SSH connection handler.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_ssh.Ssh
+
+
+
+
+.. py:class:: Ssh(task, connection, command, job_hash)
+
+   SSH Connection Handler Class.
+
+   Set up class parameters.
+
+   :param task: task object
+   :param connection: connection object
+   :param str command: command to be run
+
+   .. py:method:: run(self)
+
+      Run an SSH Command.
+
+      First, this will make a connection then run the command
+
+      :returns: Output from command.
+
+
+

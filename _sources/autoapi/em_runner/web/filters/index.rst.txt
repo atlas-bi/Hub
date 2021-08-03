@@ -1,0 +1,41 @@
+:py:mod:`em_runner.web.filters`
+===============================
+
+.. py:module:: em_runner.web.filters
+
+.. autoapi-nested-parse::
+
+   Custom Jinja template filters used in html.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.web.filters.year
+   em_runner.web.filters.datetime_format
+
+
+
+.. py:function:: year(none)
+
+   Get current year.
+
+   :param none: empty param
+   :returns: the current year.
+
+
+.. py:function:: datetime_format(my_date)
+
+   Format date string.
+
+   :param str my_date: stirng to format
+   :returns: formatted date string
+
+

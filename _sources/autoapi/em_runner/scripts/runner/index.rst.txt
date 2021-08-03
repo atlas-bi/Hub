@@ -1,0 +1,43 @@
+:py:mod:`em_runner.scripts.runner`
+==================================
+
+.. py:module:: em_runner.scripts.runner
+
+.. autoapi-nested-parse::
+
+   Task runner.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.runner.Runner
+
+
+
+
+.. py:class:: Runner(task_id)
+
+   Group of functions used to run a task.
+
+   Set up class parameters.
+
+   :param int task_id: id of the task to be run.
+
+   .. py:method:: __build_file(self)
+
+      File will be built locally then dumped onto a file server.
+
+      Webserver is not used for long-term storage.
+
+      files are kept in /em/em_runner/temp/<extract name>
+
+
+
+

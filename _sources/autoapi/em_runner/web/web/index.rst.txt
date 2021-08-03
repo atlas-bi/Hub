@@ -1,0 +1,195 @@
+:py:mod:`em_runner.web.web`
+===========================
+
+.. py:module:: em_runner.web.web
+
+.. autoapi-nested-parse::
+
+   EM Runner API routes.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.web.web.send_ftp
+   em_runner.web.web.send_sftp
+   em_runner.web.web.send_smb
+   em_runner.web.web.send_email
+   em_runner.web.web.whoami
+   em_runner.web.web.reload_daemon
+   em_runner.web.web.restart_daemon
+   em_runner.web.web.run
+   em_runner.web.web.task_get_git_code
+   em_runner.web.web.task_get_url_code
+   em_runner.web.web.task_get_source_code
+   em_runner.web.web.task_get_processing_git_code
+   em_runner.web.web.task_get_processing_url_code
+   em_runner.web.web.get_task_file_download
+
+
+
+.. py:function:: send_ftp(task_id, run_id, file_id)
+
+   Send file to FPT server specified in the task.
+
+   :url: /api/send_ftp/<task_id>/<run_id>/<file_id>
+   :param task_id: id of task owning the connection
+   :param run_id: id of the run associated with the file
+   :param file_id: id of the file to send
+
+   :returns: json message or error
+
+   File is loaded from the backup SMB file server into a tempfile.
+   The tempfile is deposited into the FTP location.
+
+
+.. py:function:: send_sftp(task_id, run_id, file_id)
+
+   Send file to SFPT server specified in the task.
+
+   :url: /api/send_sftp/<task_id>/<run_id>/<file_id>
+   :param task_id: id of task owning the connection
+   :param run_id: id of the run associated with the file
+   :param file_id: id of the file to send
+
+   :returns: json message or error
+
+   File is loaded from the backup SMB file server into a tempfile.
+   The tempfile is deposited into the SFTP location.
+
+
+.. py:function:: send_smb(task_id, run_id, file_id)
+
+   Send file to SMB server specified in the task.
+
+   :url: /api/send_smb/<task_id>/<run_id>/<file_id>
+   :param task_id: id of task owning the connection
+   :param run_id: id of the run associated with the file
+   :param file_id: id of the file to send
+
+   :returns: json message or error
+
+   File is loaded from the backup SMB file server into a tempfile.
+   The tempfile is deposited into the SMB location.
+
+
+.. py:function:: send_email(task_id, run_id, file_id)
+
+   Send file to email address specified in the task.
+
+   :url: /api/send_email/<task_id>/<run_id>/<file_id>
+   :param task_id: id of task owning the connection
+   :param run_id: id of the run associated with the file
+   :param file_id: id of the file to send
+
+   :returns: json message or error
+
+   File is loaded from the backup SMB file server into a tempfile.
+   The tempfile is sent as an email attachment.
+
+
+.. py:function:: whoami()
+
+   Run `whoami` command on host server.
+
+   :url: /api/whoami
+   :returns: json message: who the owner server user is, or error.
+
+
+.. py:function:: reload_daemon()
+
+   Reload server service daemons.
+
+   :url: /api/reloadDaemon
+   :returns: json message or error
+
+
+
+.. py:function:: restart_daemon()
+
+   Restart server service daemons.
+
+   :url: /api/restartDaemon
+   :returns: json message or error
+
+
+.. py:function:: run(task_id)
+
+   Run specified task.
+
+   :url: /api/<task_id>
+   :param task_id: id of task to run
+
+   :returns: completion message.
+
+
+.. py:function:: task_get_git_code(task_id)
+
+   Get git code for a task.
+
+   :url: /api/<task_id>/git
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_url_code(task_id)
+
+   Get non-git source code for a task.
+
+   :url: /api/<task_id>/url
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_source_code(task_id)
+
+   Get source code for a task.
+
+   :url: /api/<task_id>/source
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_processing_git_code(task_id)
+
+   Get git code for a task.
+
+   :url: /api/<task_id>/processing_git
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_processing_url_code(task_id)
+
+   Get non-git code for a task.
+
+   :url: /api/<task_id>/processing_url
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: get_task_file_download(file_id)
+
+   Download file from SMB backup server.
+
+   :url: /api/<task_id>/file/<run_id>/<file_id>/download
+   :param task_id: id of task owning the file
+   :param run_id: id of the run owning the file
+   :param file_id: id of the file to download
+
+   :returns: file
+
+
+

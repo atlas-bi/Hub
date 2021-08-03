@@ -1,0 +1,30 @@
+:py:mod:`em_web.web`
+====================
+
+.. py:module:: em_web.web
+
+.. autoapi-nested-parse::
+
+   Import shared modules.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   admin/index.rst
+   assets/index.rst
+   auth/index.rst
+   connection/index.rst
+   dashboard/index.rst
+   executors/index.rst
+   filters/index.rst
+   project/index.rst
+   saml_auth/index.rst
+   table/index.rst
+   task/index.rst
+
+

@@ -1,0 +1,68 @@
+:py:mod:`em_runner.scripts.em_code`
+===================================
+
+.. py:module:: em_runner.scripts.em_code
+
+.. autoapi-nested-parse::
+
+   Task source code handler.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_code.SourceCode
+
+
+
+
+.. py:class:: SourceCode(task, url, job_hash)
+
+   Group of functions used to get various type of source code for task runner.
+
+   Set up class parameters.
+
+   :param task: task object
+   :param str url: web address of code source
+
+   .. py:method:: gitlab(self)
+
+      Get source code from gitlab using authentication.
+
+      :returns: String of source code if the url was valid.
+
+
+   .. py:method:: web_url(self)
+
+      Get contents of a webpage.
+
+      :returns: Contents of webpage.
+
+
+   .. py:method:: source(self)
+
+      Get task source code.
+
+      :retruns: Cleaned source code.
+
+
+   .. py:method:: cleanup(query, db_type, task_params, project_params)
+      :staticmethod:
+
+      Clean up source code.
+
+      :param str query: query to clean
+      :param str db_type: sql query language name
+      :param list task_params: list of task level sql parameters to be injected
+      :param list project_params: list of project level sql parameters to be injected
+
+      :returns: Cleaned up query.
+
+
+

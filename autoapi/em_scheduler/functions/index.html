@@ -1,0 +1,464 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/><meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
+        <title>em_scheduler.functions - Extract Management 2.0</title>
+      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+    <link rel="stylesheet" href="../../../_static/pygments.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
+    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Extract Management 2.0</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/icon-512x512.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/overview.html">About the App</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/dash.html">Dash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/tasks.html">Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/connections.html">Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/admin.html">Admin</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Configuration</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../em/configuration/index.html">Setting Up EM2</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../em/configuration/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../em/configuration/auth.html">Authentication</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/development/index.html">Development</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../em/updates/index.html">Releases</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../em/updates/changelog.html">Changelog</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../em_web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../em_web/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/admin/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.admin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/assets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.assets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/auth/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.auth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/connection/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.connection</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/dashboard/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.dashboard</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/executors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.executors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/filters/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/project/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/saml_auth/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.saml_auth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/table/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_web/web/task/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.task</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../em_web/cli/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.cli</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../em_web/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../em_web/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../em_web/seed/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.seed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../events/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.events</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.extensions</span></code></a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.functions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../maintenance/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.maintenance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.web</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../em_runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../em_runner/scripts/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_cmd/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_cmd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_code/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_smb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_smtp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smtp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_sqlserver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sqlserver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_ssh/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ssh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/em_system/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_system</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.runner</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/scripts/smb_fix/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.smb_fix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../em_runner/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/web/filters/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../em_runner/web/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web.web</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../em_runner/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../em_runner/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="module-em_scheduler.functions">
+<span id="em-scheduler-functions"></span><h1><a class="reference internal" href="#module-em_scheduler.functions" title="em_scheduler.functions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.functions</span></code></a><a class="headerlink" href="#module-em_scheduler.functions" title="Permalink to this headline">¶</a></h1>
+<p>Scheduler Event Logging.</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<div class="table-wrapper"><table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%"/>
+<col style="width: 90%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#em_scheduler.functions.scheduler_delete_all_tasks" title="em_scheduler.functions.scheduler_delete_all_tasks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scheduler_delete_all_tasks</span></code></a>()</p></td>
+<td><p>Delete all jobs associated with a task from the scheduler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#em_scheduler.functions.scheduler_delete_task" title="em_scheduler.functions.scheduler_delete_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scheduler_delete_task</span></code></a>(task_id)</p></td>
+<td><p>Delete all jobs associated with a task from the scheduler.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#em_scheduler.functions.scheduler_task_runner" title="em_scheduler.functions.scheduler_task_runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scheduler_task_runner</span></code></a>(task_id)</p></td>
+<td><p>Send request to runner api to run task.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#em_scheduler.functions.scheduler_add_task" title="em_scheduler.functions.scheduler_add_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scheduler_add_task</span></code></a>(task_id)</p></td>
+<td><p>Create job for task in the scheduler.</p></td>
+</tr>
+</tbody>
+</table></div>
+<dl class="py function">
+<dt id="em_scheduler.functions.scheduler_delete_all_tasks">
+<code class="sig-prename descclassname"><span class="pre">em_scheduler.functions.</span></code><code class="sig-name descname"><span class="pre">scheduler_delete_all_tasks</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/em_scheduler/functions.html#scheduler_delete_all_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_scheduler.functions.scheduler_delete_all_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all jobs associated with a task from the scheduler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="em_scheduler.functions.scheduler_delete_task">
+<code class="sig-prename descclassname"><span class="pre">em_scheduler.functions.</span></code><code class="sig-name descname"><span class="pre">scheduler_delete_task</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/em_scheduler/functions.html#scheduler_delete_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_scheduler.functions.scheduler_delete_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all jobs associated with a task from the scheduler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>task_id</strong> – id of task to delete associated jobs</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="em_scheduler.functions.scheduler_task_runner">
+<code class="sig-prename descclassname"><span class="pre">em_scheduler.functions.</span></code><code class="sig-name descname"><span class="pre">scheduler_task_runner</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/em_scheduler/functions.html#scheduler_task_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_scheduler.functions.scheduler_task_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send request to runner api to run task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>task_id</strong> – id of task to run</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="em_scheduler.functions.scheduler_add_task">
+<code class="sig-prename descclassname"><span class="pre">em_scheduler.functions.</span></code><code class="sig-name descname"><span class="pre">scheduler_add_task</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/em_scheduler/functions.html#scheduler_add_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_scheduler.functions.scheduler_add_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create job for task in the scheduler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>task_id</strong> – id of task to create a schedule for</p>
+</dd>
+</dl>
+<p><em>Parameters for APScheduler</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Func</dt>
+<dd class="field-odd"><p>function to run</p>
+</dd>
+<dt class="field-even">Trigger</dt>
+<dd class="field-even"><p>date, interval or cron</p>
+</dd>
+<dt class="field-odd">Id</dt>
+<dd class="field-odd"><p>used to match job up to db</p>
+</dd>
+<dt class="field-even">Name</dt>
+<dd class="field-even"><p>desc of job</p>
+</dd>
+<dt class="field-odd">Misfire_grace_time</dt>
+<dd class="field-odd"><p>seconds a job can run late</p>
+</dd>
+<dt class="field-even">Coalesce</dt>
+<dd class="field-even"><p>merge mul into one run</p>
+</dd>
+<dt class="field-odd">Max_instances</dt>
+<dd class="field-odd"><p>max concurrent runs allowed</p>
+</dd>
+<dt class="field-even">Next_run_time</dt>
+<dd class="field-even"><p>when to start schedule (None: job paused)</p>
+</dd>
+<dt class="field-odd">Jobstore</dt>
+<dd class="field-odd"><p>alias of jobstore to use</p>
+</dd>
+<dt class="field-even">Executor</dt>
+<dd class="field-even"><p>alias of excutor to use</p>
+</dd>
+<dt class="field-odd">Replace_existing</dt>
+<dd class="field-odd"><p>true to replace jobs with same id</p>
+</dd>
+</dl>
+<p><em>Parameters for Cron Jobs</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Year</dt>
+<dd class="field-odd"><p>4 digit year</p>
+</dd>
+<dt class="field-even">Month</dt>
+<dd class="field-even"><p>1-12</p>
+</dd>
+<dt class="field-odd">Day</dt>
+<dd class="field-odd"><p>1-31</p>
+</dd>
+<dt class="field-even">Week</dt>
+<dd class="field-even"><p>1-53</p>
+</dd>
+<dt class="field-odd">Day_of_week</dt>
+<dd class="field-odd"><p>0-6 or mon,tue,wed,thu,fri,sat,sun</p>
+</dd>
+<dt class="field-even">Hour</dt>
+<dd class="field-even"><p>0-23</p>
+</dd>
+<dt class="field-odd">Minute</dt>
+<dd class="field-odd"><p>0-59</p>
+</dd>
+<dt class="field-even">Second</dt>
+<dd class="field-even"><p>0-59</p>
+</dd>
+<dt class="field-odd">Start_date</dt>
+<dd class="field-odd"><p>(datetime) soonest start</p>
+</dd>
+<dt class="field-even">End_date</dt>
+<dd class="field-even"><p>(datetime) latest run</p>
+</dd>
+</dl>
+<p><em>Paramters for Interval Jobs</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Weeks</dt>
+<dd class="field-odd"><p>(int) number of weeks between runs</p>
+</dd>
+<dt class="field-even">Days</dt>
+<dd class="field-even"><p>(int) number of days between runs</p>
+</dd>
+<dt class="field-odd">Hours</dt>
+<dd class="field-odd"><p>(int) number of hours between runs</p>
+</dd>
+<dt class="field-even">Minutes</dt>
+<dd class="field-even"><p>(int) number of minutes between runs</p>
+</dd>
+<dt class="field-odd">Seconds</dt>
+<dd class="field-odd"><p>(int) number of seconds between runs</p>
+</dd>
+<dt class="field-even">Start_date</dt>
+<dd class="field-even"><p>(datetime) soonest start date</p>
+</dd>
+<dt class="field-odd">End_date</dt>
+<dd class="field-odd"><p>(datetime) latest run date</p>
+</dd>
+</dl>
+<p><em>Parameters for One Off Jobs</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Run_date</dt>
+<dd class="field-odd"><p>(datetime) when to run</p>
+</dd>
+</dl>
+<p><em>Notes</em></p>
+<p>If multiple triggers are specified on the task a schedule will be added for each trigger
+type. So it is possible to have multiple triggers per task. Because of this, the id
+assigned to the job is project_id-task_id-&lt;time hash&gt;. The tasks id is sent as an arg
+to the job.</p>
+</dd></dl>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Riverside Healthcare
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../../../_sources/autoapi/em_scheduler/functions/index.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.functions</span></code></a><ul>
+<li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#em_scheduler.functions.scheduler_delete_all_tasks">scheduler_delete_all_tasks</a></li>
+<li><a class="reference internal" href="#em_scheduler.functions.scheduler_delete_task">scheduler_delete_task</a></li>
+<li><a class="reference internal" href="#em_scheduler.functions.scheduler_task_runner">scheduler_task_runner</a></li>
+<li><a class="reference internal" href="#em_scheduler.functions.scheduler_add_task">scheduler_add_task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

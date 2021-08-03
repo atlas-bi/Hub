@@ -1,0 +1,21 @@
+:py:mod:`em_runner.extensions`
+==============================
+
+.. py:module:: em_runner.extensions
+
+.. autoapi-nested-parse::
+
+   EM Runner Extensions.
+
+   Set up basic flask items for import in other modules.
+
+   *Items Setup*
+
+   :db: database
+   :executor: task executor
+
+   These items can be imported into other
+   scripts after running :obj:`em_scheduler.create_app`
+
+
+

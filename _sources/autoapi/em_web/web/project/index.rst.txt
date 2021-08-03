@@ -1,0 +1,141 @@
+:py:mod:`em_web.web.project`
+============================
+
+.. py:module:: em_web.web.project
+
+.. autoapi-nested-parse::
+
+   Project web views.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.project.project
+   em_web.web.project.project_user
+   em_web.web.project.project_get
+   em_web.web.project.project_edit_get
+   em_web.web.project.project_edit_post
+   em_web.web.project.project_new_form
+   em_web.web.project.project_new
+   em_web.web.project.project_delete
+   em_web.web.project.disable_all_project_tasks
+   em_web.web.project.enable_all_project_tasks
+   em_web.web.project.run_all_project_tasks
+
+
+
+.. py:function:: project()
+
+   List all projects.
+
+   :url: /project
+
+   :returns: html page for projects. If no projects exist then redirect to new project page.
+
+
+.. py:function:: project_user(user_id)
+
+   List projects for a specific user.
+
+   :url: /project/user *or* /project/user/<user_id>
+   :param user_id: id of project owner
+
+   :returns: html page for projects. If no projects exist then redirect to new project page.
+
+
+.. py:function:: project_get(project_id)
+
+   Project detail page.
+
+   :url: /project/<project_id>
+   :param project_id: id of the project
+
+   :returns: html page for project details, or error page if project id was invalid.
+
+
+.. py:function:: project_edit_get(project_id)
+
+   Project editor page.
+
+   :url: project/project_id/edit [get]
+   :param project_id: id of the project
+
+   :returns: html page for project editor, or error page if project id was invalid.
+
+
+.. py:function:: project_edit_post(project_id)
+
+   Save project edits.
+
+   :url: /project/<project_id>/edit [post]
+   :param project_id: id of the project
+
+   :returns: redirects to project details page.
+
+
+.. py:function:: project_new_form()
+
+   Create a new project page.
+
+   :url: /project/new [get]
+
+   :returns: html page for new project.
+
+
+.. py:function:: project_new()
+
+   Save a new project.
+
+   :url: /project/new [post]
+
+   :returns: html page for project details.
+
+
+.. py:function:: project_delete(project_id)
+
+   Delete a project.
+
+   :url: /project/<project_id>/delete
+   :param project_id: id of project to delete
+
+   :returns: redirects to all project page.
+
+
+.. py:function:: disable_all_project_tasks(project_id)
+
+   Disable all tasks in a project.
+
+   :url: /project/<project_id>/task/disable
+   :param project_id: id of project owning the tasks
+
+   :returns: redirects to the project details page.
+
+
+.. py:function:: enable_all_project_tasks(project_id)
+
+   Enable all tasks in a project.
+
+   :url: /project/<project_id>/task/enable
+   :param project_id: id of project owning the tasks
+
+   :returns: redirects to the project details page.
+
+
+.. py:function:: run_all_project_tasks(project_id)
+
+   Run all tasks in a project.
+
+   :url: /project/<project_id>/task/run
+   :param project_id: id of project owning the tasks
+
+   :returns: redirects to the project details page.
+
+

@@ -1,0 +1,579 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
+        <title>em_web.seed - Extract Management 2.0</title>
+      <link rel="stylesheet" href="../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+    <link rel="stylesheet" href="../../_static/pygments.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../_static/pygments_dark.css">
+    <link rel="stylesheet" href="../../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">Extract Management 2.0</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../_static/icon-512x512.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../em/overview.html">About the App</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../em/dash.html">Dash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../em/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../em/tasks.html">Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../em/connections.html">Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../em/admin.html">Admin</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Configuration</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../em/configuration/index.html">Setting Up EM2</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../em/configuration/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../em/configuration/auth.html">Authentication</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../em/development/index.html">Development</a></li>
+</ul>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../em/updates/index.html">Releases</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../em/updates/changelog.html">Changelog</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/em_web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/em_web/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/admin/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.admin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/assets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.assets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/auth/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.auth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/connection/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.connection</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/dashboard/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.dashboard</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/executors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.executors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/filters/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/project/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/saml_auth/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.saml_auth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/table/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_web/web/task/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.task</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_web/cli/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.cli</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_web/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_web/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_web/seed/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.seed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/em_scheduler/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_scheduler/events/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.events</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_scheduler/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_scheduler/functions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.functions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_scheduler/maintenance/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.maintenance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_scheduler/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_scheduler/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.web</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/em_runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/em_runner/scripts/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_cmd/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_cmd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_code/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_smb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_smtp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smtp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_sqlserver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sqlserver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_ssh/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ssh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_system/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_system</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.runner</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/smb_fix/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.smb_fix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/em_runner/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/web/filters/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/web/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web.web</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_runner/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/em_runner/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for em_web.seed</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Extension script to seed EM2's database.</span>
+
+<span class="sd">Database must be seeded on first run of EM2.</span>
+
+<span class="sd">.. code-block:: console</span>
+
+<span class="sd">    export FLASK_APP=em_web</span>
+<span class="sd">    flask db init</span>
+<span class="sd">    flask db migrate</span>
+<span class="sd">    flask db upgrade</span>
+<span class="sd">    flask seed</span>
+
+<span class="sd">    # and for demo</span>
+<span class="sd">    flask seed_demo</span>
+
+<span class="sd">"""</span>
+<span class="c1"># Extract Management 2.0</span>
+<span class="c1"># Copyright (C) 2020  Riverside Healthcare, Kankakee, IL</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># pylint: disable=C0301</span>
+
+<span class="kn">from</span> <span class="nn">em_web.model</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Connection</span><span class="p">,</span>
+    <span class="n">ConnectionDatabase</span><span class="p">,</span>
+    <span class="n">ConnectionDatabaseType</span><span class="p">,</span>
+    <span class="n">ConnectionFtp</span><span class="p">,</span>
+    <span class="n">LoginType</span><span class="p">,</span>
+    <span class="n">Project</span><span class="p">,</span>
+    <span class="n">QuoteLevel</span><span class="p">,</span>
+    <span class="n">Task</span><span class="p">,</span>
+    <span class="n">TaskDestinationFileType</span><span class="p">,</span>
+    <span class="n">TaskProcessingType</span><span class="p">,</span>
+    <span class="n">TaskSourceQueryType</span><span class="p">,</span>
+    <span class="n">TaskSourceType</span><span class="p">,</span>
+    <span class="n">TaskStatus</span><span class="p">,</span>
+    <span class="n">User</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.extensions</span> <span class="kn">import</span> <span class="n">db</span>
+
+
+<div class="viewcode-block" id="get_or_create"><a class="viewcode-back" href="../../autoapi/em_web/seed/index.html#em_web.seed.get_or_create">[docs]</a><span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">"""Create model if not existing."""</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">instance</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">instance</span>
+
+    <span class="n">instance</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">instance</span></div>
+
+
+<div class="viewcode-block" id="seed"><a class="viewcode-back" href="../../autoapi/em_web/seed/index.html#em_web.seed.seed">[docs]</a><span class="k">def</span> <span class="nf">seed</span><span class="p">():</span>
+    <span class="sd">"""Insert seed records to database."""</span>
+    <span class="c1"># pylint: disable=too-many-branches</span>
+    <span class="c1"># pylint: disable=too-many-statements</span>
+    <span class="c1"># login types</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">LoginType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"login"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">LoginType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"logout"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">LoginType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"bad login"</span><span class="p">)</span>
+
+    <span class="c1"># quote level</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">QuoteLevel</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Quote None"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">QuoteLevel</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Quote All"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">QuoteLevel</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Quote Minimal (default)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">QuoteLevel</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Quote Non-numeric"</span><span class="p">)</span>
+
+    <span class="c1"># task source type</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Database"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Network File (SMB Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File (SFTP Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File (FTP Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Python Script"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SSH Command"</span><span class="p">)</span>
+
+    <span class="c1"># task processing type</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskProcessingType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Network File (SMB Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskProcessingType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File (SFTP Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskProcessingType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File (FTP Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskProcessingType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Git URL"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskProcessingType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Other URL (no auth)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskProcessingType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Source Code"</span><span class="p">)</span>
+
+    <span class="c1"># task source query type</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceQueryType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Git URL"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceQueryType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File Path (SMB Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceQueryType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Other URL (no auth)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceQueryType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Source Code"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceQueryType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File Path (SFTP Connection)"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskSourceQueryType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File Path (FTP Connection)"</span><span class="p">)</span>
+
+    <span class="c1"># database type</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">ConnectionDatabaseType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Postgres"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">ConnectionDatabaseType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SQL Sever"</span><span class="p">)</span>
+
+    <span class="c1"># file types</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskDestinationFileType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"CSV (.csv)"</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">"csv"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskDestinationFileType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Text (.txt)"</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">"txt"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskDestinationFileType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Excel (.csv)"</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">"csv"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskDestinationFileType</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Other (specify in filename)"</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">""</span>
+    <span class="p">)</span>
+
+    <span class="c1"># task status</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Running"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Errored"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Stopped"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Completed"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Starting"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Scheduler"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"User"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Runner"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SFTP"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SMB"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"File"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Email"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"FTP"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Py Processer"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Git/Web Code"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Date Parser"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Cmd Runner"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"System"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SSH"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SQL Server"</span><span class="p">)</span>
+    <span class="n">get_or_create</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">TaskStatus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Postgres"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="seed_demo"><a class="viewcode-back" href="../../autoapi/em_web/seed/index.html#em_web.seed.seed_demo">[docs]</a><span class="k">def</span> <span class="nf">seed_demo</span><span class="p">():</span>
+    <span class="sd">"""Seed info for demo."""</span>
+    <span class="c1"># demo user</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">User</span><span class="p">,</span>
+        <span class="n">full_name</span><span class="o">=</span><span class="s2">"Mr Cool"</span><span class="p">,</span>
+        <span class="n">first_name</span><span class="o">=</span><span class="s2">"Mr"</span><span class="p">,</span>
+        <span class="n">account_name</span><span class="o">=</span><span class="s2">"mr-cool"</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="s2">"mr@co.ol"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># demo connection group</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">Connection</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Extract Organization"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"The best place to send data."</span><span class="p">,</span>
+        <span class="n">address</span><span class="o">=</span><span class="s2">"Organization Extract"</span><span class="p">,</span>
+        <span class="n">primary_contact</span><span class="o">=</span><span class="s2">"Boss Man"</span><span class="p">,</span>
+        <span class="n">primary_contact_email</span><span class="o">=</span><span class="s2">"boss@ma.n"</span><span class="p">,</span>
+        <span class="n">primary_contact_phone</span><span class="o">=</span><span class="s2">"(000)-000-0000"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># demo db</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">ConnectionDatabase</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Public Database"</span><span class="p">,</span>
+        <span class="n">type_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">connection_string</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"host=hh-pgsql-public.ebi.ac.uk"</span>
+            <span class="o">+</span> <span class="s2">" dbname=pfmegrnargs user=reader password=NWDMCE5xdipIjRrp"</span>
+        <span class="p">),</span>
+        <span class="n">connection_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># demo ftp connection (ro)</span>
+    <span class="n">get_or_create</span><span class="p">(</span>  <span class="c1"># noqa: S106</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">ConnectionFtp</span><span class="p">,</span>
+        <span class="n">connection_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Speed Test Tele2"</span><span class="p">,</span>
+        <span class="n">address</span><span class="o">=</span><span class="s2">"speedtest.tele2.net/"</span><span class="p">,</span>
+        <span class="n">path</span><span class="o">=</span><span class="s2">"/upload/"</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"anonymous"</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"anonymous"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ssh project</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">Project</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"SSH Project"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Group of SSH tasks."</span><span class="p">,</span>
+        <span class="n">owner_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">creator_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">updater_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">intv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">intv_type</span><span class="o">=</span><span class="s2">"h"</span><span class="p">,</span>
+        <span class="n">intv_value</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># sql project</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">Project</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"SQL Project"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Group of SQL tasks."</span><span class="p">,</span>
+        <span class="n">owner_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">creator_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">updater_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">intv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">intv_type</span><span class="o">=</span><span class="s2">"h"</span><span class="p">,</span>
+        <span class="n">intv_value</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># python project</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">Project</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Python Project"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Group of Python tasks."</span><span class="p">,</span>
+        <span class="n">owner_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">creator_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">updater_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">intv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">intv_type</span><span class="o">=</span><span class="s2">"h"</span><span class="p">,</span>
+        <span class="n">intv_value</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># demo ssh task</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">Task</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"SSH task 1 - check Windows Server CPU"</span><span class="p">,</span>
+        <span class="n">source_type_id</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">source_code</span><span class="o">=</span><span class="s2">"""powershell  if ((gwmi -class Win32_Processor).LoadPercentage -gt 95){exit 1}"""</span><span class="p">,</span>
+        <span class="n">project_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">source_query_type_id</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">enabled</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># demo sql task</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">Task</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Postgres task 1"</span><span class="p">,</span>
+        <span class="n">source_type_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">source_code</span><span class="o">=</span><span class="s2">"""SELECT</span>
+<span class="s2">  precomputed.id</span>
+<span class="s2">FROM rnc_rna_precomputed precomputed</span>
+<span class="s2">JOIN rnc_taxonomy tax</span>
+<span class="s2">ON</span>
+<span class="s2">  tax.id = precomputed.taxid</span>
+<span class="s2">WHERE</span>
+<span class="s2">  tax.lineage LIKE 'cellular organisms; Bacteria; %'</span>
+<span class="s2">  AND precomputed.is_active = true    -- exclude sequences without active cross-references</span>
+<span class="s2">  AND rna_type = 'rRNA'"""</span><span class="p">,</span>
+        <span class="n">destination_ftp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">destination_ftp_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">project_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">source_query_type_id</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">source_database_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">enabled</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">destination_file_name</span><span class="o">=</span><span class="s2">"test_</span><span class="si">%d</span><span class="s2">_%m"</span><span class="p">,</span>
+        <span class="n">destination_file_type_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">destination_file_delimiter</span><span class="o">=</span><span class="s2">"|"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># demo python task</span>
+    <span class="n">get_or_create</span><span class="p">(</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+        <span class="n">Task</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Python task 1"</span><span class="p">,</span>
+        <span class="n">source_type_id</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">source_code</span><span class="o">=</span><span class="s2">"""</span>
+
+<span class="s2"># Copyright [2009-present] EMBL-European Bioinformatics Institute</span>
+<span class="s2"># Licensed under the Apache License, Version 2.0 (the "License");</span>
+<span class="s2"># you may not use this file except in compliance with the License.</span>
+<span class="s2"># You may obtain a copy of the License at</span>
+<span class="s2">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="s2"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="s2"># distributed under the License is distributed on an "AS IS" BASIS,</span>
+<span class="s2"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="s2"># See the License for the specific language governing permissions and</span>
+<span class="s2"># limitations under the License.</span>
+<span class="s2"># An example Python script showing how to access the public RNAcentral Postgres database.</span>
+<span class="s2"># Usage:</span>
+<span class="s2"># python example-rnacentral-postgres-script.py</span>
+
+
+
+<span class="s2">import psycopg2</span>
+<span class="s2">import psycopg2.extras</span>
+
+
+<span class="s2">def main():</span>
+<span class="s2">    conn_string = "host='hh-pgsql-public.ebi.ac.uk' dbname='pfmegrnargs' user='reader' password='NWDMCE5xdipIjRrp'"</span>
+<span class="s2">    conn = psycopg2.connect(conn_string)</span>
+<span class="s2">    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)</span>
+
+<span class="s2">    # retrieve a list of RNAcentral databases</span>
+<span class="s2">    query = "SELECT * FROM rnc_database"</span>
+
+<span class="s2">    cursor.execute(query)</span>
+<span class="s2">    for row in cursor:</span>
+<span class="s2">        print(row)</span>
+
+
+<span class="s2">if __name__ == "__main__":</span>
+<span class="s2">    main())</span>
+<span class="s2">"""</span><span class="p">,</span>
+        <span class="n">destination_ftp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">destination_ftp_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">project_id</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">source_query_type_id</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">enabled</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">destination_file_name</span><span class="o">=</span><span class="s2">"test_</span><span class="si">%d</span><span class="s2">_%m"</span><span class="p">,</span>
+        <span class="n">destination_file_type_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">destination_file_delimiter</span><span class="o">=</span><span class="s2">"|"</span><span class="p">,</span></div>
+    <span class="p">)</span>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Riverside Healthcare
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

@@ -1,0 +1,860 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/><meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
+        <title>em_web.web.project - Extract Management 2.0</title>
+      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+    <link rel="stylesheet" href="../../../_static/pygments.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
+    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Extract Management 2.0</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/icon-512x512.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/overview.html">About the App</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/dash.html">Dash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/tasks.html">Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/connections.html">Connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/admin.html">Admin</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Configuration</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../em/configuration/index.html">Setting Up EM2</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../em/configuration/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../em/configuration/auth.html">Authentication</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../em/development/index.html">Development</a></li>
+</ul>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../em/updates/index.html">Releases</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../em/updates/changelog.html">Changelog</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/em_web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/em_web/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/admin/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.admin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/assets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.assets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/auth/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.auth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/connection/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.connection</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/dashboard/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.dashboard</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/executors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.executors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/filters/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/project/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/saml_auth/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.saml_auth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/table/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_web/web/task/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.web.task</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_web/cli/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.cli</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_web/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_web/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_web/seed/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_web.seed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/em_scheduler/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_scheduler/events/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.events</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_scheduler/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_scheduler/functions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.functions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_scheduler/maintenance/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.maintenance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_scheduler/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_scheduler/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_scheduler.web</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/em_runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/em_runner/scripts/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_cmd/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_cmd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_code/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_smb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_smtp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smtp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_sqlserver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sqlserver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_ssh/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ssh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_system/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_system</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/runner/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.runner</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/smb_fix/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.smb_fix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/em_runner/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/web/filters/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/web/web/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.web.web</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_runner/extensions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.extensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/em_runner/model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for em_web.web.project</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Project web views."""</span>
+<span class="c1"># Extract Management 2.0</span>
+<span class="c1"># Copyright (C) 2020  Riverside Healthcare, Kankakee, IL</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">current_app</span> <span class="k">as</span> <span class="n">app</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">url_for</span>
+<span class="kn">from</span> <span class="nn">flask_login</span> <span class="kn">import</span> <span class="n">current_user</span><span class="p">,</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">func</span><span class="p">,</span> <span class="n">text</span>
+
+<span class="kn">from</span> <span class="nn">em_web</span> <span class="kn">import</span> <span class="n">cache</span><span class="p">,</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">em_web.model</span> <span class="kn">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TaskFile</span><span class="p">,</span> <span class="n">TaskLog</span><span class="p">,</span> <span class="n">User</span>
+
+<span class="n">project_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"project_bp"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project"</span><span class="p">)</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="project"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project">[docs]</a><span class="k">def</span> <span class="nf">project</span><span class="p">():</span>
+    <span class="sd">"""List all projects.</span>
+
+<span class="sd">    :url: /project</span>
+
+<span class="sd">    :returns: html page for projects. If no projects exist then redirect to new project page.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">Project</span><span class="p">)</span><span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">Project</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">():</span>
+        <span class="n">owners</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Project</span><span class="p">,</span> <span class="n">Project</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">Project</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s2">"pages/project/all.html.j2"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Projects"</span><span class="p">,</span> <span class="n">owners</span><span class="o">=</span><span class="n">owners</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_new"</span><span class="p">))</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/user"</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/user/&lt;user_id&gt;"</span><span class="p">)</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="project_user"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project_user">[docs]</a><span class="k">def</span> <span class="nf">project_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">"""List projects for a specific user.</span>
+
+<span class="sd">    :url: /project/user *or* /project/user/&lt;user_id&gt;</span>
+<span class="sd">    :param user_id: id of project owner</span>
+
+<span class="sd">    :returns: html page for projects. If no projects exist then redirect to new project page.</span>
+<span class="sd">    """</span>
+    <span class="n">my_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">my_user</span><span class="o">.</span><span class="n">count</span><span class="p">():</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">user_id</span>
+            <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">Project</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">Project</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Project</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="p">):</span>
+
+            <span class="n">my_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+                <span class="s2">"pages/project/all.html.j2"</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">my_user</span><span class="o">.</span><span class="n">full_name</span> <span class="o">+</span> <span class="s2">"'s Projects"</span><span class="p">,</span>
+                <span class="n">username</span><span class="o">=</span><span class="n">my_user</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_new"</span><span class="p">))</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/&lt;project_id&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"GET"</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="project_get"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project_get">[docs]</a><span class="k">def</span> <span class="nf">project_get</span><span class="p">(</span><span class="n">project_id</span><span class="p">):</span>
+    <span class="sd">"""Project detail page.</span>
+
+<span class="sd">    :url: /project/&lt;project_id&gt;</span>
+<span class="sd">    :param project_id: id of the project</span>
+
+<span class="sd">    :returns: html page for project details, or error page if project id was invalid.</span>
+<span class="sd">    """</span>
+    <span class="n">me</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">me</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">"pages/project/details.html.j2"</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">me</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">me</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">"pages/project/details.html.j2"</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Error"</span><span class="p">)</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/&lt;project_id&gt;/edit"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"GET"</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="project_edit_get"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project_edit_get">[docs]</a><span class="k">def</span> <span class="nf">project_edit_get</span><span class="p">(</span><span class="n">project_id</span><span class="p">):</span>
+    <span class="sd">"""Project editor page.</span>
+
+<span class="sd">    :url: project/project_id/edit [get]</span>
+<span class="sd">    :param project_id: id of the project</span>
+
+<span class="sd">    :returns: html page for project editor, or error page if project id was invalid.</span>
+<span class="sd">    """</span>
+    <span class="n">me</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">me</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s2">"pages/project/new.html.j2"</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">me</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Editing "</span> <span class="o">+</span> <span class="n">me</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">"pages/project/details.html.j2"</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Error"</span><span class="p">)</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/&lt;project_id&gt;/edit"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"POST"</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="project_edit_post"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project_edit_post">[docs]</a><span class="k">def</span> <span class="nf">project_edit_post</span><span class="p">(</span><span class="n">project_id</span><span class="p">):</span>
+    <span class="sd">"""Save project edits.</span>
+
+<span class="sd">    :url: /project/&lt;project_id&gt;/edit [post]</span>
+<span class="sd">    :param project_id: id of the project</span>
+
+<span class="sd">    :returns: redirects to project details page.</span>
+<span class="sd">    """</span>
+    <span class="c1"># pylint: disable=too-many-branches</span>
+    <span class="c1"># pylint: disable=too-many-statements</span>
+    <span class="n">cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="n">me</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">me</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_get"</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">():</span>
+        <span class="n">updater</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">updater</span><span class="o">.</span><span class="n">full_name</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">updater</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">full_name</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="n">form</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+
+    <span class="n">me</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_name"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">me</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_desc"</span><span class="p">]</span>
+    <span class="n">me</span><span class="o">.</span><span class="n">updater_id</span> <span class="o">=</span> <span class="n">updater</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">me</span><span class="o">.</span><span class="n">global_params</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"globalParams"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
+
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"project_ownership"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">=</span> <span class="n">updater</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="c1"># add triggers</span>
+    <span class="c1"># cron</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"project_cron"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">cron</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_year"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_year"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"0"</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_year"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_year</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_mnth"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_mnth"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"0"</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_month</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_mnth"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_month</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_week"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_week"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"0"</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_week</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_week"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_week</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_day"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_day"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"0"</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_day"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_day</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_wday"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_week_day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_wday"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_week_day</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_hour"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_hour</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_hour"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_hour</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_min"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_min"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_min</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sec"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_sec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sec"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_sec</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sdate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sdate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_start_date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_start_date</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_edate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_edate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_end_date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_end_date</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">cron</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># intv</span>
+    <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">intv</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">me</span><span class="o">.</span><span class="n">intv_type</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_intv"</span><span class="p">]</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">intv_value</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_value"</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_sdate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_sdate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">intv_start_date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">intv_start_date</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_edate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_edate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">intv_end_date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">intv_end_date</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">intv</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_ooff"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">ooff</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_ooff_date"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_ooff_date"</span><span class="p">]</span>
+            <span class="k">else</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">ooff_date</span> <span class="o">=</span> <span class="n">date</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">ooff</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># reschedule any jobs.</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+            <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">": Task rescheduled."</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"SCHEUDULER_HOST"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/add/"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_get"</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">))</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/new"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"GET"</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="nd">@cache</span><span class="o">.</span><span class="n">cached</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<div class="viewcode-block" id="project_new_form"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project_new_form">[docs]</a><span class="k">def</span> <span class="nf">project_new_form</span><span class="p">():</span>
+    <span class="sd">"""Create a new project page.</span>
+
+<span class="sd">    :url: /project/new [get]</span>
+
+<span class="sd">    :returns: html page for new project.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s2">"pages/project/new.html.j2"</span><span class="p">,</span>
+        <span class="n">p</span><span class="o">=</span><span class="n">Project</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">"New Project"</span><span class="p">,</span></div>
+    <span class="p">)</span>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/new"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"POST"</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="project_new"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project_new">[docs]</a><span class="k">def</span> <span class="nf">project_new</span><span class="p">():</span>
+    <span class="sd">"""Save a new project.</span>
+
+<span class="sd">    :url: /project/new [post]</span>
+
+<span class="sd">    :returns: html page for project details.</span>
+<span class="sd">    """</span>
+    <span class="c1"># pylint: disable=too-many-branches</span>
+    <span class="c1"># pylint: disable=too-many-statements</span>
+    <span class="n">cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+
+    <span class="n">project_name</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_name"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">project_desc</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_desc"</span><span class="p">]</span>
+    <span class="n">project_params</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"globalParams"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
+
+    <span class="c1"># create owner record</span>
+    <span class="k">if</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">():</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">owner</span><span class="o">.</span><span class="n">full_name</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">full_name</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">owner</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># create project</span>
+    <span class="n">me</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">project_name</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">project_desc</span><span class="p">,</span>
+        <span class="n">owner_id</span><span class="o">=</span><span class="n">owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">creator_id</span><span class="o">=</span><span class="n">owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">updater_id</span><span class="o">=</span><span class="n">owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">global_params</span><span class="o">=</span><span class="n">project_params</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># add triggers</span>
+    <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">cron</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_year"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_year"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_mnth"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_month</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_mnth"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_week"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_week</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_week"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_day"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_day"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_wday"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_week_day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_wday"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_hour"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_hour</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_hour"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_min"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_min</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_min"</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sec"</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_sec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sec"</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sdate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_sdate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_start_date</span> <span class="o">=</span> <span class="n">date</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_edate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_cron_edate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">cron_end_date</span> <span class="o">=</span> <span class="n">date</span>
+
+    <span class="c1"># intv</span>
+    <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">intv</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">me</span><span class="o">.</span><span class="n">intv_type</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_intv"</span><span class="p">]</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">intv_value</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_value"</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_sdate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_sdate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">intv_start_date</span> <span class="o">=</span> <span class="n">date</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_edate"</span><span class="p">]:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                <span class="n">form</span><span class="p">[</span><span class="s2">"project_intv_edate"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span>
+            <span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">intv_end_date</span> <span class="o">=</span> <span class="n">date</span>
+
+    <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_ooff"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">:</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">ooff</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">form</span><span class="p">[</span><span class="s2">"project_ooff_date"</span><span class="p">],</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"project_ooff_date"</span><span class="p">]</span>
+            <span class="k">else</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">ooff_date</span> <span class="o">=</span> <span class="n">date</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">me</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_get"</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">me</span><span class="o">.</span><span class="n">id</span><span class="p">))</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/&lt;project_id&gt;/delete"</span><span class="p">)</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="project_delete"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.project_delete">[docs]</a><span class="k">def</span> <span class="nf">project_delete</span><span class="p">(</span><span class="n">project_id</span><span class="p">):</span>
+    <span class="sd">"""Delete a project.</span>
+
+<span class="sd">    :url: /project/&lt;project_id&gt;/delete</span>
+<span class="sd">    :param project_id: id of project to delete</span>
+
+<span class="sd">    :returns: redirects to all project page.</span>
+<span class="sd">    """</span>
+    <span class="n">cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="c1"># get tasks</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">Task</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Task</span><span class="o">.</span><span class="n">project_id</span> <span class="o">==</span> <span class="n">project_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="s2">"task.id"</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"SCHEUDULER_HOST"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/delete/"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">": Task deleted."</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=broad-except</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">error</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">": Failed to delete task.</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># delete logs</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">TaskLog</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">TaskLog</span><span class="o">.</span><span class="n">task_id</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">tasks</span><span class="p">))</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span>
+        <span class="n">synchronize_session</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># delete file links</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">TaskFile</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">TaskFile</span><span class="o">.</span><span class="n">task_id</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">tasks</span><span class="p">))</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span>
+        <span class="n">synchronize_session</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="c1"># delete tasks</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Task</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Task</span><span class="o">.</span><span class="n">project_id</span> <span class="o">==</span> <span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span>
+        <span class="n">synchronize_session</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># delete project</span>
+    <span class="n">Project</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">synchronize_session</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project"</span><span class="p">))</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/&lt;project_id&gt;/disable"</span><span class="p">)</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="disable_all_project_tasks"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.disable_all_project_tasks">[docs]</a><span class="k">def</span> <span class="nf">disable_all_project_tasks</span><span class="p">(</span><span class="n">project_id</span><span class="p">):</span>
+    <span class="sd">"""Disable all tasks in a project.</span>
+
+<span class="sd">    :url: /project/&lt;project_id&gt;/task/disable</span>
+<span class="sd">    :param project_id: id of project owning the tasks</span>
+
+<span class="sd">    :returns: redirects to the project details page.</span>
+<span class="sd">    """</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">next_run</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"SCHEUDULER_HOST"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/delete/"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">": Task disabled."</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="c1"># pylint: disable=broad-except</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">": Failed to disable task.</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_get"</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">))</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/&lt;project_id&gt;/enable"</span><span class="p">)</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="enable_all_project_tasks"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.enable_all_project_tasks">[docs]</a><span class="k">def</span> <span class="nf">enable_all_project_tasks</span><span class="p">(</span><span class="n">project_id</span><span class="p">):</span>
+    <span class="sd">"""Enable all tasks in a project.</span>
+
+<span class="sd">    :url: /project/&lt;project_id&gt;/task/enable</span>
+<span class="sd">    :param project_id: id of project owning the tasks</span>
+
+<span class="sd">    :returns: redirects to the project details page.</span>
+<span class="sd">    """</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"SCHEUDULER_HOST"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/add/"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">": Task enabled."</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="c1"># pylint: disable=broad-except</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">": Failed to enable task.</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_get"</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">))</span></div>
+
+
+<span class="nd">@project_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/project/&lt;project_id&gt;/run"</span><span class="p">)</span>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="run_all_project_tasks"><a class="viewcode-back" href="../../../autoapi/em_web/web/project/index.html#em_web.web.project.run_all_project_tasks">[docs]</a><span class="k">def</span> <span class="nf">run_all_project_tasks</span><span class="p">(</span><span class="n">project_id</span><span class="p">):</span>
+    <span class="sd">"""Run all tasks in a project.</span>
+
+<span class="sd">    :url: /project/&lt;project_id&gt;/task/run</span>
+<span class="sd">    :param project_id: id of project owning the tasks</span>
+
+<span class="sd">    :returns: redirects to the project details page.</span>
+<span class="sd">    """</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"SCHEUDULER_HOST"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/run/"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">": Task manually run."</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=broad-except</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
+                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">status_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">full_name</span> <span class="ow">or</span> <span class="s2">"none"</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">": Failed to run task.</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s2">"project_bp.project_get"</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">))</span></div>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Riverside Healthcare
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

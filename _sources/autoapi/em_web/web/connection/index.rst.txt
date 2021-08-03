@@ -1,0 +1,197 @@
+:py:mod:`em_web.web.connection`
+===============================
+
+.. py:module:: em_web.web.connection
+
+.. autoapi-nested-parse::
+
+   External Connection web views.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.connection.connection
+   em_web.web.connection.connection_edit
+   em_web.web.connection.connection_sftp
+   em_web.web.connection.connection_gpg
+   em_web.web.connection.connection_smb
+   em_web.web.connection.connection_ssh
+   em_web.web.connection.connection_database
+   em_web.web.connection.connection_ftp
+   em_web.web.connection.connection_new
+   em_web.web.connection.connection_remove
+   em_web.web.connection.connection_remove_sftp
+   em_web.web.connection.connection_remove_ssh
+   em_web.web.connection.connection_remove_smb
+   em_web.web.connection.connection_remove_ftp
+   em_web.web.connection.connection_remove_gpg
+   em_web.web.connection.connection_remove_database
+
+
+
+.. py:function:: connection()
+
+   List connections.
+
+   :url: /connection
+
+   :returns: html webpage.
+
+
+.. py:function:: connection_edit(connection_id)
+
+   Get or edit existing connections.
+
+   :url: /connection/<connection_id>
+   :param connection_id: connection id
+
+   :returns: redirects to connection in question.
+
+
+.. py:function:: connection_sftp()
+
+   Page for adding a SFTP Connection.
+
+   :url: /connection/sftp
+
+   :returns: html page.
+
+
+.. py:function:: connection_gpg()
+
+   Page for adding a GPG Encryption Key.
+
+   :url: /connection/gpg
+
+   :returns: html page.
+
+
+.. py:function:: connection_smb()
+
+   Page for adding a SMB Connection.
+
+   :url: /connection/smb
+
+   :returns: html page.
+
+
+.. py:function:: connection_ssh()
+
+   Page for adding a SSH Connection.
+
+   :url: /connection/ssh
+
+   :returns: html page.
+
+
+.. py:function:: connection_database()
+
+   Page for adding a Database Connection.
+
+   :url: /connection/database
+
+   :returns: html page.
+
+
+.. py:function:: connection_ftp()
+
+   Page for adding a FTP Connection.
+
+   :url: /connection/ftp
+
+   :returns: html page.
+
+
+.. py:function:: connection_new()
+
+   Page for adding a new connection group.
+
+   :url: /connection/new
+
+   :returns: redirects to new connection.
+
+
+.. py:function:: connection_remove(connection_id)
+
+   Delete a connection group.
+
+   :url: /connection/remove/<connection_id>
+   :param connection_id: id of connection in question.
+
+   :returns: redirects back to connection page.
+
+
+.. py:function:: connection_remove_sftp(connection_id, sftp_id)
+
+   Delete a SFPT connection from group.
+
+   :url: /connection/<connection_id>/removeSftp/<sftp_id>
+   :param sftp_id: id of the SFTP connection in question.
+   :param connection_id: id of connection group in question.
+
+   :returns: redirects back to connection page.
+
+
+.. py:function:: connection_remove_ssh(connection_id, ssh_id)
+
+   Delete a SSH connection from group.
+
+   :url: /connection/<connection_id>/removeSsh/<ssh_id>
+   :param ssh_id: id of the SSH connection in question.
+   :param connection_id: id of connection group in question.
+
+   :returns: redirects back to connection page.
+
+
+.. py:function:: connection_remove_smb(connection_id, smb_id)
+
+   Delete a SMB connection from group.
+
+   :url: /connection/<connection_id>/removeSmb/<smb_id>
+   :param smb_id: id of the SMB connection in question.
+   :param connection_id: id of connection group in question.
+
+   :returns: redirects back to connection page.
+
+
+.. py:function:: connection_remove_ftp(connection_id, ftp_id)
+
+   Delete a FPT connection from group.
+
+   :url: /connection/<connection_id>/removeFtp/<ftp_id>
+   :param ftp_id: id of the FTP connection in question.
+   :param connection_id: id of connection group in question.
+
+   :returns: redirects back to connection page.
+
+
+.. py:function:: connection_remove_gpg(connection_id, gpg_id)
+
+   Delete a FPT connection from group.
+
+   :url: /connection/<connection_id>/removeGpg/<gpg_id>
+   :param ftp_id: id of the FTP connection in question.
+   :param connection_id: id of connection group in question.
+
+   :returns: redirects back to connection page.
+
+
+.. py:function:: connection_remove_database(connection_id, database_id)
+
+   Delete a database connection from group.
+
+   :url: /connection/<connection_id>/removeDatabase/<database_id>
+   :param database_id: id of the database connection in question.
+   :param connection_id: id of connection group in question.
+
+   :returns: redirects back to connection page.
+
+

@@ -1,0 +1,19 @@
+pre {
+  border: 1px solid #eee !important;
+  border-radius: 0.1rem;
+  box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.05),0 0 0.05rem rgba(0,0,0,0.1) !important;
+}
+
+.bd-sidebar div.navbar_extra_footer {
+  text-align: left !important;
+  opacity: 0.7 !important;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+  padding-top: 5px;
+}
+
+body p > img {
+  border: 1px solid #eee;
+  border-radius: 0.1rem;
+  box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.05),0 0 0.05rem rgba(0,0,0,0.1);
+}

@@ -1,0 +1,17 @@
+:py:mod:`em_web.web.assets`
+===========================
+
+.. py:module:: em_web.web.assets
+
+.. autoapi-nested-parse::
+
+   Web assets.
+
+   Each route in EM Web has its own css and js bundle in an effort
+   to keep bundle size as small as possible.
+
+   Specific css and js that is not always required can be kept in their
+   own bundles and imported as needed.
+
+
+

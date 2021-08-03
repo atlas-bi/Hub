@@ -1,0 +1,40 @@
+:py:mod:`em_runner.scripts.em_smtp`
+===================================
+
+.. py:module:: em_runner.scripts.em_smtp
+
+.. autoapi-nested-parse::
+
+   SMTP connection manager.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_smtp.Smtp
+
+
+
+
+.. py:class:: Smtp(task, recipients, subject, message, attachment, attachment_name, job_hash)
+
+   SMB Connection Handler Class.
+
+   Used to send emails. pass in recips, subject, message and any attachments
+
+   Set up class parameters.
+
+   :param task: task object
+   :param list recipients: list of email addresses to send email to
+   :param str subject: email subject
+   :param str message: formated email message
+   :param str attachment: local file path to item that should be attached to email
+   :param str attachment_name: name to give attached file
+
+

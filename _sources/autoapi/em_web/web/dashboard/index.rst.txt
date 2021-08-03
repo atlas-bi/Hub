@@ -1,0 +1,148 @@
+:py:mod:`em_web.web.dashboard`
+==============================
+
+.. py:module:: em_web.web.dashboard
+
+.. autoapi-nested-parse::
+
+   Dashboard web views.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.dashboard.search
+   em_web.web.dashboard.home
+   em_web.web.dashboard.dash
+   em_web.web.dashboard.active_schedule
+   em_web.web.dashboard.dash_error_gauge
+   em_web.web.dashboard.dash_run_gauge
+   em_web.web.dashboard.dash_orphans_delete
+   em_web.web.dashboard.dash_errored_run
+   em_web.web.dashboard.dash_active_run
+   em_web.web.dashboard.dash_errored_schedule
+   em_web.web.dashboard.dash_scheduled_run
+   em_web.web.dashboard.dash_scheduled_reschedule
+   em_web.web.dashboard.dash_scheduled_disable
+   em_web.web.dashboard.add_user_log
+
+
+
+.. py:function:: search()
+
+   Search data.
+
+
+.. py:function:: home()
+
+   Return default landing page.
+
+   If user has projects, they will direct to that screen.
+
+   :url: /
+   :returns: html webpage.
+
+
+.. py:function:: dash()
+
+   Dashboard page.
+
+   :url: /
+   :returns: html webpage.
+
+
+.. py:function:: active_schedule()
+
+   Graph showing current run schedule for next 12 hrs.
+
+   :url: /schedule
+   :returns: html webpage.
+
+
+.. py:function:: dash_error_gauge()
+
+   Guage showing number of errored tasks.
+
+   :url: /dash/errorGauge
+   :returns: html webpage.
+
+
+.. py:function:: dash_run_gauge()
+
+   Guage showing number of tasks run.
+
+   :url: /dash/runGauge
+   :returns: html webpage.
+
+
+.. py:function:: dash_orphans_delete()
+
+   Button to delete any jobs without a linked tasks.
+
+   :url: /dash/orphans/delete
+   :returns: redirects to dashboard.
+
+
+.. py:function:: dash_errored_run()
+
+   Button to run all errored tasks.
+
+   :url: /dash/errored/run
+   :returns: redirects to dashboard.
+
+
+.. py:function:: dash_active_run()
+
+   Button to run all errored tasks.
+
+   :url: /dash/errored/run
+   :returns: redirects to dashboard.
+
+
+.. py:function:: dash_errored_schedule()
+
+   Button to schedule all errored tasks.
+
+   :url: /dash/errored/schedule
+   :returns: redirects to dashboard.
+
+
+.. py:function:: dash_scheduled_run()
+
+   Button to run all scheduled tasks.
+
+   :url: /dash/scheduled/run
+   :returns: redirects to dashboard.
+
+
+.. py:function:: dash_scheduled_reschedule()
+
+   Button to reschedule all scheduled tasks.
+
+   :url: /dash/scheduled/reschedule
+   :returns: redirects to dashboard.
+
+
+.. py:function:: dash_scheduled_disable()
+
+   Button to disable all scheduled tasks.
+
+   :url: /dash/scheduled/disable
+   :returns: redirects to dashboard.
+
+
+.. py:function:: add_user_log(message, error_code)
+
+   Add log entry prefixed by username.
+
+   :param message str: message to save
+   :param error_code: 1 (error) or 0 (no error)
+
+

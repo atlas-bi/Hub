@@ -1,0 +1,50 @@
+:py:mod:`em_runner.scripts.em_cmd`
+==================================
+
+.. py:module:: em_runner.scripts.em_cmd
+
+.. autoapi-nested-parse::
+
+   Functions used to run system commands.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_cmd.Cmd
+
+
+
+
+.. py:class:: Cmd(task, cmd, success_msg, error_msg, job_hash)
+
+   System command runner.
+
+   Set system path and variables.
+
+   :param cmd: add system path to cmd.
+   :param task: task object
+   :param success_msg: message to print if command is successful
+   :param error_msg: message to print if command errors
+
+   .. py:method:: shell(self)
+
+      Run input command as a shell command.
+
+      :returns: Shell output of command.
+
+
+   .. py:method:: run(self)
+
+      Run input command as a subprocess command.
+
+      :returns: Subprocess output of command.
+
+
+

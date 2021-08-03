@@ -1,0 +1,156 @@
+:py:mod:`em_web.web.admin`
+==========================
+
+.. py:module:: em_web.web.admin
+
+.. autoapi-nested-parse::
+
+   Admin web views.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.admin.admin
+   em_web.web.admin.admin_empty_scheduler
+   em_web.web.admin.admin_reload_scheduler
+   em_web.web.admin.admin_reset_tasks
+   em_web.web.admin.admin_whoami
+   em_web.web.admin.admin_reload_daemon
+   em_web.web.admin.admin_restart_daemon
+   em_web.web.admin.admin_clear_log
+   em_web.web.admin.admin_pause_jobs
+   em_web.web.admin.admin_resume_jobs
+   em_web.web.admin.admin_stop_jobs
+   em_web.web.admin.admin_kill_jobs
+   em_web.web.admin.add_user_log
+
+
+
+.. py:function:: admin()
+
+   Admin home page.
+
+   :url: /admin
+   :returns: html webpage.
+
+
+.. py:function:: admin_empty_scheduler()
+
+   Remove all jobs from scheduler.
+
+   :url: /admin/emptyScheduler
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_reload_scheduler()
+
+   Emtpy scheduler and re-add all enabled jobs.
+
+
+.. py:function:: admin_reset_tasks()
+
+   Reset all tasks to complete.
+
+   :url: /admin/resetTasks
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_whoami()
+
+   Run `whoami` command on server.
+
+   .. code-block:: console
+
+       /bin/whoami
+
+   Calls runner function :obj:`em_runner.web.web.whoami`
+
+   :url: /admin/whoami
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_reload_daemon()
+
+   Reload web service on server.
+
+   .. code-block:: console
+
+       /bin/sudo /bin/systemctl daemon-reload
+
+   Calls runner function :obj:`em_runner.web.web.reload_daemon`
+
+   :url: /admin/reloadDaemon
+
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_restart_daemon()
+
+   Restart web service on server.
+
+   .. code-block:: console
+
+       /bin/sudo /bin/systemctl restart
+
+    Calls runner function :obj:`em_runner.web.web.restart_daemon`
+
+   :url: /admin/restartDaemon
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_clear_log()
+
+   Clear all logs.
+
+   :url: /admin/clearlog
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_pause_jobs()
+
+   Stop all jobs from future runs.
+
+   :url: /admin/pauseJobs
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_resume_jobs()
+
+   Resume all paused jobs.
+
+   :url: /admin/resumeJobs
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_stop_jobs()
+
+   Gracefully shutdown scheduler.
+
+   :url: /admin/stopJobs
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: admin_kill_jobs()
+
+   Kill the scheduler.
+
+   :url: /admin/killJobs
+   :returns: redirects to admin homepage with message.
+
+
+.. py:function:: add_user_log(message, error_code)
+
+   Add log entry prefixed by username.
+
+   :param message str: message to save
+   :param error_code: 1 (error) or 0 (no error)
+
+

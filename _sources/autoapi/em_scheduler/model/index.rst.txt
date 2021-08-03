@@ -1,0 +1,345 @@
+:py:mod:`em_scheduler.model`
+============================
+
+.. py:module:: em_scheduler.model
+
+.. autoapi-nested-parse::
+
+   Extract Management 2.0 Data Model.
+
+   Model resides in EM Web, but must be copied to :obj:`em_scheduler` and
+   :obj:`em_runner` before running app.
+
+   Database migrations are run through a manager script.
+
+   .. code-block:: console
+
+       export FLASK_APP=em_web
+       flask db migrate
+       flask db upgrade
+
+   Sometimes there is a conflict between flask-migrations (Alembic migrations)
+   and the Postgresql db - Postgres will add some indexes that flask-migrations
+   doesn't think exist yet.
+
+   When this happens just remove the index from the migration file onto the previous
+   migrations file - so flask-migrations think it has already applied the migration.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_scheduler.model.LoginType
+   em_scheduler.model.Login
+   em_scheduler.model.User
+   em_scheduler.model.Project
+   em_scheduler.model.TaskSourceType
+   em_scheduler.model.TaskSourceQueryType
+   em_scheduler.model.TaskProcessingType
+   em_scheduler.model.TaskStatus
+   em_scheduler.model.Connection
+   em_scheduler.model.ConnectionSftp
+   em_scheduler.model.ConnectionSsh
+   em_scheduler.model.ConnectionGpg
+   em_scheduler.model.ConnectionFtp
+   em_scheduler.model.ConnectionSmb
+   em_scheduler.model.ConnectionDatabaseType
+   em_scheduler.model.ConnectionDatabase
+   em_scheduler.model.TaskDestinationFileType
+   em_scheduler.model.QuoteLevel
+   em_scheduler.model.Task
+   em_scheduler.model.TaskLog
+   em_scheduler.model.TaskFile
+
+
+
+
+.. py:class:: LoginType
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table of user login types.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: Login
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table should contain all login attempts.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: User
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table containing any user-specific information.
+
+   .. py:method:: get_id(self)
+
+      Convert id to unicode.
+
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: Project
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table containing project details.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: TaskSourceType
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table of task source types.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: TaskSourceQueryType
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table of task query source types.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: TaskProcessingType
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table of task query source types.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: TaskStatus
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table of task status types.
+
+   This table can link back to a task status, or a task log status.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: Connection
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table containing all destination information.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: ConnectionSftp
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table conntaining sftp connection strings.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: ConnectionSsh
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table conntaining sftp connection strings.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: ConnectionGpg
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table conntaining gpg keys.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: ConnectionFtp
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table conntaining sftp connection strings.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: ConnectionSmb
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table conntaining sftp connection strings.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: ConnectionDatabaseType
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table of task source database types.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: ConnectionDatabase
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   List of task source databases and connection strings.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: TaskDestinationFileType
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table of task destination file types.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: QuoteLevel
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Lookup table for python quote levels.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: Task
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table containing task details.
+
+   .. py:attribute:: updater_id
+      
+
+      data source 
+
+
+   .. py:attribute:: source_ssh_id
+      
+
+      processing script source 
+
+
+   .. py:attribute:: processing_command
+      
+
+      destination 
+
+
+   .. py:attribute:: destination_quote_level_id
+      
+
+      email 
+
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: TaskLog
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table containing job run history.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+
+.. py:class:: TaskFile
+
+   Bases: :py:obj:`em_scheduler.extensions.db.Model`
+
+   Table containing paths to task backup files.
+
+   .. py:method:: __repr__(self)
+
+      Return repr(self).
+
+
+

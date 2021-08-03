@@ -1,0 +1,51 @@
+:py:mod:`em_runner.scripts.em_sqlserver`
+========================================
+
+.. py:module:: em_runner.scripts.em_sqlserver
+
+.. autoapi-nested-parse::
+
+   Connection handler for SQL Server Databases.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_sqlserver.SqlServer
+
+
+
+
+.. py:class:: SqlServer(task, query, connection, job_hash)
+
+   Functions to query against sql server.
+
+   Initialize class.
+
+   :param task: task requesting the query
+   :param query: query to run
+   :param connection: connection string
+
+   .. py:method:: __rows(self, size=500)
+
+      Return data from query by a generator.
+
+      :param cursor: curser containing query output
+      :param size: chunk size of rows to return
+
+
+   .. py:method:: run(self)
+
+      Run a sql query and return temp file location.
+
+      Data from query is written to disk in a tempfile. Tempfile
+      must be removed after data is consumed!
+
+
+

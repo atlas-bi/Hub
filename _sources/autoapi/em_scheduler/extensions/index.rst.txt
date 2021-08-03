@@ -1,0 +1,21 @@
+:py:mod:`em_scheduler.extensions`
+=================================
+
+.. py:module:: em_scheduler.extensions
+
+.. autoapi-nested-parse::
+
+   EM Scheduler Extensions.
+
+   Set up basic flask items for import in other modules.
+
+   *Items Setup*
+
+   :db: database
+   :scheduler: scheduler
+
+   These items can be imported into other
+   scripts after running :obj:`em_scheduler.create_app`
+
+
+

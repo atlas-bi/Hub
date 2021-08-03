@@ -1,0 +1,172 @@
+:py:mod:`em_scheduler.web`
+==========================
+
+.. py:module:: em_scheduler.web
+
+.. autoapi-nested-parse::
+
+   Scheduler Web API.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_scheduler.web.alive
+   em_scheduler.web.schedule
+   em_scheduler.web.add_task
+   em_scheduler.web.delete_task
+   em_scheduler.web.run_task
+   em_scheduler.web.run_task_delay
+   em_scheduler.web.delete_all_tasks
+   em_scheduler.web.pause_all_tasks
+   em_scheduler.web.resume_all_tasks
+   em_scheduler.web.shutdown
+   em_scheduler.web.kill
+   em_scheduler.web.get_jobs
+   em_scheduler.web.get_jobs_details
+   em_scheduler.web.get_scheduled_jobs
+   em_scheduler.web.delete_orphans
+
+
+
+.. py:function:: alive()
+
+   Check API status.
+
+   :url: /api/
+   :returns: status alive!
+
+
+.. py:function:: schedule()
+
+   Build simulated run schedule.
+
+   Build list of hours to show on the chart:
+   ['now', <now + 1>, <now + 2>, etc]
+
+   Build list of schedule for next 24 hours
+
+   Merge two lists and put 0 where needed.
+
+   :url: /api/
+   :returns: status alive!
+
+
+.. py:function:: add_task(task_id)
+
+   Schedule task to run.
+
+   :url: /api/add/<task_id>
+   :param int task_id: id of task to schedule
+   :returns: json message
+
+   First check for any existing schedules, remove them, then add a new schedule.
+
+
+.. py:function:: delete_task(task_id)
+
+   Delete tasks schedule.
+
+   :url: /api/delete/<task_id>
+   :param task_id: id of task to delete
+   :returns: json message
+
+
+.. py:function:: run_task(task_id)
+
+   Run task now.
+
+   :url: /api/run/<task_id>
+   :param task_id: id of task to run
+   :returns: json message
+
+
+.. py:function:: run_task_delay(task_id, minutes)
+
+   Run task in x minutes.
+
+   :url: /api/run/<task_id>/delay/<minutes>
+   :param task_id: id of task to run
+   :param minutes: minutes from now to run task
+   :returns: json message
+
+
+.. py:function:: delete_all_tasks()
+
+   Delete all scheduled tasks.
+
+   :url: /api/delete
+   :returns: json message
+
+
+.. py:function:: pause_all_tasks()
+
+   Pause all tasks.
+
+   :url: /api/pause
+   :returns: json message
+
+
+.. py:function:: resume_all_tasks()
+
+   Resume all tasks.
+
+   :url: /api/resume
+   :returns: succss message.
+
+
+.. py:function:: shutdown()
+
+   Gracefully shutdown scheduler.
+
+   :url: /api/shutdown
+   :returns: succss message.
+
+
+.. py:function:: kill()
+
+   Kill scheduler.
+
+   :url: /api/kill
+   :returns: succss message.
+
+
+.. py:function:: get_jobs()
+
+   Get list of all job ids.
+
+   :url: /api/jobs
+   :returns: list of job ids.
+
+
+.. py:function:: get_jobs_details()
+
+   Get list of all jobs with all details.
+
+   :url: /api/details
+   :returns: list of job ids.
+
+
+.. py:function:: get_scheduled_jobs()
+
+   Get list of all scheduled job ids.
+
+   :url: /api/scheduled
+   :returns: json list of ids for active jobs
+
+
+.. py:function:: delete_orphans()
+
+   Delete all orphaned jobs.
+
+   :url: /api/delete-orphans
+   :returns: json message
+
+

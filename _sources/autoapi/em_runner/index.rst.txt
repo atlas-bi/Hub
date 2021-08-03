@@ -1,0 +1,85 @@
+:py:mod:`em_runner`
+===================
+
+.. py:module:: em_runner
+
+.. autoapi-nested-parse::
+
+   EM's runner module.
+
+   EM's runner is a Flask web API designed to run tasks on multiple worders. The API
+   should quickly respont to a request to run a task and launch the task on a separate
+   thread.
+
+   The run should be only accessable on localhost.
+
+   Tasks are run by sending a simple web request. Note - EM's runner works only from task id's,
+   so there is not need to specify that a value sent to the API is a `task`.. that is assumed.
+
+   .. code-block:: console
+
+       /api/<task_id>
+
+   The API will respond that is has successfully recieved a request to run the task. The
+   task will launch on a separate thread on the same worker.
+
+   Other Urls
+   **********
+
+   * /api/send_<type>/<task_id>/<run_id>/<file_id> - use to resend archived output files
+   * /api/whoami - returns the username of the active user on the web server
+   * /api/reloadDaemon - reload web server service daemon
+   * /api/restartDaemon - restart web server service daemon
+   * /<my_id>/<code_type> - returns tasks's source code for viewing
+
+   Database Model
+   **************
+
+   Database model should be cloned from `em_web` before running app.
+
+   .. code-block:: console
+
+       cp em_web/model.py em_scheduler/
+
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   scripts/index.rst
+   web/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   extensions/index.rst
+   model/index.rst
+
+
+Package Contents
+----------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.create_app
+
+
+
+.. py:function:: create_app()
+
+   Create task runner app.
+
+   :return: app
+
+

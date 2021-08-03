@@ -1,0 +1,72 @@
+:py:mod:`em_runner.scripts.em_smb`
+==================================
+
+.. py:module:: em_runner.scripts.em_smb
+
+.. autoapi-nested-parse::
+
+   SMB Connection Manager.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_smb.Smb
+
+
+
+
+.. py:class:: Smb(task, connection, overwrite, file_name, file_path, job_hash)
+
+   SMB Connection Handler Class.
+
+   smb.read = returns contents of a network file
+   smb.save = save contents of local file to network file
+
+   Set up class parameters.
+
+   :param task: task object
+   :param connection: connection object
+   :param int overwrite: value determines if existing files should be overwriten
+   :param str file_name: name of file in motion
+   :param str file_path: local file path
+
+   .. py:method:: __connect(self)
+
+      Connect to SMB server.
+
+      After making a connection we save it to redis. Next time we need a connection
+      we can grab if from redis and attempt to use. If it is no longer connected
+      then reconnect.
+
+      Because we want to use existing connection we will not close them...
+
+
+   .. py:method:: list_dir(self)
+
+      Get list of directory contents.
+
+      :returns: list of all directory contents.
+
+
+   .. py:method:: read(self)
+
+      Return file contents of network file path.
+
+      :returns: Contents of file specified.
+
+
+   .. py:method:: save(self)
+
+      Load data into network file path, creating location if not existing.
+
+      :returns: True if successful.
+
+
+

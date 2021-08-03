@@ -1,0 +1,41 @@
+:py:mod:`em_web.cli`
+====================
+
+.. py:module:: em_web.cli
+
+.. autoapi-nested-parse::
+
+   EM Web Custom CLI.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.cli.create_db
+   em_web.cli.db_seed
+   em_web.cli.db_seed_demo
+
+
+
+.. py:function:: create_db()
+
+   Add command to create the test database.
+
+
+.. py:function:: db_seed()
+
+   Add command to seed the database.
+
+
+.. py:function:: db_seed_demo()
+
+   Add command to seed the database for a demo.
+
+

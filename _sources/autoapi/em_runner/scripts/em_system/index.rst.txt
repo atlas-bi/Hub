@@ -1,0 +1,61 @@
+:py:mod:`em_runner.scripts.em_system`
+=====================================
+
+.. py:module:: em_runner.scripts.em_system
+
+.. autoapi-nested-parse::
+
+   Host system monitors.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_system.Monitor
+
+
+
+
+.. py:class:: Monitor(task, job_hash)
+
+   Group of functions to monitor host OS.
+
+   Set up class varaibles.
+
+   :param task: task object
+
+   .. py:method:: check_all(self)
+
+      Check disk, cpu and memory of host.
+
+      :returns: true if all tests pass, else false.
+
+
+   .. py:method:: __disk(self)
+
+      Check if free disk space is below threshold set in config.py.
+
+      :returns: True if test passes, else False.
+
+
+   .. py:method:: __cpu(self)
+
+      Check if cpu is below threshold set in config.py.
+
+      :returns: True if test passes, else False.
+
+
+   .. py:method:: __mem(self)
+
+      Check if memory is below threshold set in config.py.
+
+      :returns: True if test passes, else False.
+
+
+

@@ -1,0 +1,170 @@
+:py:mod:`em_web.web.table`
+==========================
+
+.. py:module:: em_web.web.table
+
+.. autoapi-nested-parse::
+
+   Table API.
+
+   All routes return a json string to be build into a table by javascript.
+
+   All tables accept request parameters of:
+
+   * p: page number
+   * s: sort order ex: "Name.asc", "Name.desc"
+
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.table.project_list
+   em_web.web.table.table_tasklog_userevents
+   em_web.web.table.table_user_auth
+   em_web.web.table.connection_task
+   em_web.web.table.table_jobs_orphans
+   em_web.web.table.dash_tasks
+   em_web.web.table.task_list
+   em_web.web.table.project_task_all
+   em_web.web.table.project_task_log_all
+   em_web.web.table.task_log
+   em_web.web.table.dash_log
+   em_web.web.table.dash_error_log
+   em_web.web.table.get_task_files
+
+
+
+.. py:function:: project_list(my_type='all')
+
+   Build json dataset for ajax tables.
+
+   :url: /table/project/<my_type>
+   :param my_type: type of list (mine or all)
+
+   :returns: json for ajax table.
+
+
+.. py:function:: table_tasklog_userevents()
+
+   Table of all user events.
+
+   :url: /table/tasklog/userevents
+
+   :returns: json output of all user events.
+
+
+.. py:function:: table_user_auth()
+
+   Table of all user login events.
+
+   :url: /table/user/auth
+
+   :returns: json output of all user events.
+
+
+.. py:function:: connection_task(connection_id)
+
+   Get a table of any tasks associated with the connection.
+
+   :url: /table/connection/<connection_id>/tasks
+   :param connection_id: id of connection in question
+
+   :returns: json output of associated tasks.
+
+
+.. py:function:: table_jobs_orphans()
+
+   Get a table of any jobs without a linked task.
+
+   :url: /table/jobs/orphans
+
+   :returns: json output of associated jobs.
+
+
+.. py:function:: dash_tasks(task_type)
+
+   Get a table of any jobs marked error.
+
+   :url: /table/tasks/<task_type>
+   :param task_type: active, errored, or scheduled
+
+   :returns: json output of associated tasks.
+
+
+.. py:function:: task_list(my_type)
+
+   Build json dataset for ajax tables.
+
+   :url: /table/tasks/<my_type>/list
+   :param my_type: type of list (mine or all)
+
+   :returns: json for ajax table.
+
+
+.. py:function:: project_task_all(project_id)
+
+   Build json dataset for ajax tables of tasks for a project.
+
+   :url: /table/project/<project_id>/task
+   :param project_id: id of project owning the tasks
+
+   :returns: json for ajax table.
+
+
+.. py:function:: project_task_log_all(project_id)
+
+   Build project tasklog json dataset for ajax tables.
+
+   :url: /table/project/<project_id>/tasklog
+   :param project_id: id of project owning the tasklog
+
+   :returns: json for ajax table.
+
+
+.. py:function:: task_log(task_id)
+
+   Build tasklog json dataset for ajax tables.
+
+   :url: /table/task/<task_id>/log
+
+   :param task_id: id of task owning the tasklog
+
+   :returns: json for ajax table.
+
+
+.. py:function:: dash_log()
+
+   Get a table of all task logs.
+
+   :url: /table/tasks/log
+
+   :returns: json output of associated logs.
+
+
+.. py:function:: dash_error_log()
+
+   Get a table of all task error logs.
+
+   :url: /table/tasks/errorLog
+
+   :returns: json output of associated logs.
+
+
+.. py:function:: get_task_files(task_id)
+
+   Build backup files associated with task as json dataset.
+
+   :url: /table/task/<task_id>/files
+   :param task_id: id of task owning the tasklog
+
+   :returns: json for ajax table.
+
+

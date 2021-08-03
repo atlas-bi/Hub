@@ -1,0 +1,62 @@
+:py:mod:`em_web.web.auth`
+=========================
+
+.. py:module:: em_web.web.auth
+
+.. autoapi-nested-parse::
+
+   Login/Logout web views.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.auth.load_user
+   em_web.web.auth.not_authorized
+   em_web.web.auth.login
+   em_web.web.auth.logout
+   em_web.web.auth.log_login
+
+
+
+.. py:function:: load_user(user_id)
+
+   Get user.
+
+
+.. py:function:: not_authorized()
+
+   Return not authorized template.
+
+
+.. py:function:: login()
+
+   User login page.
+
+   :url: /login
+   :returns: webpage
+
+
+.. py:function:: logout()
+
+   User logout page.
+
+   :url: /logout
+   :returns: webpage
+
+
+.. py:function:: log_login(name, type_id)
+
+   Log all login/logout attempts.
+
+   :param name (str): name of user performing action
+   :param type_id (int): id of event type
+
+

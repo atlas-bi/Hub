@@ -1,0 +1,59 @@
+:py:mod:`em_scheduler.events`
+=============================
+
+.. py:module:: em_scheduler.events
+
+.. autoapi-nested-parse::
+
+   Log scheduler events.
+
+   Scheduler events have a listener added to trigger a logging function.
+   The event details are logged to ``Model.TaskLog``.
+
+   These logs will only be from scheduler events (starting/stoping/etc)
+   and not from the actual details of the run. Run detail are added to
+   the logs by ``em_runner``.
+
+   Events saved to :obj:`em_scheduler.model.TaskLog`:
+
+   * EVENT_JOB_ADDED
+   * EVENT_JOB_ERROR
+   * EVENT_JOB_EXECUTED
+   * EVENT_JOB_MISSED
+   * EVENT_JOB_REMOVED
+   * EVENT_JOB_SUBMITTED
+
+   Events not saved to :obj:`em_scheduler.model.TaskLog`:
+
+   * EVENT_ALL_JOBS_REMOVED
+   * EVENT_EXECUTOR_ADDED
+   * EVENT_EXECUTOR_REMOVED
+   * EVENT_JOB_MAX_INSTANCES
+   * EVENT_JOB_MODIFIED
+   * EVENT_JOBSTORE_ADDED
+   * EVENT_JOBSTORE_REMOVED
+   * EVENT_SCHEDULER_PAUSED,
+   * EVENT_SCHEDULER_RESUMED
+   * EVENT_SCHEDULER_SHUTDOWN
+   * EVENT_SCHEDULER_STARTED
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_scheduler.events.scheduler_logs
+
+
+
+.. py:function:: scheduler_logs(app)
+
+   Wrap function to pass app context to all logs.
+
+

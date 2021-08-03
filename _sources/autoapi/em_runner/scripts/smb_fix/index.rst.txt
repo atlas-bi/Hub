@@ -1,0 +1,11 @@
+:py:mod:`em_runner.scripts.smb_fix`
+===================================
+
+.. py:module:: em_runner.scripts.smb_fix
+
+.. autoapi-nested-parse::
+
+   Update to an older version of https://github.com/miketeo/pysmb. Waiting for next release.
+
+
+

@@ -1,0 +1,70 @@
+:py:mod:`em_runner.scripts.em_python`
+=====================================
+
+.. py:module:: em_runner.scripts.em_python
+
+.. autoapi-nested-parse::
+
+   Python script runner.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_python.PyProcesser
+
+
+
+
+.. py:class:: PyProcesser(task, script, input_path, job_hash)
+
+   Python Script Runner.
+
+   Script will create a virtual environment, run a script or module, and then
+   cleanup by removing all files.
+
+   Set up class parameters.
+
+   :param task: task object
+   :param script: name of python function to run in environment
+   :param input_path (optional):  pass filename as parameter to script
+
+   .. py:method:: run(self)
+
+      Run processing script.
+
+      :returns: Any output from the script.
+
+
+   .. py:method:: __build_env(self)
+
+      Build a virtual environment.
+
+      Runs command:
+      .. code-block:: console
+
+          virtualenv <path>
+
+
+
+   .. py:method:: __pip_install(self)
+
+      Get includes from script.
+
+      get import (...)
+      (?<=^import)\s+[^\.][^\s]+?\\s+?$
+
+      get import (...) as ...
+      (?<=^import)\s+[^\.][^\s]+?(?=\s)
+
+      get from (...) imoprt (...)
+      (?<=^from)\s+[^\.].+?(?=import)
+
+
+

@@ -1,0 +1,97 @@
+:py:mod:`em_scheduler`
+======================
+
+.. py:module:: em_scheduler
+
+.. autoapi-nested-parse::
+
+   EM's scheduler module.
+
+   EM's scheduler is a Flask web API running Flask_APScheduler on a single
+   worker process.
+
+   The scheduler should be running on a single worker process and only accessable on localhost.
+
+   Tasks are started and stopped by sending a web request to various URL's.
+
+   * /add/<task_id>
+   * /delete/<task_id>
+   * /run/<task_id>
+
+
+   When the scheduler is ready to run a task it will send an async web request to the runner API
+   with the id of the task to run next.
+
+   Other Urls
+   **********
+
+   * /delete - delete all jobs
+   * /pause - pause all jobs
+   * /resume - resume all paused jobs
+   * /shutdown - gracefully shutdown the scheduler
+   * /kill - kill the scheduler
+   * /jobs - list all id's
+   * /details - list all job details
+   * /scheduled - list id's of scheduled jobs
+   * /delete-orphans - delete all orphaned jobs (jobs that no
+     longer have an associated EM task existing)
+
+   Database Model
+   **************
+
+   Database model should be cloned from `em_web` before running app.
+
+   .. code-block:: console
+
+       cp em_web/model.py em_scheduler/
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   events/index.rst
+   extensions/index.rst
+   functions/index.rst
+   maintenance/index.rst
+   model/index.rst
+   web/index.rst
+
+
+Package Contents
+----------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_scheduler.create_app
+   em_scheduler.error_message
+
+
+
+.. py:function:: create_app()
+
+   Create task runner app.
+
+   :return: app
+
+
+.. py:function:: error_message(error)
+
+   Return error page for 404 and 500 errors including the specific error message.
+
+   :param error: error message
+   :return: json web response with error message:
+
+   .. code-block:: python
+
+       {"error": "messsage"}
+
+
+

@@ -1,0 +1,103 @@
+:py:mod:`em_runner.scripts.em_date`
+===================================
+
+.. py:module:: em_runner.scripts.em_date
+
+.. autoapi-nested-parse::
+
+   Use to make a string form data parameters.
+
+   Allows input of mathematical operations after a python date parameter, for example,
+   %d-1 = yesterday.
+
+   Date strings are split on the first recurring parameter and the strings processed
+   in groups.
+
+   For example, %Y-%d-%m_%Y-%d-%m will be processed in two groups of "%Y-%d-%m".
+
+   allowed on
+       microseconds
+       seconds
+       minutes
+       hours
+       days
+       weeks
+       months
+       years
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_date.DateParsing
+
+
+
+
+.. py:class:: DateParsing(task, date_string, job_hash)
+
+   Used to convert a modified python strftime to a propert datetime.
+
+   Set up the class parameters.
+
+   :param task: task object
+   :param date_string: string to parse into a date
+
+   .. py:method:: get_date_part(my_string)
+      :staticmethod:
+
+      Return the date of the python date string.
+
+      :param my_string: date part to convert
+
+      :returns: string of datepart
+
+      List of delta options:
+
+      %f Microsecond as a decimal number, zero-padded on the left. 000000, 000001, …, 999999
+
+      %S Second as a zero-padded decimal number. 00, 01, …, 59
+
+      %M Minute as a zero-padded decimal number. 00, 01, …, 59
+
+      %H Hour (24-hour clock) as a zero-padded decimal number. 00, 01, …, 23
+      %I Hour (12-hour clock) as a zero-padded decimal number. 01, 02, …, 12
+
+      %a Sun, Mon, …, Sat (en_US);
+      %A Sunday, Monday, …, Saturday (en_US);
+      %w Weekday as a decimal number, where 0 is Sunday and 6 is Saturday. 0, 1, …, 6
+      %d Day of the month as a zero-padded decimal number. 01, 02, …, 31
+
+      %U Week number of the year (Sunday as the first day) as a zero padded decimal number.
+          00, 01,..53
+      %W Week number of the year (Monday as the first day of the week) as a decimal number.
+          0, 01,..53
+
+      %m-firstday Will add the month number (01,02...) plus 1 for the first day of month.
+      %m-firstday0 Will add the month number (01,02...) plus 1 for the first day of month.
+
+      %m-lastday Will add the month number (01,02...) plus the last day of month in digets.
+
+      Dates parts can also have math performed on them. For example, %d-1 will result in
+      yesterdays date.
+
+
+
+   .. py:method:: string_to_date(self)
+
+      Return a complete date string.
+
+      Input string is split into date parts. Each part is individually converted to a
+      string. All string parts are then re-joined.
+
+      :returns: string of date, or input string if error.
+
+
+
+

@@ -1,0 +1,68 @@
+:py:mod:`em_runner.scripts.em_file`
+===================================
+
+.. py:module:: em_runner.scripts.em_file
+
+.. autoapi-nested-parse::
+
+   Local file manager.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_file.File
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_file.file_size
+
+
+
+.. py:function:: file_size(size)
+
+   Convert file size from bytes to appropriate file size string.
+
+   Input size (string) must be a # of bytes.
+
+   :param size str: number of bytes
+   :returns: string of formatted file size.
+
+
+.. py:class:: File(task, data_file, job_hash)
+
+   Files are created in the drive /em/temp/ from any data sent.
+
+   File name and full file path+name are returned.
+
+   Set up class parameters.
+
+   :param task: task object
+   :param data: data to drop into file
+
+   .. py:method:: __quote_level(self)
+
+      Return quote level based on task values.
+
+      :returns: quote level as an integer.
+
+
+   .. py:method:: save(self)
+
+      Create and save the file.
+
+      :returns: [filename, filepath] of final file.
+
+
+

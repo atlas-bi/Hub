@@ -1,0 +1,55 @@
+:py:mod:`em_runner.scripts.em_ftp`
+==================================
+
+.. py:module:: em_runner.scripts.em_ftp
+
+.. autoapi-nested-parse::
+
+   FTP connection manager.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_ftp.Ftp
+
+
+
+
+.. py:class:: Ftp(task, connection, overwrite, file_name, file_path, job_hash)
+
+   FTP Connection Handler Class.
+
+   Function takes a file name and source file path
+   and will upload the file to the fpt location
+   specified in the task settings.
+
+   Set up class parameters.
+
+   :param task: task object
+   :param connection: connection object
+   :param int overwrite: value determines if existing files should be overwriten
+   :param str file_name: name of file in motion
+   :param str file_path: local file path
+
+   .. py:method:: read(self)
+
+      Read a file from FTP server.
+
+      :returns: file contents as string.
+
+
+   .. py:method:: save(self)
+
+      Use to copy local file to FTP server.
+
+      :returns: true if successful.
+
+
+

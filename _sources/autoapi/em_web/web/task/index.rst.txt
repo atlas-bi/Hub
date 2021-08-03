@@ -1,0 +1,476 @@
+:py:mod:`em_web.web.task`
+=========================
+
+.. py:module:: em_web.web.task
+
+.. autoapi-nested-parse::
+
+   Task web views.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.task.task_endretry
+   em_web.web.task.task_duplicate
+   em_web.web.task.task_hello
+   em_web.web.task.task_delete
+   em_web.web.task.task_all
+   em_web.web.task.task_mine
+   em_web.web.task.task_user
+   em_web.web.task.task_new
+   em_web.web.task.get_task
+   em_web.web.task.task_edit_get
+   em_web.web.task.task_get_git_code
+   em_web.web.task.task_get_source_code
+   em_web.web.task.task_get_url_code
+   em_web.web.task.task_get_processing_git_code
+   em_web.web.task.task_get_processing_url_code
+   em_web.web.task.task_edit_post
+   em_web.web.task.run_task_now
+   em_web.web.task.schedule_task
+   em_web.web.task.enable_task
+   em_web.web.task.disable_task
+   em_web.web.task.get_task_run
+   em_web.web.task.get_task_file_send_sftp
+   em_web.web.task.get_task_file_send_ftp
+   em_web.web.task.get_task_file_send_smb
+   em_web.web.task.get_task_file_send_email
+   em_web.web.task.get_task_file_download
+   em_web.web.task.get_task_run_log
+   em_web.web.task.task_sftp_dest
+   em_web.web.task.task_gpg_file
+   em_web.web.task.task_sftp_source
+   em_web.web.task.task_ssh_source
+   em_web.web.task.task_sftp_query
+   em_web.web.task.task_sftp_processing
+   em_web.web.task.task_ftp_dest
+   em_web.web.task.task_ftp_source
+   em_web.web.task.task_ftp_processing
+   em_web.web.task.task_ftp_query
+   em_web.web.task.task_smb_source
+   em_web.web.task.task_smb_dest
+   em_web.web.task.task_smb_query
+   em_web.web.task.task_smb_processing
+   em_web.web.task.task_database_source
+   em_web.web.task.task_reset
+
+
+
+.. py:function:: task_endretry(task_id)
+
+   Stop a task from performing the scheduled retry.
+
+   :param task_id: id of task to stop
+   :returns: redirect to task details
+
+   First, remove the redis key for reruns
+   Then, force the task to reschedule, which will
+   clear any scheduled jobs that do not belong to
+   the primary schedule.
+
+
+.. py:function:: task_duplicate(task_id)
+
+   Duplicate a task.
+
+   :url: /task/<task_id>/duplicate
+   :param task_id: id of task to duplicate
+
+   :returns: html view of new task.
+
+
+.. py:function:: task_hello(task_id)
+
+   Get basic task info.
+
+   :param task_id: id of task to query
+
+   :returns json of task details
+
+
+.. py:function:: task_delete(task_id)
+
+   Delete a task.
+
+   :url: /task/<task_id>/delete
+   :param task_id: id of task to delete
+
+   :returns: redirects back to project or dashboard.
+
+
+.. py:function:: task_all()
+
+   Page for all tasks.
+
+   :url: /task
+   :returns: html of task page.
+
+
+.. py:function:: task_mine()
+
+   Page for my tasks.
+
+   :url: /task/mine
+   :returns: html of task page.
+
+
+.. py:function:: task_user(user_id)
+
+   Page for tasks for a specific user.
+
+   :url: /task/user/<user_id>
+   :param user_id: id of task owner
+
+   :returns: html of task page.
+
+
+.. py:function:: task_new(project_id)
+
+   Create a new task.
+
+   :url: /project/<project_id>/task/new
+   :param project_id: id of project owning the new task
+
+   :returns: redirects to task page.
+
+
+.. py:function:: get_task(task_id)
+
+   Get task details page.
+
+   :url: /task/<task_id>
+   :param task_id: id of the task
+
+   :returns: html for task page.
+
+
+.. py:function:: task_edit_get(task_id)
+
+   Task edit page.
+
+   :url: /task/<task_id>/edit
+   :param task_id: id of project owning the tasks
+
+   :returns: redirects to the project details page.
+
+
+.. py:function:: task_get_git_code(task_id)
+
+   Get git code for a task.
+
+   :url: /task/<task_id>/git
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_source_code(task_id)
+
+   Get git code for a task.
+
+   :url: /task/<task_id>/git
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_url_code(task_id)
+
+   Get non-git source code for a task.
+
+   :url: /task/<task_id>/url
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_processing_git_code(task_id)
+
+   Get git code for a task.
+
+   :url: /task/<task_id>/processing_git
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_get_processing_url_code(task_id)
+
+   Get non-git code for a task.
+
+   :url: /task/<task_id>/processing_url
+   :param task_id: id of task
+
+   :returns: html page with source code.
+
+
+.. py:function:: task_edit_post(task_id)
+
+   Save task edits.
+
+   :url: /task/<task_id>/edit
+   :param task_id: id of task
+
+   :returns: redirect to task details page.
+
+
+.. py:function:: run_task_now(task_id)
+
+   Run a task.
+
+   :url: /task/<task_id>/run
+   :param task_id: id of task
+
+   :returns: redirect to task details page.
+
+
+.. py:function:: schedule_task(task_id)
+
+   Add a task to scheduler.
+
+   :url: /task/<task_id>/schedule
+   :param task_id: id of task
+
+   :returns: redirect to task details page.
+
+
+.. py:function:: enable_task(task_id)
+
+   Enable a task.
+
+   :url: /task/<task_id>/enable
+   :param task_id: id of task
+
+   :returns: redirect to task details page.
+
+
+.. py:function:: disable_task(task_id)
+
+   Disable a task.
+
+   :url: /task/<task_id>/disable
+   :param task_id: id of task
+
+   :returns: redirect to task details page.
+
+
+.. py:function:: get_task_run(task_id, run_id)
+
+   Get task run details.
+
+   :url: /task/<task_id>/log/<run_id>
+   :param task_id: id of task owning the tasklog
+   :param run_id: id of the run
+
+   :returns: html of run details
+
+
+.. py:function:: get_task_file_send_sftp(task_id, file_id)
+
+   Reload task SFTP output.
+
+   :url: /task/<task_id>/file/<run_id>/<file_id>/sendSftp
+   :param task_id: id of task owning the tasklog
+   :param run_id: id of the run
+   :param file_id: id of file to load
+
+   :returns: redirect to task details.
+
+
+.. py:function:: get_task_file_send_ftp(task_id, file_id)
+
+   Reload task FTP output.
+
+   :url: /task/<task_id>/file/<run_id>/<file_id>/sendFtp
+   :param task_id: id of task owning the tasklog
+   :param run_id: id of the run
+   :param file_id: id of file to load
+
+   :returns: redirect to task details.
+
+
+.. py:function:: get_task_file_send_smb(task_id, file_id)
+
+   Reload task SMB output.
+
+   :url: /task/<task_id>/file/<run_id>/<file_id>/sendSmb
+   :param task_id: id of task owning the tasklog
+       run_id: id of the run
+       file_id: id of file to load
+
+   :returns: redirect to task details.
+
+
+.. py:function:: get_task_file_send_email(task_id, file_id)
+
+   Resend task email output.
+
+   :url: /task/<task_id>/file/<run_id>/<file_id>/sendEmail
+   :param task_id: id of task owning the tasklog
+   :param run_id: id of the run
+   :param file_id: id of file to load
+
+   :returns: redirect to task details.
+
+
+.. py:function:: get_task_file_download(file_id)
+
+   Download task backup file.
+
+   :url: /task/<task_id>/file/<run_id>/<file_id>/download
+   :param task_id: id of task owning the tasklog
+   :param run_id: id of the run
+   :param file_id: id of file to load
+
+   :returns: redirect to task details.
+
+
+.. py:function:: get_task_run_log(task_id, run_id)
+
+   Build json dataset for ajax tables of tasklog.
+
+   :url: /task/<task_id>/runlog/<run_id>
+   :param task_id: id of task
+   :param run_id: id of run
+
+   :returns: json for ajax table.
+
+
+.. py:function:: task_sftp_dest()
+
+   Template to add sftp destination to a task.
+
+   :url: /task/sftp-dest
+   :returns: html page.
+
+
+.. py:function:: task_gpg_file()
+
+   Template to add gpg encryption to a task.
+
+   :url: /task/gpg-file
+   :returns: html page.
+
+
+.. py:function:: task_sftp_source()
+
+   Template to add sftp source to a task.
+
+   :url: /task/sftp-source
+   :returns: html page.
+
+
+.. py:function:: task_ssh_source()
+
+   Template to add ssh source to a task.
+
+   :url: /task/ssh-source
+   :returns: html page.
+
+
+.. py:function:: task_sftp_query()
+
+   Template to add sftp query source to a task.
+
+   :url: /task/sftp-query
+   :returns: html page.
+
+
+.. py:function:: task_sftp_processing()
+
+   Template to add sftp processing source to a task.
+
+   :url: /task/sftp-processing
+   :returns: html page.
+
+
+.. py:function:: task_ftp_dest()
+
+   Template to add ftp destination to a task.
+
+   :url: /task/ftp-dest
+   :returns: html page.
+
+
+.. py:function:: task_ftp_source()
+
+   Template to add ftp source to a task.
+
+   :url: /task/ftp-source
+   :returns: html page.
+
+
+.. py:function:: task_ftp_processing()
+
+   Template to add ftp processing source to a task.
+
+   :url: /task/ftp-processing
+   :returns: html page.
+
+
+.. py:function:: task_ftp_query()
+
+   Template to add ftp query source to a task.
+
+   :url: /task/ftp-query
+   :returns: html page.
+
+
+.. py:function:: task_smb_source()
+
+   Template to add smb source to a task.
+
+   :url: /task/smb-source
+   :returns: html page.
+
+
+.. py:function:: task_smb_dest()
+
+   Template to add smb destination to a task.
+
+   :url: /task/smb-dest
+   :returns: html page.
+
+
+.. py:function:: task_smb_query()
+
+   Template to add smb query source to a task.
+
+   :url: /task/smb-query
+   :returns: html page.
+
+
+.. py:function:: task_smb_processing()
+
+   Template to add smb processing source to a task.
+
+   :url: /task/smb-processing
+   :returns: html page.
+
+
+.. py:function:: task_database_source()
+
+   Template to add database source to a task.
+
+   :url: /task/database-source
+   :returns: html page.
+
+
+.. py:function:: task_reset(task_id)
+
+   Reset a task status to completed.
+
+   :url: /task/<task_id>/reset
+   :param task_id: id of task to reset
+
+   :returns: redirects to task details.
+
+

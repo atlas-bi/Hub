@@ -1,0 +1,55 @@
+:py:mod:`em_web.web.saml_auth`
+==============================
+
+.. py:module:: em_web.web.saml_auth
+
+.. autoapi-nested-parse::
+
+   SAML Login/Logout web views.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.saml_auth.SAML
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   em_web.web.saml_auth.idp_initiated
+   em_web.web.saml_auth.build_metadata
+
+
+
+.. py:class:: SAML(flask_app)
+
+   SAML Authentication.
+
+   Init class.
+
+   .. py:method:: saml_client_for(self)
+
+      Build SAML client.
+
+
+
+.. py:function:: idp_initiated()
+
+   Get response from IDP.
+
+
+.. py:function:: build_metadata()
+
+   Build saml metadata.
+
+

@@ -1,0 +1,51 @@
+:py:mod:`em_runner.scripts.em_postgres`
+=======================================
+
+.. py:module:: em_runner.scripts.em_postgres
+
+.. autoapi-nested-parse::
+
+   Connection handler for Postgres Databases.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_postgres.Postgres
+
+
+
+
+.. py:class:: Postgres(task, query, connection, job_hash)
+
+   Functions to query against sql server.
+
+   Initialize class.
+
+   :param task: task requesting the query
+   :param query: query to run
+   :param connection: connection string
+
+   .. py:method:: __rows(self, size=50)
+
+      Return data from query by a generator.
+
+      :param cursor: curser containing query output
+      :param size: chunk size of rows to return
+
+
+   .. py:method:: run(self)
+
+      Run a sql query and return temp file location.
+
+      Data from query is written to disk in a tempfile. Tempfile
+      must be removed after data is consumed!
+
+
+
