@@ -195,7 +195,7 @@ scss_project_new = Bundle(
     "./assets/collapse.scss",
     "./assets/input.scss",
     filters="pyscss,rcssmin",
-    output="css/project_new.min.css",
+    output="css/project_new_sc.min.css",
 )
 web_assets.register("scss_project_new", scss_project_new)
 
@@ -206,7 +206,7 @@ css_project_new = Bundle(
     "./lib/codemirror/nord.css",
     "./lib/codemirror/simplescrollbars.css",
     filters="rcssmin",
-    output="css/search.min.css",
+    output="css/project_new.min.css",
 )
 web_assets.register("css_project_new", css_project_new)
 
