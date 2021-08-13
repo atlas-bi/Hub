@@ -19,6 +19,23 @@ jobs:
         args: pg:reset DATABASE --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    - name: Heroku login credentials
+        run: |
+          cat > ~/.netrc <<EOF
+            machine api.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+            machine git.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+          EOF
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+      - name: Reset Redis
+        run: |
+          heroku addons:remove heroku-redis --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+          heroku addons:create heroku-redis:hobby-dev --maxmemory_policy allkeys-lru --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
     - name: Deploy to Heroku
       uses: gonuit/heroku-docker-deploy@v1.3.3
       with:
