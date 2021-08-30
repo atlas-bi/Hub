@@ -7,7 +7,7 @@ lint:
   before_script:
   - python -m pip install --disable-pip-version-check --quiet tox
   script:
-  - export LINT=$(tox -e lint)
+  - export LINT=$(tox -e lint -r)
   - echo -e "$LINT"
   - python -m pip install --disable-pip-version-check --quiet anybadge
   - anybadge -l $CI_JOB_NAME -v $(echo $LINT | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f lint.svg succeeded=green failed=red

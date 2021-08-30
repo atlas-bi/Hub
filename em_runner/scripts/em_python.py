@@ -169,9 +169,11 @@ class PyProcesser:
                             re.findall(r"(?<=^import)\s+[^\.][^\s]+?(?=\s)", line)
                         )
 
+            package_map = {"dateutil": "python-dateutil", "smb": "pysmb"}
+
             # clean list
             imports = [
-                x[0].strip().split(".")[0].replace("dateutil", "python-dateutil")
+                package_map.get(x[0].strip().split(".")[0], x[0].strip().split(".")[0])
                 for x in imports
                 if x != []
             ]

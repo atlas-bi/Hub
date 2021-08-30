@@ -1,131 +1,147 @@
 {#
-    Extract Management 2.0
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+Extract Management 2.0
+Copyright (C) 2020 Riverside Healthcare, Kankakee, IL
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 #}
-
 <!-- message preview -->
 <div style="visibility:hidden;height:0;font-size:1px;">
-	{% if success == 1 %}
-		{% if task.email_completion_message %}
-			{{ task.email_completion_message }}
-		{% else %}
-			Task run has completed.
-		{% endif %}
-	{% endif %}
-
-	{% if success == 0 %}
-		{% if task.email_error_message %}
-			{{ task.email_error_message }}
-		{% else %}
-			Task run has errors.
-		{% endif %}
-	{% endif %}
-
+    {% if success == 1 %}
+        {% if task.email_completion_message %}
+            {{ task.email_completion_message }}
+        {% else %}
+            Task run has completed.
+        {% endif %}
+    {% endif %}
+    {% if success == 0 %}
+        {% if task.email_error_message %}
+            {{ task.email_error_message }}
+        {% else %}
+            Task run has errors.
+        {% endif %}
+    {% endif %}
 </div>
-
 <!-- message body -->
 <div style="padding:25px">
-
-	<!-- heading -->
-	<div style="margin-bottom:25px;">
-		<h2 style="font-family: Georgia,serif;font-size: 35px;margin:0;font-weight:lighter">Extract Management 2.0</h2>
-		<div style="color: #6c7378;font-size: 15px;">&#169; 2020 Riverside Healthcare</div>
-	</div>
-
-	<!-- task title -->
-	<h3>Project: <a style="color: #6c7378;text-decoration: none" href="{{ host }}/project/{{ task.projectId }}">{{ task.project.name }}</a> / Task: <a style="color: #6c7378;text-decoration: none" href="{{ host }}/task/{{ task.id}}">{{ task.name }}</a> / Run: <a style="color: #6c7378;text-decoration: none" href="{{ host }}/task/{{ task.id }}/log/{{ task.lastRunJobId}}">{{ task.last_run_job_id }}</a></h3>
-
-	<!-- message body -->
-	{% if success == 1 %}
-		{% if task.email_completion_message %}
-			{{ task.email_completion_message }}
-		{% else %}
-			Task run has completed.
-		{% endif %}
-	{% endif %}
-
-	{% if success == 0 %}
-		{% if task.email_error_message %}
-			{{ task.email_error_message }}
-		{% else %}
-			Task run has errors.
-		{% endif %}
-	{% endif %}
-
-	<!-- embeded file -->
-	{% if output and output|length > 0 %}
-		<h3>Output</h3>
-		<table style="margin-top:25px;margin-bottom:25px;border: 1px solid #d9d9d9;border-radius: 3px;border-spacing: 0;width: 100%;border-top: none;position: relative;white-space: pre-wrap;max-width: 100%;">
-			{% if task.source_query_include_header %}
-			<thead>
-				<tr style="background: #078992;border: none;color: #fff;border-top-right-radius: 3px;border-top-left-radius: 3px;">
-					{% for item in output[0] %}
-						{% if loop.index0 == 0 %}
-							<th style="border-top-left-radius: 3px;">{{ item }}</th>
-						{% elif loop.index == loop.length %}
-							<th style="border-top-right-radius: 3px;">{{ item }}</th>
-						{% else %}
-							<th>{{ item }}</th>
-						{% endif %}
-					{% endfor %}
-				</tr>
-			</thead>
-			{% endif %}
-			<tbody>
-				{% for row in output %}
-					{% if task.source_query_include_header and loop.index0 == 0 %}
-					{% else %}
-						<tr>
-							{% for cell in row %}
-								{% if loop.index0 > 0 %}
-									<td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;">{{ cell }}</td>
-								{% else %}
-									<td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;">{{ cell }}</td>
-								{% endif %}
-							{% endfor %}
-						</tr>
-					{% endif %}
-				{% endfor %}
-			</tbody>
-		</table>
-	{% endif %}
-
-	<!-- logs -->
-	{% if logs|length > 0 and ((task.email_completion_log == 1 and success == 1) or success == 0)%}
-		<h3>Logs</h3>
-		<table style="margin-top:25px;margin-bottom:25px;border: 1px solid #d9d9d9;border-radius: 3px;border-spacing: 0;width: 100%;border-top: none;position: relative;white-space: pre-wrap;max-width: 100%;">
-			<thead>
-				<tr style="background: #078992;border: none;color: #fff;border-top-right-radius: 3px;border-top-left-radius: 3px;">
-					<th style="border-top-left-radius: 3px;">Status</th>
-					<th>Status Date</th>
-					<th style="border-top-right-radius: 3px;">Status Message</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for log in logs %}
-					<tr {% if log.statusId == 2 or log.error == 1 %} style="background-color: rgba(255,105,97,.2);"{% endif %} >
-						<td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;">{{ log.status_date|datetime_format }}</td>
-						<td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;">{{ log.status.name }}</td>
-						<td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;">{{ log.message|e }}</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	{% endif %}
-
-	<!-- footer -->
-	<footer style="color: #6c7378;">Email Date: {{date}}</footer>
+    <!-- heading -->
+    <div style="margin-bottom:25px;">
+        <h2 style="font-family: Georgia,serif;font-size: 35px;margin:0;font-weight:lighter">
+            Extract Management 2.0
+        </h2>
+        <div style="color: #6c7378;font-size: 15px;">
+            &#169; 2020 Riverside Healthcare
+        </div>
+    </div>
+    <!-- task title -->
+    <h3>
+        Project:
+        <a style="color: #6c7378;text-decoration: none" href="{{ host }}/project/{{ task.projectId }}">
+            {{ task.project.name }}
+        </a>
+        / Task:
+        <a style="color: #6c7378;text-decoration: none" href="{{ host }}/task/{{ task.id }}">
+            {{ task.name }}
+        </a>
+        / Run:
+        <a style="color: #6c7378;text-decoration: none"
+           href="{{ host }}/task/{{ task.id }}/log/{{ task.lastRunJobId }}">
+            {{ task.last_run_job_id }}
+        </a>
+    </h3>
+    <!-- message body -->
+    {% if success == 1 %}
+        {% if task.email_completion_message %}
+            {{ task.email_completion_message }}
+        {% else %}
+            Task run has completed.
+        {% endif %}
+    {% endif %}
+    {% if success == 0 %}
+        {% if task.email_error_message %}
+            {{ task.email_error_message }}
+        {% else %}
+            Task run has errors.
+        {% endif %}
+    {% endif %}
+    <!-- embeded file -->
+    {% if output and output|length > 0 %}
+        <h3>Output</h3>
+        <table style="margin-top:25px;margin-bottom:25px;border: 1px solid #d9d9d9;border-radius: 3px;border-spacing: 0;width: 100%;border-top: none;position: relative;max-width: 100%;">
+            {% if task.source_query_include_header %}
+                <thead>
+                    <tr style="background: #078992;border: none;color: #fff;border-top-right-radius: 3px;border-top-left-radius: 3px;">
+                        {% for item in output[0] %}
+                            {% if loop.index0 == 0 %}
+                                <th style="border-top-left-radius: 3px;">{{ item }}</th>
+                            {% elif loop.index == loop.length %}
+                                <th style="border-top-right-radius: 3px;">{{ item }}</th>
+                            {% else %}
+                                <th>{{ item }}</th>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+            {% endif %}
+            <tbody>
+                {% for row in output %}
+                    {% if task.source_query_include_header and loop.index0 == 0 %}
+                    {% else %}
+                        <tr>
+                            {% for cell in row %}
+                                {% if loop.index0 > 0 %}
+                                    <td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;">
+                                        {{ cell }}
+                                    </td>
+                                {% else %}
+                                    <td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;">
+                                        {{ cell }}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <!-- logs -->
+    {% if logs|length > 0 and ((task.email_completion_log == 1 and success == 1) or success == 0) %}
+        <h3>Logs</h3>
+        <table style="margin-top:25px;margin-bottom:25px;border: 1px solid #d9d9d9;border-radius: 3px;border-spacing: 0;width: 100%;border-top: none;position: relative;white-space: pre-wrap;max-width: 100%;">
+            <thead>
+                <tr style="background: #078992;border: none;color: #fff;border-top-right-radius: 3px;border-top-left-radius: 3px;">
+                    <th style="border-top-left-radius: 3px;">Status</th>
+                    <th>Status Date</th>
+                    <th style="border-top-right-radius: 3px;">Status Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr {% if log.statusId == 2 or log.error == 1 %} style="background-color: rgba(255,105,97,.2);" {% endif %}>
+                        <td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;">
+                            {{ log.status_date|datetime_format }}
+                        </td>
+                        <td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;">
+                            {{ log.status.name }}
+                        </td>
+                        <td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;">
+                            {{ log.message|e }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <!-- footer -->
+    <footer style="color: #6c7378;">
+        Email Date: {{ date }}
+    </footer>
 </div>

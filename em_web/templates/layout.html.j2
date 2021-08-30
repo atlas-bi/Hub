@@ -1,25 +1,5 @@
 <!DOCTYPE HTML>
-
 <html dir="ltr" lang="en-US">
-
-    {#
-        Extract Management 2.0
-        Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
-
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see https://www.gnu.org/licenses/.
-    #}
-
     {% cache None %}
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -32,70 +12,58 @@
     <link href="/static/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
     <link href="/static/site.webmanifest" rel="manifest" />
     <link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" />
-
     {% assets "css_font" %}
-    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
-
     {% assets "css_table" %}
-    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
-
-    {% endcache %}
-    {% assets "css_search" %}
+{% endcache %}
+{% assets "css_search" %}
     <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
-    {% endassets %}
-    {% assets "js_search" %}
+{% endassets %}
+{% assets "js_search" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-
-    <title>Extract Management 2.0 - {{ title }}</title>
-
-    {% block head %}{% endblock head %}
-    {% block css %}{% endblock css %}
-
-    <body>
-        {% if config['DEMO'] %}
-            {% include 'demo.html.j2' %}
-        {% endif %}
-
-        {% block body_auth %}
-
-            {% include "sections/head.html.j2" %}
-
-            <div class="block">
-                <div class="block-left">
-                    {% include "sections/nav.html.j2" %}
-                </div>
-                <div class="block-search">
-                    {% include "sections/search.html.j2" %}
-                </div>
-                <div class="block-right">
-                    <!-- status message -->
-                    <div class="em-status">
-                        <div class="em-statusContainer">
-                            <span class="em-statusTitle">Running tasks:</span>
-                            <span class="em-statusMessage"></span>
-                            <span class="blink">.</span>
-                            <span class="blink-2">.</span>
-                            <span class="blink-3">.</span>
-                        </div>
-                    </div>
-                    {% if messages|length %}
-                        <div class="login-error">
-                            <svg class="login-errorIcn" viewbox="0 0 576 512" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
-                            </svg>
-                            {% for message in messages %}
-                                {{ message }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    {% block body %}
-                    {% endblock body %}
-                </div>
+{% endassets %}
+<title>Extract Management 2.0 - {{ title }}</title>
+{% block head %}{% endblock head %}
+{% block css %}{% endblock css %}
+<body>
+    {% if config['DEMO'] %}
+        {% include 'demo.html.j2' %}
+    {% endif %}
+    {% block body_auth %}
+        {% include "sections/head.html.j2" %}
+        <div class="block">
+            <div class="block-left">
+                {% include "sections/nav.html.j2" %}
             </div>
-        {% endblock body_auth %}
-        {% block js %}{% endblock js %}
-    <script src="//code.tidio.co/x1qe9xcalwsdkfkn4ybm8tkkeabgk9tf.js" async></script></body>
+            <div class="block-search">
+                {% include "sections/search.html.j2" %}
+            </div>
+            <div class="block-right">
+                <!-- status message -->
+                <div class="em-status">
+                    <div class="em-statusContainer">
+                        <span class="em-statusTitle">Running tasks:</span>
+                        <span class="em-statusMessage"></span>
+                        <span class="blink">.</span>
+                        <span class="blink-2">.</span>
+                        <span class="blink-3">.</span>
+                    </div>
+                </div>
+                {% if messages|length %}
+                    <div class="login-error">
+                        <svg class="login-errorIcn" viewbox="0 0 576 512" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/>
+                        </svg>
+                        {% for message in messages %}{{ message }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% block body %}{% endblock body %}
+            </div>
+        </div>
+    {% endblock body_auth %}
+    {% block js %}{% endblock js %}
+<script src="//code.tidio.co/x1qe9xcalwsdkfkn4ybm8tkkeabgk9tf.js" async></script></body>
 </html>

@@ -34,6 +34,7 @@ from flask import current_app as app
 from em_runner import db
 from em_runner.model import TaskLog
 from em_runner.scripts.em_date import DateParsing
+from em_runner.scripts.em_params import ParamParser
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
@@ -83,7 +84,9 @@ class File:
 
     # pylint: disable=too-few-public-methods
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, task, data_file, job_hash):
+    def __init__(
+        self, task, data_file, job_hash, project_params=None, task_params=None
+    ):
         """Set up class parameters.
 
         :param task: task object
@@ -102,6 +105,8 @@ class File:
             self.task.name.replace(" ", "_"),
             self.job_hash,
         )
+        self.task_params = task_params
+        self.project_params = project_params
 
     def __quote_level(self):
         """Return quote level based on task values.
@@ -172,9 +177,19 @@ class File:
             and self.task.destination_file_name is not None
         ):
 
+            # parse python dates
             self.file_name = DateParsing(
                 self.task, self.task.destination_file_name, self.job_hash
             ).string_to_date()
+
+            # parse params
+            self.file_name = ParamParser(
+                task=self.task,
+                query=self.file_name,
+                job_hash=self.job_hash,
+                project_params=self.project_params,
+                task_params=self.task_params,
+            ).insert_file_params()
 
         else:
             self.file_name = self.job_hash or (
@@ -356,14 +371,20 @@ class File:
             # create zip
             if self.task.destination_create_zip == 1:
 
-                self.zip_name = (
-                    DateParsing(
-                        self.task, self.task.destination_zip_name, self.job_hash
-                    )
-                    .string_to_date()
-                    .replace(".zip", "")
-                    + ".zip"
-                )
+                self.zip_name = DateParsing(
+                    self.task, self.task.destination_zip_name, self.job_hash
+                ).string_to_date()
+
+                # parse params
+                self.zip_name = ParamParser(
+                    task=self.task,
+                    query=self.zip_name,
+                    job_hash=self.job_hash,
+                    project_params=self.project_params,
+                    task_params=self.task_params,
+                ).insert_file_params()
+
+                self.zip_name = self.zip_name.replace(".zip", "") + ".zip"
 
                 with zipfile.ZipFile(self.base_path + self.zip_name, "w") as zip_file:
                     zip_file.write(

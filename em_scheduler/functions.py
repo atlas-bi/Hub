@@ -56,6 +56,14 @@ def scheduler_task_runner(task_id):
     """
     try:
         with scheduler.app.app_context():
+            # mark the task status as error in the
+            # unlikely event that the runner is not
+            # triggered.. then we will have the
+            # job saved in an errored state.
+            task = Task.query.filter_by(id=task_id).first()
+            task.status_id = 2
+            db.session.commit()
+
             get(scheduler.app.config["RUNNER_HOST"] + "/" + task_id)
     # pylint: disable=broad-except
     except BaseException as e:

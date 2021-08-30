@@ -157,6 +157,8 @@ class Project(db.Model):
 
     global_params: str
 
+    sequence_tasks: int
+
     id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String(120), nullable=True)
     description = db.Column(db.String(8000), nullable=True)
@@ -184,6 +186,8 @@ class Project(db.Model):
     ooff_date = db.Column(db.DateTime, nullable=True)
 
     global_params = db.Column(db.String(8000), nullable=True)
+
+    sequence_tasks = db.Column(db.Integer, nullable=True)
 
     task = db.relationship(
         "Task",
@@ -615,6 +619,7 @@ class Task(db.Model):
     project_id: int
     status_id: int
     enabled: int
+    order: int
     last_run: datetime.datetime
     next_run: datetime.datetime
     last_run_job_id: str
@@ -724,6 +729,7 @@ class Task(db.Model):
         db.Integer, db.ForeignKey(TaskStatus.id), nullable=True, index=True
     )
     enabled = db.Column(db.Integer, nullable=True, index=True)
+    order = db.Column(db.Integer, nullable=True, index=True)
     last_run = db.Column(db.DateTime, nullable=True)
     last_run_job_id = db.Column(db.String(30), nullable=True, index=True)
     next_run = db.Column(db.DateTime, nullable=True, index=True)

@@ -6,15 +6,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 max_line_length = 99
-include = '''
-    /(
-        em_runner/
-      | em_scheduler/
-      | em_web/
-      | tests/
-      | publish/
-    )/
-    '''
 exclude = '''
     /(
         \.git
@@ -37,23 +28,6 @@ exclude = '''
       | temp
     )/
     '''
-quiet = true
-
-[tool.curlylint]
-include = '\.(html.j2)$'
-exclude = '''
-(
-    /pages/task/details.html.j2
-    | /pages/connection/all.html.j2
-    | /saml_test.html.j2
-    | /demo.html.j2
-)
-'''
-quiet = true
-
-[tool.curlylint.rules]
-indent = 4
-html_has_lang = 'en-US'
 
 [tool.isort]
 profile = "black"
@@ -105,43 +79,43 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.6.1,<4.0"
-Flask-Migrate = "^2.5.3"
-python3-saml = "^1.9.0"
-SQLAlchemy = "^1.3.22"
+python-ldap = "^3.3.1"
+is-safe-url = "^1.0"
+Flask-Login = "^0.5.0"
+pysaml2 = "^7.0.1"
+python-gnupg = "^0.4.7"
+relative-to-now = "^0.0.8"
+paramiko = "^2.7.2"
+virtualenv = "^20.7.2"
+psycopg2-binary = "^2.9.1"
+cryptography = "^3.4.7"
+psutil = "^5.8.0"
+Flask-Compress = "^1.10.1"
+SQLAlchemy = "1.4.22"
+Flask-Migrate = "^3.1.0"
+python3-saml = "^1.12.0"
 bs4 = "^0.0.1"
 flask-redis = "^0.4.0"
-Flask-SQLAlchemy = "^2.4.4"
+Flask-SQLAlchemy = "^2.5.1"
 jsmin = "^2.2.2"
-python-dateutil = "^2.8.1"
+python-dateutil = "^2.8.2"
 Flask-Executor = "^0.9.4"
-Flask = "^1.1.2"
+Flask = "^2.0.1"
 num2words = "^0.5.10"
-pyodbc = "^4.0.30"
-requests = "^2.25.1"
-Flask-Session = "^0.3.2"
-Flask-APScheduler = "^1.12.1"
-xmlsec = "^1.3.9"
+pyodbc = "^4.0.31"
+requests = "^2.26.0"
+Flask-Session = "^0.4.0"
+Flask-APScheduler = "^1.12.2"
+xmlsec = "^1.3.11"
 Flask-Assets = "^2.0"
-Flask-Caching = "^1.9.0"
-Flask-HTMLmin = "^2.0.0"
+Flask-Caching = "^1.10.1"
+Flask-HTMLmin = "^2.1.0"
 redis = "^3.5.3"
 Flask-Script = "^2.0.6"
-Jinja2 = "^2.11.2"
+Jinja2 = "^3.0.1"
 Flask-SQLAlchemy-Caching = "^1.0.4"
-pysmb = "^1.2.6"
+pysmb = "^1.2.7"
 rcssmin = "^1.0.6"
-Flask-Compress = "^1.8.0"
-psutil = "^5.8.0"
-cryptography = "^3.3.1"
-psycopg2-binary = "^2.8.6"
-virtualenv = "^20.2.2"
-paramiko = "^2.7.2"
-relative-to-now = "^0.0.5"
-python-gnupg = "^0.4.6"
-pysaml2 = "^6.5.1"
-Flask-Login = "^0.5.0"
-is-safe-url = "^1.0"
-python-ldap = "^3.3.1"
 
 [tool.poetry.dependencies.Flask-DebugToolbar]
 version = "^0.11.0"
@@ -180,7 +154,7 @@ git = "https://github.com/Kronuz/pyScss.git"
 rev = "6bf001e"
 
 [tool.poetry.dependencies.pytest]
-version = "^6.2.1"
+version = "^6.2.4"
 optional = true
 
 [tool.poetry.dependencies.pytest-cov]
@@ -240,7 +214,7 @@ max-module-lines = 1000
 ignore = "smb_fix.py"
 
 [tool.pylint.messages_control]
-disable = "C0330, C0326, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911"
+disable = "C0330, C0326, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911, E1120, E1123, W1514, W1406"
 
 [tool.pytest]
 

@@ -29,6 +29,7 @@ from flask import current_app as app
 
 from em_runner import db
 from em_runner.model import TaskLog
+from em_runner.scripts.em_params import LoadParams, ParamParser
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
@@ -39,7 +40,9 @@ urllib3.disable_warnings()
 class SourceCode:
     """Group of functions used to get various type of source code for task runner."""
 
-    def __init__(self, task, url, job_hash):
+    def __init__(
+        self, task, url, job_hash, query=None, project_params=None, task_params=None
+    ):
         """Set up class parameters.
 
         :param task: task object
@@ -48,6 +51,17 @@ class SourceCode:
         self.url = url
         self.task = task
         self.job_hash = job_hash
+        self.query = query
+        self.db_type = "mssql" if self.task.source_database_id == 2 else None
+
+        if project_params is None and task_params is None:
+            self.project_params, self.task_params = LoadParams(
+                self.task, self.job_hash
+            ).get()
+
+        else:
+            self.task_params = task_params
+            self.project_params = project_params
 
     def gitlab(self):
         """Get source code from gitlab using authentication.
@@ -98,17 +112,11 @@ class SourceCode:
                     raise Exception("Failed to get code: " + page.text)
 
                 if self.url.lower().endswith(".sql"):
-
-                    return self.cleanup(
-                        (
-                            page.text
-                            if not page.text.startswith("<!DOCTYPE")
-                            else "Visit URL to view code"
-                        ),
-                        ("mssql" if self.task.source_database_id == 2 else None),
-                        self.task.query_params,
-                        self.task.project.global_params,
+                    self.query = page.text
+                    self.db_type = (
+                        "mssql" if self.task.source_database_id == 2 else None
                     )
+                    return self.cleanup()
 
                 return (
                     page.text
@@ -159,16 +167,9 @@ class SourceCode:
         try:
             logging.info("Source: Getting Url: %s", self.url)
             page = requests.get(self.url, verify=False)  # noqa: S501
-            return (
-                self.cleanup(
-                    page.text,
-                    ("mssql" if self.task.source_database_id == 2 else None),
-                    self.task.query_params,
-                    self.task.project.global_params,
-                )
-                if page.status_code == 200
-                else -1
-            )
+            self.query = page.text
+            self.db_type = "mssql" if self.task.source_database_id == 2 else None
+            return self.cleanup() if page.status_code == 200 else -1
 
         # pylint: disable=broad-except
         except BaseException as e:
@@ -197,12 +198,9 @@ class SourceCode:
         :retruns: Cleaned source code.
         """
         try:
-            return self.cleanup(
-                query=self.task.source_code,
-                db_type=("mssql" if self.task.source_database_id == 2 else None),
-                task_params=self.task.query_params,
-                project_params=self.task.project.global_params,
-            )
+            self.query = self.task.source_code
+            self.db_type = "mssql" if self.task.source_database_id == 2 else None
+            return self.cleanup()
 
         # pylint: disable=broad-except
         except BaseException:
@@ -222,8 +220,7 @@ class SourceCode:
             db.session.commit()
         return -1
 
-    @staticmethod
-    def cleanup(query, db_type, task_params, project_params):
+    def cleanup(self):
         """Clean up source code.
 
         :param str query: query to clean
@@ -235,6 +232,7 @@ class SourceCode:
         """
         # remove database call
         # sql stuff
+        query = self.query
 
         query = re.sub(
             r"(^;?\s*;?)use\s+.+", "", query, flags=re.IGNORECASE | re.MULTILINE
@@ -244,7 +242,7 @@ class SourceCode:
         )
 
         # only needed for mssql
-        if db_type == "mssql":
+        if self.db_type == "mssql":
             # add no count
             query = "SET NOCOUNT ON;\n" + query
 
@@ -257,49 +255,7 @@ class SourceCode:
         # remove " go"
         query = re.sub(r" go", r"", query, flags=re.IGNORECASE)
 
-        # add global parameters
-        if project_params is not None:
-
-            params = [
-                re.split(r"\s?:\s?|\s?=\s?", param)
-                for param in project_params.split("\n")
-                if param != ""
-            ]
-
-            for param in params:
-                query = re.sub(
-                    r"(?<=SET\s" + param[0] + r")\s?=\s?.*;?",
-                    " = " + param[1] + ";",
-                    query,
-                    flags=re.IGNORECASE,
-                )
-                query = re.sub(
-                    r"(?<=Declare\s" + param[0] + r"\s)(.+?)\s?=\s?.*;?",
-                    r"\1 = " + param[1] + ";",
-                    query,
-                    flags=re.IGNORECASE,
-                )
-
-        if task_params is not None:
-            params = [
-                re.split(r"(?:\s*:\s*|\s*=\s*)", param)
-                for param in task_params.split("\n")
-                if param != ""
-            ]
-
-            for param in params:
-                query = re.sub(
-                    r"(?<=SET\s" + param[0] + r")\s?=\s?.*;?",
-                    " = " + param[1] + ";",
-                    query,
-                    flags=re.IGNORECASE,
-                )
-                query = re.sub(
-                    r"(?<=Declare\s" + param[0] + r"\s)(.+?)\s?=\s?.*;?",
-                    r"\1 = " + param[1] + ";",
-                    query,
-                    flags=re.IGNORECASE,
-                )
+        query = ParamParser(self.task, query, self.job_hash).insert_query_params()
 
         # add two blank lines on end of query
         return query + "\n\n"

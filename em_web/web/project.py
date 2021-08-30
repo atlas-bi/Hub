@@ -111,9 +111,17 @@ def project_get(project_id):
     :returns: html page for project details, or error page if project id was invalid.
     """
     me = Project.query.filter_by(id=project_id).first()
+    first_task = (
+        Task.query.filter_by(project_id=project_id)
+        .filter_by(enabled=1)
+        .order_by(Task.order.asc(), Task.name.asc())
+        .first()
+    )
 
     if me:
-        return render_template("pages/project/details.html.j2", p=me, title=me.name)
+        return render_template(
+            "pages/project/details.html.j2", p=me, title=me.name, task=first_task
+        )
 
     return render_template("pages/project/details.html.j2", invalid=True, title="Error")
 
@@ -170,7 +178,12 @@ def project_edit_post(project_id):
     me.name = form["project_name"].strip()
     me.description = form["project_desc"]
     me.updater_id = updater.id
-    me.global_params = form.get("globalParams") or ""
+    me.global_params = form.get("globalParams", "").strip()
+
+    if form.get("run_tasks_in_sequence", 0) == "1":
+        me.sequence_tasks = 1
+    else:
+        me.sequence_tasks = 0
 
     if form.get("project_ownership") == "1":
         me.owner_id = updater.id
@@ -325,7 +338,7 @@ def project_new():
 
     project_name = form["project_name"].strip()
     project_desc = form["project_desc"]
-    project_params = form.get("globalParams") or ""
+    project_params = form.get("globalParams", "").strip()
 
     # create owner record
     if User.query.filter_by(id=current_user.id).count():
@@ -349,6 +362,11 @@ def project_new():
         updater_id=owner.id,
         global_params=project_params,
     )
+
+    if form.get("run_tasks_in_sequence", 0) == "1":
+        me.sequence_tasks = 1
+    else:
+        me.sequence_tasks = 0
 
     # add triggers
     if form["project_cron"] == "1":

@@ -21,6 +21,7 @@ import html
 import json
 import logging
 import os
+import re
 import zipfile
 
 import requests
@@ -121,6 +122,7 @@ def task_duplicate(task_id):
     new_task.creator_id = whoami.id
     new_task.updater_id = whoami.id
     new_task.status_id = None
+    new_task.order = None
     new_task.name = new_task.name + " (Duplicated)"
 
     db.session.add(new_task)
@@ -398,6 +400,11 @@ def task_new(project_id):
     tme.updater_id = whoami.id
 
     tme.max_retries = form.get("task-retry") or 0
+    tme.order = (
+        form.get("task-rank")
+        if re.match(r"^\d+$", str(form.get("task-rank", "0")))
+        else None
+    )
 
     # source options
     if "sourceType" in form:
@@ -521,7 +528,7 @@ def task_new(project_id):
         # query options
     if "sourceQueryType" in form:
         tme.source_query_type_id = form["sourceQueryType"]
-        tme.query_params = form["queryParams"] if "queryParams" in form else ""
+        tme.query_params = form["queryParams"].strip() if "queryParams" in form else ""
         tme.source_git = form["sourceGit"] if form["sourceQueryType"] == "1" else None
 
         # smb file
@@ -1187,6 +1194,12 @@ def task_edit_post(task_id):
 
     tme.max_retries = form.get("task-retry") or 0
 
+    tme.order = (
+        form.get("task-rank")
+        if re.match(r"^\d+$", str(form.get("task-rank", "0")))
+        else None
+    )
+
     tme.updater_id = whoami.id
     # source options
     if "sourceType" in form:
@@ -1310,7 +1323,7 @@ def task_edit_post(task_id):
         # query options
     if "sourceQueryType" in form:
         tme.source_query_type_id = form["sourceQueryType"]
-        tme.query_params = form["queryParams"] if "queryParams" in form else ""
+        tme.query_params = form["queryParams"].strip() if "queryParams" in form else ""
         tme.source_git = form["sourceGit"] if form["sourceQueryType"] == "1" else None
 
         # smb file

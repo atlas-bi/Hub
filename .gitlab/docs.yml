@@ -11,7 +11,7 @@ docs:
   - redis-server --daemonize yes
   - cd /builds/extract-management/extract-management-site/
   script:
-  - tox -e docs
+  - tox -e docs -r
   - mv docs/_build/ public/
   artifacts:
     paths:

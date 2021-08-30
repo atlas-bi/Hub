@@ -133,7 +133,21 @@ def add_task(task_id):
     """
     try:
         scheduler_delete_task(task_id)
-        if scheduler_add_task(task_id):
+        # only add task if it is the first in a series, or project is parallel.
+        if Task.query.filter_by(id=task_id).first().project.sequence_tasks == 1:
+            # if task is first
+            if (
+                Task.query.filter_by(
+                    project_id=Task.query.filter_by(id=task_id).first().project_id
+                )
+                .filter_by(enabled=1)
+                .order_by(Task.order.asc(), Task.name.asc())
+                .first()
+                .id
+                == task_id
+            ) and scheduler_add_task(task_id):
+                return jsonify({"message": "Scheduler: task job added!"})
+        elif scheduler_add_task(task_id):
             return jsonify({"message": "Scheduler: task job added!"})
         return jsonify({"message": "Scheduler: failed to create job!"})
 

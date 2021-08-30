@@ -66,6 +66,10 @@ If a task has a non-catastrophic failure, meaning that the app is still running 
 
 In cases like this it is advisable to allow the task to rerun.
 
+Run Rank
+====
+
+Run Rank determines which order the tasks will be run in, only if the project is set to run tasks in series.
 
 Data Sources
 ============
@@ -148,6 +152,14 @@ For example, if you want to include the day yesterday in your filename you can d
     nice_name_yesterday_%d-1.csv
 
 The '%d-1' will parse out to the day number yesterday.
+
+Parameters from project/task parameters can also be used. For example, if you have a parameter `#year=parse(%Y)`, you can add that to the filename as
+
+.. code:: python
+
+    current_year_#year.csv
+
+and the #year value will be updated with the current year value.
 
 If needed, the file can be sent inside a zip folder.
 

@@ -1,28 +1,22 @@
-{#
-    Extract Management 2.0
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see https://www.gnu.org/licenses/.
-#}
-<div class="em-inputTtl">Connection Name</div>
+<div class="em-inputTtl">
+    Connection Name
+</div>
 {% if smb_query|length ==0 %}
-    <span class="em-error">There are no connections set up. <a class="em-link" title="set up a new connection" href="/connection">Set up a connection first.</a></span>
+    <span class="em-error">
+        There are no connections set up.
+        <a class="em-link" title="set up a new connection" href="/connection">
+            Set up a connection first.
+        </a>
+    </span>
 {% else %}
     <select class="em-input" name="task-query-smb">
-        <option disabled="disabled" {% if not t %} selected="selected" {% endif %}>Choose one</option>
+        <option disabled="disabled" {% if not t %}selected="selected"{% endif %}>
+            Choose one
+        </option>
         {% for s in smb_query %}
-            <option value="{{ s.id }}" {% if t and t.query_smb_id == s.id %} selected="selected" {% endif %}>{{ s.name }}</option>
+            <option value="{{ s.id }}" {% if t and t.query_smb_id == s.id %}selected="selected"{% endif %}>
+                {{ s.name }}
+            </option>
         {% endfor %}
     </select>
 {% endif %}

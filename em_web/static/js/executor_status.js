@@ -35,7 +35,7 @@
           jobText += jobs[key] + "&nbsp;";
         }
 
-        box.style.height = "64px";
+        box.style.height = "auto";
 
         box.querySelector(".em-statusMessage").innerHTML = jobText;
         myTimeout = 1000;

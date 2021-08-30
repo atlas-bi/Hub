@@ -8,7 +8,7 @@ web:
   - rm -rf package-lock.json
   - rm -rf node_modules
   script:
-  - export STATIC=$(tox -e static)
+  - export STATIC=$(tox -e static -r)
   - echo -e "$STATIC"
   - python -m pip install --disable-pip-version-check --quiet anybadge
   - anybadge -l $CI_JOB_NAME -v $(echo $STATIC | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f web.svg succeeded=green failed=red

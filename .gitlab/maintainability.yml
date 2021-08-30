@@ -6,7 +6,7 @@ maintainability:
   before_script:
   - pip install --no-cache-dir anybadge tox
   script:
-  - export LINT=$(tox -e radon); echo -e "$LINT"
+  - export LINT=$(tox -e radon -r); echo -e "$LINT"
   - "export MI=$(echo $LINT | grep -o 'Average complexity: .' | sed -e 's/Average complexity: //')"
   - anybadge -l maintainability -v $MI -f maintainability.svg F=red C=red D=red C=orange B=yellow A=green
   artifacts:

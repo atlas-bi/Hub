@@ -1,109 +1,182 @@
-{#
-    Extract Management 2.0
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see https://www.gnu.org/licenses/.
-#}
 {% extends "layout.html.j2" %}
-
 {% block js %}
     {% assets "js_project_details" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock js %}
-
 {% block css %}
     {% assets "css_project_details" %}
-    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
     {% assets "css_scroll" %}
-    <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+        <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
 {% endblock css %}
-
 {% block body %}
-
     {% if invalid == True %}
         <h1>Invalid project.</h1>
-        <h2>Maybe try <a class="em-titleGrey" title="all projects" href="/project">all projects</a>?</h2>
-
+        <h2>
+            Maybe try
+            <a class="em-titleGrey" title="all projects" href="/project">
+                all projects
+            </a>
+            ?
+        </h2>
     {% else %}
-
-        <h1 class="em-title">Owner: {% if p.project_owner %}<a href="/project/user/{{ p.project_owner.id }}" title="{{ p.project_owner.full_name }}'s projects" class="em-link">{{ p.project_owner.full_name }}</a>{% else %}<span class="em-titleGrey">Unknown</span>{% endif %} / Project: {{ p.name }} </h1>
-
+        <h1 class="em-title">
+            Owner:
+            {% if p.project_owner %}
+                <a href="/project/user/{{ p.project_owner.id }}"
+                   title="{{ p.project_owner.full_name }}'s projects"
+                   class="em-link">
+                    {{ p.project_owner.full_name }}
+                </a>
+            {% else %}
+                <span class="em-titleGrey">Unknown</span>
+            {% endif %}
+            / Project: {{ p.name }}
+        </h1>
         {% include "pages/project/nav.html.j2" %}
-
-        <p>{{ p.description }}</p>
-
+        <p>
+            {% if p.sequence_tasks == 1 %}
+                <strong>Tasks will run in sequence by rank (ascending) and then name (alpha ascending).</strong>
+                {% if task.next_run %}
+                    <br />
+                    Next Run: {{ task.next_run }}
+                {% endif %}
+            {% else %}
+                <strong>Tasks will run in parallel.</strong>
+            {% endif %}
+        </p>
+        <p>
+            {{ p.description }}
+        </p>
         <h2 class="em-sectionTitle">Task Triggers</h2>
-
         {% if p.cron == 1 %}
             <h3 class="em-sectionTitle">Cron Schedule</h3>
-            <p>Run ...
+            <p>
+                Run ...
                 <!-- month, year -->
-                <span class="em-pSection">{% if p.cron_month != None or p.cron_year != None %}<em>in </em>{% endif %}{% if p.cron_month != None %}<em>{{ p.cron_month|cron_month }}</em>, {% endif %}{% if p.cron_year != None %}<em>{{ p.cron_year }}</em>{% endif %}</span>
-
+                <span class="em-pSection">
+                    {% if p.cron_month != None or p.cron_year != None %}
+                        <em>in</em>
+                    {% endif %}
+                    {% if p.cron_month != None %}
+                        <em>{{ p.cron_month|cron_month }}</em>
+                        ,
+                    {% endif %}
+                    {% if p.cron_year != None %}<em>{{ p.cron_year }}</em>{% endif %}
+                </span>
                 <!-- week of year -->
-                <span class="em-pSection">{% if p.cron_week != None %}on the <em>{{ p.cron_week|num_st }}</em> week of the year,{% endif %}</span>
-
+                <span class="em-pSection">
+                    {% if p.cron_week != None %}
+                        on the
+                        <em>{{ p.cron_week|num_st }}</em>
+                        week of the year,
+                    {% endif %}
+                </span>
                 <!-- day of week -->
-                <span class="em-pSection">{% if p.cron_week_day != None %}on <em>{{ p.cron_week_day|cron_week_day }}</em>, {% endif %}</span>
-
+                <span class="em-pSection">
+                    {% if p.cron_week_day != None %}
+                        on
+                        <em>{{ p.cron_week_day|cron_week_day }}</em>
+                        ,
+                    {% endif %}
+                </span>
                 <!-- day of month -->
-                <span class="em-pSection">{% if p.cron_day != None %}on <em>{{ p.cron_day|num_st }}</em> day of the month,{% endif %}</span>
-
+                <span class="em-pSection">
+                    {% if p.cron_day != None %}
+                        on
+                        <em>{{ p.cron_day|num_st }}</em>
+                        day of the month,
+                    {% endif %}
+                </span>
                 <!-- time -->
-                <span class="em-pSection">{% if p.cron_hour or p.cron_min or p.cron_sec %}at <em>{{ p.cron_hour|time }}:{{ p.cron_min|time }}:{{ p.cron_sec|time }}</em> (hh:mm:ss),{% endif %}</span>
-
+                <span class="em-pSection">
+                    {% if p.cron_hour or p.cron_min or p.cron_sec %}
+                        at
+                        <em>{{ p.cron_hour|time }}:{{ p.cron_min|time }}:{{ p.cron_sec|time }}</em>
+                        (hh:mm:ss),
+                    {% endif %}
+                </span>
                 <!-- start / end dates -->
-                <span class="em-pSection">{% if p.cron_start_date != None %}starting on <em>{{ p.cron_start_date }}</em>,{% endif %}</span>
-                <span class="em-pSection">{% if p.cron_end_date != None %}ending on <em>{{ p.cron_end_date }}</em>.{% else %} with no end date.{% endif %}</span>
+                <span class="em-pSection">
+                    {% if p.cron_start_date != None %}
+                        starting on
+                        <em>{{ p.cron_start_date }}</em>
+                        ,
+                    {% endif %}
+                </span>
+                <span class="em-pSection">
+                    {% if p.cron_end_date != None %}
+                        ending on
+                        <em>{{ p.cron_end_date }}</em>
+                        .
+                    {% else %}
+                        with no end date.
+                    {% endif %}
+                </span>
             </p>
         {% endif %}
         {% if p.intv == 1 %}
             <h3 class="em-sectionTitle">Interval</h3>
             <p>
-                {% if p.intv_type != None %}Run every <em>{{ (p.intv_value,p.intv_type)|intv_name }}</em>{% endif %}
-                {% if p.intv_start_date != None %}starting on <em>{{ p.intv_start_date }}</em>, {% endif %}
-                {% if p.intv_end_date != None %}ending on <em>{{ p.intv_end_date }}</em>.{% else %} with no end date.{% endif %}
+                {% if p.intv_type != None %}
+                    Run every
+                    <em>{{ (p.intv_value,p.intv_type)|intv_name }}</em>
+                {% endif %}
+                {% if p.intv_start_date != None %}
+                    starting on
+                    <em>{{ p.intv_start_date }}</em>
+                    ,
+                {% endif %}
+                {% if p.intv_end_date != None %}
+                    ending on
+                    <em>{{ p.intv_end_date }}</em>
+                    .
+                {% else %}
+                    with no end date.
+                {% endif %}
             </p>
         {% endif %}
         {% if p.ooff == 1 %}
             <h3 class="em-sectionTitle">One off</h3>
-            <p>Running on <em>{{ p.ooff_date }}.</em></p>
+            <p>
+                Running on
+                <em>{{ p.ooff_date }}.</em>
+            </p>
         {% endif %}
-
         {% if p.global_params %}
             <h2>Global SQL Parameters</h2>
-            <div class="em-code">{{ p.global_params }}</div>
+            <div class="em-code" style="white-space: pre-line;">
+                {{ p.global_params | newline_to_br }}
+            </div>
         {% endif %}
-
-
         <!-- tab control -->
         <div class="tab">
-            <a title="tasks" class="tab-lnk active" href="tasks">Tasks</a>
-            <a title="task logs" class="tab-lnk" href="tasklog">Task Logs</a>
+            <a title="tasks" class="tab-lnk active" href="tasks">
+                Tasks
+            </a>
+            <a title="task logs" class="tab-lnk" href="tasklog">
+                Task Logs
+            </a>
         </div>
         <!-- tab body -->
-
         <div class="tab-cnt">
             <div class="tab-dta active" id="tasks">
                 <div class="em-tools">
-                    <a class="em-link" title="add a task" href="/project/{{ p.id }}/task/new">Add a task</a>
-                    <a class="em-link" title="disable all tasks" href="/project/{{ p.id }}/disable">Disable all tasks</a>
-                    <a class="em-link" title="enable all tasks" href="/project/{{ p.id }}/enable">Enable all tasks</a>
-                    <a class="em-link" title="run all tasks" href="/project/{{ p.id }}/run">Run all tasks</a>
+                    <a class="em-link" title="add a task" href="/project/{{ p.id }}/task/new">
+                        Add a task
+                    </a>
+                    <a class="em-link" title="disable all tasks" href="/project/{{ p.id }}/disable">
+                        Disable all tasks
+                    </a>
+                    <a class="em-link" title="enable all tasks" href="/project/{{ p.id }}/enable">
+                        Enable all tasks
+                    </a>
+                    <a class="em-link" title="run all tasks" href="/project/{{ p.id }}/run">
+                        Run all tasks
+                    </a>
                 </div>
                 <div class="em-ajaxTable" data-theme="Exec" data-src="/table/project/{{ p.id }}/task">
                     <div class="loader-typing">
@@ -119,6 +192,5 @@
                 </div>
             </div>
         </div>
-
     {% endif %}
 {% endblock body %}

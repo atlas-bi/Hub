@@ -19,6 +19,17 @@
 Changelog
 *********
 
+Version 2021.08.1
+-----------------
+
+- Fixed installer for latest Poetry update
+- Added ability to run tasks in sequence
+- Updated html linter
+- Added better error handling when task runner is offline
+- Added python package lookup for py processor
+- Added option to use parameters in file names
+- Added option to pre-parse parameters using python date formats
+
 Version 2021.04.1
 -----------------
 

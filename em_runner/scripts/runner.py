@@ -41,6 +41,7 @@ from em_runner.scripts.em_code import SourceCode
 from em_runner.scripts.em_date import DateParsing
 from em_runner.scripts.em_file import File, file_size
 from em_runner.scripts.em_ftp import Ftp
+from em_runner.scripts.em_params import LoadParams
 from em_runner.scripts.em_postgres import Postgres
 from em_runner.scripts.em_python import PyProcesser
 from em_runner.scripts.em_sftp import Sftp
@@ -153,6 +154,10 @@ class Runner:
                 self.job_hash,
             )
 
+            self.project_params, self.task_params = LoadParams(
+                self.task, self.job_hash
+            ).get()
+
             # load file/ run query/ etc to get some sort of data or process something.
             if self.error == 0:
                 self.__get_source()
@@ -229,6 +234,21 @@ class Runner:
                     )
                 else:
                     redis_client.delete("runner_" + str(task_id) + "_attempt")
+
+                    # if the project runs in series, mark all following enabled tasks as errored
+                    if task.project.sequence_tasks == 1:
+                        task_id_list = [
+                            x.id
+                            for x in Task.query.filter_by(enabled=1)
+                            .filter_by(project_id=task.project_id)
+                            .order_by(Task.order.asc(), Task.name.asc())
+                            .all()
+                        ]
+                        for this_id in task_id_list[
+                            task_id_list.index(int(task_id)) + 1 :
+                        ]:
+                            Task.query.filter_by(id=this_id).update({"status_id": 2})
+
             else:
                 # remove any retry tracking
                 redis_client.delete("runner_" + str(task_id) + "_attempt")
@@ -236,6 +256,27 @@ class Runner:
                 task.est_duration = (
                     datetime.datetime.now() - task.last_run
                 ).total_seconds()
+
+                # if this is a sequence job, trigger the next job.
+                if task.project.sequence_tasks == 1:
+                    task_id_list = [
+                        x.id
+                        for x in Task.query.filter_by(enabled=1)
+                        .filter_by(project_id=task.project_id)
+                        .order_by(Task.order.asc(), Task.name.asc())
+                        .all()
+                    ]
+                    next_task_id = task_id_list[
+                        task_id_list.index(int(task_id))
+                        + 1 : task_id_list.index(int(task_id))
+                        + 2
+                    ]
+                    if next_task_id:
+                        # trigger next task
+                        requests.get(
+                            "%s/run/%s/delay/0"
+                            % (app.config["SCHEUDULER_HOST"], next_task_id[0])
+                        )
 
             task.last_run_job_id = None
             task.last_run = datetime.datetime.now()
@@ -402,6 +443,8 @@ class Runner:
                         task=self.task,
                         url=self.task.processing_git,
                         job_hash=self.job_hash,
+                        project_params=self.project_params,
+                        task_params=self.task_params,
                     ).gitlab()
                 # pylint: disable=broad-except
                 except BaseException:
@@ -456,6 +499,8 @@ class Runner:
                         task=self.task,
                         url=self.task.processing_url,
                         job_hash=self.job_hash,
+                        task_params=self.task_params,
+                        project_params=self.project_params,
                     ).web_url()
                 # pylint: disable=broad-except
                 except BaseException:
@@ -730,7 +775,11 @@ class Runner:
         if self.task.source_query_type_id == 3:  # url
             try:
                 query = SourceCode(
-                    task=self.task, url=self.task.source_url, job_hash=self.job_hash
+                    task=self.task,
+                    url=self.task.source_url,
+                    job_hash=self.job_hash,
+                    project_params=self.project_params,
+                    task_params=self.task_params,
                 ).web_url()
             # pylint: disable=broad-except
             except BaseException:
@@ -740,7 +789,11 @@ class Runner:
         elif self.task.source_query_type_id == 1:  # gitlab url
             try:
                 query = SourceCode(
-                    task=self.task, url=self.task.source_git, job_hash=self.job_hash
+                    task=self.task,
+                    url=self.task.source_git,
+                    job_hash=self.job_hash,
+                    project_params=self.project_params,
+                    task_params=self.task_params,
                 ).gitlab()
             # pylint: disable=broad-except
             except BaseException:
@@ -749,16 +802,19 @@ class Runner:
 
         elif self.task.source_query_type_id == 4:  # code
             query = SourceCode(
-                task=self.task, url=None, job_hash=self.job_hash
-            ).cleanup(
+                task=self.task,
+                url=None,
+                job_hash=self.job_hash,
                 query=self.task.source_code,
-                db_type=("mssql" if self.task.source_database_id == 2 else None),
-                task_params=self.task.query_params,
-                project_params=self.task.project.global_params,
-            )
+                project_params=self.project_params,
+                task_params=self.task_params,
+            ).cleanup()
 
         elif self.task.source_query_type_id == 2:
-            query = SourceCode(self.task, None, self.job_hash).cleanup(
+            query = SourceCode(
+                self.task,
+                None,
+                self.job_hash,
                 query=Smb(
                     task=self.task,
                     file_path=self.task.source_query_file,
@@ -769,10 +825,9 @@ class Runner:
                 )
                 .read()
                 .decode(),
-                db_type=("mssql" if self.task.source_database_id == 2 else None),
-                task_params=self.task.query_params,
-                project_params=self.task.project.global_params,
-            )
+                project_params=self.project_params,
+                task_params=self.task_params,
+            ).cleanup()
 
         return query
 

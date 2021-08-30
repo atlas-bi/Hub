@@ -109,6 +109,18 @@
         ipt.value = 1;
         // add required attr on inputs
       }
+    } else if (e.target.closest("#run_tasks_in_sequence")) {
+      i = e.target.closest("#run_tasks_in_sequence");
+      ipt = d.querySelector('input[name="run_tasks_in_sequence"]');
+      if (i.getAttribute("checked") === "checked") {
+        i.removeAttribute("checked");
+        ipt.value = 0;
+        // remove required attr on inputs
+      } else {
+        i.setAttribute("checked", "checked");
+        ipt.value = 1;
+        // add required attr on inputs
+      }
     } else if (e.target.closest(".task_overwrite_smb_if_exists")) {
       i = e.target.closest(".task_overwrite_smb_if_exists");
       ipt = d.querySelector('input[name="task_overwrite_smb"]');

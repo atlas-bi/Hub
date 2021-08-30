@@ -8,7 +8,7 @@ html:
   - rm -rf package-lock.json
   - rm -rf node_modules
   script:
-  - export HTML=$(tox -e html)
+  - export HTML=$(tox -e html -r)
   - echo -e "$HTML"
   - python -m pip install --disable-pip-version-check --quiet anybadge
   - anybadge -l $CI_JOB_NAME -v $(echo $HTML | grep -q "commands succeeded" && echo "succeeded" || echo "failed") -f html.svg succeeded=green failed=red

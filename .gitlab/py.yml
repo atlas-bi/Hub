@@ -8,7 +8,7 @@
   - apt-get install -y --no-install-recommends libxmlsec1-dev pkg-config
   - pip install --no-cache-dir tox
   script:
-  - tox -e clean,$PYVR,cov
+  - tox -e clean,$PYVR,cov -r
   services:
   - redis:latest
   variables:

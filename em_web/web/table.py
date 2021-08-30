@@ -862,8 +862,6 @@ def project_task_all(project_id):
     :returns: json for ajax table.
     """
     page = request.args.get("p", default=1, type=int)
-    sort = request.args.get("s", default="Status.desc", type=str)
-    split_sort = sort.split(".")
 
     page -= 1
 
@@ -877,6 +875,20 @@ def project_task_all(project_id):
         "Enabled": text("task.enabled"),
     }
 
+    me = [{"head": '["Name","Enabled","Last Run","Run Now","Next Run"]'}]
+
+    # if the task run in series then add a rank column
+    project = Project.query.filter_by(id=project_id).first()
+    if project.sequence_tasks == 1:
+        cols["Run Rank"] = text("task.order")
+        me = [{"head": '["Name","Enabled","Last Run","Run Now","Next Run","Run Rank"]'}]
+
+        sort = request.args.get("s", default="Run Rank.asc", type=str)
+    else:
+        sort = request.args.get("s", default="Status.desc", type=str)
+
+    split_sort = sort.split(".")
+
     tasks = (
         db.session.query()
         .select_from(Task)
@@ -885,8 +897,6 @@ def project_task_all(project_id):
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
-
-    me = [{"head": '["Name","Enabled","Last Run","Run Now","Next Run"]'}]
 
     me.append({"total": tasks.count() or 0})  # runs.total
     me.append({"page": page})  # page
@@ -932,6 +942,7 @@ def project_task_all(project_id):
                 )
                 if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                 else (task["Next Run"] if task["Next Run"] else ""),
+                "Run Rank": (task["Run Rank"] if "Run Rank" in task else None),
             }
         )
 

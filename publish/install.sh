@@ -111,6 +111,8 @@ command_install libxmlsec1-dev
 command_install redis-server
 command_install ufw
 command_install gnupg
+# only if ubuntu 20.04 +
+command_install python-is-python3
 
 
 fmt_blue "Updating timezone to CST"
@@ -126,7 +128,7 @@ sudo ufw --force enable > /dev/null
 
 # start redis
 fmt_blue "Starting redis server"
-$(which python3) -m pip install --disable-pip-version-check --quiet virtualenv setuptools wheel > /dev/null
+
 sudo sed -i -e "s/supervised no/supervised systemd/g" /etc/redis/redis.conf > /dev/null
 sudo systemctl enable redis-server > /dev/null
 sudo systemctl start redis-server > /dev/null
@@ -170,26 +172,28 @@ sudo -u webapp git -c http.sslVerify=false clone --depth 1 "$REMOTE" . -q
 fmt_green "${BOLD}Installing in /home/websites/em/$HASH"
 
 # create python environment
-fmt_blue "Creating python environment"
-sudo -u webapp virtualenv -q --clear --no-periodic-update venv
+fmt_blue "Creating python poetry environment"
 
+$(which python3) -m pip install --disable-pip-version-check --quiet virtualenv setuptools wheel > /dev/null
+sudo -u webapp curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | $(which python3) -
+rm poetry.toml &> /dev/null
+~webapp/.local/bin/poetry config --local virtualenvs.in-project true
+~webapp/.local/bin/poetry config --local virtualenvs.create true
 
 # install Extract Management 2.0
 fmt_blue "Installing dependencies"
 
 # install poetry - the package manager
 # shellcheck disable=SC1091
-venv/bin/python -m pip install --disable-pip-version-check --quiet poetry
-venv/bin/poetry config virtualenvs.create false
-venv/bin/poetry install --no-dev --quiet
-venv/bin/poetry add gunicorn --quiet
-venv/bin/poetry add gevent --quiet
+~webapp/.local/bin/poetry install --no-dev
+~webapp/.local/bin/poetry add gunicorn gevent
+
 
 fmt_green "${UL}Env Info:"
-fmt_yellow "$(venv/bin/poetry env info)"
+fmt_yellow "$(~webapp/.local/bin/poetry env info)"
 
 # echo -e "\n${GREEN}Dep Info.${RESET}"
-# echo -e "$(venv/bin/poetry show --tree)"
+# echo -e "$($HOME/.poetry/bin/poetry" show --tree)"
 
 # make log files
 fmt_blue "Creating gunicorn log files"

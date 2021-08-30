@@ -1,5 +1,7 @@
 # flake8: noqa,
 # pylint: skip-file
+
+
 from datetime import datetime
 
 import pytest
@@ -170,6 +172,30 @@ def test_new_task(em_web_authed):
         follow_redirects=True,
     )
 
+    assert response.status_code == 200
+
+
+def test_task_params(em_web_authed):
+    project = Project.query.first()
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    response = em_web_authed.post(
+        "/project/" + str(project.id) + "/task/new",
+        data={
+            "name": "Test task params",
+            "enabled": 0,
+            "sourceType": 1,  # database
+            "sourceQueryType": 4,  # source code
+            "sourceCode": "Declare @test int = 1;\nDeclare @test_two int = 2;Set @test_colon int = 1;",
+            "queryParams": "@test=2\n@test_colon:2\n@test_two=parse(%Y)",
+        },
+        headers=headers,
+        follow_redirects=True,
+    )
+    # check source code for params
+    # task/1923/source
+    # need to check the code here
     assert response.status_code == 200
 
 

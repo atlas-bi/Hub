@@ -25,6 +25,7 @@ from pathlib import Path
 
 from flask import Blueprint
 from flask import current_app as app
+from jinja2 import Markup, escape, evalcontextfilter
 from num2words import num2words
 
 filters_bp = Blueprint("filters_bp", __name__)
@@ -295,3 +296,15 @@ def database_pass(my_string):
     # pylint: disable=broad-except
     except BaseException:
         return my_string
+
+
+@evalcontextfilter
+@filters_bp.app_template_filter("newline_to_br")
+def newline_to_br(context, my_string: str):
+    """Convert newlines to html tag."""
+    result = "<br />".join(re.split(r"(?:\r\n|\r|\n){2,}", escape(my_string)))
+
+    if context.autoescape:
+        result = Markup(result)
+
+    return result

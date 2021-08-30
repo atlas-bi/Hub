@@ -1,23 +1,5 @@
-{#
-    Extract Management 2.0
-    Copyright (C) 2020  Riverside Healthcare, Kankakee, IL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see https://www.gnu.org/licenses/.
-#}
 {% if schedule and schedule_index %}
     <h2 class="em-title">Run Plan</h2>
-
     <div class="em-timeline">
         <div class="em-timelineScale">
             {% for index in schedule_index %}
@@ -25,17 +7,16 @@
                     <span class="em-ScaleValue">{{ index }}</span>
                 </div>
             {% endfor %}
-
             <div class="em-ScaleBar">
                 <!-- blank for 0 -->
             </div>
         </div>
-
         <div class="em-timelineLiner">
             {% for col in schedule %}
                 <div class="em-el">
                     {% if col.count > 0 %}
-                        <div class="em-elBar" style="transform: scaleY({{ 13 / schedule_index[0] * col.count }})"></div>
+                        <div class="em-elBar"
+                             style="transform: scaleY({{ 13 / schedule_index[0] * col.count }})"></div>
                     {% endif %}
                     <span class="em-elLabel">{{ col.case }}</span>
                 </div>
