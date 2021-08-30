@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -244,6 +245,10 @@
 <div class="section" id="new-project">
 <h2>New Project<a class="headerlink" href="#new-project" title="Permalink to this headline">¶</a></h2>
 <p>When creating or editing a project the same steps can be used. By default a new project is owned by the creator. However, users have the option of taking ownership of existing projects by checking the “Take Ownership of Project” button.</p>
+<div class="section" id="run-tasks-in-sequence">
+<h3>Run Tasks in Sequence<a class="headerlink" href="#run-tasks-in-sequence" title="Permalink to this headline">¶</a></h3>
+<p>Checking this box will run the tasks in a series instead of in parallel. The run order is determined by the job rank (1,2,3,4…) and if there is no rank, or a duplicate value, the tasks are sorted by name (1,2,3..a,b,c..).</p>
+</div>
 <div class="section" id="triggers">
 <h3>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h3>
 <p>There are three types of triggers for a project.</p>
@@ -291,6 +296,12 @@
 <span class="k">Declare</span> <span class="o">@</span><span class="n">myDate</span> <span class="o">=</span> <span class="n">getdate</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Parameters can also include custom date syntax using the <cite>parse()</cite> syntax, with most python date shortcodes. For example, this command will get the current year.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">--paramter</span>
+<span class="n">myYear</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="o">%</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters are calculated when the tasks are first run and the parameter values will remain consistent during the task run. Parameters can also be used in the filename, only <cite>parse()</cite> values will be converted to actual values.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The code preview in <a class="reference internal" href="tasks.html#task-details"><span class="std std-ref">Task Details</span></a> is modified to include parameter values. Verify this is correct when adding parameters!</p>
@@ -360,6 +371,7 @@
 <li><a class="reference internal" href="#">Projects</a><ul>
 <li><a class="reference internal" href="#project-details">Project Details</a></li>
 <li><a class="reference internal" href="#new-project">New Project</a><ul>
+<li><a class="reference internal" href="#run-tasks-in-sequence">Run Tasks in Sequence</a></li>
 <li><a class="reference internal" href="#triggers">Triggers</a><ul>
 <li><a class="reference internal" href="#cron">Cron</a></li>
 <li><a class="reference internal" href="#interval">Interval</a></li>

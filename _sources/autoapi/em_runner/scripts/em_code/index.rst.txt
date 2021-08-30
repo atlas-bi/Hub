@@ -22,7 +22,7 @@ Classes
 
 
 
-.. py:class:: SourceCode(task, url, job_hash)
+.. py:class:: SourceCode(task, url, job_hash, query=None, project_params=None, task_params=None)
 
    Group of functions used to get various type of source code for task runner.
 
@@ -52,8 +52,7 @@ Classes
       :retruns: Cleaned source code.
 
 
-   .. py:method:: cleanup(query, db_type, task_params, project_params)
-      :staticmethod:
+   .. py:method:: cleanup(self)
 
       Clean up source code.
 

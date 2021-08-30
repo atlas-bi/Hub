@@ -48,6 +48,10 @@ New Project
 
 When creating or editing a project the same steps can be used. By default a new project is owned by the creator. However, users have the option of taking ownership of existing projects by checking the "Take Ownership of Project" button.
 
+Run Tasks in Sequence
+=====================
+
+Checking this box will run the tasks in a series instead of in parallel. The run order is determined by the job rank (1,2,3,4...) and if there is no rank, or a duplicate value, the tasks are sorted by name (1,2,3..a,b,c..).
 
 Triggers
 ========
@@ -109,6 +113,14 @@ For example:
     -- final SQL
     Declare @myDate = getdate()
 
+Parameters can also include custom date syntax using the `parse()` syntax, with most python date shortcodes. For example, this command will get the current year.
+
+.. code:: sql
+
+    --paramter
+    myYear = parse(%Y)
+
+Parameters are calculated when the tasks are first run and the parameter values will remain consistent during the task run. Parameters can also be used in the filename, only `parse()` values will be converted to actual values.
 
 .. note:: The code preview in :ref:`task_details` is modified to include parameter values. Verify this is correct when adding parameters!
 

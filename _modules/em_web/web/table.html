@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -1081,8 +1082,6 @@
 <span class="sd">    :returns: json for ajax table.</span>
 <span class="sd">    """</span>
     <span class="n">page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">sort</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"s"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"Status.desc"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-    <span class="n">split_sort</span> <span class="o">=</span> <span class="n">sort</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
 
     <span class="n">page</span> <span class="o">-=</span> <span class="mi">1</span>
 
@@ -1096,6 +1095,20 @@
         <span class="s2">"Enabled"</span><span class="p">:</span> <span class="n">text</span><span class="p">(</span><span class="s2">"task.enabled"</span><span class="p">),</span>
     <span class="p">}</span>
 
+    <span class="n">me</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"head"</span><span class="p">:</span> <span class="s1">'["Name","Enabled","Last Run","Run Now","Next Run"]'</span><span class="p">}]</span>
+
+    <span class="c1"># if the task run in series then add a rank column</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">project_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">project</span><span class="o">.</span><span class="n">sequence_tasks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">cols</span><span class="p">[</span><span class="s2">"Run Rank"</span><span class="p">]</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"task.order"</span><span class="p">)</span>
+        <span class="n">me</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"head"</span><span class="p">:</span> <span class="s1">'["Name","Enabled","Last Run","Run Now","Next Run","Run Rank"]'</span><span class="p">}]</span>
+
+        <span class="n">sort</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"s"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"Run Rank.asc"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sort</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"s"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"Status.desc"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="n">split_sort</span> <span class="o">=</span> <span class="n">sort</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+
     <span class="n">tasks</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
         <span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">Task</span><span class="p">)</span>
@@ -1104,8 +1117,6 @@
         <span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="o">*</span><span class="n">cols</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">split_sort</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">+</span> <span class="n">split_sort</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
     <span class="p">)</span>
-
-    <span class="n">me</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"head"</span><span class="p">:</span> <span class="s1">'["Name","Enabled","Last Run","Run Now","Next Run"]'</span><span class="p">}]</span>
 
     <span class="n">me</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"total"</span><span class="p">:</span> <span class="n">tasks</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">})</span>  <span class="c1"># runs.total</span>
     <span class="n">me</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"page"</span><span class="p">:</span> <span class="n">page</span><span class="p">})</span>  <span class="c1"># page</span>
@@ -1151,6 +1162,7 @@
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">task</span><span class="p">[</span><span class="s2">"Next Run"</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">[</span><span class="s2">"Next Run"</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
                 <span class="k">else</span> <span class="p">(</span><span class="n">task</span><span class="p">[</span><span class="s2">"Next Run"</span><span class="p">]</span> <span class="k">if</span> <span class="n">task</span><span class="p">[</span><span class="s2">"Next Run"</span><span class="p">]</span> <span class="k">else</span> <span class="s2">""</span><span class="p">),</span>
+                <span class="s2">"Run Rank"</span><span class="p">:</span> <span class="p">(</span><span class="n">task</span><span class="p">[</span><span class="s2">"Run Rank"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"Run Rank"</span> <span class="ow">in</span> <span class="n">task</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
             <span class="p">}</span>
         <span class="p">)</span>
 

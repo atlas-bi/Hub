@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -275,6 +276,14 @@
 <span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
+            <span class="c1"># mark the task status as error in the</span>
+            <span class="c1"># unlikely event that the runner is not</span>
+            <span class="c1"># triggered.. then we will have the</span>
+            <span class="c1"># job saved in an errored state.</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">task_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">task</span><span class="o">.</span><span class="n">status_id</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
             <span class="n">get</span><span class="p">(</span><span class="n">scheduler</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"RUNNER_HOST"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="n">task_id</span><span class="p">)</span>
     <span class="c1"># pylint: disable=broad-except</span>
     <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>

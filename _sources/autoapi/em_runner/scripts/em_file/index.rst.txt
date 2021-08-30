@@ -40,7 +40,7 @@ Functions
    :returns: string of formatted file size.
 
 
-.. py:class:: File(task, data_file, job_hash)
+.. py:class:: File(task, data_file, job_hash, project_params=None, task_params=None)
 
    Files are created in the drive /em/temp/ from any data sent.
 

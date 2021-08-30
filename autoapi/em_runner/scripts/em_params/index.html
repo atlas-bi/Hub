@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
 
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/><meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
-        <title>em_runner.scripts.em_sftp - Extract Management 2.0</title>
+        <title>em_runner.scripts.em_params - Extract Management 2.0</title>
       <link rel="stylesheet" href="../../../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
     <link rel="stylesheet" href="../../../../_static/pygments.css">
     
@@ -179,10 +179,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
+<li class="toctree-l4 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
-<li class="toctree-l4 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../em_smb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smb</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../em_smtp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_smtp</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../em_sqlserver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sqlserver</span></code></a></li>
@@ -217,9 +217,9 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="module-em_runner.scripts.em_sftp">
-<span id="em-runner-scripts-em-sftp"></span><h1><a class="reference internal" href="#module-em_runner.scripts.em_sftp" title="em_runner.scripts.em_sftp"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a><a class="headerlink" href="#module-em_runner.scripts.em_sftp" title="Permalink to this headline">¶</a></h1>
-<p>SFTP connection manager.</p>
+        <div class="section" id="module-em_runner.scripts.em_params">
+<span id="em-runner-scripts-em-params"></span><h1><a class="reference internal" href="#module-em_runner.scripts.em_params" title="em_runner.scripts.em_params"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a><a class="headerlink" href="#module-em_runner.scripts.em_params" title="Permalink to this headline">¶</a></h1>
+<p>EM Param functions to load params and also populate params in a string.</p>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="classes">
@@ -230,49 +230,47 @@
 <col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#em_runner.scripts.em_sftp.Sftp" title="em_runner.scripts.em_sftp.Sftp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sftp</span></code></a></p></td>
-<td><p>SFTP Connection Handler Class.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#em_runner.scripts.em_params.LoadParams" title="em_runner.scripts.em_params.LoadParams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LoadParams</span></code></a></p></td>
+<td><p>Load task params.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#em_runner.scripts.em_params.ParamParser" title="em_runner.scripts.em_params.ParamParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ParamParser</span></code></a></p></td>
+<td><p>Insert params to destination.</p></td>
 </tr>
 </tbody>
 </table></div>
 <dl class="py class">
-<dt id="em_runner.scripts.em_sftp.Sftp">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">em_runner.scripts.em_sftp.</span></code><code class="sig-name descname"><span class="pre">Sftp</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_sftp.html#Sftp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_sftp.Sftp" title="Permalink to this definition">¶</a></dt>
-<dd><p>SFTP Connection Handler Class.</p>
-<p>Function takes a file name and source file path
-and will upload the file to the sfpt location
-specified in the task settings.</p>
-<p>Set up class parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>task</strong> – task object</p></li>
-<li><p><strong>connection</strong> – connection object</p></li>
-<li><p><strong>overwrite</strong> (<em>int</em>) – value determines if existing files should be overwriten</p></li>
-<li><p><strong>file_name</strong> (<em>str</em>) – name of file in motion</p></li>
-<li><p><strong>file_path</strong> (<em>str</em>) – local file path</p></li>
-</ul>
-</dd>
-</dl>
+<dt id="em_runner.scripts.em_params.LoadParams">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">em_runner.scripts.em_params.</span></code><code class="sig-name descname"><span class="pre">LoadParams</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_hash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_params.html#LoadParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_params.LoadParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load task params.</p>
+<p>Params should be calculated before the task is run, so the same values are used
+throughout the run.</p>
+<p>If both project and task params retrun none, they will be rechecked at each use.</p>
+<p>Set up class.</p>
 <dl class="py method">
-<dt id="em_runner.scripts.em_sftp.Sftp.read">
-<code class="sig-name descname"><span class="pre">read</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_sftp.html#Sftp.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_sftp.Sftp.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a file from FTP server.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>file contents as string.</p>
-</dd>
-</dl>
+<dt id="em_runner.scripts.em_params.LoadParams.parse_params">
+<code class="sig-name descname"><span class="pre">parse_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_params.html#LoadParams.parse_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_params.LoadParams.parse_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse project and task params.</p>
 </dd></dl>
 <dl class="py method">
-<dt id="em_runner.scripts.em_sftp.Sftp.save">
-<code class="sig-name descname"><span class="pre">save</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_sftp.html#Sftp.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_sftp.Sftp.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use to copy local file to FTP server.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>true if successful.</p>
-</dd>
-</dl>
+<dt id="em_runner.scripts.em_params.LoadParams.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_params.html#LoadParams.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_params.LoadParams.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current params.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="em_runner.scripts.em_params.ParamParser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">em_runner.scripts.em_params.</span></code><code class="sig-name descname"><span class="pre">ParamParser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_hash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_params.html#ParamParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_params.ParamParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert params to destination.</p>
+<p>Set up class.</p>
+<dl class="py method">
+<dt id="em_runner.scripts.em_params.ParamParser.insert_query_params">
+<code class="sig-name descname"><span class="pre">insert_query_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_params.html#ParamParser.insert_query_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_params.ParamParser.insert_query_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace param place holders with value in queries.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="em_runner.scripts.em_params.ParamParser.insert_file_params">
+<code class="sig-name descname"><span class="pre">insert_file_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_runner/scripts/em_params.html#ParamParser.insert_file_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_runner.scripts.em_params.ParamParser.insert_file_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace param place holders with value in filenames.</p>
 </dd></dl>
 </dd></dl>
 </div>
@@ -295,7 +293,7 @@ specified in the task settings.</p>
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
             |
-            <a class="muted-link" href="../../../../_sources/autoapi/em_runner/scripts/em_sftp/index.rst.txt"
+            <a class="muted-link" href="../../../../_sources/autoapi/em_runner/scripts/em_params/index.rst.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -315,12 +313,17 @@ specified in the task settings.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a><ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a><ul>
 <li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a><ul>
-<li><a class="reference internal" href="#em_runner.scripts.em_sftp.Sftp">Sftp</a><ul>
-<li><a class="reference internal" href="#em_runner.scripts.em_sftp.Sftp.read">read</a></li>
-<li><a class="reference internal" href="#em_runner.scripts.em_sftp.Sftp.save">save</a></li>
+<li><a class="reference internal" href="#em_runner.scripts.em_params.LoadParams">LoadParams</a><ul>
+<li><a class="reference internal" href="#em_runner.scripts.em_params.LoadParams.parse_params">parse_params</a></li>
+<li><a class="reference internal" href="#em_runner.scripts.em_params.LoadParams.get">get</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#em_runner.scripts.em_params.ParamParser">ParamParser</a><ul>
+<li><a class="reference internal" href="#em_runner.scripts.em_params.ParamParser.insert_query_params">insert_query_params</a></li>
+<li><a class="reference internal" href="#em_runner.scripts.em_params.ParamParser.insert_file_params">insert_file_params</a></li>
 </ul>
 </li>
 </ul>

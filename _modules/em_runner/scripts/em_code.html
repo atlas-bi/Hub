@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -248,6 +249,7 @@
 
 <span class="kn">from</span> <span class="nn">em_runner</span> <span class="kn">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">em_runner.model</span> <span class="kn">import</span> <span class="n">TaskLog</span>
+<span class="kn">from</span> <span class="nn">em_runner.scripts.em_params</span> <span class="kn">import</span> <span class="n">LoadParams</span><span class="p">,</span> <span class="n">ParamParser</span>
 
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s2">"/scripts"</span><span class="p">)</span>
 
@@ -258,7 +260,9 @@
 <div class="viewcode-block" id="SourceCode"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_code/index.html#em_runner.scripts.em_code.SourceCode">[docs]</a><span class="k">class</span> <span class="nc">SourceCode</span><span class="p">:</span>
     <span class="sd">"""Group of functions used to get various type of source code for task runner."""</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">job_hash</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">job_hash</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">project_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task_params</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
         <span class="sd">"""Set up class parameters.</span>
 
 <span class="sd">        :param task: task object</span>
@@ -267,6 +271,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span> <span class="o">=</span> <span class="n">job_hash</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_type</span> <span class="o">=</span> <span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">project_params</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">task_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="o">=</span> <span class="n">LoadParams</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="o">=</span> <span class="n">task_params</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span> <span class="o">=</span> <span class="n">project_params</span>
 
 <div class="viewcode-block" id="SourceCode.gitlab"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_code/index.html#em_runner.scripts.em_code.SourceCode.gitlab">[docs]</a>    <span class="k">def</span> <span class="nf">gitlab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Get source code from gitlab using authentication.</span>
@@ -317,17 +332,11 @@
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Failed to get code: "</span> <span class="o">+</span> <span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".sql"</span><span class="p">):</span>
-
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">(</span>
-                        <span class="p">(</span>
-                            <span class="n">page</span><span class="o">.</span><span class="n">text</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"&lt;!DOCTYPE"</span><span class="p">)</span>
-                            <span class="k">else</span> <span class="s2">"Visit URL to view code"</span>
-                        <span class="p">),</span>
-                        <span class="p">(</span><span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">query_params</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">global_params</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">db_type</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span>
                     <span class="p">)</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="n">page</span><span class="o">.</span><span class="n">text</span>
@@ -378,16 +387,9 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Source: Getting Url: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
             <span class="n">page</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># noqa: S501</span>
-            <span class="k">return</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">(</span>
-                    <span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
-                    <span class="p">(</span><span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">query_params</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">global_params</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
-                <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db_type</span> <span class="o">=</span> <span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span> <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
 
         <span class="c1"># pylint: disable=broad-except</span>
         <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -416,12 +418,9 @@
 <span class="sd">        :retruns: Cleaned source code.</span>
 <span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">(</span>
-                <span class="n">query</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_code</span><span class="p">,</span>
-                <span class="n">db_type</span><span class="o">=</span><span class="p">(</span><span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">query_params</span><span class="p">,</span>
-                <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">global_params</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_code</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db_type</span> <span class="o">=</span> <span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 
         <span class="c1"># pylint: disable=broad-except</span>
         <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
@@ -441,8 +440,7 @@
             <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="SourceCode.cleanup"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_code/index.html#em_runner.scripts.em_code.SourceCode.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">db_type</span><span class="p">,</span> <span class="n">task_params</span><span class="p">,</span> <span class="n">project_params</span><span class="p">):</span>
+<div class="viewcode-block" id="SourceCode.cleanup"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_code/index.html#em_runner.scripts.em_code.SourceCode.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Clean up source code.</span>
 
 <span class="sd">        :param str query: query to clean</span>
@@ -454,6 +452,7 @@
 <span class="sd">        """</span>
         <span class="c1"># remove database call</span>
         <span class="c1"># sql stuff</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span>
 
         <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
             <span class="sa">r</span><span class="s2">"(^;?\s*;?)use\s+.+"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span>
@@ -463,7 +462,7 @@
         <span class="p">)</span>
 
         <span class="c1"># only needed for mssql</span>
-        <span class="k">if</span> <span class="n">db_type</span> <span class="o">==</span> <span class="s2">"mssql"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_type</span> <span class="o">==</span> <span class="s2">"mssql"</span><span class="p">:</span>
             <span class="c1"># add no count</span>
             <span class="n">query</span> <span class="o">=</span> <span class="s2">"SET NOCOUNT ON;</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">query</span>
 
@@ -476,49 +475,7 @@
         <span class="c1"># remove " go"</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">" go"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">""</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
 
-        <span class="c1"># add global parameters</span>
-        <span class="k">if</span> <span class="n">project_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
-            <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s?:\s?|\s?=\s?"</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">project_params</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">param</span> <span class="o">!=</span> <span class="s2">""</span>
-            <span class="p">]</span>
-
-            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
-                    <span class="sa">r</span><span class="s2">"(?&lt;=SET\s"</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">")\s?=\s?.*;?"</span><span class="p">,</span>
-                    <span class="s2">" = "</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">";"</span><span class="p">,</span>
-                    <span class="n">query</span><span class="p">,</span>
-                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
-                    <span class="sa">r</span><span class="s2">"(?&lt;=Declare\s"</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">"\s)(.+?)\s?=\s?.*;?"</span><span class="p">,</span>
-                    <span class="sa">r</span><span class="s2">"\1 = "</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">";"</span><span class="p">,</span>
-                    <span class="n">query</span><span class="p">,</span>
-                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
-                <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">task_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(?:\s*:\s*|\s*=\s*)"</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">task_params</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">param</span> <span class="o">!=</span> <span class="s2">""</span>
-            <span class="p">]</span>
-
-            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
-                    <span class="sa">r</span><span class="s2">"(?&lt;=SET\s"</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">")\s?=\s?.*;?"</span><span class="p">,</span>
-                    <span class="s2">" = "</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">";"</span><span class="p">,</span>
-                    <span class="n">query</span><span class="p">,</span>
-                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
-                    <span class="sa">r</span><span class="s2">"(?&lt;=Declare\s"</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">"\s)(.+?)\s?=\s?.*;?"</span><span class="p">,</span>
-                    <span class="sa">r</span><span class="s2">"\1 = "</span> <span class="o">+</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">";"</span><span class="p">,</span>
-                    <span class="n">query</span><span class="p">,</span>
-                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
-                <span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">ParamParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">)</span><span class="o">.</span><span class="n">insert_query_params</span><span class="p">()</span>
 
         <span class="c1"># add two blank lines on end of query</span>
         <span class="k">return</span> <span class="n">query</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span></div></div>

@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -260,6 +261,7 @@
 <span class="kn">from</span> <span class="nn">em_runner.scripts.em_date</span> <span class="kn">import</span> <span class="n">DateParsing</span>
 <span class="kn">from</span> <span class="nn">em_runner.scripts.em_file</span> <span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">file_size</span>
 <span class="kn">from</span> <span class="nn">em_runner.scripts.em_ftp</span> <span class="kn">import</span> <span class="n">Ftp</span>
+<span class="kn">from</span> <span class="nn">em_runner.scripts.em_params</span> <span class="kn">import</span> <span class="n">LoadParams</span>
 <span class="kn">from</span> <span class="nn">em_runner.scripts.em_postgres</span> <span class="kn">import</span> <span class="n">Postgres</span>
 <span class="kn">from</span> <span class="nn">em_runner.scripts.em_python</span> <span class="kn">import</span> <span class="n">PyProcesser</span>
 <span class="kn">from</span> <span class="nn">em_runner.scripts.em_sftp</span> <span class="kn">import</span> <span class="n">Sftp</span>
@@ -372,6 +374,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
             <span class="p">)</span>
 
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="o">=</span> <span class="n">LoadParams</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
             <span class="c1"># load file/ run query/ etc to get some sort of data or process something.</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__get_source</span><span class="p">()</span>
@@ -448,6 +454,21 @@
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">redis_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">"runner_"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"_attempt"</span><span class="p">)</span>
+
+                    <span class="c1"># if the project runs in series, mark all following enabled tasks as errored</span>
+                    <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">sequence_tasks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">task_id_list</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">x</span><span class="o">.</span><span class="n">id</span>
+                            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">project_id</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Task</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">asc</span><span class="p">(),</span> <span class="n">Task</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">asc</span><span class="p">())</span>
+                            <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                        <span class="p">]</span>
+                        <span class="k">for</span> <span class="n">this_id</span> <span class="ow">in</span> <span class="n">task_id_list</span><span class="p">[</span>
+                            <span class="n">task_id_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span>
+                        <span class="p">]:</span>
+                            <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">this_id</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"status_id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># remove any retry tracking</span>
                 <span class="n">redis_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">"runner_"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"_attempt"</span><span class="p">)</span>
@@ -455,6 +476,27 @@
                 <span class="n">task</span><span class="o">.</span><span class="n">est_duration</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">task</span><span class="o">.</span><span class="n">last_run</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+                <span class="c1"># if this is a sequence job, trigger the next job.</span>
+                <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">sequence_tasks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">task_id_list</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">x</span><span class="o">.</span><span class="n">id</span>
+                        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">project_id</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Task</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">asc</span><span class="p">(),</span> <span class="n">Task</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">asc</span><span class="p">())</span>
+                        <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                    <span class="p">]</span>
+                    <span class="n">next_task_id</span> <span class="o">=</span> <span class="n">task_id_list</span><span class="p">[</span>
+                        <span class="n">task_id_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+                        <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">task_id_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+                        <span class="o">+</span> <span class="mi">2</span>
+                    <span class="p">]</span>
+                    <span class="k">if</span> <span class="n">next_task_id</span><span class="p">:</span>
+                        <span class="c1"># trigger next task</span>
+                        <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="s2">"</span><span class="si">%s</span><span class="s2">/run/</span><span class="si">%s</span><span class="s2">/delay/0"</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"SCHEUDULER_HOST"</span><span class="p">],</span> <span class="n">next_task_id</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="p">)</span>
 
             <span class="n">task</span><span class="o">.</span><span class="n">last_run_job_id</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">task</span><span class="o">.</span><span class="n">last_run</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
@@ -621,6 +663,8 @@
                         <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
                         <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">processing_git</span><span class="p">,</span>
                         <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
+                        <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span>
+                        <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">,</span>
                     <span class="p">)</span><span class="o">.</span><span class="n">gitlab</span><span class="p">()</span>
                 <span class="c1"># pylint: disable=broad-except</span>
                 <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
@@ -675,6 +719,8 @@
                         <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
                         <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">processing_url</span><span class="p">,</span>
                         <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
+                        <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">,</span>
+                        <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span>
                     <span class="p">)</span><span class="o">.</span><span class="n">web_url</span><span class="p">()</span>
                 <span class="c1"># pylint: disable=broad-except</span>
                 <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
@@ -949,7 +995,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_query_type_id</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># url</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">SourceCode</span><span class="p">(</span>
-                    <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_url</span><span class="p">,</span> <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span>
+                    <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+                    <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_url</span><span class="p">,</span>
+                    <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
+                    <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span>
+                    <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">,</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">web_url</span><span class="p">()</span>
             <span class="c1"># pylint: disable=broad-except</span>
             <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
@@ -959,7 +1009,11 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_query_type_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># gitlab url</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">SourceCode</span><span class="p">(</span>
-                    <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_git</span><span class="p">,</span> <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span>
+                    <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+                    <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_git</span><span class="p">,</span>
+                    <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
+                    <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span>
+                    <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">,</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">gitlab</span><span class="p">()</span>
             <span class="c1"># pylint: disable=broad-except</span>
             <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
@@ -968,16 +1022,19 @@
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_query_type_id</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># code</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">SourceCode</span><span class="p">(</span>
-                <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">cleanup</span><span class="p">(</span>
+                <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">job_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
                 <span class="n">query</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_code</span><span class="p">,</span>
-                <span class="n">db_type</span><span class="o">=</span><span class="p">(</span><span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">query_params</span><span class="p">,</span>
-                <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">global_params</span><span class="p">,</span>
-            <span class="p">)</span>
+                <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span>
+                <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_query_type_id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="n">SourceCode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">)</span><span class="o">.</span><span class="n">cleanup</span><span class="p">(</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">SourceCode</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
                 <span class="n">query</span><span class="o">=</span><span class="n">Smb</span><span class="p">(</span>
                     <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
                     <span class="n">file_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_query_file</span><span class="p">,</span>
@@ -988,10 +1045,9 @@
                 <span class="p">)</span>
                 <span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="o">.</span><span class="n">decode</span><span class="p">(),</span>
-                <span class="n">db_type</span><span class="o">=</span><span class="p">(</span><span class="s2">"mssql"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_database_id</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">query_params</span><span class="p">,</span>
-                <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">global_params</span><span class="p">,</span>
-            <span class="p">)</span>
+                <span class="n">project_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span>
+                <span class="n">task_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">query</span>
 

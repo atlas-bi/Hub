@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -270,6 +271,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#em_web.web.filters.database_pass" title="em_web.web.filters.database_pass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">database_pass</span></code></a>(my_string)</p></td>
 <td><p>Hide password in connection strings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#em_web.web.filters.newline_to_br" title="em_web.web.filters.newline_to_br"><code class="xref py py-obj docutils literal notranslate"><span class="pre">newline_to_br</span></code></a>(context, my_string: str)</p></td>
+<td><p>Convert newlines to html tag.</p></td>
 </tr>
 </tbody>
 </table></div>
@@ -454,6 +458,11 @@
 </dd>
 </dl>
 </dd></dl>
+<dl class="py function">
+<dt id="em_web.web.filters.newline_to_br">
+<code class="sig-prename descclassname"><span class="pre">em_web.web.filters.</span></code><code class="sig-name descname"><span class="pre">newline_to_br</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">my_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/em_web/web/filters.html#newline_to_br"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#em_web.web.filters.newline_to_br" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert newlines to html tag.</p>
+</dd></dl>
 </div>
 </div>
 </div>
@@ -511,6 +520,7 @@
 <li><a class="reference internal" href="#em_web.web.filters.hide_smb_pass">hide_smb_pass</a></li>
 <li><a class="reference internal" href="#em_web.web.filters.clean_path">clean_path</a></li>
 <li><a class="reference internal" href="#em_web.web.filters.database_pass">database_pass</a></li>
+<li><a class="reference internal" href="#em_web.web.filters.newline_to_br">newline_to_br</a></li>
 </ul>
 </li>
 </ul>

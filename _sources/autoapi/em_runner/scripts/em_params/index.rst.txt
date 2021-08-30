@@ -1,0 +1,64 @@
+:py:mod:`em_runner.scripts.em_params`
+=====================================
+
+.. py:module:: em_runner.scripts.em_params
+
+.. autoapi-nested-parse::
+
+   EM Param functions to load params and also populate params in a string.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   em_runner.scripts.em_params.LoadParams
+   em_runner.scripts.em_params.ParamParser
+
+
+
+
+.. py:class:: LoadParams(task, job_hash=None)
+
+   Load task params.
+
+   Params should be calculated before the task is run, so the same values are used
+   throughout the run.
+
+   If both project and task params retrun none, they will be rechecked at each use.
+
+   Set up class.
+
+   .. py:method:: parse_params(self, params)
+
+      Parse project and task params.
+
+
+   .. py:method:: get(self)
+
+      Get current params.
+
+
+
+.. py:class:: ParamParser(task, query, job_hash=None, project_params=None, task_params=None)
+
+   Insert params to destination.
+
+   Set up class.
+
+   .. py:method:: insert_query_params(self)
+
+      Replace param place holders with value in queries.
+
+
+   .. py:method:: insert_file_params(self)
+
+      Replace param place holders with value in filenames.
+
+
+

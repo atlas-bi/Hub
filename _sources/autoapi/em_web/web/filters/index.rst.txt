@@ -32,6 +32,7 @@ Functions
    em_web.web.filters.hide_smb_pass
    em_web.web.filters.clean_path
    em_web.web.filters.database_pass
+   em_web.web.filters.newline_to_br
 
 
 
@@ -161,5 +162,10 @@ Functions
    :param my_string: connection string
 
    :returns: connection string with hidden password.
+
+
+.. py:function:: newline_to_br(context, my_string: str)
+
+   Convert newlines to html tag.
 
 

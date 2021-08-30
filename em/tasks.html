@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -250,6 +251,10 @@
 <p>If a task has a non-catastrophic failure, meaning that the app is still running and the error has been logged, we have the option to attempt multiple retries. This is especially useful when uploading files into SFTP’s where you cannot control the upload speeds etc, and may be subject to upload errors.</p>
 <p>In cases like this it is advisable to allow the task to rerun.</p>
 </div>
+<div class="section" id="run-rank">
+<h3>Run Rank<a class="headerlink" href="#run-rank" title="Permalink to this headline">¶</a></h3>
+<p>Run Rank determines which order the tasks will be run in, only if the project is set to run tasks in series.</p>
+</div>
 <div class="section" id="data-sources">
 <h3>Data Sources<a class="headerlink" href="#data-sources" title="Permalink to this headline">¶</a></h3>
 <p>Most of the data source/ destination options are fairly consistent through all the option groups.</p>
@@ -308,6 +313,11 @@
 </pre></div>
 </div>
 <p>The ‘%d-1’ will parse out to the day number yesterday.</p>
+<p>Parameters from project/task parameters can also be used. For example, if you have a parameter <cite>#year=parse(%Y)</cite>, you can add that to the filename as</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">current_year_</span><span class="c1">#year.csv</span>
+</pre></div>
+</div>
+<p>and the #year value will be updated with the current year value.</p>
 <p>If needed, the file can be sent inside a zip folder.</p>
 <p>Additional characters can be appended to each line in the file.</p>
 </div>
@@ -392,6 +402,7 @@
 <li><a class="reference internal" href="#task-details">Task Details</a></li>
 <li><a class="reference internal" href="#new-task">New Task</a><ul>
 <li><a class="reference internal" href="#retries">Retries</a></li>
+<li><a class="reference internal" href="#run-rank">Run Rank</a></li>
 <li><a class="reference internal" href="#data-sources">Data Sources</a><ul>
 <li><a class="reference internal" href="#database">Database</a></li>
 <li><a class="reference internal" href="#ftp-sftp-smb">FTP/SFTP/SMB</a></li>

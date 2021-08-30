@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/><meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
-        <title>em_runner.scripts.em_postgres - Extract Management 2.0</title>
+        <title>em_runner.scripts.em_params - Extract Management 2.0</title>
       <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
     <link rel="stylesheet" href="../../../_static/pygments.css">
     
@@ -217,179 +217,129 @@
         <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <h1>Source code for em_runner.scripts.em_postgres</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Connection handler for Postgres Databases."""</span>
-<span class="c1"># Extract Management 2.0</span>
-<span class="c1"># Copyright (C) 2020  Riverside Healthcare, Kankakee, IL</span>
+        <h1>Source code for em_runner.scripts.em_params</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""EM Param functions to load params and also populate params in a string."""</span>
 
-<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
-<span class="c1"># it under the terms of the GNU General Public License as published by</span>
-<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c1"># (at your option) any later version.</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
-<span class="c1"># This program is distributed in the hope that it will be useful,</span>
-<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c1"># GNU General Public License for more details.</span>
-
-<span class="c1"># You should have received a copy of the GNU General Public License</span>
-<span class="c1"># along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-
-<span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-
-<span class="kn">import</span> <span class="nn">psycopg2</span>
-<span class="kn">from</span> <span class="nn">error_print</span> <span class="kn">import</span> <span class="n">full_stack</span>
-
-<span class="kn">from</span> <span class="nn">em_runner</span> <span class="kn">import</span> <span class="n">db</span>
-<span class="kn">from</span> <span class="nn">em_runner.model</span> <span class="kn">import</span> <span class="n">TaskLog</span>
-
-<span class="kn">from</span> <span class="nn">.em_file</span> <span class="kn">import</span> <span class="n">file_size</span>
-
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s2">"/scripts"</span><span class="p">)</span>
-
-<span class="c1"># set the limit for a csv cell value to something massive.</span>
-<span class="c1"># this is needed when users are building xml in a sql query</span>
-<span class="c1"># and have one very large column.</span>
-
-<span class="n">MAX_INT</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span>
-
-<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="c1"># decrease the MAX_INT value by factor 10</span>
-    <span class="c1"># as long as the OverflowError occurs.</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">csv</span><span class="o">.</span><span class="n">field_size_limit</span><span class="p">(</span><span class="n">MAX_INT</span><span class="p">)</span>
-        <span class="k">break</span>
-    <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
-        <span class="n">MAX_INT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">MAX_INT</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">em_runner.scripts.em_date</span> <span class="kn">import</span> <span class="n">DateParsing</span>
 
 
-<div class="viewcode-block" id="Postgres"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_postgres/index.html#em_runner.scripts.em_postgres.Postgres">[docs]</a><span class="k">class</span> <span class="nc">Postgres</span><span class="p">:</span>
-    <span class="sd">"""Functions to query against sql server."""</span>
+<div class="viewcode-block" id="LoadParams"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_params/index.html#em_runner.scripts.em_params.LoadParams">[docs]</a><span class="k">class</span> <span class="nc">LoadParams</span><span class="p">:</span>
+    <span class="sd">"""Load task params.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">job_hash</span><span class="p">):</span>
-        <span class="sd">"""Initialize class.</span>
+<span class="sd">    Params should be calculated before the task is run, so the same values are used</span>
+<span class="sd">    throughout the run.</span>
 
-<span class="sd">        :param task: task requesting the query</span>
-<span class="sd">        :param query: query to run</span>
-<span class="sd">        :param connection: connection string</span>
-<span class="sd">        """</span>
+<span class="sd">    If both project and task params retrun none, they will be rechecked at each use.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">job_hash</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">"""Set up class."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span> <span class="o">=</span> <span class="n">job_hash</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">query_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">global_params</span>
 
-<div class="viewcode-block" id="Postgres.__rows"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_postgres/index.html#em_runner.scripts.em_postgres.Postgres.__rows">[docs]</a>    <span class="k">def</span> <span class="nf">__rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
-        <span class="sd">"""Return data from query by a generator.</span>
+<div class="viewcode-block" id="LoadParams.parse_params"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_params/index.html#em_runner.scripts.em_params.LoadParams.parse_params">[docs]</a>    <span class="k">def</span> <span class="nf">parse_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="sd">"""Parse project and task params."""</span>
+        <span class="c1"># split into key value pairs</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s?:\s?|\s?=\s?"</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">""</span>
+        <span class="p">)</span>
 
-<span class="sd">        :param cursor: curser containing query output</span>
-<span class="sd">        :param size: chunk size of rows to return</span>
-<span class="sd">        """</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchmany</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="k">yield from</span> <span class="n">rows</span></div>
+        <span class="k">def</span> <span class="nf">insert_date</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+            <span class="sd">"""Parse py dates."""</span>
+            <span class="k">return</span> <span class="n">DateParsing</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">string_to_date</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># parse python dates</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"parse\((.*?)\)"</span><span class="p">,</span> <span class="n">insert_date</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
 
-        <span class="k">except</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">OperationalError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s2">"Postgres: Failed to connect: Task: </span><span class="si">%s</span><span class="s2">, with run: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
-                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
-                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">),</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
-            <span class="p">)</span>
-            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
-                <span class="n">task_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">job_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
-                <span class="n">status_id</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
-                <span class="n">error</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="n">message</span><span class="o">=</span><span class="s2">"Failed to connect.</span><span class="se">\n</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),),</span>
-            <span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">params</span></div>
 
-    <span class="k">def</span> <span class="nf">__close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class="viewcode-block" id="LoadParams.get"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_params/index.html#em_runner.scripts.em_params.LoadParams.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Get current params."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_params</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span></div></div>
+        <span class="p">)</span>
 
-<div class="viewcode-block" id="Postgres.run"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_postgres/index.html#em_runner.scripts.em_postgres.Postgres.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""Run a sql query and return temp file location.</span>
 
-<span class="sd">        Data from query is written to disk in a tempfile. Tempfile</span>
-<span class="sd">        must be removed after data is consumed!</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__connect</span><span class="p">():</span>
-            <span class="k">return</span> <span class="kc">False</span>
+<div class="viewcode-block" id="ParamParser"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_params/index.html#em_runner.scripts.em_params.ParamParser">[docs]</a><span class="k">class</span> <span class="nc">ParamParser</span><span class="p">:</span>
+    <span class="sd">"""Insert params to destination."""</span>
 
-        <span class="c1"># pylint: disable=broad-except</span>
-        <span class="k">try</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">job_hash</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">project_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task_params</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">"""Set up class."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span> <span class="o">=</span> <span class="n">job_hash</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">project_params</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">task_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="o">=</span> <span class="n">LoadParams</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
-            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
-                <span class="n">mode</span><span class="o">=</span><span class="s2">"w+"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
-                <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="o">=</span> <span class="n">task_params</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span> <span class="o">=</span> <span class="n">project_params</span>
 
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">source_query_include_header</span><span class="p">:</span>
-                    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
-                        <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span><span class="o">.</span><span class="n">description</span>
-                        <span class="k">else</span> <span class="p">[]</span>
-                    <span class="p">)</span>
+<div class="viewcode-block" id="ParamParser.insert_query_params"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_params/index.html#em_runner.scripts.em_params.ParamParser.insert_query_params">[docs]</a>    <span class="k">def</span> <span class="nf">insert_query_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Replace param place holders with value in queries."""</span>
 
-                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rows</span><span class="p">():</span>
-                    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">insert_code_params</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <span class="sd">"""Replace all keys with values in queries."""</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">"(?&lt;=SET\s"</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">")\s?=\s?.*;?"</span><span class="p">,</span>
+                    <span class="s2">" = "</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">";"</span><span class="p">,</span>
+                    <span class="n">query</span><span class="p">,</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">"(?&lt;=Declare\s"</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">"\s)(.+?)\s?=\s?.*;?"</span><span class="p">,</span>
+                    <span class="sa">r</span><span class="s2">"\1 = "</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s2">";"</span><span class="p">,</span>
+                    <span class="n">query</span><span class="p">,</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+                <span class="p">)</span>
 
-            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
-                <span class="n">task_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">job_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
-                <span class="n">status_id</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
-                <span class="n">message</span><span class="o">=</span><span class="p">(</span>
-                    <span class="s2">"Query completed. Data file </span><span class="si">%s</span><span class="s2"> created. Data size: </span><span class="si">%s</span><span class="s2">."</span>
-                    <span class="o">%</span> <span class="p">(</span><span class="n">data_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">file_size</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">data_file</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
-                <span class="p">),</span>
-            <span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">query</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">__close</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span>
+        <span class="c1"># add global parameters</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">insert_code_params</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">data_file</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">insert_code_params</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">)</span>
 
-        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s2">"Postgresql: Failed to run query: Task: </span><span class="si">%s</span><span class="s2">, with run: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
-                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
-                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">),</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">full_stack</span><span class="p">()),</span>
-            <span class="p">)</span>
-            <span class="n">log</span> <span class="o">=</span> <span class="n">TaskLog</span><span class="p">(</span>
-                <span class="n">task_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">job_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">job_hash</span><span class="p">,</span>
-                <span class="n">status_id</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-                <span class="n">error</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="n">message</span><span class="o">=</span><span class="s2">"Failed to run query.</span><span class="se">\n</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">full_stack</span><span class="p">()),),</span>
-            <span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
-            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1"># add two blank lines on end of query</span>
+        <span class="k">return</span> <span class="n">query</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span></div>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">__close</span><span class="p">()</span>
+<div class="viewcode-block" id="ParamParser.insert_file_params"><a class="viewcode-back" href="../../../autoapi/em_runner/scripts/em_params/index.html#em_runner.scripts.em_params.ParamParser.insert_file_params">[docs]</a>    <span class="k">def</span> <span class="nf">insert_file_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Replace param place holders with value in filenames."""</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span>
 
-            <span class="k">return</span> <span class="kc">False</span></div></div>
+        <span class="k">def</span> <span class="nf">replace_param</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <span class="sd">"""Replace all keys with value."""</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">file_name</span>
+
+        <span class="c1"># add global parameters</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">replace_param</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">replace_param</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">file_name</span></div></div>
 </pre></div>
       </article>
       <footer>

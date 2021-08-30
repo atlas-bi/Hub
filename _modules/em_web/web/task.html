@@ -179,6 +179,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_date/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_date</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_file/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_file</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_ftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_ftp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_params/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_params</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_postgres/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_postgres</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_python/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_python</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/em_runner/scripts/em_sftp/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">em_runner.scripts.em_sftp</span></code></a></li>
@@ -240,6 +241,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">zipfile</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
@@ -340,6 +342,7 @@
     <span class="n">new_task</span><span class="o">.</span><span class="n">creator_id</span> <span class="o">=</span> <span class="n">whoami</span><span class="o">.</span><span class="n">id</span>
     <span class="n">new_task</span><span class="o">.</span><span class="n">updater_id</span> <span class="o">=</span> <span class="n">whoami</span><span class="o">.</span><span class="n">id</span>
     <span class="n">new_task</span><span class="o">.</span><span class="n">status_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">new_task</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">new_task</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_task</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">" (Duplicated)"</span>
 
     <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_task</span><span class="p">)</span>
@@ -617,6 +620,11 @@
     <span class="n">tme</span><span class="o">.</span><span class="n">updater_id</span> <span class="o">=</span> <span class="n">whoami</span><span class="o">.</span><span class="n">id</span>
 
     <span class="n">tme</span><span class="o">.</span><span class="n">max_retries</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task-retry"</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+    <span class="n">tme</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task-rank"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\d+$"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task-rank"</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)))</span>
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
 
     <span class="c1"># source options</span>
     <span class="k">if</span> <span class="s2">"sourceType"</span> <span class="ow">in</span> <span class="n">form</span><span class="p">:</span>
@@ -740,7 +748,7 @@
         <span class="c1"># query options</span>
     <span class="k">if</span> <span class="s2">"sourceQueryType"</span> <span class="ow">in</span> <span class="n">form</span><span class="p">:</span>
         <span class="n">tme</span><span class="o">.</span><span class="n">source_query_type_id</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"sourceQueryType"</span><span class="p">]</span>
-        <span class="n">tme</span><span class="o">.</span><span class="n">query_params</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"queryParams"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"queryParams"</span> <span class="ow">in</span> <span class="n">form</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">tme</span><span class="o">.</span><span class="n">query_params</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"queryParams"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="s2">"queryParams"</span> <span class="ow">in</span> <span class="n">form</span> <span class="k">else</span> <span class="s2">""</span>
         <span class="n">tme</span><span class="o">.</span><span class="n">source_git</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"sourceGit"</span><span class="p">]</span> <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"sourceQueryType"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="c1"># smb file</span>
@@ -1406,6 +1414,12 @@
 
     <span class="n">tme</span><span class="o">.</span><span class="n">max_retries</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task-retry"</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
 
+    <span class="n">tme</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task-rank"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\d+$"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task-rank"</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)))</span>
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+
     <span class="n">tme</span><span class="o">.</span><span class="n">updater_id</span> <span class="o">=</span> <span class="n">whoami</span><span class="o">.</span><span class="n">id</span>
     <span class="c1"># source options</span>
     <span class="k">if</span> <span class="s2">"sourceType"</span> <span class="ow">in</span> <span class="n">form</span><span class="p">:</span>
@@ -1529,7 +1543,7 @@
         <span class="c1"># query options</span>
     <span class="k">if</span> <span class="s2">"sourceQueryType"</span> <span class="ow">in</span> <span class="n">form</span><span class="p">:</span>
         <span class="n">tme</span><span class="o">.</span><span class="n">source_query_type_id</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"sourceQueryType"</span><span class="p">]</span>
-        <span class="n">tme</span><span class="o">.</span><span class="n">query_params</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"queryParams"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"queryParams"</span> <span class="ow">in</span> <span class="n">form</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">tme</span><span class="o">.</span><span class="n">query_params</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"queryParams"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="s2">"queryParams"</span> <span class="ow">in</span> <span class="n">form</span> <span class="k">else</span> <span class="s2">""</span>
         <span class="n">tme</span><span class="o">.</span><span class="n">source_git</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="s2">"sourceGit"</span><span class="p">]</span> <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">"sourceQueryType"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"1"</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="c1"># smb file</span>

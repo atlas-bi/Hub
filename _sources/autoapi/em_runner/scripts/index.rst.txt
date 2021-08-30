@@ -20,6 +20,7 @@ Submodules
    em_date/index.rst
    em_file/index.rst
    em_ftp/index.rst
+   em_params/index.rst
    em_postgres/index.rst
    em_python/index.rst
    em_sftp/index.rst
