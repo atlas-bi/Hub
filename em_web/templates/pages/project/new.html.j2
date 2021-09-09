@@ -14,22 +14,16 @@
     <h1 class="em-title">
         {% if p %}
             Editing
-            <a class="em-link" title="open project" href="/project/{{ p.id }}">
-                {{ p.name }}
-            </a>
+            <a class="em-link" title="open project" href="/project/{{ p.id }}">{{ p.name }}</a>
         {% else %}
             New Project
         {% endif %}
     </h1>
     <form method="post" action="/project/{% if p %}{{ p.id }}/edit{% else %}new{% endif %}" id="project-new">
-        <div class="em-inputTtl">
-            Name
-        </div>
+        <div class="em-inputTtl">Name</div>
         <input class="em-input" name="project_name" autocomplete="off" required="required" value="{{ p.name }}" />
         <br />
-        <div class="em-inputTtl">
-            Description - A little knowledge is a dangerous thing!
-        </div>
+        <div class="em-inputTtl">Description - A little knowledge is a dangerous thing!</div>
         <textarea class="em-input" name="project_desc">{{ p.description }}</textarea>
         {% if p %}
             <h3 class="em-dropHead">
@@ -84,41 +78,23 @@
                     for examples.
                     </em>
                 </p>
-                <div class="em-inputTtl">
-                    Run in a specific year (4 dgt)
-                </div>
+                <div class="em-inputTtl">Run in a specific year (4 dgt)</div>
                 <input class="em-input" type="number" name="project_cron_year" value="{{ p.cron_year }}"/>
-                <div class="em-inputTtl">
-                    Run in a specific month (1-12)
-                </div>
+                <div class="em-inputTtl">Run in a specific month (1-12)</div>
                 <input class="em-input" type="number" name="project_cron_mnth" value="{{ p.cron_month }}"/>
-                <div class="em-inputTtl">
-                    Run in a specific week (1-53)
-                </div>
+                <div class="em-inputTtl">Run in a specific week (1-53)</div>
                 <input class="em-input" type="number" name="project_cron_week" value="{{ p.cron_week }}"/>
-                <div class="em-inputTtl">
-                    Run on a specific day (1-31)
-                </div>
+                <div class="em-inputTtl">Run on a specific day (1-31)</div>
                 <input class="em-input" type="number" name="project_cron_day" value="{{ p.cron_day }}"/>
-                <div class="em-inputTtl">
-                    Run on a specific day of the week (0 mon-6 sun)
-                </div>
+                <div class="em-inputTtl">Run on a specific day of the week (0 mon-6 sun)</div>
                 <input class="em-input" type="number" name="project_cron_wday" value="{{ p.cron_week_day }}"/>
-                <div class="em-inputTtl">
-                    Run on a specific hour of the day (0-23)
-                </div>
+                <div class="em-inputTtl">Run on a specific hour of the day (0-23)</div>
                 <input class="em-input" type="number" name="project_cron_hour" value="{{ p.cron_hour }}"/>
-                <div class="em-inputTtl">
-                    Run on a specific minute (0-59)
-                </div>
+                <div class="em-inputTtl">Run on a specific minute (0-59)</div>
                 <input class="em-input" type="number" name="project_cron_min" value="{{ p.cron_min }}"/>
-                <div class="em-inputTtl">
-                    Run on a specific second (0-59).. Really bro??
-                </div>
+                <div class="em-inputTtl">Run on a specific second (0-59).. Really bro??</div>
                 <input class="em-input" type="number" name="project_cron_sec" value="{{ p.cron_sec }}"/>
-                <div class="em-inputTtl">
-                    Start running on
-                </div>
+                <div class="em-inputTtl">Start running on</div>
                 <input class="em-input em-inputEraser"
                        name="project_cron_sdate"
                        id="project_cron_sdate"
@@ -133,9 +109,7 @@
                         <path d="M497.941 273.941c18.745-18.745 18.745-49.137 0-67.882l-160-160c-18.745-18.745-49.136-18.746-67.883 0l-256 256c-18.745 18.745-18.745 49.137 0 67.882l96 96A48.004 48.004 0 0 0 144 480h356c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H355.883l142.058-142.059zm-302.627-62.627l137.373 137.373L265.373 416H150.628l-80-80 124.686-124.686z"/>
                     </svg>
                 </button>
-                <div class="em-inputTtl">
-                    End runing on
-                </div>
+                <div class="em-inputTtl">End runing on</div>
                 <input class="em-input em-inputEraser"
                        name="project_cron_edate"
                        id="project_cron_edate"
@@ -170,17 +144,13 @@
                     </label>
                     Use an interval schedule
                 </h3>
-                <div class="em-inputTtl">
-                    Run every (number)
-                </div>
+                <div class="em-inputTtl">Run every (number)</div>
                 <input class="em-input"
                        type="number"
                        name="project_intv_value"
                        id="project_intv_value"
                        value="{{ p.intv_value }}"/>
-                <div class="em-inputTtl">
-                    Interval
-                </div>
+                <div class="em-inputTtl">Interval</div>
                 <select class="em-input" name="project_intv_intv">
                     <option value="w" {% if p.intv_type == 'w' %}selected="selected" {% endif %}>
                         week(s)
@@ -198,9 +168,7 @@
                         second(s)
                     </option>
                 </select>
-                <div class="em-inputTtl">
-                    Start running on
-                </div>
+                <div class="em-inputTtl">Start running on</div>
                 <input class="em-input em-inputEraser"
                        name="project_intv_sdate"
                        id="project_intv_sdate"
@@ -215,9 +183,7 @@
                         <path d="M497.941 273.941c18.745-18.745 18.745-49.137 0-67.882l-160-160c-18.745-18.745-49.136-18.746-67.883 0l-256 256c-18.745 18.745-18.745 49.137 0 67.882l96 96A48.004 48.004 0 0 0 144 480h356c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H355.883l142.058-142.059zm-302.627-62.627l137.373 137.373L265.373 416H150.628l-80-80 124.686-124.686z"/>
                     </svg>
                 </button>
-                <div class="em-inputTtl">
-                    End running on
-                </div>
+                <div class="em-inputTtl">End running on</div>
                 <input class="em-input em-inputEraser"
                        name="project_intv_edate"
                        id="project_intv_edate"
@@ -252,9 +218,7 @@
                     Use a one time schedule
                 </h3>
                 <input type="hidden" name="project_ooff" value="{{ p.ooff or 0 }}" />
-                <div class="em-inputTtl">
-                    When? Leave blank to run immediately.
-                </div>
+                <div class="em-inputTtl">When? Leave blank to run immediately.</div>
                 <input class="em-input em-inputEraser"
                        name="project_ooff_date"
                        id="project_ooff_date"

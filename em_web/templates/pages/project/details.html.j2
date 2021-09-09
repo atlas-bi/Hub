@@ -17,9 +17,7 @@
         <h1>Invalid project.</h1>
         <h2>
             Maybe try
-            <a class="em-titleGrey" title="all projects" href="/project">
-                all projects
-            </a>
+            <a class="em-titleGrey" title="all projects" href="/project">all projects</a>
             ?
         </h2>
     {% else %}
@@ -148,35 +146,23 @@
         {% endif %}
         {% if p.global_params %}
             <h2>Global SQL Parameters</h2>
-            <div class="em-code" style="white-space: pre-line;">
-                {{ p.global_params | newline_to_br }}
-            </div>
+            <div class="em-code" style="white-space: pre-line;">{{ p.global_params | newline_to_br }}</div>
         {% endif %}
         <!-- tab control -->
         <div class="tab">
-            <a title="tasks" class="tab-lnk active" href="tasks">
-                Tasks
-            </a>
-            <a title="task logs" class="tab-lnk" href="tasklog">
-                Task Logs
-            </a>
+            <a title="tasks" class="tab-lnk active" href="tasks">Tasks</a>
+            <a title="task logs" class="tab-lnk" href="tasklog">Task Logs</a>
         </div>
         <!-- tab body -->
         <div class="tab-cnt">
             <div class="tab-dta active" id="tasks">
                 <div class="em-tools">
-                    <a class="em-link" title="add a task" href="/project/{{ p.id }}/task/new">
-                        Add a task
-                    </a>
-                    <a class="em-link" title="disable all tasks" href="/project/{{ p.id }}/disable">
-                        Disable all tasks
-                    </a>
-                    <a class="em-link" title="enable all tasks" href="/project/{{ p.id }}/enable">
-                        Enable all tasks
-                    </a>
-                    <a class="em-link" title="run all tasks" href="/project/{{ p.id }}/run">
-                        Run all tasks
-                    </a>
+                    <a class="em-link" title="add a task" href="/project/{{ p.id }}/task/new">Add a task</a>
+                    <a class="em-link"
+                       title="disable all tasks"
+                       href="/project/{{ p.id }}/disable">Disable all tasks</a>
+                    <a class="em-link" title="enable all tasks" href="/project/{{ p.id }}/enable">Enable all tasks</a>
+                    <a class="em-link" title="run all tasks" href="/project/{{ p.id }}/run">Run all tasks</a>
                 </div>
                 <div class="em-ajaxTable" data-theme="Exec" data-src="/table/project/{{ p.id }}/task">
                     <div class="loader-typing">

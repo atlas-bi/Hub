@@ -26,9 +26,7 @@
         <h1>Invalid task.</h1>
         <h2>
             Maybe try
-            <a title="all tasks" class="em-titleGrey" href="/task">
-                all tasks
-            </a>
+            <a title="all tasks" class="em-titleGrey" href="/task">all tasks</a>
             ?
         </h2>
     {% else %}
@@ -45,9 +43,9 @@
             {% endif %}
             / Project:
             {% if t.project %}
-                <a class="em-titleGrey" title="open project" href="/project/{{ t.project.id }}">
-                    {{ t.project.name }}
-                </a>
+                <a class="em-titleGrey"
+                   title="open project"
+                   href="/project/{{ t.project.id }}">{{ t.project.name }}</a>
             {% else %}
                 <span class="em-titleGrey">Orphan</span>
             {% endif %}
@@ -93,22 +91,14 @@
         </div>
         <!-- tab control -->
         <div class="tab">
-            <a title="data source" class="tab-lnk active" href="datasource">
-                Data Source
-            </a>
-            <a title="task logs" class="tab-lnk" href="tasklog">
-                Task Logs
-            </a>
-            <a title="task files" class="tab-lnk" href="taskfile">
-                Task Files
-            </a>
+            <a title="data source" class="tab-lnk active" href="datasource">Data Source</a>
+            <a title="task logs" class="tab-lnk" href="tasklog">Task Logs</a>
+            <a title="task files" class="tab-lnk" href="taskfile">Task Files</a>
         </div>
         <!-- tab body -->
         <div class="tab-cnt">
             <div class="tab-dta active" id="datasource">
-                <div class="em-grid">
-                    {% include "pages/task/details_source.html.j2" %}
-                </div>
+                <div class="em-grid">{% include "pages/task/details_source.html.j2" %}</div>
                 <div class="tab-dta" id="tasklog">
                     <div class="em-ajaxTable" data-src="/table/task/{{ t.id }}/log">
                         <div class="loader-typing">

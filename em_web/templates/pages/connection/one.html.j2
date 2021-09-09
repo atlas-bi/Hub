@@ -12,37 +12,25 @@
 {% block body %}
     <h1 class="em-title">Edit Connection</h1>
     <form method="post" action="/connection/{{ connection.id }}">
-        <div class="em-inputTtl">
-            Name
-        </div>
+        <div class="em-inputTtl">Name</div>
         <input class="em-input" type="text" name="name" autocomplete="off" value="{{ connection.name }}" />
-        <div class="em-inputTtl">
-            Description - A little knowledge is a dangerous thing!
-        </div>
+        <div class="em-inputTtl">Description - A little knowledge is a dangerous thing!</div>
         <input class="em-input" type="text" name="desc" autocomplete="off" value="{{ connection.description }}" />
-        <div class="em-inputTtl">
-            Address
-        </div>
+        <div class="em-inputTtl">Address</div>
         <input class="em-input" type="text" name="addr" autocomplete="off" value="{{ connection.address }}" />
-        <div class="em-inputTtl">
-            Primary Contact
-        </div>
+        <div class="em-inputTtl">Primary Contact</div>
         <input class="em-input"
                type="text"
                name="contact"
                autocomplete="off"
                value="{{ connection.primary_contact }}"/>
-        <div class="em-inputTtl">
-            Email Address
-        </div>
+        <div class="em-inputTtl">Email Address</div>
         <input class="em-input"
                type="text"
                name="email"
                autocomplete="off"
                value="{{ connection.primary_contact_email }}"/>
-        <div class="em-inputTtl">
-            Phone
-        </div>
+        <div class="em-inputTtl">Phone</div>
         <input class="em-input"
                type="text"
                name="phone"
@@ -67,35 +55,21 @@
                                 </svg>
                             </a>
                         </div>
-                        <div class="em-inputTtl">
-                            Name (ex: My fav connection)
-                        </div>
+                        <div class="em-inputTtl">Name (ex: My fav connection)</div>
                         <input class="em-input" type="text" name="sftp{{ s.id }}-name" value="{{ s.name }}"/>
-                        <div class="em-inputTtl">
-                            Address (ex: sftp.google.com)
-                        </div>
+                        <div class="em-inputTtl">Address (ex: sftp.google.com)</div>
                         <input class="em-input" type="text" name="sftp{{ s.id }}-addr" value="{{ s.address }}"/>
-                        <div class="em-inputTtl">
-                            Port (ex: 22 (22 is default SFTP port))
-                        </div>
+                        <div class="em-inputTtl">Port (ex: 22 (22 is default SFTP port))</div>
                         <input class="em-input" type="text" name="sftp{{ s.id }}-port" value="{{ s.port or 22 }}"/>
-                        <div class="em-inputTtl">
-                            Path (ex: /path/to/outer/space)
-                        </div>
+                        <div class="em-inputTtl">Path (ex: /path/to/outer/space)</div>
                         <input class="em-input" type="text" name="sftp{{ s.id }}-path" value="{{ s.path }}"/>
-                        <div class="em-inputTtl">
-                            Username (ex: joe-cool)
-                        </div>
+                        <div class="em-inputTtl">Username (ex: joe-cool)</div>
                         <input class="em-input" type="text" name="sftp{{ s.id }}-user" value="{{ s.username }}"/>
-                        <div class="em-inputTtl">
-                            SSH Key
-                        </div>
+                        <div class="em-inputTtl">SSH Key</div>
                         <textarea class="em-input" type="text" name="sftp{{ s.id }}-key" rows="2">
                             {{ s.key|decrypt or "" }}
                         </textarea>
-                        <div class="em-inputTtl">
-                            Password (ex: d0n't4g@!)
-                        </div>
+                        <div class="em-inputTtl">Password (ex: d0n't4g@!)</div>
                         <input class="em-input"
                                type="password"
                                name="sftp{{ s.id }}-pass"
@@ -138,25 +112,15 @@
                                 </svg>
                             </a>
                         </div>
-                        <div class="em-inputTtl">
-                            Name (ex: My fav connection)
-                        </div>
+                        <div class="em-inputTtl">Name (ex: My fav connection)</div>
                         <input class="em-input" type="text" name="ftp{{ s.id }}-name" value="{{ s.name }}"/>
-                        <div class="em-inputTtl">
-                            Address (ex: ftp.google.com)
-                        </div>
+                        <div class="em-inputTtl">Address (ex: ftp.google.com)</div>
                         <input class="em-input" type="text" name="ftp{{ s.id }}-addr" value="{{ s.address }}"/>
-                        <div class="em-inputTtl">
-                            Path (ex: /path/to/outer/space)
-                        </div>
+                        <div class="em-inputTtl">Path (ex: /path/to/outer/space)</div>
                         <input class="em-input" type="text" name="ftp{{ s.id }}-path" value="{{ s.path }}"/>
-                        <div class="em-inputTtl">
-                            Username (ex: joe-cool)
-                        </div>
+                        <div class="em-inputTtl">Username (ex: joe-cool)</div>
                         <input class="em-input" type="text" name="ftp{{ s.id }}-user" value="{{ s.username }}"/>
-                        <div class="em-inputTtl">
-                            Password (ex: d0n't4g@!)
-                        </div>
+                        <div class="em-inputTtl">Password (ex: d0n't4g@!)</div>
                         <input class="em-input"
                                type="password"
                                name="ftp{{ s.id }}-pass"
@@ -199,24 +163,16 @@
                                 </svg>
                             </a>
                         </div>
-                        <div class="em-inputTtl">
-                            Name (ex: My fav connection)
-                        </div>
+                        <div class="em-inputTtl">Name (ex: My fav connection)</div>
                         <input class="em-input" type="text" name="smb{{ s.id }}-name" value="{{ s.name }}"/>
-                        <div class="em-inputTtl">
-                            Server Name (ex: server_it_up)
-                        </div>
+                        <div class="em-inputTtl">Server Name (ex: server_it_up)</div>
                         <input class="em-input"
                                type="text"
                                name="smb{{ s.id }}-servername"
                                value="{{ s.server_name }}"/>
-                        <div class="em-inputTtl">
-                            Server IP (ex: 10.0.0.1)
-                        </div>
+                        <div class="em-inputTtl">Server IP (ex: 10.0.0.1)</div>
                         <input class="em-input" type="text" name="smb{{ s.id }}-serverip" value="{{ s.server_ip }}"/>
-                        <div class="em-inputTtl">
-                            Share Name (ex: my_drive)
-                        </div>
+                        <div class="em-inputTtl">Share Name (ex: my_drive)</div>
                         <input class="em-input" type="text" name="smb{{ s.id }}-sharename" value="{{ s.share_name }}"/>
                         <div class="em-inputTtl">
                             Folder Path (ex: this/is/awesome)
@@ -295,15 +251,9 @@
                             <div class="em-connectionExample">
                                 Examples:
                                 <ul>
-                                    <li>
-                                        SQL Server: SERVER=server_name;DATABASE=database_name;UID=username;PWD=password
-                                    </li>
-                                    <li>
-                                        Postgres: host=server_name dbname=database_name user=username password=password
-                                    </li>
-                                    <li>
-                                        SQLite: username:password@host,host_ip/share_name/path/to/database.sqlite
-                                    </li>
+                                    <li>SQL Server: SERVER=server_name;DATABASE=database_name;UID=username;PWD=password</li>
+                                    <li>Postgres: host=server_name dbname=database_name user=username password=password</li>
+                                    <li>SQLite: username:password@host,host_ip/share_name/path/to/database.sqlite</li>
                                 </ul>
                             </div>
                         </div>
@@ -326,7 +276,9 @@
             Add Database Connection
         </div>
         <!-- SSH Connections -->
-        <h2 class="em-sectionTitle">SSH Connections</h2>
+        <h2 class="em-sectionTitle">
+            SSH Connections
+        </h2>
         <div id="em-elementGroupSsh">
             {% for s in connection.ssh %}
                 <div class="em-drop" data-toggle="clps" data-target="#ssh{{ s.id }}" data-ssh="{{ s.id }}">
@@ -387,7 +339,9 @@
             Add SSH Connection
         </div>
         <!-- GPG Connections -->
-        <h2 class="em-sectionTitle">GPG Keys</h2>
+        <h2 class="em-sectionTitle">
+            GPG Keys
+        </h2>
         <div id="em-elementGroupGpg">
             {% for s in connection.gpg %}
                 <div class="em-drop" data-toggle="clps" data-target="#gpg{{ s.id }}" data-gpg="{{ s.id }}">

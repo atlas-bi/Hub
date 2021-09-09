@@ -13,20 +13,14 @@
     <h1 class="em-title">
         {% if t %}
             Editing
-            <a class="em-titleGrey" title="open task" href="/task/{{ t.id }}">
-                {{ t.name }}
-            </a>
+            <a class="em-titleGrey" title="open task" href="/task/{{ t.id }}">{{ t.name }}</a>
             for
-            <a class="em-titleGrey" title="open project" href="/project/{{ t.project.id }}">
-                {{ t.project.name }}
-            </a>
+            <a class="em-titleGrey" title="open project" href="/project/{{ t.project.id }}">{{ t.project.name }}</a>
         {% else %}
             New Task
             {% if p %}
                 for
-                <a class="em-titleGrey" title="open project" href="/project/{{ p.id }}">
-                    {{ p.name }}
-                </a>
+                <a class="em-titleGrey" title="open project" href="/project/{{ p.id }}">{{ p.name }}</a>
             {% endif %}
         {% endif %}
     </h1>
@@ -34,17 +28,13 @@
         <!--
             description
     -->
-        <div class="em-inputTtl">
-            Descriptive Name - A little knowledge is a dangerous thing!
-        </div>
+        <div class="em-inputTtl">Descriptive Name - A little knowledge is a dangerous thing!</div>
         <input class="em-input" name="name" autocomplete="off" required="required" value="{{ t.name }}"/>
         <br />
     <!--
             max retries
 -->
-        <div class="em-inputTtl">
-            Max Retry Attempts
-        </div>
+        <div class="em-inputTtl">Max Retry Attempts</div>
         <input class="em-input"
                type="number"
                name="task-retry"
@@ -90,9 +80,7 @@
 -->
             <section class="task-sourceDatabase"
                      {% if not t or t.source_type_id != 1 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl">
-                    Organization
-                </div>
+                <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="database_source" data-database="task-database-source-connection">
                     <option {% if not t or not t.source_database_conn or not t.source_database_conn.connection.id %} selected="selected" {% endif %}
                             value="none">
@@ -127,9 +115,7 @@
                 if File smb
 -->
             <section class="task-sourceSmb" {% if not t or t.source_type_id != 2 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl">
-                    Organization
-                </div>
+                <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="smb_source" data-smb="task-smb-source-connection">
                     <option {% if not t or not t.source_smb_conn or not t.source_smb_conn.connection.id %} selected="selected" {% endif %}
                             value="none">
@@ -159,9 +145,7 @@
                     <span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span>
                 </div>
                 <input class="em-input" name="sourceSmbFile" autocomplete="off" value="{{ t.source_smb_file or '' }}"/>
-                <div class="em-inputTtl">
-                    Delimiter (blank defaults to comma)
-                </div>
+                <div class="em-inputTtl">Delimiter (blank defaults to comma)</div>
                 <input class="em-input"
                        name="sourceSmbDelimiter"
                        autocomplete="off"
@@ -183,9 +167,7 @@
                 if File SFTP
 -->
             <section class="task-sourceSftp" {% if not t or t.source_type_id != 3 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl">
-                    Organization
-                </div>
+                <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="sftp_source" data-sftp="task-sftp-source-connection">
                     <option {% if not t or not t.source_sftp_conn or not t.source_sftp_conn.connection.id %} selected="selected" {% endif %}
                             value="none">
@@ -218,9 +200,7 @@
                        name="sourceSftpFile"
                        autocomplete="off"
                        value="{{ t.source_sftp_file or '' }}"/>
-                <div class="em-inputTtl">
-                    Delimiter (blank defaults to comma)
-                </div>
+                <div class="em-inputTtl">Delimiter (blank defaults to comma)</div>
                 <input class="em-input"
                        name="sourceSftpDelimiter"
                        autocomplete="off"
@@ -242,9 +222,7 @@
                 if File FTP
 -->
             <section class="task-sourceFtp" {% if not t or t.source_type_id != 4 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl">
-                    Organization
-                </div>
+                <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="ftp_source" data-ftp="task-ftp-source-connection">
                     <option {% if not t or not t.source_ftp_conn or not t.source_ftp_conn.connection.id %} selected="selected" {% endif %}
                             value="none">
@@ -274,9 +252,7 @@
                     <span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span>
                 </div>
                 <input class="em-input" name="sourceFtpFile" autocomplete="off" value="{{ t.source_ftp_file or '' }}"/>
-                <div class="em-inputTtl">
-                    Delimiter (blank defaults to comma)
-                </div>
+                <div class="em-inputTtl">Delimiter (blank defaults to comma)</div>
                 <input class="em-input"
                        name="sourceFtpDelimiter"
                        autocomplete="off"
@@ -298,9 +274,7 @@
                 if SSH
 -->
             <section class="task-sourceSsh" {% if not t or t.source_type_id != 6 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl">
-                    Organization
-                </div>
+                <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="ssh_source" data-ssh="task-ssh-source-connection">
                     <option {% if not t or not t.source_ssh_conn or not t.source_ssh_conn.connection.id %} selected="selected" {% endif %}
                             value="none">
@@ -333,9 +307,7 @@
                 File
                 URL
 -->
-            <div class="em-inputTtl">
-                Query Location
-            </div>
+            <div class="em-inputTtl">Query Location</div>
             <select class="em-input" name="sourceQueryType">
                 <option disabled="disabled"
                         {% if not t or t.source_query_type_id == None %} selected="selected" {% endif %}>
@@ -352,9 +324,7 @@
 -->
             <section class="task-sourceGit"
                      {% if not t or t.source_query_type_id != 1 %}style="display:none;"{% endif %}>
-                <div class="em-inputTtl">
-                    GIT Code URL (login configured by Admin)
-                </div>
+                <div class="em-inputTtl">GIT Code URL (login configured by Admin)</div>
                 <input class="em-input" name="sourceGit" autocomplete="off" value="{{ t.source_git or '' }}" />
             </section>
 <!--
@@ -377,9 +347,7 @@
                        name="sourceQuerySmbFile"
                        autocomplete="off"
                        value="{{ t.query_smb_file or '' }}"/>
-                <div class="em-inputTtl">
-                    Organization
-                </div>
+                <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="smb_query" data-smb="task-query-smb-source-connection">
                     <option {% if not t or not t.query_smb_conn or not t.query_smb_conn.connection.id %} selected="selected" {% endif %}
                             value="none">
@@ -418,9 +386,7 @@
                        name="sourceQueryFtpFile"
                        autocomplete="off"
                        value="{{ t.query_ftp_file or '' }}"/>
-                <div class="em-inputTtl">
-                    Organization
-                </div>
+                <div class="em-inputTtl">Organization</div>
                 <select class="em-input" name="ftp_query" data-ftp="task-query-ftp-source-connection">
                     <option {% if not t or not t.query_ftp_conn or not t.query_ftp_conn.connection.id %} selected="selected" {% endif %}
                             value="none">
@@ -453,7 +419,9 @@
                         python date/time variables
                     </a>
                     allowed)
-                    <span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span>
+                    <span class="tooltiptext">
+                        {% include '/sections/py_dates.html.j2' %}
+                    </span>
                 </div>
                 <input class="em-input"
                        name="sourceQuerySftpFile"
@@ -722,7 +690,9 @@
                             python date/time variables
                         </a>
                         allowed)
-                        <span class="tooltiptext">{% include '/sections/py_dates.html.j2' %}</span>
+                        <span class="tooltiptext">
+                            {% include '/sections/py_dates.html.j2' %}
+                        </span>
                     </div>
                     <input class="em-input"
                            name="destinationFileName"

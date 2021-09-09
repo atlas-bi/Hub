@@ -15,12 +15,8 @@
     {% include "sections/flashes.html.j2" %}
     <h2 class="em-title">App Tasks</h2>
     <div class="em-tools">
-        <a href="/admin/clearlog" title="clear logs">
-            Clear all logs
-        </a>
-        <a href="/admin/resetTasks" title="reset all tasks">
-            Reset all tasks to completed
-        </a>
+        <a href="/admin/clearlog" title="clear logs">Clear all logs</a>
+        <a href="/admin/resetTasks" title="reset all tasks">Reset all tasks to completed</a>
     </div>
     <h2 class="em-title">Scheduler Tasks</h2>
     <div class="em-tools">
@@ -29,15 +25,9 @@
            onclick="return confirm('Are you sure? Go to Dash, Error, Reschedule all to restart.')">
             Empty Scheduler
         </a>
-        <a href="/admin/pauseJobs" title="pause all jobs">
-            Pause All Jobs
-        </a>
-        <a href="/admin/resumeJobs" title="resume all jobs">
-            Resume Enabled Jobs
-        </a>
-        <a href="/admin/reloadJobs" title="resume all jobs">
-            Reschedule Enabled Jobs
-        </a>
+        <a href="/admin/pauseJobs" title="pause all jobs">Pause All Jobs</a>
+        <a href="/admin/resumeJobs" title="resume all jobs">Resume Enabled Jobs</a>
+        <a href="/admin/reloadJobs" title="resume all jobs">Reschedule Enabled Jobs</a>
         <a href="/admin/stopJobs"
            title="gracefully stop scheduler"
            onclick="return confirm('Are you sure? Click Restart Web Service to start again.')">
@@ -51,22 +41,14 @@
     </div>
     <h2 class="em-title">Server Tasks</h2>
     <div class="em-tools">
-        <a href="/admin/reloadDaemon" title="reload web service">
-            Reload Web Service
-        </a>
-        <a href="/admin/restartDaemon" title="restart web service">
-            Restart Web Service
-        </a>
+        <a href="/admin/reloadDaemon" title="reload web service">Reload Web Service</a>
+        <a href="/admin/restartDaemon" title="restart web service">Restart Web Service</a>
         <a href="/admin/whoami" title="whoami?">Whoami</a>
     </div>
     <!-- tab control -->
     <div class="tab">
-        <a title="task logs" class="tab-lnk active" href="task_history">
-            User History
-        </a>
-        <a title="task logs" class="tab-lnk" href="login_history">
-            Login History
-        </a>
+        <a title="task logs" class="tab-lnk active" href="task_history">User History</a>
+        <a title="task logs" class="tab-lnk" href="login_history">Login History</a>
     </div>
     <!-- tab body -->
     <div class="tab-cnt">

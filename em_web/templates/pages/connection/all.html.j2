@@ -29,35 +29,21 @@
     <div class="clps" id="new_connection">
         <div class="em-dropBody">
             <form method="post" action="/connection/new">
-                <div class="em-inputTtl">
-                    Name
-                </div>
+                <div class="em-inputTtl">Name</div>
                 <input class="em-input" type="text" name="name" autocomplete="off" required="required"/>
-                <div class="em-inputTtl">
-                    Description
-                </div>
+                <div class="em-inputTtl">Description</div>
                 <input class="em-input" type="text" name="desc" autocomplete="off" required="required"/>
-                <div class="em-inputTtl">
-                    Address
-                </div>
+                <div class="em-inputTtl">Address</div>
                 <input class="em-input" type="text" name="addr" autocomplete="off" />
-                <div class="em-inputTtl">
-                    Primary Contact
-                </div>
+                <div class="em-inputTtl">Primary Contact</div>
                 <input class="em-input" type="text" name="contact" autocomplete="off" />
-                <div class="em-inputTtl">
-                    Email Address
-                </div>
+                <div class="em-inputTtl">Email Address</div>
                 <input class="em-input" type="text" name="email" autocomplete="off" />
-                <div class="em-inputTtl">
-                    Phone
-                </div>
+                <div class="em-inputTtl">Phone</div>
                 <input class="em-input" type="text" name="phone" autocomplete="off" />
                 <!-- add sftp connection to new group -->
                 <h2 class="em-sectionTitle">SFTP Connections</h2>
-                <div id="em-elementGroupSftp">
-                    {% include "pages/connection/type/sftp.html.j2" %}
-                </div>
+                <div id="em-elementGroupSftp">{% include "pages/connection/type/sftp.html.j2" %}</div>
                 <div class="em-addElement" id="connections-addSftp">
                     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
                         <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
@@ -66,9 +52,7 @@
                 </div>
                 <!-- add stp connection to new group -->
                 <h2 class="em-sectionTitle">FTP Connections</h2>
-                <div id="em-elementGroupFtp">
-                    {% include "pages/connection/type/ftp.html.j2" %}
-                </div>
+                <div id="em-elementGroupFtp">{% include "pages/connection/type/ftp.html.j2" %}</div>
                 <div class="em-addElement" id="connections-addFtp">
                     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
                         <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
@@ -77,9 +61,7 @@
                 </div>
                 <!-- add smb connection to new group -->
                 <h2 class="em-sectionTitle">SMB (Network Folder) Connections</h2>
-                <div id="em-elementGroupSmb">
-                    {% include "pages/connection/type/smb.html.j2" %}
-                </div>
+                <div id="em-elementGroupSmb">{% include "pages/connection/type/smb.html.j2" %}</div>
                 <div class="em-addElement" id="connections-addSmb">
                     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
                         <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
@@ -88,9 +70,7 @@
                 </div>
                 <!-- add database connection to new group -->
                 <h2 class="em-sectionTitle">Database Connections</h2>
-                <div id="em-elementGroupDatabase">
-                    {% include "pages/connection/type/database.html.j2" %}
-                </div>
+                <div id="em-elementGroupDatabase">{% include "pages/connection/type/database.html.j2" %}</div>
                 <div class="em-addElement" id="connections-addDatabase">
                     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
                         <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
@@ -99,9 +79,7 @@
                 </div>
                 <!-- add ssh connection to new group -->
                 <h2 class="em-sectionTitle">SSH Connections</h2>
-                <div id="em-elementGroupSsh">
-                    {% include "pages/connection/type/ssh.html.j2" %}
-                </div>
+                <div id="em-elementGroupSsh">{% include "pages/connection/type/ssh.html.j2" %}</div>
                 <div class="em-addElement" id="connections-addSsh">
                     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
                         <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
@@ -114,9 +92,7 @@
         </div>
     </div>
     {% if connections|length == 0 %}
-        <div style="margin-top:15px;">
-            No existing connections.
-        </div>
+        <div style="margin-top:15px;">No existing connections.</div>
     {% endif %}
     <!-- existing connections -->
     {% for d in connections %}

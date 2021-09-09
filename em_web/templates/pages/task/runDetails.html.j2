@@ -17,23 +17,19 @@
         <h1>Invalid job.</h1>
         <h2>
             Maybe try
-            <a class="em-titleGrey" href="/project" title="all tasks">
-                all tasks
-            </a>
+            <a class="em-titleGrey" href="/project" title="all tasks">all tasks</a>
             ?
         </h2>
     {% else %}
         <h1 class="em-title">
             Run data for {{ run }} (Task
-            <a class="em-titleGrey" title="open task" href="/task/{{ t.id }}">
-                {{ t.name }}
-            </a>
+            <a class="em-titleGrey" title="open task" href="/task/{{ t.id }}">{{ t.name }}</a>
             )
             {% if t.project %}
                 (Project
-                <a class="em-titleGrey" title="open project" href="/project/{{ t.project.id }}">
-                    {{ t.project.name }}
-                </a>
+                <a class="em-titleGrey"
+                   title="open project"
+                   href="/project/{{ t.project.id }}">{{ t.project.name }}</a>
                 )
             {% endif %}
         </h1>

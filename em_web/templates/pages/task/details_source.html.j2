@@ -11,9 +11,7 @@
     {{ t.source_database_conn.connection_string|decrypt|database_pass }}
 </div>
 <div class="em-grid">
-    <div class="em-gridName">
-        Include Headers?
-    </div>
+    <div class="em-gridName">Include Headers?</div>
     <div class="em-gridValue">
         {% if t.source_query_include_header==1 %}
             Yes
@@ -176,12 +174,8 @@
 {% endif %}
 {% if t.query_params and t.source_type_id == 1 %}
 </div>
-<span class="em-gridName">
-    Query Parameters *note: will override any project params
-</span>
-<div class="em-code">
-    {{ t.query_params | newline_to_br }}
-</div>
+<span class="em-gridName">Query Parameters *note: will override any project params</span>
+<div class="em-code">{{ t.query_params | newline_to_br }}</div>
 <div class="em-grid">
 {% endif %}
 <!-- database -->
@@ -197,9 +191,7 @@
 {% if t.source_git and t.source_type_id == 1 and t.source_query_type_id == 1 %}
     <span class="em-gridName">Git URL</span>
     <span class="em-gridValue">
-        <a class="em-link" title="open page" href="{{ t.source_git }}" target="_blank">
-            {{ t.source_git }}
-        </a>
+        <a class="em-link" title="open page" href="{{ t.source_git }}" target="_blank">{{ t.source_git }}</a>
     </span>
 </div>
 <div class="em-ajaxContent" data-src="/task/{{ t.id }}/git">
@@ -213,9 +205,7 @@
 {% if t.source_url and t.source_type_id == 1 and t.source_query_type_id == 3 %}
     <span class="em-gridName">Web URL</span>
     <span class="em-gridValue">
-        <a class="em-link" title="open page" href="{{ t.source_url }}" target="_blank">
-            {{ t.source_url }}
-        </a>
+        <a class="em-link" title="open page" href="{{ t.source_url }}" target="_blank">{{ t.source_url }}</a>
     </span>
 </div>
 <div class="em-ajaxContent" data-src="/task/{{ t.id }}/url">
@@ -228,9 +218,13 @@
 <!-- source SMB -->
 {% if t.source_type_id == 1 and t.source_query_type_id == 2 and t.query_smb_id %}
     <span class="em-gridName">Filename</span>
-    <span class="em-gridValue">{{ t.query_smb_file }}</span>
+    <span class="em-gridValue">
+        {{ t.query_smb_file }}
+    </span>
 </div>
-<span class="em-gridName">SMB Connection</span>
+<span class="em-gridName">
+    SMB Connection
+</span>
 <div class="em-code">
     <a class="em-link" title="open connection" href="/connection/{{ t.query_smb_conn.connection.id }}">
         {{ t.query_smb_conn.connection.name }} - {{ t.query_smb_conn.name }}
@@ -258,10 +252,16 @@
 {% endif %}
 <!-- source SFTP -->
 {% if t.source_type_id == 1 and t.source_query_type_id == 5 and t.query_sftp_id %}
-    <span class="em-gridName">Filename</span>
-    <span class="em-gridValue">{{ t.query_sftp_file }}</span>
+    <span class="em-gridName">
+        Filename
+    </span>
+    <span class="em-gridValue">
+        {{ t.query_sftp_file }}
+    </span>
 </div>
-<span class="em-gridName">SFTP Connection</span>
+<span class="em-gridName">
+    SFTP Connection
+</span>
 <div class="em-code">
     <a class="em-link" title="open connection" href="/connection/{{ t.query_sftp_conn.connection.id }}">
         {{ t.query_sftp_conn.connection.name }} - {{ t.query_sftp_conn.name }}

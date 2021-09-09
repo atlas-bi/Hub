@@ -2,11 +2,7 @@
     {% if messages %}
         <ul class="flashes">
             <span class="flashes-close">&times;</span>
-            {% for message in messages %}
-                <li>
-                    {{ message }}
-                </li>
-            {% endfor %}
+            {% for message in messages %}<li>{{ message }}</li>{% endfor %}
         </ul>
     {% endif %}
 {% endwith %}

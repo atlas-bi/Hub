@@ -1,12 +1,8 @@
-<div class="em-inputTtl">
-    Connection Name
-</div>
+<div class="em-inputTtl">Connection Name</div>
 {% if ftp_query|length ==0 %}
     <span class="em-error">
         There are no connections set up.
-        <a class="em-link" title="set up a new connection" href="/connection">
-            Set up a connection first.
-        </a>
+        <a class="em-link" title="set up a new connection" href="/connection">Set up a connection first.</a>
     </span>
 {% else %}
     <select class="em-input" name="task-query-ftp">

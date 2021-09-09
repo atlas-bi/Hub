@@ -24,6 +24,9 @@ class LoadParams:
     def parse_params(self, params):
         """Parse project and task params."""
         # split into key value pairs
+        if not params:
+            return {}
+
         params = dict(
             re.split(r"\s?:\s?|\s?=\s?", param.strip())
             for param in params.splitlines()
