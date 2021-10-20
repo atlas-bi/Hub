@@ -8,6 +8,7 @@ import saml2
 import saml2.saml
 from apscheduler.jobstores.redis import RedisJobStore
 
+
 class Config:
     """All prod configuration set here. For dev there are overrides below."""
 

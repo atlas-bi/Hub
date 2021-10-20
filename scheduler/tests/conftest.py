@@ -1,5 +1,6 @@
 """Setyp pytest."""
 import os
+import sys
 
 import pytest
 
@@ -11,6 +12,7 @@ os.environ["FLASK_ENV"] = "test"
 os.environ["FLASK_APP"] = "scheduler"
 os.environ["FLASK_DEBUG"] = "False"
 
+import subprocess
 from datetime import datetime
 from typing import Any, Generator, Tuple
 
@@ -21,6 +23,18 @@ from dateutil.tz import tzlocal
 @pytest.fixture()
 def client_fixture() -> Generator:
     """Scheduler client."""
+    if sys.platform == "darwin":
+        print("killing 5002")
+        subprocess.run(
+            ["lsof -i :5002 | grep 'python' | awk '{print $2}' | xargs kill -9"],
+            shell=True,
+        )
+        print("killing 5001")
+        subprocess.run(
+            ["lsof -i :5001 | grep 'python' | awk '{print $2}' | xargs kill -9"],
+            shell=True,
+        )
+
     app = scheduler_create_app()
     with app.test_client() as client, app.app_context():
         assert app.config["ENV"] == "test"  # noqa: S101
@@ -49,6 +63,17 @@ def client_fixture() -> Generator:
 @pytest.fixture(scope="module")
 def event_fixture() -> Generator:
     """Create module scoped fixture to share fixture for tests."""
+    if sys.platform == "darwin":
+        print("killing 5002")
+        subprocess.run(
+            ["lsof -i :5002 | grep 'python' | awk '{print $2}' | xargs kill -9"],
+            shell=True,
+        )
+        print("killing 5001")
+        subprocess.run(
+            ["lsof -i :5001 | grep 'python' | awk '{print $2}' | xargs kill -9"],
+            shell=True,
+        )
     app = scheduler_create_app()
     with app.test_client() as client, app.app_context():
 

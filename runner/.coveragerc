@@ -1,5 +1,5 @@
 [run]
-source = .
+source = runner
 branch = True
 
 [report]
@@ -8,5 +8,6 @@ omit =
     */smb_fix.py
     */flask_simpleldap.py
     */seed.py
+    tests/*
 show_missing = True
 skip_covered = True
