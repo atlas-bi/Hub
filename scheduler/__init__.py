@@ -57,7 +57,7 @@ def create_app() -> Flask:
 
     if app.config["ENV"] == "development":
         try:
-            from cust_config import DevConfig as DevConfigCust
+            from config_cust import DevConfig as DevConfigCust
 
             app.config.from_object(DevConfigCust())
         except ImportError:
@@ -67,7 +67,7 @@ def create_app() -> Flask:
 
     elif app.config["ENV"] == "test":
         try:
-            from cust_config import (
+            from config_cust import (
                 TestConfig as TestConfigCust,  # type: ignore[attr-defined]
             )
 
@@ -79,7 +79,7 @@ def create_app() -> Flask:
 
     else:
         try:
-            from cust_config import Config as ConfigCust
+            from config_cust import Config as ConfigCust
 
             app.config.from_object(ConfigCust())
         except ImportError:

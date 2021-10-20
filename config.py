@@ -7,7 +7,6 @@ import redis
 import saml2
 import saml2.saml
 from apscheduler.jobstores.redis import RedisJobStore
-from urllib.parse import urlparse
 
 class Config:
     """All prod configuration set here. For dev there are overrides below."""
@@ -30,15 +29,13 @@ class Config:
 
     # redis sessions
 
-    REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
-    redis_url_parts = urlparse(REDIS_URL)
-    redis_host = os.environ.get("REDIS_HOST", redis_url_parts.hostname)
-    redis_port = os.environ.get("REDIS_PORT", redis_url_parts.port)
+    redis_host = os.environ.get("REDIS_HOST", "localhost")
+    redis_port = os.environ.get("REDIS_PORT", 6379)
 
+    REDIS_URL = os.environ.get("REDIS_URL", redis.Redis(host=redis_host, port=redis_port))
 
     SESSION_TYPE = "redis"
     SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
-
 
     # authentication
     LOGIN_VIEW = "auth_bp.login"
@@ -266,17 +263,15 @@ class DevConfig(Config):
         user="username", pw="password", url="server", db="atlas_hub_dev"
     )
 
-    REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
-    redis_url_parts = urlparse(REDIS_URL)
-    redis_host = os.environ.get("REDIS_HOST", redis_url_parts.hostname)
-    redis_port = os.environ.get("REDIS_PORT", redis_url_parts.port)
+    redis_host = os.environ.get("REDIS_HOST", "localhost")
+    redis_port = os.environ.get("REDIS_PORT", 6379)
+
+    REDIS_URL = os.environ.get("REDIS_URL", redis.Redis(host=redis_host, port=redis_port))
 
     # migrations override
     MIGRATIONS = "migrations_dev"
 
     SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
-
-
 
     ASSETS_DEBUG = True
 
