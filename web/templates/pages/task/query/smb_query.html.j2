@@ -1,0 +1,21 @@
+{% if smb_query|length ==0 %}
+    <article class="message is-danger">
+        <div class="message-body">There are no connections set up. Set up a connection first.</div>
+    </article>
+{% else %}
+    <div class="field">
+        <label class="label">Connection</label>
+        <div class="select is-fullwidth">
+            <select class="em-input" name="task-query-smb">
+                <option disabled="disabled" {% if not t %}selected="selected"{% endif %}>
+                    Choose one
+                </option>
+                {% for s in smb_query %}
+                    <option value="{{ s.id }}" {% if t and t.query_smb_id == s.id %}selected="selected"{% endif %}>
+                        {{ s.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+{% endif %}

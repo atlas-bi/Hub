@@ -1,0 +1,88 @@
+{% extends "layout.html.j2" %}
+
+{% block body %}
+    <h1 class="title is-1">Dashboard</h1>
+    <h2 class="title is-2">Run Plan</h2>
+    <div class="em-ajaxContent block" data-src="{{ url_for('dashboard_bp.active_schedule') }}" style="height:264px">
+        <div class="loader"></div>
+    </div>
+    <div class="block">
+        <div class="tabs">
+            <ul>
+                <li class="is-active">
+                    <a title="errored tasks" class="tab-lnk" href="#errored">Errored Tasks</a>
+                </li>
+                <li>
+                    <a title="active tasks" class="tab-lnk" href="#active">Running Tasks</a>
+                </li>
+                <li>
+                    <a title="scheduled tasks" class="tab-lnk" href="#scheduled">Scheduled Tasks</a>
+                </li>
+                <li>
+                    <a title="orphaned tasks" class="tab-lnk" href="#orphaned">Orphaned Jobs</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-cnt">
+            <div class="tab-dta is-active" id="errored">
+                <div class="block">
+                    <a title="run all now" href="{{ url_for('dashboard_bp.dash_errored_run') }}">
+                        <span class="icon">
+                            <i class="far fa-play-circle"></i>
+                        </span>
+                        <span>Run All</span>
+                    </a>
+                </div>
+                <div class="em-ajaxTable"
+                     data-theme="Exec"
+                     data-src="{{ url_for('table_bp.dash_tasks', task_type='errored')}}">
+                    <div class="loader"></div>
+                </div>
+            </div>
+            <div class="tab-dta" id="active">
+                <div class="em-ajaxTable"
+                     data-theme="Exec"
+                     data-src="{{ url_for('table_bp.dash_tasks', task_type='active')}}">
+                    <div class="loader"></div>
+                </div>
+            </div>
+            <div class="tab-dta" id="scheduled">
+                <div class="block">
+                    <a title="run all now" href="{{ url_for('dashboard_bp.dash_scheduled_run') }}">
+                        <span class="icon">
+                            <i class="far fa-play-circle"></i>
+                        </span>
+                        <span>Run All</span>
+                    </a>
+                    &#8195;
+                    <span class="has-text-grey-light">/</span>
+                    &#8195;
+                    <a title="disable all" href="{{ url_for('dashboard_bp.dash_scheduled_disable') }}">
+                        <span class="icon">
+                            <i class="fas fa-toggle-off"></i>
+                        </span>
+                        <span>Disable All</span>
+                    </a>
+                </div>
+                <div class="em-ajaxTable"
+                     data-theme="Exec"
+                     data-src="{{ url_for('table_bp.dash_tasks', task_type='scheduled')}}">
+                    <div class="loader"></div>
+                </div>
+            </div>
+            <div class="tab-dta" id="orphaned">
+                <div class="block">
+                    <a title="delete all" href="{{ url_for('dashboard_bp.dash_orphans_delete') }}">
+                        <span class="icon">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                        <span>Delete All</span>
+                    </a>
+                </div>
+                <div class="em-ajaxTable" data-theme="Exec" data-src="{{ url_for('table_bp.table_jobs_orphans') }}">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

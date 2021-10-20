@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 # This script should be run via curl:
-#   bash -c "$(curl -kfsSL https://github.com/Riverside-Healthcare/extract_management.git)"
+#   bash -c "$(curl -kfsSL https://github.com/atlas-bi/atlas-automation-hub.git)"
 #
 # or via wget:
-#   bash -c "$(wget -O- https://github.com/Riverside-Healthcare/extract_management.git)"
+#   bash -c "$(wget -O- https://github.com/atlas-bi/atlas-automation-hub.git)"
 #
 # A server DNS can be specified by adding "DNS=none
 # A different sql remote can be specified.
@@ -13,7 +13,7 @@
 # get custom dns
 
 DNS=none
-REMOTE=https://github.com/Riverside-Healthcare/extract_management.git
+REMOTE=https://github.com/atlas-bi/atlas-automation-hub.git
 ERROR=0
 
 echo "$DNS"
@@ -58,27 +58,17 @@ color
 echo "${YELLOW}"
 echo "
 
-EEEEEEEEEEEEEEEEEEEEEE     MMMMMMMM               MMMMMMMM      222222222222222                 000000000
-E::::::::::::::::::::E     M:::::::M             M:::::::M     2:::::::::::::::22             00:::::::::00
-E::::::::::::::::::::E     M::::::::M           M::::::::M     2::::::222222:::::2          00:::::::::::::00
-EE::::::EEEEEEEEE::::E     M:::::::::M         M:::::::::M     2222222     2:::::2         0:::::::000:::::::0
-  E:::::E       EEEEEE     M::::::::::M       M::::::::::M                 2:::::2         0::::::0   0::::::0
-  E:::::E                  M:::::::::::M     M:::::::::::M                 2:::::2         0:::::0     0:::::0
-  E::::::EEEEEEEEEE        M:::::::M::::M   M::::M:::::::M              2222::::2          0:::::0     0:::::0
-  E:::::::::::::::E        M::::::M M::::M M::::M M::::::M         22222::::::22           0:::::0     0:::::0
-  E:::::::::::::::E        M::::::M  M::::M::::M  M::::::M       22::::::::222             0:::::0     0:::::0
-  E::::::EEEEEEEEEE        M::::::M   M:::::::M   M::::::M      2:::::22222                0:::::0     0:::::0
-  E:::::E                  M::::::M    M:::::M    M::::::M     2:::::2                     0:::::0     0:::::0
-  E:::::E       EEEEEE     M::::::M     MMMMM     M::::::M     2:::::2                     0::::::0   0::::::0
-EE::::::EEEEEEEE:::::E     M::::::M               M::::::M     2:::::2       222222        0:::::::000:::::::0
-E::::::::::::::::::::E     M::::::M               M::::::M     2::::::2222222:::::2 ......  00:::::::::::::00
-E::::::::::::::::::::E     M::::::M               M::::::M     2::::::::::::::::::2 .::::.    00:::::::::00
-EEEEEEEEEEEEEEEEEEEEEE     MMMMMMMM               MMMMMMMM     22222222222222222222 ......      000000000
-
+   ###    ######## ##          ###     ######     ##     ## ##     ## ########
+  ## ##      ##    ##         ## ##   ##    ##    ##     ## ##     ## ##     ##
+ ##   ##     ##    ##        ##   ##  ##          ##     ## ##     ## ##     ##
+##     ##    ##    ##       ##     ##  ######     ######### ##     ## ########
+#########    ##    ##       #########       ##    ##     ## ##     ## ##     ##
+##     ##    ##    ##       ##     ## ##    ##    ##     ## ##     ## ##     ##
+##     ##    ##    ######## ##     ##  ######     ##     ##  #######  ########
 
 "
 
-fmt_green "Thanks for installing Extract Management 2.0!"
+fmt_green "Thanks for installing Atlas Automation Hub!"
 
 
 fmt_blue "Verifying required packages are installed"
@@ -161,15 +151,15 @@ print(hashlib.sha256(str(time.time()).encode('utf-8')).hexdigest()[:10])
 
 HASH=$($(which python3) -c "$HASHSCRIPT")
 
-fmt_green "Creating install directory /home/websites/em/$HASH"
-mkdir -p "/home/websites/em/$HASH"
-sudo chown -R webapp "/home/websites/em/$HASH"
+fmt_green "Creating install directory /home/websites/atlas_hub/$HASH"
+mkdir -p "/home/websites/atlas_hub/$HASH"
+sudo chown -R webapp "/home/websites/atlas_hub/$HASH"
 
-cd "/home/websites/em/$HASH" || exit 1
+cd "/home/websites/atlas_hub/$HASH" || exit 1
 
 sudo -u webapp git -c http.sslVerify=false clone --depth 1 "$REMOTE" . -q
 
-fmt_green "${BOLD}Installing in /home/websites/em/$HASH"
+fmt_green "${BOLD}Installing in /home/websites/atlas_hub/$HASH"
 
 # create python environment
 fmt_blue "Creating python poetry environment"
@@ -180,7 +170,7 @@ rm poetry.toml &> /dev/null
 ~webapp/.local/bin/poetry config --local virtualenvs.in-project true
 ~webapp/.local/bin/poetry config --local virtualenvs.create true
 
-# install Extract Management 2.0
+# install
 fmt_blue "Installing dependencies"
 
 # install poetry - the package manager
@@ -197,17 +187,17 @@ fmt_yellow "$(~webapp/.local/bin/poetry env info)"
 
 # make log files
 fmt_blue "Creating gunicorn log files"
-mkdir em_web/logs && touch em_web/logs/gunicorn-access.log && touch em_web/logs/gunicorn-error.log
-mkdir em_runner/logs && touch em_runner/logs/gunicorn-access.log && touch em_runner/logs/gunicorn-error.log
-mkdir em_scheduler/logs && touch em_scheduler/logs/gunicorn-access.log && touch em_scheduler/logs/gunicorn-error.log
+mkdir web/logs && touch web/logs/gunicorn-access.log && touch web/logs/gunicorn-error.log
+mkdir runner/logs && touch runner/logs/gunicorn-access.log && touch runner/logs/gunicorn-error.log
+mkdir scheduler/logs && touch scheduler/logs/gunicorn-access.log && touch scheduler/logs/gunicorn-error.log
 sudo chmod 777 ./*/logs/*
 
-# set up three sites - em_web, em_scheduler, and em_runner.
+# set up three sites - web, scheduler, and runner.
 
 # copy model between apps
 fmt_blue "Creating API db model"
-cp em_web/model.py em_runner/model.py
-cp em_web/model.py em_scheduler/model.py
+cp web/model.py runner/model.py
+cp web/model.py scheduler/model.py
 
 # update hash in gunicorn files
 fmt_blue "Updating gunicorn service files"
@@ -215,15 +205,15 @@ sed -i -e "s/hash/$HASH/g" ./*/publish/gunicorn.service
 
 # move in three service files
 fmt_blue "Installing gunicorn service files"
-sudo mv "em_web/publish/gunicorn.service" "/etc/systemd/system/em_web.$HASH.service"
-sudo mv "em_runner/publish/gunicorn.service" "/etc/systemd/system/em_runner.$HASH.service"
-sudo mv "em_scheduler/publish/gunicorn.service" "/etc/systemd/system/em_scheduler.$HASH.service"
+sudo mv "web/publish/gunicorn.service" "/etc/systemd/system/atlas_hub_web.$HASH.service"
+sudo mv "runner/publish/gunicorn.service" "/etc/systemd/system/atlas_hub_runner.$HASH.service"
+sudo mv "scheduler/publish/gunicorn.service" "/etc/systemd/system/atlas_hub_scheduler.$HASH.service"
 
 # start serice files and verify status
 fmt_blue "Starting gunicorn services"
-sudo systemctl start "em_web.$HASH.service" && sudo systemctl enable "em_web.$HASH.service" && sudo systemctl is-active "em_web.$HASH.service" | grep "inactive" > /dev/null && sudo systemctl status "em_web.$HASH.service" && ((ERROR++))
-sudo systemctl start "em_runner.$HASH.service" && sudo systemctl enable "em_runner.$HASH.service" && sudo systemctl is-active "em_runner.$HASH.service" | grep "inactive" > /dev/null && sudo systemctl status "em_runner.$HASH.service" && ((ERROR++))
-sudo systemctl start "em_scheduler.$HASH.service" && sudo systemctl enable "em_scheduler.$HASH.service" && sudo systemctl is-active "em_scheduler.$HASH.service" | grep "inactive" > /dev/null && sudo systemctl status "em_scheduler.$HASH.service" && ((ERROR++))
+sudo systemctl start "atlas_hub_web.$HASH.service" && sudo systemctl enable "atlas_hub_web.$HASH.service" && sudo systemctl is-active "atlas_hub_web.$HASH.service" | grep "inactive" > /dev/null && sudo systemctl status "atlas_hub_web.$HASH.service" && ((ERROR++))
+sudo systemctl start "atlas_hub_runner.$HASH.service" && sudo systemctl enable "atlas_hub_runner.$HASH.service" && sudo systemctl is-active "atlas_hub_runner.$HASH.service" | grep "inactive" > /dev/null && sudo systemctl status "atlas_hub_runner.$HASH.service" && ((ERROR++))
+sudo systemctl start "atlas_hub_scheduler.$HASH.service" && sudo systemctl enable "atlas_hub_scheduler.$HASH.service" && sudo systemctl is-active "atlas_hub_scheduler.$HASH.service" | grep "inactive" > /dev/null && sudo systemctl status "atlas_hub_scheduler.$HASH.service" && ((ERROR++))
 
 # update nginx service files
 fmt_blue "Updating hash in nginx service files"
@@ -235,14 +225,14 @@ fi
 sed -i -e "s/hash/$HASH/g" ./*/publish/nginx
 
 fmt_blue "Installing nginx service files"
-mv em_web/publish/nginx /etc/nginx/sites-available/em_web
-mv em_runner/publish/nginx /etc/nginx/sites-available/em_runner
-mv em_scheduler/publish/nginx /etc/nginx/sites-available/em_scheduler
+mv web/publish/nginx /etc/nginx/sites-available/atlas_hub_web
+mv runner/publish/nginx /etc/nginx/sites-available/atlas_hub_runner
+mv scheduler/publish/nginx /etc/nginx/sites-available/atlas_hub_scheduler
 
 fmt_blue "Starting nginx service files"
-ln -s /etc/nginx/sites-available/em_web /etc/nginx/sites-enabled &> install.log
-ln -s /etc/nginx/sites-available/em_runner /etc/nginx/sites-enabled &> install.log
-ln -s /etc/nginx/sites-available/em_scheduler /etc/nginx/sites-enabled &> install.log
+ln -s /etc/nginx/sites-available/atlas_hub_web /etc/nginx/sites-enabled &> install.log
+ln -s /etc/nginx/sites-available/atlas_hub_runner /etc/nginx/sites-enabled &> install.log
+ln -s /etc/nginx/sites-available/atlas_hub_scheduler /etc/nginx/sites-enabled &> install.log
 
 fmt_green "Reloading Nginx!"
 sudo systemctl reload nginx
@@ -251,16 +241,16 @@ sudo systemctl is-active nginx | grep "inactive" > install.log && echo "${RED}!!
 # remove old gunicorn processes
 fmt_blue "Removing old gunicorn processes"
 sudo systemctl reset-failed
-(cd /etc/systemd/system/ && ls em_*) | grep "em_*" | grep -v "em.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
+(cd /etc/systemd/system/ && ls atlas_hub_*) | grep "atlas_hub_*" | grep -v "atlas_hub.*$HASH" | xargs -i sh -c 'sudo systemctl disable {} || true && sudo systemctl stop {} || true && sudo rm -f /etc/systemd/system/{}'
 sudo systemctl reset-failed
 
 # remove old instances of the website
 fmt_blue "Removing old website instances"
-(cd /home/websites/em/ && ls) | grep -v "$HASH" | xargs -i sh -c 'sudo rm -rf /home/websites/em/{} &>install.log'
+(cd /home/websites/atlas_hub/ && ls) | grep -v "$HASH" | xargs -i sh -c 'sudo rm -rf /home/websites/atlas_hub/{} &>install.log'
 
 # verify status
 if [ "$DNS" = none ]; then
-  DNS=none
+  DNS=localhost
 fi
 
 fmt_green "Checking online status - https://$DNS/login"
@@ -268,7 +258,7 @@ fmt_green "Checking online status - https://$DNS/login"
 fmt_yellow "$(curl -sS "https://$DNS/login" --insecure -I)"
 
 TITLE=$(curl -sS "https://$DNS/login" --insecure -so - | grep -iPo "(?<=<title>)(.*)(?=</title>)")
-if [[ $TITLE == "Extract Management 2.0 - Login" ]] || [[ $TITLE == "Redirecting..." ]];
+if [[ $TITLE == "Atlas Automation Hub - Login" ]] || [[ $TITLE == "Redirecting..." ]];
 then
     fmt_green "Login page successfully reached!"
 else
@@ -286,14 +276,14 @@ ${BLUE}${UL}Gunicorn${RESET}
 ${RED}sudo${RESET} journalctl -u ${GREEN}gunicorn${RESET}
 
 # check service status
-${RED}sudo${RESET} systemctl status ${GREEN}em_web.$HASH.service${RESET}
-${RED}sudo${RESET} systemctl status ${GREEN}em_runner.$HASH.service${RESET}
-${RED}sudo${RESET} systemctl status ${GREEN}em_scheduler.$HASH.service${RESET}
+${RED}sudo${RESET} systemctl status ${GREEN}atlas_hub_web.$HASH.service${RESET}
+${RED}sudo${RESET} systemctl status ${GREEN}atlas_hub_runner.$HASH.service${RESET}
+${RED}sudo${RESET} systemctl status ${GREEN}atlas_hub_scheduler.$HASH.service${RESET}
 
 # read error logs
-${RED}tail -300${RESET} /home/websites/em/${GREEN}$HASH${RESET}/em_web/logs/gunicorn-error.log${RESET}
-${RED}tail -300${RESET} /home/websites/em/${GREEN}$HASH${RESET}/em_runner/logs/gunicorn-error.log${RESET}
-${RED}tail -300${RESET} /home/websites/em/${GREEN}$HASH${RESET}/em_scheduler/logs/gunicorn-error.log${RESET}
+${RED}tail -300${RESET} /home/websites/em/${GREEN}$HASH${RESET}/atlas_hub_web/logs/gunicorn-error.log${RESET}
+${RED}tail -300${RESET} /home/websites/em/${GREEN}$HASH${RESET}/atlas_hub_runner/logs/gunicorn-error.log${RESET}
+${RED}tail -300${RESET} /home/websites/em/${GREEN}$HASH${RESET}/atlas_hub_scheduler/logs/gunicorn-error.log${RESET}
 
 # reload gunicorn processes
 ${RED}sudo${RESET} systemctl daemon-reload

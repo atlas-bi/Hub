@@ -1,0 +1,154 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+        </li>
+        <li>
+            <a href="{{ url_for('connection_bp.one_connection', connection_id=connection.id) }}">{{ connection }}</a>
+        </li>
+        <li class="is-active">
+            <a href="" aria-current="page">
+                {% if smb %}
+                    Editing {{ smb }}
+                {% else %}
+                    New SMB Connection
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">
+        {% if smb %}
+            Editing
+            <span class="has-text-link">{{ smb }}</span>
+        {% else %}
+            New SMB Connection
+        {% endif %}
+    </h1>
+    <form action="{% if smb -%}
+                      {{ url_for('connection_bp.edit_connection_smb', smb_id=smb.id, connection_id=connection.id) }}
+                  {%- else -%}
+                      {{ url_for('connection_bp.new_connection_smb', connection_id=connection.id) }}
+                  {%- endif %}"
+          method="POST">
+        <div class="field">
+            <label class="label">
+                Name
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="name"
+                   placeholder="friendly name"
+                   value="{% if smb -%}
+                              {{ smb.name }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Server Name
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="server_name"
+                   placeholder="server_name"
+                   value="{% if smb -%}
+                              {{ smb.server_name }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Server IP Address
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="server_ip"
+                   placeholder="10.0.0.1"
+                   value="{% if smb -%}
+                              {{ smb.server_ip }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Share Name
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="share_name"
+                   placeholder="my_share"
+                   value="{% if smb -%}
+                              {{ smb.share_name or '' }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Path
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                required
+                type="text"
+                name="path"
+                placeholder="/path/to/somewhere"
+                value="{% if smb -%}{{ smb.path or '' }}{%- endif %}"/>
+            </div>
+            <div class="field">
+                <label class="label">
+                    Username
+                    <span class="has-text-grey">*</span>
+                </label>
+                <input class="input"
+                       required
+                       type="text"
+                       name="username"
+                       placeholder="username"
+                       value="{% if smb -%}
+                                  {{ smb.username or '' }}
+                              {%- endif %}"/>
+            </div>
+            <div class="field">
+                <label class="label">
+                    Password
+                    <span class="has-text-grey">*</span>
+                </label>
+                <div class="field has-addons">
+                    <p class="control is-expanded">
+                        <input class="input"
+                               required
+                               type="password"
+                               name="password"
+                               placeholder="password"
+                               value="{% if smb -%}
+                                          {{ smb.password|decrypt or '' }}
+                                      {%- endif %}"/>
+                    </p>
+                    <div class="control">
+                        <a class="button toggle-pass "data-target="password">
+                            <span class="icon">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <button class="button is-info is-fullwidth my-5" type="submit">
+                {% if smb %}
+                    Save
+                {% else %}
+                    Add
+                {% endif %}
+                SMB Connection
+            </button>
+        </form>
+    {% endblock body %}

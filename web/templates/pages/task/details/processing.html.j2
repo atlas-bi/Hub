@@ -1,0 +1,91 @@
+{% if t.processing_type_id != 'none' and t.processing_type_id != None %}
+    <div class="box">
+        {% if t.processing_git and t.processing_type_id == 4 %}
+            <!-- code from git -->
+            <h2 class="title is-2">Processing Script - GIT Address</h2>
+            <a title="open page" href="{{ t.processing_git }}" target="_blank">{{ t.processing_git }}</a>
+            <div class="em-ajaxContent" data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
+                <div class="loader"></div>
+            </div>
+        {% elif t.processing_url and t.processing_type_id == 5 %}
+            <!-- code from url -->
+            <h2 class="title is-2">Processing Script - Web Address</h2>
+            <a title="open page" href="{{ t.processing_url }}" target="_blank">{{ t.processing_url }}</a>
+            <div class="em-ajaxContent" data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
+                <div class="loader"></div>
+            </div>
+        {% elif t.processing_type_id == 1 and t.processing_smb_conn %}
+            <!-- processing SMB -->
+            <h2 class="title is-2">Processing Script - SMB Connection</h2>
+            <div class="content">
+                <ul>
+                    <li>
+                        Filename:
+                        <span class="tag is-info is-light">{{ t.processing_smb_file }}</span>
+                    </li>
+                </ul>
+            </div>
+            <a title="open connection"
+               href="{{ url_for('connection_bp.one_connection', connection_id=t.processing_smb_conn.connection.id) }}">
+                {{ t.processing_smb_conn.connection.name }}&#8195;
+                <span class="has-text-grey-light">/</span>
+                &#8195;{{ t.processing_smb_conn.name }}
+            </a>
+            <pre class="box"><code class="language-ini">smb://{{ t.processing_smb_conn.username }}:...@{{ t.processing_smb_conn.server_ip }}({{ t.processing_smb_conn.server_name }})/{{ t.processing_smb_conn.share_name }}/{{ t.processing_smb_conn.path|clean_path }}{{ t.processing_smb_file }}</code></pre>
+        {% elif t.processing_type_id == 2 and t.processing_sftp_conn %}
+            <!-- processing SFTP -->
+            <h2 class="title is-2">Processing Script - SFTP Connection</h2>
+            <div class="content">
+                <ul>
+                    <li>
+                        Filename:
+                        <span class="tag is-info is-light">{{ t.processing_sftp_file }}</span>
+                    </li>
+                </ul>
+            </div>
+            <a title="open connection"
+               href="{{ url_for('connection_bp.one_connection', connection_id=t.processing_sftp_conn.connection.id) }}">
+                {{ t.processing_sftp_conn.connection.name }}&#8195;
+                <span class="has-text-grey-light">/</span>
+                &#8195;{{ t.processing_sftp_conn.name }}
+            </a>
+            <pre class="box"><code class="language-bash">{{ t.processing_sftp_conn.username }}@{{ t.processing_sftp_conn.address }}:{{ t.processing_sftp_conn.port or '22' }}&nbsp;{{ t.processing_sftp_conn.path|clean_path }}{{ t.processing_sftp_file }}</code></pre>
+        {% elif t.processing_type_id == 3 and t.processing_ftp_conn %}
+            <!-- processing FTP -->
+            <h2 class="title is-2">Processing Script - FTP Connection</h2>
+            <div class="content">
+                <ul>
+                    <li>
+                        Filename:
+                        <span class="tag is-info is-light">{{ t.processing_sftp_file }}</span>
+                    </li>
+                    {% if t.processing_sftp_ignore_delimiter != 1 and t.processing_sftp_delimiter %}
+                        <li>
+                            Delimiter:
+                            <span class="tag is-info is-light">{{ t.processing_sftp_delimiter or "," }}</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <a title="open connection"
+               href="{{ url_for('connection_bp.one_connection', connection_id=t.processing_ftp_conn.connection.id) }}">
+                {{ t.processing_ftp_conn.connection.name }}&#8195;
+                <span class="has-text-grey-light">/</span>
+                &#8195;{{ t.processing_ftp_conn.name }}
+            </a>
+            <pre class="box"><code class="language-ini">{{ t.processing_ftp_conn.username }}@{{ t.processing_ftp_conn.address|clean_address }}&nbsp;{{ t.processing_ftp_conn.path|clean_path }}{{ t.processing_ftp_file }}
+                </code></pre>
+    {% elif t.processing_code and t.processing_type_id == 6 %}
+        <!-- hand query -->
+        <h2 class="title is-2">Processing Script - Source Code Connection</h2>
+        {% with code = t.processing_code %}
+            {% include "pages/task/code.html.j2" %}
+
+        {% endwith %}
+    {% endif %}
+    {% if t.processing_command %}
+        <h4 class="title is-4">Command</h4>
+        <pre class="box"><code class="language-py">{{ t.processing_command }}</code></pre>
+    {% endif %}
+</div>
+{% endif %}

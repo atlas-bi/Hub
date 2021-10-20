@@ -1,0 +1,551 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+        </li>
+        <li class="is-active">
+            <a href="" aria-current="page">{{ connection }}</a>
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">{{ connection }}</h1>
+    {% if connection.description %}
+        <h2 class="subtitle">{{ connection.description }}</h2>
+    {% endif %}
+    <div class="field has-addons">
+        <p class="control">
+            <a class="button"
+               title="Edit Connection"
+               href="{{ url_for('connection_bp.edit_connection', connection_id=connection.id)}}">
+                <span class="icon">
+                    <i class="fas fa-edit"></i>
+                </span>
+                <span>Edit</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="Delete Connection"
+               href="{{ url_for('connection_bp.delete_connection', connection_id=connection.id)}}"
+               onclick="return confirm('Are you sure you want to delete this connection?')">
+                <span class="icon">
+                    <i class="fas fa-trash"></i>
+                </span>
+                <span>Delete</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="New Database"
+               href="{{ url_for('connection_bp.new_connection_database', connection_id=connection.id)}}">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>New Database</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="New SFTP"
+               href="{{ url_for('connection_bp.new_connection_sftp', connection_id=connection.id)}}">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>New SFTP</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="New FTP"
+               href="{{ url_for('connection_bp.new_connection_ftp', connection_id=connection.id)}}">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>New FTP</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="New SMB"
+               href="{{ url_for('connection_bp.new_connection_smb', connection_id=connection.id)}}">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>New SBM</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="New SSH"
+               href="{{ url_for('connection_bp.new_connection_ssh', connection_id=connection.id)}}">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>New SSH</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="New GPG"
+               href="{{ url_for('connection_bp.new_connection_gpg', connection_id=connection.id)}}">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>New GPG</span>
+            </a>
+        </p>
+    </div>
+    <div class="box">
+        <h2 class="title is-2">Contact Information</h2>
+        <div class="content">
+            {% if connection.address %}
+                <h4 class="title is-4">Address</h4>
+                {{ connection.address }}
+                <br />
+                <br />
+            {% endif %}
+            {% if connection.primary_contact %}
+                Name: {{ connection.primary_contact }}
+                <br />
+            {% endif %}
+            {% if connection.primary_contact_email %}
+                Email:
+                <a href="mailto:{{ connection.primary_contact_email }}"
+                   title="send email">{{ connection.primary_contact_email }}</a>
+                <br />
+            {% endif %}
+            {% if connection.primary_contact_phone %}
+                Phone: {{ connection.primary_contact_phone }}
+            {% endif %}
+        </div>
+    </div>
+    {% if connection.database|length > 0 %}
+        <div class="box">
+            <h2 class="title is-2">Database Connections</h2>
+            {% for s in connection.database %}
+                <h3 class="title is-3">{{ s }} - {{ s.database_type.name }}</h3>
+                <div class="field has-addons">
+                    <p class="control">
+                        <a class="button"
+                           title="Edit Database Connection"
+                           href="{{ url_for('connection_bp.edit_connection_database', connection_id=connection.id, database_id=s.id)}}">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>Edit</span>
+                        </a>
+                    </p>
+                    <p class="control">
+                        <a class="button"
+                           title="Delete Database Connection"
+                           href="{{ url_for('connection_bp.delete_connection_database', connection_id=connection.id, database_id=s.id)}}"
+                           onclick="return confirm('Are you sure you want to delete this database connection?')">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>Delete</span>
+                        </a>
+                    </p>
+                </div>
+                <pre class="box"><code class="language-bash">{{ s.connection_string|decrypt }}</code></pre>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if connection.sftp|length > 0 %}
+        <div class="box">
+            <h2 class="title is-2">SFTP Connections</h2>
+            {% for s in connection.sftp %}
+                <h3 class="title is-3">{{ s }}</h3>
+                <div class="field has-addons">
+                    <p class="control">
+                        <a class="button"
+                           title="Edit SFTP Connection"
+                           href="{{ url_for('connection_bp.edit_connection_sftp', connection_id=connection.id, sftp_id=s.id)}}">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>Edit</span>
+                        </a>
+                    </p>
+                    <p class="control">
+                        <a class="button"
+                           title="Delete SFTP Connection"
+                           href="{{ url_for('connection_bp.delete_connection_sftp', connection_id=connection.id, sftp_id=s.id)}}"
+                           onclick="return confirm('Are you sure you want to delete this SFTP connection?')">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>Delete</span>
+                        </a>
+                    </p>
+                </div>
+                <div class="content">
+                    Address:
+                    <span class="tag is-light">{{ s.address or "unknown" }}:{{ s.port or '22' }}</span>
+                    {% if s.path %}
+                        <br />
+                        Path:
+                        <span class="tag is-light">{{ s.path|clean_path or "/" }}</span>
+                    {% endif %}
+                    {% if s.username %}
+                        <br />
+                        Username:
+                        <span class="tag is-light">{{ s.username }}</span>
+                    {% endif %}
+                    {% if s.password %}
+                        <br />
+                        Password:
+                        <span>
+                            <span class="tag is-light">
+                                <input type="password"
+                                       class="transparent"
+                                       readonly="true"
+                                       value="{{ s.password|decrypt }}"
+                                       style="width:{{ s.password|decrypt|length * 7 }}px;
+                                              cursor: text;"/>
+                            </span>
+                            <a class="copy-input ml-3"
+                               title="copy password"
+                               data-value="{{ s.password|decrypt }}"
+                               href="">
+                                <span class="icon icon-sm">
+                                    <i class="fas fa-copy"></i>
+                                </span>
+                                <span>
+                                    Copy
+                                </span>
+                            </a>
+                        </span>
+                    {% endif %}
+                    {% if s.key and s.key != "" %}
+                        <br />
+                        SSH Key: <pre class="box"><code class="language-bash">{{ s.key|decrypt }}</code></pre>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if connection.ftp|length > 0 %}
+        <div class="box">
+            <h2 class="title is-2">
+                FTP Connections
+            </h2>
+            {% for s in connection.ftp %}
+                <h3 class="title is-3">
+                    {{ s }}
+                </h3>
+                <div class="field has-addons">
+                    <p class="control">
+                        <a class="button"
+                           title="Edit FTP Connection"
+                           href="{{ url_for('connection_bp.edit_connection_ftp', connection_id=connection.id, ftp_id=s.id)}}">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>
+                                Edit
+                            </span>
+                        </a>
+                    </p>
+                    <p class="control">
+                        <a class="button"
+                           title="Delete FTP Connection"
+                           href="{{ url_for('connection_bp.delete_connection_ftp', connection_id=connection.id, ftp_id=s.id)}}"
+                           onclick="return confirm('Are you sure you want to delete this FTP connection?')">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>
+                                Delete
+                            </span>
+                        </a>
+                    </p>
+                </div>
+                <div class="content">
+                    Address:
+                    <span class="tag is-light">
+                        {{ s.address or "unknown" }}
+                    </span>
+                    {% if s.path %}
+                        <br />
+                        Path:
+                        <span class="tag is-light">
+                            {{ s.path|clean_path or "/" }}
+                        </span>
+                    {% endif %}
+                    {% if s.username %}
+                        <br />
+                        Username:
+                        <span class="tag is-light">
+                            {{ s.username }}
+                        </span>
+                    {% endif %}
+                    {% if s.password %}
+                        <br />
+                        Password:
+                        <span>
+                            <span class="tag is-light">
+                                <input type="password"
+                                       class="transparent"
+                                       readonly="true"
+                                       value="{{ s.password|decrypt }}"
+                                       style="width:{{ s.password|decrypt|length * 7 }}px;
+                                              cursor: text;"/>
+                            </span>
+                            <a class="copy-input ml-3"
+                               title="copy password"
+                               data-value="{{ s.password|decrypt }}"
+                               href="">
+                                <span class="icon icon-sm">
+                                    <i class="fas fa-copy"></i>
+                                </span>
+                                <span>
+                                    Copy
+                                </span>
+                            </a>
+                        </span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if connection.smb|length > 0 %}
+        <div class="box">
+            <h2 class="title is-2">
+                SMB Connections
+            </h2>
+            {% for s in connection.smb %}
+                <h3 class="title is-3">
+                    {{ s }}
+                </h3>
+                <div class="field has-addons">
+                    <p class="control">
+                        <a class="button"
+                           title="Edit SMB Connection"
+                           href="{{ url_for('connection_bp.edit_connection_smb', connection_id=connection.id, smb_id=s.id)}}">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>
+                                Edit
+                            </span>
+                        </a>
+                    </p>
+                    <p class="control">
+                        <a class="button"
+                           title="Delete SMB Connection"
+                           href="{{ url_for('connection_bp.delete_connection_smb', connection_id=connection.id, smb_id=s.id)}}"
+                           onclick="return confirm('Are you sure you want to delete this SMB connection?')">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>
+                                Delete
+                            </span>
+                        </a>
+                    </p>
+                </div>
+                <div class="content">
+                    Server Name:
+                    <span class="tag is-light">
+                        {{ s.server_name or "unknown" }}
+                    </span>
+                    <br />
+                    Server IP:
+                    <span class="tag is-light">
+                        {{ s.server_ip or "unknown" }}
+                    </span>
+                    <br />
+                    Share Name:
+                    <span class="tag is-light">
+                        {{ s.share_name or "unknown" }}
+                    </span>
+                    {% if s.path %}
+                        <br />
+                        Path:
+                        <span class="tag is-light">
+                            {{ s.path|clean_path or "/" }}
+                        </span>
+                    {% endif %}
+                    {% if s.username %}
+                        <br />
+                        Username:
+                        <span class="tag is-light">
+                            {{ s.username }}
+                        </span>
+                    {% endif %}
+                    {% if s.password %}
+                        <br />
+                        Password:
+                        <span>
+                            <span class="tag is-light">
+                                <input type="password"
+                                       class="transparent"
+                                       readonly="true"
+                                       value="{{ s.password|decrypt }}"
+                                       style="width:{{ s.password|decrypt|length * 7 }}px;
+                                              cursor: text;"/>
+                            </span>
+                            <a class="copy-input ml-3"
+                               title="copy password"
+                               data-value="{{ s.password|decrypt }}"
+                               href="">
+                                <span class="icon icon-sm">
+                                    <i class="fas fa-copy"></i>
+                                </span>
+                                <span>
+                                    Copy
+                                </span>
+                            </a>
+                        </span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if connection.ssh|length > 0 %}
+        <div class="box">
+            <h2 class="title is-2">
+                SSH Connections
+            </h2>
+            {% for s in connection.ssh %}
+                <h3 class="title is-3">
+                    {{ s }}
+                </h3>
+                <div class="field has-addons">
+                    <p class="control">
+                        <a class="button"
+                           title="Edit SSH Connection"
+                           href="{{ url_for('connection_bp.edit_connection_ssh', connection_id=connection.id, ssh_id=s.id)}}">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>
+                                Edit
+                            </span>
+                        </a>
+                    </p>
+                    <p class="control">
+                        <a class="button"
+                           title="Delete SSH Connection"
+                           href="{{ url_for('connection_bp.delete_connection_ssh', connection_id=connection.id, ssh_id=s.id)}}"
+                           onclick="return confirm('Are you sure you want to delete this SSH connection?')">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>
+                                Delete
+                            </span>
+                        </a>
+                    </p>
+                </div>
+                <div class="content">
+                    Address:
+                    <span class="tag is-light">
+                        {{ s.address or "unknown" }}:{{ s.port or '22' }}
+                    </span>
+                    {% if s.path %}
+                        <br />
+                        Path:
+                        <span class="tag is-light">
+                            {{ s.path|clean_path or "/" }}
+                        </span>
+                    {% endif %}
+                    {% if s.username %}
+                        <br />
+                        Username:
+                        <span class="tag is-light">
+                            {{ s.username }}
+                        </span>
+                    {% endif %}
+                    {% if s.password %}
+                        <br />
+                        Password:
+                        <span>
+                            <span class="tag is-light">
+                                <input type="password"
+                                       class="transparent"
+                                       readonly="true"
+                                       value="{{ s.password|decrypt }}"
+                                       style="width:{{ s.password|decrypt|length * 7 }}px;
+                                              cursor: text;"/>
+                            </span>
+                            <a class="copy-input ml-3"
+                               title="copy password"
+                               data-value="{{ s.password|decrypt }}"
+                               href="">
+                                <span class="icon icon-sm">
+                                    <i class="fas fa-copy"></i>
+                                </span>
+                                <span>
+                                    Copy
+                                </span>
+                            </a>
+                        </span>
+                    {% endif %}
+                    {% if s.key and s.key != "" %}
+                        <br />
+                        SSH Key: <pre class="box"><code class="language-bash">{{ s.key|decrypt }}</code></pre>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if connection.gpg|length > 0 %}
+        <div class="box">
+            <h2 class="title is-2">
+                GPG Connections
+            </h2>
+            {% for s in connection.gpg %}
+                <h3 class="title is-3">
+                    {{ s }}
+                </h3>
+                <div class="field has-addons">
+                    <p class="control">
+                        <a class="button"
+                           title="Edit GPG Connection"
+                           href="{{ url_for('connection_bp.edit_connection_gpg', connection_id=connection.id, gpg_id=s.id)}}">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>
+                                Edit
+                            </span>
+                        </a>
+                    </p>
+                    <p class="control">
+                        <a class="button"
+                           title="Delete GPG Connection"
+                           href="{{ url_for('connection_bp.delete_connection_gpg', connection_id=connection.id, gpg_id=s.id)}}"
+                           onclick="return confirm('Are you sure you want to delete this GPG connection?')">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>
+                                Delete
+                            </span>
+                        </a>
+                    </p>
+                </div>
+                <div class="content">
+                    {% if s.key and s.key != "" %}
+                        <br />
+                        GPG Key: <pre class="box"><code class="language-bash">{{ s.key|decrypt }}</code></pre>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2 class="title is-2">
+        Tasks using this destination
+    </h2>
+    <!-- ajax table -->
+    <div class="em-ajaxTable mb-5" data-src="{{ url_for('table_bp.connection_tasks', connection_id=connection.id) }}">
+        <div class="loader">
+        </div>
+    </div>
+{% endblock body %}

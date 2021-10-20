@@ -1,0 +1,293 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300;
+  src: url("/static/fonts/inter/files/inter-latin-300-normal.woff2") format("woff2"), url("/static/fonts/inter/files/inter-all-300-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/static/fonts/inter/files/inter-latin-400-normal.woff2") format("woff2"), url("/static/fonts/inter/files/inter-all-400-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url("/static/fonts/inter/files/inter-latin-500-normal.woff2") format("woff2"), url("/static/fonts/inter/files/inter-all-500-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url("/static/fonts/inter/files/inter-latin-600-normal.woff2") format("woff2"), url("/static/fonts/inter/files/inter-all-600-normal.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("/static/fonts/inter/files/inter-latin-700-normal.woff2") format("woff2"), url("/static/fonts/inter/files/inter-all-700-normal.woff") format("woff");
+}
+/* from font awesome */
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/static/fonts/fontawesome/webfonts/fa-regular-400.eot");
+  src: url("/static/fonts/fontawesome/webfonts/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("/static/fonts/fontawesome/webfonts/fa-regular-400.woff2") format("woff2"), url("/static/fonts/fontawesome/webfonts/fa-regular-400.woff") format("woff"), url("/static/fonts/fontawesome/webfonts/fa-regular-400.ttf") format("truetype"), url("/static/fonts/fontawesome/webfonts/fa-regular-400.svg#fontawesome") format("svg");
+}
+.far {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("/static/fonts/fontawesome/webfonts/fa-solid-900.eot");
+  src: url("/static/fonts/fontawesome/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("/static/fonts/fontawesome/webfonts/fa-solid-900.woff2") format("woff2"), url("/static/fonts/fontawesome/webfonts/fa-solid-900.woff") format("woff"), url("/static/fonts/fontawesome/webfonts/fa-solid-900.ttf") format("truetype"), url("/static/fonts/fontawesome/webfonts/fa-solid-900.svg#fontawesome") format("svg");
+}
+.fa,
+.fas {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.fa-ul {
+  list-style-type: none;
+  margin-left: 2.5em;
+  padding-left: 0;
+}
+.fa-ul > li {
+  position: relative;
+}
+
+.fa-li {
+  left: -2em;
+  position: absolute;
+  text-align: center;
+  width: 2em;
+  line-height: inherit;
+}
+
+.fa-lg {
+  font-size: 1.3333333333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.fa-xs {
+  font-size: 0.75em;
+}
+
+.fa-sm {
+  font-size: 0.875em;
+}
+
+.fa-2_3x {
+  font-size: 2.3em;
+}
+
+.fa-1x {
+  font-size: 1em;
+}
+
+.fa-2x {
+  font-size: 2em;
+}
+
+.fa-3x {
+  font-size: 3em;
+}
+
+.fa-4x {
+  font-size: 4em;
+}
+
+.fa-5x {
+  font-size: 5em;
+}
+
+.fa-6x {
+  font-size: 6em;
+}
+
+.fa-7x {
+  font-size: 7em;
+}
+
+.fa-8x {
+  font-size: 8em;
+}
+
+.fa-9x {
+  font-size: 9em;
+}
+
+.fa-10x {
+  font-size: 10em;
+}
+
+.fa,
+.fas,
+.far,
+.fal,
+.fad,
+.fab {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+/* build icon list */
+.fa-search:before {
+  content: "\f002";
+}
+
+.fa-edit:before {
+  content: "\f044";
+}
+
+.fa-trash:before {
+  content: "\f1f8";
+}
+
+.fa-backspace:before {
+  content: "\f55a";
+}
+
+.fa-sort:before {
+  content: "\f0dc";
+}
+
+.fa-terminal:before {
+  content: "\f120";
+}
+
+.fa-list:before {
+  content: "\f03a";
+}
+
+.fa-ban:before {
+  content: "\f05e";
+}
+
+.fa-toggle-on:before {
+  content: "\f205";
+}
+
+.fa-toggle-off:before {
+  content: "\f204";
+}
+
+.fa-play-circle:before {
+  content: "\f144";
+}
+
+.fa-plus:before {
+  content: "\f067";
+}
+
+.fa-sync-alt:before {
+  content: "\f2f1";
+}
+
+.fa-copy:before {
+  content: "\f0c5";
+}
+
+.fa-download:before {
+  content: "\f019";
+}
+
+.fa-check:before {
+  content: "\f00c";
+}
+
+.fa-info-circle:before {
+  content: "\f05a";
+}
+
+.fa-file-download:before {
+  content: "\f56d";
+}
+
+.fa-angle-right:before {
+  content: "\f105";
+}
+
+.fa-check-circle:before {
+  content: "\f058";
+}
+
+.fa-times-circle:before {
+  content: "\f057";
+}
+
+.fa-circle-notch:before {
+  content: "\f1ce";
+}
+
+.fa-stop-circle:before {
+  content: "\f28d";
+}
+
+.fa-pause-circle:before {
+  content: "\f28b";
+}
+
+.fa-question-circle:before {
+  content: "\f059";
+}
+
+.fa-calendar:before {
+  content: "\f133";
+}
+
+.fa-external-link-alt:before {
+  content: "\f35d";
+}
+
+.fa-eye-slash:before {
+  content: "\f070";
+}
+
+.fa-eye:before {
+  content: "\f06e";
+}
+
+.fa-users:before {
+  content: "\f0c0";
+}
+
+.fa-sign-in-alt:before {
+  content: "\f2f6";
+}
+
+.fa-angle-down:before {
+  content: "\f107";
+}
+
+.fa-exclamation-triangle:before {
+  content: "\f071";
+}
+
+@font-face {
+  font-family: "Rasa";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url("/static/fonts/rasa/files/rasa-latin-600-normal.woff2") format("woff2"), url("/static/fonts/rasa/files/rasa-all-600-normal.woff") format("woff");
+}

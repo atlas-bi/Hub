@@ -1,4 +1,4 @@
-# Dockerfile for static testing Extract Management 2.0
+# Dockerfile for static testing Atlas Automation Hub
 #
 # build:
 # docker build -f static.dockerfile . -t christopherpickering/extract-management-2-static-test

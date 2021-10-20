@@ -1,4 +1,4 @@
-# Dockerfile for testing Extract Management 2.0 with Python 3.9
+# Dockerfile for testing Atlas Automation Hub with Python 3.9
 #
 # build:
 # docker build -f py39.dockerfile . -t christopherpickering/extract-management-2-python39-test

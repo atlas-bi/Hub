@@ -1,4 +1,4 @@
-.base:
+.scheduler:
   interruptible: true
   before_script:
   - apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev
@@ -8,16 +8,49 @@
   - apt-get install -y --no-install-recommends libxmlsec1-dev pkg-config
   - pip install --no-cache-dir tox
   script:
-  - tox -e clean,$PYVR,cov -r
+  - tox -e test_scheduler
+  services:
+  - redis:latest
+  variables:
+    PYTHONDONTWRITEBYTECODE: 1
+
+.runner:
+  interruptible: true
+  before_script:
+  - apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev
+    # ldap
+  - apt-get install -y --no-install-recommends libsasl2-dev libldap2-dev libssl-dev
+    # xmlsec1
+  - apt-get install -y --no-install-recommends libxmlsec1-dev pkg-config
+  - pip install --no-cache-dir tox
+  script:
+  - tox -e test_runner
+  services:
+  - redis:latest
+  variables:
+    PYTHONDONTWRITEBYTECODE: 1
+
+.web:
+  interruptible: true
+  before_script:
+  - apt-get update && apt-get install -y --no-install-recommends unixodbc-dev unixodbc libpq-dev
+    # ldap
+  - apt-get install -y --no-install-recommends libsasl2-dev libldap2-dev libssl-dev
+    # xmlsec1
+  - apt-get install -y --no-install-recommends libxmlsec1-dev pkg-config
+  - pip install --no-cache-dir tox
+  script:
+  - tox -e test_web
   services:
   - redis:latest
   variables:
     PYTHONDONTWRITEBYTECODE: 1
 
 
-py39:
-  extends: .base
+py39-web:
+  extends: .web
   stage: test
+  needs: []
   image: python:3.9
   variables:
     PYVR: py39
@@ -27,16 +60,76 @@ py39:
     reports:
       junit: report.xml
 
-py38:
-  extends: .base
+py38-web:
+  extends: .web
   stage: test
+  needs: []
   image: python:3.8
   variables:
     PYVR: py38
 
-py37:
-  extends: .base
+py37-web:
+  extends: .web
   stage: test
+  needs: []
+  image: python:3.7
+  variables:
+    PYVR: py37
+
+py39-runner:
+  extends: .runner
+  stage: test
+  needs: []
+  image: python:3.9
+  variables:
+    PYVR: py39
+  coverage: /^TOTAL.*\s+(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
+py38-runner:
+  extends: .runner
+  stage: test
+  needs: []
+  image: python:3.8
+  variables:
+    PYVR: py38
+
+py37-runner:
+  extends: .runner
+  stage: test
+  needs: []
+  image: python:3.7
+  variables:
+    PYVR: py37
+
+py39-scheduler:
+  extends: .scheduler
+  stage: test
+  needs: []
+  image: python:3.9
+  variables:
+    PYVR: py39
+  coverage: /^TOTAL.*\s+(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
+py38-scheduler:
+  extends: .scheduler
+  stage: test
+  needs: []
+  image: python:3.8
+  variables:
+    PYVR: py38
+
+py37-scheduler:
+  extends: .scheduler
+  stage: test
+  needs: []
   image: python:3.7
   variables:
     PYVR: py37

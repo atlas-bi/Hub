@@ -1,0 +1,97 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+        </li>
+        <li>
+            <a href="{{ url_for('project_bp.user_projects', user_id=p.project_owner.id) }}">{{ p.project_owner }}'s Projects</a>
+        </li>
+        <li>
+            <a href="{{ url_for('project_bp.one_project', project_id=p.id) }}">{{ p }}</a>
+        </li>
+        <li class="is-active">
+            {% if t %}
+                <a href="#" aria-current="page">Editing {{ t }}</a>
+            {% else %}
+                <a href="#" aria-current="page">New Task</a>
+            {% endif %}
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">
+        {% if t %}
+            Editing
+            <a
+               title="open task"
+               href="{{ url_for('task_bp.one_task', task_id=t.id) }}">{{ t.name }}</a>
+        {% else %}
+            New Task
+        {% endif %}
+    </h1>
+    <form class="mb-5"
+        action="{% if t -%}
+        /task/{{ t.id }}/edit
+    {%- else -%}
+        /project/{{ p.id }}/task/new
+    {%- endif %}"
+    method="post">
+    <div class="box">
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input" name="name" autocomplete="off" required="required" value="{{ t.name }}"/>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Max Retry Attempts</label>
+            <div class="control">
+                <input class="input"
+                       type="number"
+                       name="task-retry"
+                       value="{% if t and t.max_retries is not none -%}
+                                  {{ t.max_retries }}
+                              {%- else -%}
+                                  1
+                              {%- endif %}"/>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">
+                Run Rank - if project is set to run task in series this field is used to order the task.
+            </label>
+            <div class="control">
+                <input class="input"
+                       type="number"
+                       name="task-rank"
+                       value="{% if t and t.order is not none -%}
+                                  {{ t.order }}
+                              {%- endif %}"/>
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <h2 class="title is-2">Task Parameters</h2>
+        <div class="field">
+            <div class="control">
+            <textarea class="textarea" name="taskParams" rows="1">{{ t.query_params or '' }}</textarea>
+        </div>
+    </div>
+</div>
+{% include "pages/task/new/data_source.html.j2" %}
+{% include "pages/task/new/query_location.html.j2" %}
+{% include "pages/task/new/processing.html.j2" %}
+{% include "pages/task/new/destination.html.j2" %}
+
+<button class="button is-info is-fullwidth" type="submit">
+    {% if t %}
+        Save Task
+    {% else %}
+        Add Task
+    {% endif %}
+</button>
+</form>
+{% endblock body %}

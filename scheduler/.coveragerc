@@ -1,0 +1,13 @@
+[run]
+source = .
+branch = True
+
+[report]
+omit =
+    */confi_text.py
+    */smb_fix.py
+    */flask_simpleldap.py
+    */seed.py
+    tests/*
+show_missing = True
+skip_covered = True

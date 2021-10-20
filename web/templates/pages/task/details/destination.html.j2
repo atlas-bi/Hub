@@ -1,0 +1,156 @@
+<div class="box">
+    <h2 class="title is-2">Destination</h2>
+    <h3 class="title is-3">File Information</h3>
+    <div class="content">
+        <ul>
+            <li>
+                File Name:
+                <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext)}}</span>
+            </li>
+            
+                {% if t.destination_ignore_delimiter != 1 and t.destination_file_delimiter %}
+                <li>
+                    File Delimiter:
+                    <span class="tag is-info is-light">{{ t.destination_file_delimiter or ',' }}</span>
+                    </li>
+                {% endif %}
+            
+            {% if t.destination_file_line_terminator %}
+                <li>Line End Appending</li>
+                <span class="em-gridValue">
+                    <span class="tag is-info is-light">{{ t.destination_file_line_terminator or '' }}</span>
+                </span>
+            {% endif %}
+            {% if t.destination_quote_level_id %}
+                <li>
+                    Quote Level:
+                    <span class="tag is-info is-light">{{ t.destination_file_quote_level.name or 'default' }}</span>
+                </li>
+            {% endif %}
+            {% if t.destination_create_zip == 1 %}
+                <li>
+                    ZIP archive name:
+                    <span class="tag is-info is-light">{{ t.destination_zip_name }}</span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% if t.file_gpg_id and t.file_gpg %}
+        <!-- encryption -->
+        <h3 class="title is-3">GPG Encryption</h3>
+        <a title="open connection"
+           href="{{ url_for('connection_bp.one_connection', connection_id=t.file_gpg_conn.connection.id) }}">
+            {{ t.file_gpg_conn.connection.name }}&#8195;
+            <span class="has-text-grey-light">/</span>
+            &#8195;{{ t.file_gpg_conn.name }}
+        </a>
+        <br />
+        <label class="label has-text-grey">Open connection to view key.</label>
+    {% endif %}
+    <!-- sftp output -->
+    {% if t.destination_sftp_conn and t.destination_sftp %}
+        <h3 class="title is-3">SFTP Connection</h3>
+        {% if t.destination_sftp_overwrite == 1 %}
+            <article class="message is-warning">
+                <div class="message-body">This task will attempt to overwrite files with the same name.</div>
+            </article>
+        {% endif %}
+        <a
+            title="open connection"
+            href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_sftp_conn.connection.id) }}">
+            {{ t.destination_sftp_conn.connection.name }}&#8195;
+            <span class="has-text-grey-light">/</span>
+            &#8195;{{ t.destination_sftp_conn.name }}
+        </a>
+        <pre class="box"><code class="language-bash">{{ t.destination_sftp_conn.username }}@{{ t.destination_sftp_conn.address }}:{{ t.destination_sftp_conn.port or '22' }}&nbsp;{{ t.destination_sftp_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
+    {% endif %}
+    {% if t.destination_ftp and t.destination_ftp_conn %}
+        <!-- ftp output -->
+        <h3 class="title is-3">FTP Connection</h3>
+        {% if t.destination_ftp_overwrite == 1 %}
+            <article class="message is-warning">
+                <div class="message-body">This task will attempt to overwrite files with the same name.</div>
+            </article>
+        {% endif %}
+        <a title="open connection"
+           href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_ftp_conn.connection.id) }}">
+            {{ t.destination_ftp_conn.connection.name }}&#8195;
+            <span class="has-text-grey-light">/</span>
+            &#8195;{{ t.destination_ftp_conn.name }}
+        </a>
+        <pre class="box"><code class="language-bash">{{ t.destination_ftp_conn.username }}@{{ t.destination_ftp_conn.address|clean_address }}&nbsp;{{ t.destination_ftp_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
+    {% endif %}
+    {% if t.destination_smb and t.destination_smb_conn %}
+        <!-- smb output -->
+        <h3 class="title is-3">SMB Connection</h3>
+        {% if t.destination_smb_overwrite == 1 %}
+            <article class="message is-warning">
+                <div class="message-body">This task will attempt to overwrite files with the same name.</div>
+            </article>
+        {% endif %}
+        <a
+            title="open connection"
+            href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_smb_conn.connection.id) }}">
+            {{ t.destination_smb_conn.connection.name }}&#8195;
+            <span class="has-text-grey-light">/</span>
+            &#8195;{{ t.destination_smb_conn.name }}
+        </a>
+        <pre class="box"><code class="language-ini">smb://{{ t.destination_smb_conn.username }}:...@{{ t.destination_smb_conn.server_ip }}({{ t.destination_smb_conn.server_name }})/{{ t.destination_smb_conn.share_name }}/{{ t.destination_smb_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
+    {% endif %}
+    {% if t.email_completion == 1 %}
+        <!-- success emails -->
+        <h3 class="title is-3">Success Email</h3>
+        <div class="content">
+            <ul>
+                {% if t.email_completion_file == 1 %}
+                <li>
+                    Output file attached to email
+                </li>
+                {% endif %}
+                {% if t.email_completion_file == 1 and t.email_completion_dont_send_empty_file == 1 %}
+                <li>
+                    
+                        Will not send with empty files
+                    
+                </li>
+                {% endif %}
+                {% if t.email_completion_file == 1 and t.email_completion_file_embed == 1 %}
+                <li>
+                    
+                        File will be embedded in email body
+                    
+                </li>
+                {% endif %}
+                {% if t.email_completion_log == 1 %}
+                <li>
+                    Run logs embedded in email
+                </li>
+                {% endif %}
+                <li>
+                    Email Recipients:
+                    <span class="tag is-info is-light">{{ t.email_completion_recipients or "None" }}</span>
+                </li>
+            </ul>
+        </div>
+        {% if t.email_completion_message|length > 0 %}
+            <h4 class="title is-4">Message</h4>
+            <pre class="box"><code class="language-text">{{ t.email_completion_message }}</code></pre>
+        {% endif %}
+    {% endif %}
+    <!-- error emails -->
+    {% if t.email_error == 1 %}
+        <h3 class="title is-3">Error Email</h3>
+        <div class="content">
+            <ul>
+                <li>
+                    Email Recipients:
+                    <span class="tag is-info is-light">{{ t.email_error_recipients or "None" }}</span>
+                </li>
+            </ul>
+        </div>
+        {% if t.email_error_message|length > 0 %}
+            <h4 class="title is-4">Message</h4>
+            <pre class="box"><code class="language-text">{{ t.email_error_message }}</code></pre>
+        {% endif %}
+    {% endif %}
+</div>

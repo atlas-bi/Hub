@@ -1,0 +1,97 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+        </li>
+        <li>
+            <a href="{{ url_for('connection_bp.one_connection', connection_id=connection.id) }}">{{ connection }}</a>
+        </li>
+        <li class="is-active">
+            <a href="" aria-current="page">
+                {% if database %}
+                    Editing {{ database }}
+                {% else %}
+                    New Database Connection
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">
+        {% if database %}
+            Editing
+            <span class="has-text-link">{{ database }}</span>
+        {% else %}
+            New Database Connection
+        {% endif %}
+    </h1>
+    <form action="{% if database -%}
+                      {{ url_for('connection_bp.edit_connection_database', database_id=database.id, connection_id=connection.id) }}
+                  {%- else -%}
+                      {{ url_for('connection_bp.new_connection_database', connection_id=connection.id) }}
+                  {%- endif %}"
+          method="POST">
+        <div class="field">
+            <label class="label">
+                Name
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="name"
+                   placeholder="friendly name"
+                   value="{% if database -%}
+                              {{ database.name }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Database Type
+                <span class="has-text-grey">*</span>
+            </label>
+            <div class="select is-fullwidth">
+                <select class="input" name="database_type" required="required">
+                    <option selected="selected">
+                        Choose one
+                    </option>
+                    {% for t in database_types %}
+                        <option value="{{ t.id }}"
+                                {% if database and t.id == database.type_id %}selected="selected"{% endif %}>
+                            {{ t.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">
+                Connection String
+                <span class="has-text-grey">*</span>
+            </label>
+            <label class="label has-text-grey content">
+                Examples:
+                <ul>
+                    <li>SQL Server: SERVER=server_name;DATABASE=database_name;UID=username;PWD=password</li>
+                    <li>Postgres: host=server_name dbname=database_name user=username password=password</li>
+                    <li>SQLite: username:password@host,host_ip/share_name/path/to/database.sqlite</li>
+                </ul>
+            </label>
+        </div>
+        <style>.CodeMirror {height: 100px;}</style>
+        <textarea class="connection_string"
+                                      name="connection_string">{% if database %}{{ database.connection_string|decrypt }}{% endif %}</textarea>
+    <button class="button is-info is-fullwidth my-5" type="submit">
+        {% if database %}
+            Save
+        {% else %}
+            Add
+        {% endif %}
+        Database Connection
+    </button>
+</form>
+{% endblock body %}

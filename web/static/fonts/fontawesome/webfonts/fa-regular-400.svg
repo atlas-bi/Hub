@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" ><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><metadata>
+Created by FontForge 20201107 at Wed Aug  4 12:25:29 2021
+ By Robert Madole
+Copyright (c) Font Awesome
+</metadata><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><defs><font id="FontAwesome5Free-Regular" horiz-adv-x="512" ><font-face 
+    font-family="Font Awesome 5 Free Regular"
+    font-weight="400"
+    font-stretch="normal"
+    units-per-em="512"
+    panose-1="2 0 5 3 0 0 0 0 0 0"
+    ascent="448"
+    descent="-64"
+    bbox="-0.0663408 -64.0662 640.004 448.1"
+    underline-thickness="25"
+    underline-position="-50"
+    unicode-range="U+0020-F5C8"
+  /><missing-glyph /><glyph glyph-name="play-circle" unicode="&#xf144;" 
+d="M371.7 210c16.3994 -9.2002 16.3994 -32.9004 0 -42l-176 -101c-15.9004 -8.7998 -35.7002 2.59961 -35.7002 21v208c0 18.5 19.9004 29.7998 35.7002 21zM504 192c0 -137 -111 -248 -248 -248s-248 111 -248 248s111 248 248 248s248 -111 248 -248zM56 192
+c0 -110.5 89.5 -200 200 -200s200 89.5 200 200s-89.5 200 -200 200s-200 -89.5 -200 -200z" /></font></defs></svg>

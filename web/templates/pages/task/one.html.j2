@@ -1,0 +1,220 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+        </li>
+        <li>
+            <a href="{{ url_for('project_bp.user_projects', user_id=t.project.project_owner.id) }}">{{ t.project.project_owner }}'s Projects</a>
+        </li>
+        <li>
+            <a href="{{ url_for('project_bp.one_project', project_id=t.project_id) }}">{{ t.project }}</a>
+        </li>
+        <li class="is-active">
+            <a href="" aria-current="page">{{ t }}</a>
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1" task_id="{{ t.id }}">
+        <div class="field is-inline">
+            {% if t.enabled == 1 %}
+                <input id="enable-task"
+                    class="switch is-medium is-rounded is-info"
+                    action="{{ url_for('task_controls_bp.disable_task', task_id=t.id) }}"
+                    type="checkbox"
+                    checked="checked"/>
+            {% else %}
+                <input id="enable-task"
+                    class="switch is-medium is-rounded is-info"
+                    action="{{ url_for('task_controls_bp.enable_task', task_id=t.id) }}"
+                    type="checkbox"/>
+                {% endif %}
+            <label for="enable-task" class="pt-3"></label>
+        </div>
+        {{ t }}
+        <span class="tag is-large is-pulled-right hello_status em-titleStatus
+                     {% if t.status.id == 2 %}
+                         is-danger
+                     {% elif t.status.id == 1 %}
+                         is-warning
+                     {% elif t.status.id == 4 %}
+                         is-primary
+                     {% endif %} em-border">{{ t.status.name }}</span>
+    </h1>
+    {% if r == 'None' and t.enabled == 1 %}
+        <div class="em-error"
+             style="margin-bottom: 10px;">Error! Task must be rescheduled in order to run!</div>
+    {% endif %}
+    <div class="field has-addons">
+        <p class="control">
+            <a class="button"
+               title="Edit task"
+               href="{{ url_for('task_edit_bp.task_edit_get', task_id=t.id)}}">
+                <span class="icon">
+                    <i class="fas fa-edit"></i>
+                </span>
+                <span>Edit</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="Delete task"
+               href="{{ url_for('task_controls_bp.delete_task', task_id=t.id)}}"
+               onclick="return confirm('Are you sure?')">
+                <span class="icon">
+                    <i class="fas fa-trash"></i>
+                </span>
+                <span>Delete</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button" title="Run Task" href="{{ url_for('task_controls_bp.run_task', task_id=t.id)}}">
+                <span class="icon">
+                    <i class="far fa-play-circle"></i>
+                </span>
+                <span>Run</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="Reschedule Task"
+               href="{{ url_for('task_controls_bp.schedule_task', task_id=t.id)}}">
+                <span class="icon">
+                    <i class="far fa-sync-alt"></i>
+                </span>
+                <span>Reschedule</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="Duplicate task"
+               href="{{ url_for('task_controls_bp.duplicate_task', task_id=t.id)}}">
+                <span class="icon">
+                    <i class="far fa-copy"></i>
+                </span>
+                <span>Duplicate</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="Duplicate task"
+               href="{{ url_for('task_controls_bp.reset_task', task_id=t.id)}}">
+                <span class="icon">
+                    <i class="fas fa-check"></i>
+                </span>
+                <span>Reset</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="End retry"
+               href="{{ url_for('task_controls_bp.task_endretry', task_id=t.id)}}">
+                <span class="icon">
+                    <i class="far fa-ban"></i>
+                </span>
+                <span>Cancel Retry</span>
+            </a>
+        </p>
+    </div>
+    <div class="content em-taskSummary">
+        <div class="table-container">
+            <table class="table">
+                <tr>
+                    <td>Last Run</td>
+                    <td>
+                        <span class="hello_last_run">{{ l_relative }}</span>
+                        <span class="hello_last_run_abs">{{ l }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Next Run</td>
+                    <td>
+                        {% if t.project.sequence_tasks %}
+                            Task runs in a sequence. See project for next run times.
+                        {% else %}
+                            <span class="hello_next_run">{{ r_relative }}</span>
+                            <span class="hello_next_run_abs">{{ r }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if t.est_duration %}
+                    <tr>
+                        <td>Estimated Duration</td>
+                        <td>{{ t.est_duration|duration }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>Max Retry Attempts</td>
+                    <td>
+                        {% if t and t.max_retries is not none %}
+                            {{ t.max_retries }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if t and t.project.sequence_tasks == 1 and t.order is not none %}
+                    <tr>
+                        <td>Task Run Rank</td>
+                        <td>{{ t.order }}</td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    <!-- tab control -->
+    <div class="tabs">
+        <ul>
+            <li class="is-active">
+                <a title="data source" class="tab-lnk" href="#details">
+                    <span class="icon is-small">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    </span>
+                    <span>Details</span>
+                </a>
+            </li>
+            <li>
+                <a title="task logs" class="tab-lnk" href="#tasklog">
+                    <span class="icon is-small">
+                        <i class="fas fa-terminal" aria-hidden="true"></i>
+                    </span>
+                    <span>
+                        Logs
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a title="task files" class="tab-lnk" href="#taskfile">
+                    <span class="icon is-small">
+                        <i class="fas fa-file-download" aria-hidden="true"></i>
+                    </span>
+                    <span>
+                        Files
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- tab body -->
+    <div class="tab-cnt">
+        <div class="tab-dta mb-5 is-active" id="details">
+            {% include "pages/task/one_details.html.j2" %}
+        </div>
+        <div class="tab-dta mb-5" id="tasklog">
+            <div class="em-ajaxLogs" data-src="{{ url_for('table_bp.task_log', task_id=t.id) }}">
+                <div class="loader">
+                </div>
+            </div>
+        </div>
+        <div class="tab-dta mb-5" id="taskfile">
+            <div class="em-ajaxTable" data-src="{{ url_for('table_bp.one_task_files', task_id=t.id) }}">
+                <div class="loader">
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

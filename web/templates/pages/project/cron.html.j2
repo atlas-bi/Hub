@@ -1,0 +1,98 @@
+<h2 class="title is-2">Cron Schedule - Run on specific dates/times</h2>
+<div class="field">
+    <input class="is-checkradio is-info"
+           type="checkbox"
+           id="project_cron_check"
+           data-target="project-cron"
+           {% if p.cron == 1 %}checked="checked"{% endif %}/>
+    <label for="project_cron_check">Use a cron schedule</label>
+    <input type="hidden" name="project_cron" value="{{ p.cron or 0 }}"/>
+</div>
+<div class="project-cron" {% if not p or p and p.cron !=1 %}style="display:none;"{% endif %}>
+<article class="message is-info" >
+    <div class="message-header">
+        <p>
+            Info
+        </p>
+    </div>
+    <div class="message-body">
+        Only one field is required="required", if the current date matches all the filed out field the task will run. Ex. Choose "Day of Week" = 6 and "Hour" = 7 and the project will run every Sunday at 7 AM.
+        <br />
+        Leaving an option blank will treat it as a wildcard. See
+        <a target="_blank"
+            title="cron job guide"
+        href="https://ostechnix.com/a-beginners-guide-to-cron-jobs/">this article</a>
+        for examples.
+    </div>
+</article>
+<div class="field">
+    <label class="label">Run in a specific year (4 dgt)</label>
+    <input class="input" type="number" name="project_cron_year" value="{{ p.cron_year }}"/>
+</div>
+<div class="field">
+    <label class="label">Run in a specific month (1-12)</label>
+    <input class="input" type="number" name="project_cron_mnth" value="{{ p.cron_month }}"/>
+</div>
+<div class="field">
+    <label class="label">Run in a specific week (1-53)</label>
+    <input class="input" type="number" name="project_cron_week" value="{{ p.cron_week }}"/>
+</div>
+<div class="field">
+    <label class="label">Run on a specific day (1-31)</label>
+    <input class="input" type="number" name="project_cron_day" value="{{ p.cron_day }}"/>
+</div>
+<div class="field">
+    <label class="label">Run on a specific day of the week (0 mon-6 sun)</label>
+    <input class="input" type="number" name="project_cron_wday" value="{{ p.cron_week_day }}"/>
+</div>
+<div class="field">
+    <label class="label">Run on a specific hour of the day (0-23)</label>
+    <input class="input" type="number" name="project_cron_hour" value="{{ p.cron_hour }}"/>
+</div>
+<div class="field">
+    <label class="label">Run on a specific minute (0-59)</label>
+    <input class="input" type="number" name="project_cron_min" value="{{ p.cron_min }}"/>
+</div>
+<div class="field">
+    <label class="label">Run on a specific second (0-59).. Really bro??</label>
+    <input class="input" type="number" name="project_cron_sec" value="{{ p.cron_sec }}"/>
+</div>
+<div class="field">
+    <label class="label">Start running on</label>
+    <div class="field is-grouped">
+        <div class="control is-expanded">
+            <input class="input em-inputEraser"
+                   name="project_cron_sdate"
+                   id="project_cron_sdate"
+                   placeholder="select date"
+                   value="{{ p.cron_start_date or '' }}"/>
+        </div>
+        <div class="control">
+            <a class="button em-eraseInput" data-target="project_cron_sdate" data-toggle="erasor">
+                <span class="icon is-small">
+                    <i class="fas fa-backspace"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="field">
+    <label class="label">End running on</label>
+    <div class="field is-grouped">
+        <div class="control is-expanded">
+            <input class="input em-inputEraser"
+                   name="project_cron_edate"
+                   id="project_cron_edate"
+                   placeholder="select date"
+                   value="{{ p.cron_end_date or '' }}"/>
+        </div>
+        <div class="control">
+            <a class=" button em-eraseInput" data-target="project_cron_edate" data-toggle="erasor">
+                <span class="icon is-small">
+                    <i class="fas fa-backspace"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
+</div>

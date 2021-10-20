@@ -1,0 +1,26 @@
+<div class="box">
+    {% if schedule and schedule_index %}
+        <div class="is-relative pb-5">
+            <div class="em-timelineScale">
+                {% for index in schedule_index %}
+                    <div class="em-ScaleBar" data-attr="{{ index }}"></div>
+                {% endfor %}
+                <div class="em-ScaleBar">
+                    <!-- blank for 0 -->
+                </div>
+            </div>
+            <div class="em-timelineLiner is-flex">
+                {% for col in schedule %}
+                    <div class="em-el is-flex is-flex-direction-column px-1 is-flex-grow-1">
+                        {% if col.count > 0 %}
+                            <div class="is-flex-grow-1 is-flex-shrink-1 "></div>
+                            <div class="em-elBar has-background-info"
+                                 data-attr="{{ col.case }}"
+                                 style="height: {{ col.count / schedule_index[0] *100 }}%"></div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,227 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+        </li>
+        <li>
+            <a href="{{ url_for('project_bp.user_projects', user_id=p.project_owner.id) }}">{{ p.project_owner }}'s Projects</a>
+        </li>
+        <li class="is-active">
+            <a href="" aria-current="page">{{ p }}</a>
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">{{ p }}</h1>
+    <h2 class="subtitle">{{ p.description }}</h2>
+    <div class="field has-addons">
+        <p class="control">
+            <a class="button"
+               title="Edit Project"
+               href="{{ url_for('project_bp.edit_project_form', project_id=p.id)}}">
+                <span class="icon">
+                    <i class="fas fa-edit"></i>
+                </span>
+                <span>Edit</span>
+            </a>
+        </p>
+        <p class="control">
+            <a class="button"
+               title="Delete Project"
+               href="{{ url_for('project_bp.delete_project', project_id=p.id)}}"
+               onclick="return confirm('Are you sure you want to delete this project? All tasks and logs will also be removed.')">
+                <span class="icon">
+                    <i class="fas fa-trash"></i>
+                </span>
+                <span>Delete</span>
+            </a>
+        </p>
+    </div>
+    <article class="message is-info">
+        <div class="message-body">
+            {% if p.sequence_tasks == 1 %}
+                Tasks will run in sequence by rank (ascending) and then name (alpha ascending).
+            {% else %}
+                Tasks will run in parallel.
+            {% endif %}
+            {% if task.next_run %}
+                <br />
+                Next Run: {{ task.next_run }}
+            {% endif %}
+        </div>
+    </article>
+    {% if p.cron == 1 or p.intv==1 or p.ooff==1 %}
+        <div class="box">
+            <h2 class="title is-2">Schedule</h2>
+            {% if p.cron == 1 %}
+                <h3 class="title is-3">Cron Schedule - Run on specific dates/times</h3>
+                <div class="content">
+                    Run
+                    <!-- month, year -->
+                    <span class="em-pSection">
+                        {% if p.cron_month != None or p.cron_year != None %}
+                            <em>every</em>
+                        {% endif %}
+                        {% if p.cron_month != None %}<em>{{ p.cron_month|cron_month }},</em>{% endif %}
+                        {% if p.cron_year != None %}<em>{{ p.cron_year }}</em>{% endif %}
+                    </span>
+                    <!-- week of year -->
+                    <span class="em-pSection">
+                        {% if p.cron_week != None %}
+                            on the
+                            <em>{{ p.cron_week|num_st }}</em>
+                            week of the year,
+                        {% endif %}
+                    </span>
+                    <!-- day of week -->
+                    <span class="em-pSection">
+                        {% if p.cron_week_day != None %}
+                            on
+                            <em>{{ p.cron_week_day|cron_week_day }}</em>
+                            ,
+                        {% endif %}
+                    </span>
+                    <!-- day of month -->
+                    <span class="em-pSection">
+                        {% if p.cron_day != None %}
+                            on the
+                            <em>{{ p.cron_day|num_st }}</em>
+                            day of the month,
+                        {% endif %}
+                    </span>
+                    <!-- time -->
+                    <span class="em-pSection">
+                        {% if p.cron_hour or p.cron_min or p.cron_sec %}
+                            at
+                            <em>{{ p.cron_hour|time }}:{{ p.cron_min|time }}:{{ p.cron_sec|time }}</em>
+                            (hh:mm:ss),
+                        {% endif %}
+                    </span>
+                    <!-- start / end dates -->
+                    <span class="em-pSection">
+                        {% if p.cron_start_date != None %}
+                            starting on
+                            <em>{{ p.cron_start_date }}</em>
+                            ,
+                        {% endif %}
+                    </span>
+                    <span class="em-pSection">
+                        {% if p.cron_end_date != None %}
+                            ending on
+                            <em>{{ p.cron_end_date }}</em>
+                            .
+                        {% else %}
+                            with no end date.
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+            {% if p.intv == 1 %}
+                <h3 class="title is-3">
+                    Interval Schedule - Run with specific duration
+                    <em>between</em>
+                    runs
+                </h3>
+                <div class="content">
+                    {% if p.intv_type != None %}
+                        Run every
+                        <em>{{ (p.intv_value,p.intv_type)|intv_name }}</em>
+                    {% endif %}
+                    {% if p.intv_start_date != None %}
+                        starting on
+                        <em>{{ p.intv_start_date }}</em>
+                        ,
+                    {% endif %}
+                    {% if p.intv_end_date != None %}
+                        ending on
+                        <em>{{ p.intv_end_date }}</em>
+                        .
+                    {% else %}
+                        with no end date.
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if p.ooff == 1 %}
+                <h3 class="title is-3">Date Schedule - Run one time</h3>
+                <div class="content">
+                    Running on
+                    <em>{{ p.ooff_date }}.</em>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <article class="message is-danger">
+            <div class="message-body">
+                Project has no run schedule!
+            </div>
+        </article>
+    {% endif %}
+    {% if p.global_params %}
+        <div class="box">
+            <h2 class="title is-2">
+                Global Parameters
+            </h2>
+            <pre class="box"><code class="language-sql">{{ p.global_params }}</code></pre>
+        </div>
+    {% endif %}
+    <div class="box">
+        <h2 class="title is-2">
+            Tasks
+        </h2>
+        <div class="field has-addons">
+            <p class="control">
+                <a class="button" title="New Task" href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id)}}">
+                    <span class="icon">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                    <span>
+                        New
+                    </span>
+                </a>
+            </p>
+            <p class="control">
+                <a class="button"
+                   title="Disable Project"
+                   href="{{ url_for('project_bp.disable_all_project_tasks', project_id=p.id)}}">
+                    <span class="icon">
+                        <i class="fas fa-toggle-off"></i>
+                    </span>
+                    <span>
+                        Disable All
+                    </span>
+                </a>
+            </p>
+            <p class="control">
+                <a class="button"
+                   title="Enable Project"
+                   href="{{ url_for('project_bp.enable_all_project_tasks', project_id=p.id)}}">
+                    <span class="icon">
+                        <i class="fas fa-toggle-on"></i>
+                    </span>
+                    <span>
+                        Enable All
+                    </span>
+                </a>
+            </p>
+            <p class="control">
+                <a class="button"
+                   title="Run Project"
+                   href="{{ url_for('project_bp.run_all_project_tasks', project_id=p.id)}}">
+                    <span class="icon">
+                        <i class="far fa-play-circle"></i>
+                    </span>
+                    <span>
+                        Run All
+                    </span>
+                </a>
+            </p>
+        </div>
+        <div class="em-ajaxTable no-tools no-box" data-theme="Exec" data-src="{{ url_for('table_bp.project_all_tasks', project_id=p.id) }}">
+            <div class="loader">
+            </div>
+        </div>
+    </div>
+{% endblock body %}

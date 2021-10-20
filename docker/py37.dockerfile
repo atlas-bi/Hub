@@ -1,4 +1,4 @@
-# Dockerfile for testing Extract Management 2.0 with Python 3.7
+# Dockerfile for testing Atlas Automation Hub with Python 3.7
 #
 # build:
 # docker build -f py37.dockerfile . -t christopherpickering/extract-management-2-python37-test
