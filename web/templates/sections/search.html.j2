@@ -1,0 +1,16 @@
+<form id="search-form" class="is-flex is-flex-grow-1 is-align-items-center mx-3 ml-5">
+    <div class="control has-icons-left is-flex-grow-1">
+        <input class="input"
+               id="search"
+               type="text"
+               placeholder="search for projects, tasks, users, connections .."
+               value="{{ search_string }}"
+               maxlength="80"
+               required="required"
+               disabled/>
+        <span class="icon is-small is-left">
+            <i class="fas fa-search"></i>
+        </span>
+    </div>
+    <div id="search-results" class="panel has-background-white"></div>
+</form>

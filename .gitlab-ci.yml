@@ -2,7 +2,7 @@ variables:
   PYTHONDONTWRITEBYTECODE: 1
   FLASK_ENV: test
   FLASK_DEBUG: 1
-  FLASK_APP: em_web
+  FLASK_APP: web
 
 stages:
 - static
@@ -12,13 +12,10 @@ stages:
 
 include:
 - local: /.gitlab/py.yml
-- local: /.gitlab/docs.yml
-- local: /.gitlab/typing.yml
 - local: /.gitlab/maintainability.yml
 - local: /.gitlab/lint.yml
-- local: /.gitlab/web.yml
+# - local: /.gitlab/web.yml
 - local: /.gitlab/metrics.yml
 - local: /.gitlab/secrets.yml
-- local: /.gitlab/html.yml
-- local: /.gitlab/public.yml
+# - local: /.gitlab/html.yml
 - local: /.gitlab/deploy.yml

@@ -1,0 +1,70 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+        </li>
+        <li>
+            <a href="{{ url_for('connection_bp.one_connection', connection_id=connection.id) }}">{{ connection }}</a>
+        </li>
+        <li class="is-active">
+            <a href="" aria-current="page">
+                {% if gpg %}
+                    Editing {{ gpg }}
+                {% else %}
+                    New GPG Connection
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">
+        {% if gpg %}
+            Editing
+            <span class="has-text-link">{{ gpg }}</span>
+        {% else %}
+            New GPG Connection
+        {% endif %}
+    </h1>
+    <form action="{% if gpg -%}
+                      {{ url_for('connection_bp.edit_connection_gpg', gpg_id=gpg.id, connection_id=connection.id) }}
+                  {%- else -%}
+                      {{ url_for('connection_bp.new_connection_gpg', connection_id=connection.id) }}
+                  {%- endif %}"
+          method="POST">
+        <div class="field">
+            <label class="label">
+                Name
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="name"
+                   placeholder="friendly name"
+                   value="{% if gpg -%}
+                              {{ gpg.name }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                GPG Key
+                <span class="has-text-grey">*</span>
+            </label>
+        </div>
+        <style>.CodeMirror {height: 100px;}</style>
+        <textarea class="connection_string"
+                                      name="key">{% if gpg and gpg.key -%}{{ gpg.key|decrypt }}{%- endif %}</textarea>
+    <button class="button is-info is-fullwidth my-5" type="submit">
+        {% if gpg %}
+            Save
+        {% else %}
+            Add
+        {% endif %}
+        GPG Connection
+    </button>
+</form>
+{% endblock body %}

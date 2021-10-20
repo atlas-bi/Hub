@@ -1,0 +1,16 @@
+[run]
+source = web
+branch = True
+
+[report]
+omit =
+    */confi_text.py
+    */smb_fix.py
+    */flask_simpleldap.py
+    */seed.py
+    */cli.py
+    tests/*
+    */ldap_auth.py
+    */saml_auth.py
+show_missing = True
+skip_covered = True

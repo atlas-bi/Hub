@@ -29,12 +29,12 @@ Possibilities are almost unlimited....
 Documentation
 -------------
 
-Read the `documentation <https://docs.extract.management>`_.
+Read the `documentation <https://www.atlas.bi/docs/automation_hub/>`_.
 
 Demo
 ----
 
-Try out the `demo <https://demo.extract.management>`_!
+Try out the `demo <https://atlas-hub.atlas.bi>`_!
 
 Run with Docker
 ~~~~~~~~~~~~~~~
@@ -50,15 +50,15 @@ Or, you can run your own docker image:
 Run from Source
 ~~~~~~~~~~~~~~~
 
-EM2 can be run locally. We use pyenv and poetry to manage the project dependencies. Assuming you will too -
+Atlas Automation Hub can be run locally. We use pyenv and poetry to manage the project dependencies. Assuming you will too -
 
 .. code:: sh
 
     pyenv local 3.9.0
     poetry install
 
-    # have you already created a database "em_web_dev" and updated the config files?
-    FLASK_APP=em_web
+    # have you already created a database "atlas_hub_dev" and updated the config files?
+    FLASK_APP=web
     flask db init
     flask db migrate
     flask db upgrade
@@ -70,9 +70,9 @@ Finally, to run the three site, you will need to run each command in a separate 
 
 .. code:: sh
 
-    FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=em_web && flask run
-    FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=em_scheduler && flask run --port=5001
-    FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=em_runner && flask run --port=5002
+    FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=web && flask run
+    FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=scheduler && flask run --port=5001
+    FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=runner && flask run --port=5002
 
 
 Credits

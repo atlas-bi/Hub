@@ -1,0 +1,65 @@
+{% if code %}
+    {% with rand = code|dateHash %}
+        <div class="em-tableTools">
+            <div class="field has-addons">
+                <p class="control">
+                    <button class="button" onclick="copyQuery{{ rand }}(event)" title="copy">
+                        <span class="icon">
+                            <i class="fas fa-copy"></i>
+                        </span>
+                        <span>Copy</span>
+                    </button>
+                </p>
+                <p class="control">
+                    <button class="button" onclick="saveQuery{{ rand }}(event)" title="download">
+                        <span class="icon">
+                            <i class="fas fa-download"></i>
+                        </span>
+                        <span>Download</span>
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div class="my-3 p-0 box em-codeBox line-numbers" style="height:500px;">
+            <div ss-container="ss-container" class="ss-preview" style="height:100%">
+                <pre>
+<code class="language-{{ language or 'sql' }}">{{ code }}</code>
+                                                                                                </pre>
+        </div>
+    </div>
+    <script>
+                    var readyStateCheckInterval{{ rand }} = setInterval(function() {
+                        if (document.readyState === "complete") {
+                            clearInterval(readyStateCheckInterval{{ rand }});
+
+                            SimpleScrollbar.initAll();Prism.highlightAll();
+
+                            window.copyQuery{{ rand }} = function(e) {
+                                var code = document.getElementById('git_code_{{ rand }}').querySelector('.em-codeBox pre').innerText;
+                                var txt = document.createElement('textarea');
+                                txt.value = code;
+                                txt.setAttribute('readonly', '');
+                                txt.style = {
+                                  position: 'absolute',
+                                  left: '-9999px'
+                                };
+                                document.body.appendChild(txt);
+                                txt.select();
+                                document.execCommand('copy');
+                                document.body.removeChild(txt);
+                              };
+                            window.saveQuery{{ rand }} = function(e) {
+                                var a = document.createElement("a");
+                                a.href = URL.createObjectURL(new Blob([document.getElementById('git_code_{{ rand }}').querySelector('.em-codeBox pre').innerText], {
+                                    type: "text/sql"
+                                }));
+                                a.setAttribute("download", "query.sql");
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                              };
+                        }
+                    }, 10);
+</script>
+{% endwith %}
+{% endif %}

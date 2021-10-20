@@ -1,0 +1,91 @@
+{% extends "layout.html.j2" %}
+
+{% block body %}
+    <h1 class="title is-1">Admin Area</h1>
+    <div class="box">
+        <h2 class="title is-2">App Tasks</h2>
+        <div class="field has-addons">
+            <p class="control">
+                <a class="button" title="Edit Project" href="{{ url_for('admin_bp.reset_tasks')}}">
+                    <span class="icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </span>
+                    <span>Reset all tasks to completed</span>
+                </a>
+            </p>
+            <p class="control">
+                <a class="button" href="{{ url_for('admin_bp.reschedule_tasks') }}" title="resume all jobs">
+                    <span class="icon">
+                        <i class="fas fa-calendar"></i>
+                    </span>
+                    <span>Reschedule Enabled Jobs</span>
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="box">
+        <h2 class="title is-2">Scheduler Tasks</h2>
+        <div class="field has-addons">
+            <p class="control">
+                <a class="button" href="{{ url_for('admin_bp.pause_scheduler') }}" title="pause scheduler">
+                    <span class="icon">
+                        <i class="fas fa-pause-circle"></i>
+                    </span>
+                    <span>Pause Scheduler</span>
+                </a>
+            </p>
+            <p class="control">
+                <a class="button" href="{{ url_for('admin_bp.resume_scheduler') }}" title="resume scheduler">
+                    <span class="icon">
+                        <i class="fas fa-play-circle"></i>
+                    </span>
+                    <span>Resume Scheduler</span>
+                </a>
+            </p>
+            <p class="control">
+                <a class="button"
+                   href="{{ url_for('admin_bp.kill_scheduler') }}"
+                   title="kill scheduler"
+                   onclick="return confirm('Are you sure? Click Restart Web Service to start again.')">
+                    <span class="icon">
+                        <i class="fas fa-ban"></i>
+                    </span>
+                    <span>Kill Scheduler</span>
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="tabs">
+        <ul>
+            <li class="is-active">
+                <a title="task logs" class="tab-lnk is-active" href="#task_history">
+                    <span class="icon is-small">
+                        <i class="fas fa-users" aria-hidden="true"></i>
+                    </span>
+                    <span>User History</span>
+                </a>
+            </li>
+            <li class="is-active">
+                <a title="task logs" class="tab-lnk active" href="#login_history">
+                    <span class="icon is-small">
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                    </span>
+                    <span>Login History</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- tab body -->
+    <div class="tab-cnt">
+        <div class="tab-dta is-active" id="task_history">
+            <div class="em-ajaxTable" data-src="{{ url_for('table_bp.tasklog_userevents') }}">
+                <div class="loader"></div>
+            </div>
+        </div>
+        <div class="tab-dta" id="login_history">
+            <div class="em-ajaxTable" data-src="{{ url_for('table_bp.user_auth') }}">
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

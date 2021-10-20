@@ -1,0 +1,238 @@
+//@import "include/color";
+@import "include/font";
+//@import "include/layout";
+
+@import "../../../node_modules/bulma/bulma";
+@import '../../../node_modules/bulma-checkradio/src/sass';
+@import '../../../node_modules/bulma-switch/src/sass';
+@import '../../../node_modules/bulma-tooltip/src/sass';
+
+.atlas-navbar {
+  padding: 16px 0;
+
+  .navbar-brand {
+    margin-left: 0 !important;
+    a {
+      padding-top: 0;
+      padding-bottom: 0;
+
+      img {
+        max-height: 50px;
+        height: 50px;
+      }
+    }
+  }
+  a.navbar-item {
+    &:hover {
+      color: $grey-darker;
+    }
+  }
+  .has-dropdown {
+    .navbar-link {
+      &:hover {
+        color: $grey-darker;
+      }
+    }
+  }
+}
+
+
+@media screen and (min-width: $desktop) {
+  .atlas-navbar .navbar-start {
+    padding-top: 0 !important;
+  }
+}
+
+
+@media screen and (min-width: $desktop) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+
+/* search */
+
+#search-form {
+  position:relative;
+}
+#search-results {
+  position:absolute;
+  top:50px;
+  left:0;
+  right:0;
+  display:none;
+  border-radius: $radius;
+  max-height:90vh;
+  overflow:scroll;
+}
+
+#search-results:empty {
+  display: none !important;
+}
+
+#search-form:focus-within #search-results
+{
+  display:block;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+}
+
+#search-results:active {
+  display:block;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+}
+
+#search-results .panel-block:first-of-type {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+#search-results em {
+  background-color: $info-light;
+  color: $info;
+}
+
+
+/*** tabs ***/
+
+.tab-cnt > .tab-dta:not(.is-active) {
+  display: none;
+}
+
+/*** tags ***/
+
+.tag:empty {
+  background: transparent;
+}
+
+/*** multiline tooltip ***/
+
+[data-tooltip].has-tooltip-multiline::before {
+  white-space:pre-line !important;
+}
+
+
+/* font */
+.is-size-6-5 {
+  font-size: .85rem !important
+}
+
+/* input */
+
+input.transparent {
+  border: transparent !important;
+  background: transparent !important;
+}
+
+/* pagination */
+.pagination.is-close ul li:not(:first-of-type) .pagination-link{
+margin-left:0;
+border-top-left-radius:0;
+border-bottom-left-radius:0;
+}
+
+.pagination.is-close ul li:not(:last-child)  .pagination-link{
+margin-right:-1px;
+border-top-right-radius:0;
+border-bottom-right-radius:0;
+
+}
+.pagination.is-close ul li:not(:last-child)  .pagination-link:hover{
+  margin-right:0px;
+  z-index:4;
+}
+.pagination.is-close ul li:not(:last-child):hover + li .pagination-link{
+  margin-left:-1px
+}
+
+/* logs */
+.log-group div[log_id].is-collapsed {
+  height:20px;
+  overflow:hidden;
+  align-items:baseline;
+}
+
+.log-group.first-of-type {
+  margin-top: 15px;
+}
+
+.em-codeBox {
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.em-codeBox pre {
+  display: inline-block;
+  min-width: calc(100%);
+  min-height: calc(100% - 1px);
+  padding: 1em 0 0 1em;
+  margin: 0 !important;
+  overflow: hidden !important;
+
+}
+
+.em-codeBox code {
+  padding-right: 130px;
+}
+
+
+.em-timelineScale {
+  position:absolute;
+  width:100%;
+  bottom:0;
+  top:0;
+}
+.em-timelineLiner {
+padding-left:50px;
+position:relative;
+&::before {
+  content: "runs/\A   time";
+  position:absolute;
+  left: 0;
+  bottom: -20px;
+  white-space: pre-wrap;
+}
+
+}
+.em-el {
+  height:200px;
+}
+
+.em-elBar {
+  position:relative;
+  height: 0;
+  &::before {
+    content: attr(data-attr);
+    position:absolute;
+    bottom: -30px;
+    background: $white;
+    right:0;
+    left:0;
+  }
+}
+.em-ScaleBar {
+  height: 1px;
+  width: 100%;
+  background: $grey-light;
+  position: relative;
+  margin-bottom:50px;
+  &::before{
+    content: attr(data-attr);
+    position:absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: $white;
+    padding-right:10px;
+    color:$grey-dark;
+  }
+  &:last-of-type {
+    background: transparent;
+  }
+}
+
+/* fix bulma + prism */
+code .number{
+  all:unset
+}

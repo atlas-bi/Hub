@@ -1,15 +1,13 @@
-[run]
-parallel = true
-include =
-    em_web/*
-    em_runner/*
-    em_scheduler/*
-
-
 [report]
 omit =
     */confi_text.py
     */smb_fix.py
     */flask_simpleldap.py
     */seed.py
+    */tests/*
+    */cli.py
+    tests/*
+    */ldap_auth.py
+    */saml_auth.py
 show_missing = true
+skip_covered = True

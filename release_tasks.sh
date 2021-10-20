@@ -1,7 +1,7 @@
 #!/bin/bash
 export FLASK_ENV=development
 export FLASK_DEBUG=True
-export FLASK_APP=em_web
+export FLASK_APP=web
 
 flask db init
 flask db migrate

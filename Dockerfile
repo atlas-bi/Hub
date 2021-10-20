@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update -qq \
      && apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config postgresql postgresql-contrib > /dev/null
 
-RUN su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp em_web_test"
+RUN su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp atlas_hub_test"
 
 RUN apt-get install -y -qq \
     build-essential \
@@ -38,12 +38,12 @@ RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
     && poetry install \
     && poetry env info
 
-RUN cp em_web/model.py em_scheduler/ && cp em_web/model.py em_runner/
+RUN cp web/model.py scheduler/ && cp web/model.py runner/
 
 ENV FLASK_ENV=development \
     FLASK_DEBUG=True \
-    FLASK_APP=em_web
+    FLASK_APP=web
 
 RUN /etc/init.d/postgresql start && flask db init && flask db migrate && flask db upgrade && flask cli seed && flask cli seed_demo
 
-CMD (redis-server &) && (/etc/init.d/postgresql start &) && (FLASK_APP=em_scheduler && flask run --port=5001 &) && (FLASK_APP=em_runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT
+CMD (redis-server &) && (/etc/init.d/postgresql start &) && (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

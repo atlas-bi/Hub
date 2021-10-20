@@ -1,0 +1,129 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        <li>
+            <a href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+        </li>
+        <li>
+            <a href="{{ url_for('connection_bp.one_connection', connection_id=connection.id) }}">{{ connection }}</a>
+        </li>
+        <li class="is-active">
+            <a href="" aria-current="page">
+                {% if ssh %}
+                    Editing {{ ssh }}
+                {% else %}
+                    New SSH Connection
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">
+        {% if ssh %}
+            Editing
+            <span class="has-text-link">{{ ssh }}</span>
+        {% else %}
+            New SSH Connection
+        {% endif %}
+    </h1>
+    <form action="{% if ssh -%}
+                      {{ url_for('connection_bp.edit_connection_ssh', ssh_id=ssh.id, connection_id=connection.id) }}
+                  {%- else -%}
+                      {{ url_for('connection_bp.new_connection_ssh', connection_id=connection.id) }}
+                  {%- endif %}"
+          method="POST">
+        <div class="field">
+            <label class="label">
+                Name
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="name"
+                   placeholder="friendly name"
+                   value="{% if ssh -%}
+                              {{ ssh.name }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Address
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="address"
+                   placeholder="ssh.google.com"
+                   value="{% if ssh -%}
+                              {{ ssh.address or '' }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Port
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="number"
+                   name="port"
+                   placeholder="22"
+                   value="{% if ssh -%}
+                              {{ ssh.port or 22 }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Username
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="username"
+                   placeholder="username"
+                   value="{% if ssh -%}
+                              {{ ssh.username or '' }}
+                          {%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Password
+                <span class="has-text-grey">*</span>
+            </label>
+            <div class="field has-addons">
+                <p class="control is-expanded">
+                    <input class="input"
+                           required
+                           type="password"
+                           name="password"
+                           placeholder="password"
+                           value="{% if ssh -%}
+                                      {{ ssh.password|decrypt or '' }}
+                                  {%- endif %}"/>
+                </p>
+                <div class="control">
+                    <a class="button toggle-pass "data-target="password">
+                        <span class="icon">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    <button class="button is-info is-fullwidth my-5" type="submit">
+        {% if ssh %}
+            Save
+        {% else %}
+            Add
+        {% endif %}
+        SSH Connection
+    </button>
+</form>
+{% endblock body %}

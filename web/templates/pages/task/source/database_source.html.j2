@@ -1,0 +1,19 @@
+{% if database_source|length ==0 %}
+    <article class="message is-danger">
+        <div class="message-body">There are no connections set up. Set up a connection first.</div>
+    </article>
+{% else %}
+    <label class="label">Connection</label>
+    <div class="select is-fullwidth">
+        <select class="input" name="task-source-database">
+            <option disabled="disabled" {% if not t %}selected="selected"{% endif %}>
+                Choose one
+            </option>
+            {% for s in database_source %}
+                <option value="{{ s.id }}" {% if t and t.source_database_id == s.id %} selected="selected" {% endif %}>
+                    {{ s.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+{% endif %}

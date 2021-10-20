@@ -1,0 +1,53 @@
+{% extends "layout.html.j2" %}
+
+{% block crumbs %}
+    <ul>
+        {% if user %}
+            <li>
+                <a href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+            </li>
+            <li class="is-active">
+                <a href="{{ url_for('project_bp.user_projects', user_id=user.id) }}">{{ user }}'s Projects</a>
+            </li>
+            <li>
+                <a href="{{ url_for('task_bp.user_tasks', user_id=user.id) }}">{{ user }}'s Tasks</a>
+            </li>
+        {% else %}
+            <li class="is-active">
+                <a href="#">All Projects</a>
+            </li>
+            <li>
+                <a href="{{ url_for('task_bp.all_tasks') }}">All Tasks</a>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock crumbs %}
+
+{% block body %}
+    <h1 class="title is-1">
+        {% if user %}
+            {{ user }}'s
+        {% else %}
+            All
+        {% endif %}
+        Projects
+    </h1>
+    <div class="tags">
+        {% for owner in owners %}
+            <a href="{{ url_for('project_bp.user_projects', user_id=owner[1]) }}"
+               title="open {{ owner[0] }}'s projects">
+                <span class="tag mr-1 is-light is-medium">
+                    {{ owner[0] }}
+                    <span class="ml-2 mb-0 tag is-info is-rounded">
+                        <strong>{{ owner[2] }}</strong>
+                    </span>
+                </span>
+            </a>
+        {% endfor %}
+    </div>
+    <div class="em-ajaxTable"
+        data-theme="Exec"
+        data-src="{% if user -%}{{ url_for('table_bp.project_list', my_type=user.id) }}{%- else -%}{{ url_for('table_bp.project_list', my_type='all') }}{%- endif %}">
+        <div class="loader"></div>
+    </div>
+{% endblock body %}
