@@ -7,7 +7,7 @@ import redis
 import saml2
 import saml2.saml
 from apscheduler.jobstores.redis import RedisJobStore
-
+from urllib.parse import urlparse
 
 class Config:
     """All prod configuration set here. For dev there are overrides below."""
@@ -29,8 +29,13 @@ class Config:
     PASS_KEY = b"zL-yN8sVPaheeWmLJz8CxHXSLt8ZMI9jrAPXn167a8I="
 
     # redis sessions
+
+    REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+    redis_url_parts = urlparse(REDIS_URL)
+
+
     SESSION_TYPE = "redis"
-    SESSION_REDIS = redis.Redis(host="127.0.0.1", port=6379)
+    SESSION_REDIS = redis.Redis(host=redis_url_parts.hostname, port=redis_url_parts.port)
 
     # authentication
     LOGIN_VIEW = "auth_bp.login"
@@ -81,7 +86,6 @@ class Config:
     EXECUTOR_TYPE = "thread"
     EXECUTOR_MAX_WORKERS = 12
     EXECUTOR_PROPAGATE_EXCEPTIONS = True
-    REDIS_URL = "redis://127.0.0.1:6379/0"
 
     # compression
     MINIFY_HTML = True
@@ -168,8 +172,8 @@ class Config:
         "default": RedisJobStore(
             jobs_key="atlas_hub_jobs",
             run_times_key="atlas_hub_running",
-            host="127.0.0.1",
-            port=6379,
+            host=redis_url_parts.hostname,
+            port=redis_url_parts.port,
         )
     }
 
@@ -235,9 +239,6 @@ class Config:
     EXECUTOR_MAX_WORKERS = 12
     EXECUTOR_PROPAGATE_EXCEPTIONS = True
 
-    if os.environ.get("REDIS_URL"):
-        REDIS_URL = os.environ.get("REDIS_URL", REDIS_URL)
-
 
 class DevConfig(Config):
     """Configuration overides for development.
@@ -262,10 +263,15 @@ class DevConfig(Config):
         user="username", pw="password", url="server", db="atlas_hub_dev"
     )
 
+    REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+    redis_url_parts = urlparse(REDIS_URL)
+
     # migrations override
     MIGRATIONS = "migrations_dev"
-    SESSION_REDIS = redis.Redis(host="redis", port=6379)
-    REDIS_URL = "redis://redis:6379/0"
+
+    SESSION_REDIS = redis.Redis(host=redis_url_parts.hostname, port=redis_url_parts.port)
+
+
 
     ASSETS_DEBUG = True
 
@@ -273,8 +279,8 @@ class DevConfig(Config):
         "default": RedisJobStore(
             jobs_key="atlas_hub_jobs",
             run_times_key="atlas_hub_running",
-            host="redis",
-            port=6379,
+            host=redis_url_parts.hostname,
+            port=redis_url_parts.port,
         )
     }
 
