@@ -13,8 +13,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 @task
 def publish(ctx):
-    """Remotely deploy
-
+    """Remotely deploy.
 
     Deploy by running:
 
