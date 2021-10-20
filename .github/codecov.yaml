@@ -1,0 +1,12 @@
+coverage:
+  status:
+    # Codecov shouldn't put red x's on pull requests
+    # https://docs.codecov.io/docs/common-recipe-list#set-non-blocking-status-checks
+    project:
+      default:
+        informational: true
+    patch:
+      default:
+        informational: true
+
+comment: false
