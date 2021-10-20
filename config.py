@@ -32,10 +32,13 @@ class Config:
 
     REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
     redis_url_parts = urlparse(REDIS_URL)
+    redis_host = os.environ.get("REDIS_HOST", redis_url_parts.hostname)
+    redis_port = os.environ.get("REDIS_PORT", redis_url_parts.port)
 
 
     SESSION_TYPE = "redis"
-    SESSION_REDIS = redis.Redis(host=redis_url_parts.hostname, port=redis_url_parts.port)
+    SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
+
 
     # authentication
     LOGIN_VIEW = "auth_bp.login"
@@ -172,8 +175,8 @@ class Config:
         "default": RedisJobStore(
             jobs_key="atlas_hub_jobs",
             run_times_key="atlas_hub_running",
-            host=redis_url_parts.hostname,
-            port=redis_url_parts.port,
+            host=redis_host,
+            port=redis_port,
         )
     }
 
@@ -265,11 +268,13 @@ class DevConfig(Config):
 
     REDIS_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
     redis_url_parts = urlparse(REDIS_URL)
+    redis_host = os.environ.get("REDIS_HOST", redis_url_parts.hostname)
+    redis_port = os.environ.get("REDIS_PORT", redis_url_parts.port)
 
     # migrations override
     MIGRATIONS = "migrations_dev"
 
-    SESSION_REDIS = redis.Redis(host=redis_url_parts.hostname, port=redis_url_parts.port)
+    SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
 
 
 
@@ -279,8 +284,8 @@ class DevConfig(Config):
         "default": RedisJobStore(
             jobs_key="atlas_hub_jobs",
             run_times_key="atlas_hub_running",
-            host=redis_url_parts.hostname,
-            port=redis_url_parts.port,
+            host=redis_host,
+            port=redis_port,
         )
     }
 
