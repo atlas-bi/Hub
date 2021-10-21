@@ -166,12 +166,9 @@ def edit_project(project_id: int) -> Response:
     )
 
     db.session.commit()
-    me = me.first()
-    # reschedule any jobs.
-    tasks = Task.query.filter_by(project_id=project.id, enabled=1).all()
 
-    for task in tasks:
-        submit_executor("enable_task", task.id)
+    # reschedule any jobs.
+    submit_executor("schedule_project", project_id)
 
     flash("Changes saved.")
     return redirect(url_for("project_bp.one_project", project_id=project_id))
@@ -248,8 +245,7 @@ def delete_project(project_id: int) -> Response:
         )
     ]
 
-    for task in tasks:
-        submit_executor("disable_task", task)
+    submit_executor("disable_project", project_id)
 
     # delete logs
     db.session.query(TaskLog).filter(TaskLog.task_id.in_(tasks)).delete(  # type: ignore[attr-defined, union-attr]

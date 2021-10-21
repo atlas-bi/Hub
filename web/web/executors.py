@@ -243,7 +243,6 @@ def enable_task(task_list: List[int]) -> str:
         )
         try:
             for task in tasks:
-                sub_disable_task(task.id)
                 sub_enable_task(task.id)
         # pylint: disable=W0703
         except BaseException as e:
@@ -327,6 +326,39 @@ def disable_project(project_list: List[int]) -> str:
         return "Failed to disable project, see task logs."
 
     return "Project disabled."
+
+
+def schedule_project(project_list: List[int]) -> str:
+    """Scheduling project."""
+    project_id = project_list[0]
+    tasks = Task.query.filter_by(project_id=project_id, enabled=1).all()
+    try:
+        # first enable all, so we get sequence right
+        for task in tasks:
+            task.enabled = 1
+            db.session.commit()
+
+        for task in tasks:
+            sub_enable_task(task.id)
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        task.enabled = 0
+        db.session.commit()
+        log = TaskLog(
+            status_id=7,
+            error=1,
+            message=(
+                (current_user.full_name or "none")
+                + ": Failed to schedule task.\n"
+                + str(e)
+            ),
+        )
+        db.session.add(log)
+        db.session.commit()
+        return "Failed to schedule project, see task logs."
+
+    return "Project scheduled."
 
 
 def enable_project(project_list: List[int]) -> str:

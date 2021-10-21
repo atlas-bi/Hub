@@ -54,7 +54,8 @@ class Sftp:
         self.file_name = file_name
         self.file_path = file_path
         self.job_hash = job_hash
-        self.transport, self.conn, self.key = self.__connect()
+        self.key = None
+        self.transport, self.conn = self.__connect()
 
     def __connect(self) -> Tuple[Any, Any, Any]:
 
@@ -87,7 +88,7 @@ class Sftp:
                             )
                             key_file.seek(0)
 
-                            key = paramiko.RSAKey.from_private_key_file(
+                            self.key = paramiko.RSAKey.from_private_key_file(
                                 key_file.name,
                                 password=em_decrypt(
                                     self.connection.password, app.config["PASS_KEY"]
@@ -118,7 +119,7 @@ class Sftp:
 
                     else:
                         raise e
-            return transport, conn, key
+            return transport, conn,
 
         # pylint: disable=broad-except
         except BaseException as e:
@@ -300,7 +301,6 @@ class Sftp:
                 status_id=9,
                 message="File verified on server: "
                 + str(self.connection.path)
-                + "/"
                 + self.file_name,
             )
             db.session.add(log)
@@ -321,7 +321,6 @@ class Sftp:
                 error=1,
                 message="File failed to finish loading to server: "
                 + str(self.connection.path)
-                + "/"
                 + self.file_name
                 + "\n"
                 + str(full_stack()),
