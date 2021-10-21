@@ -21,6 +21,10 @@ def scheduler_delete_task(task_id: int) -> bool:
             job.remove()
             status = True
 
+    task = Task.query.filter_by(id=task_id).first()
+    if task:
+        task.next_run = None
+
     return status
 
 
