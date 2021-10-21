@@ -92,8 +92,9 @@ def create_app() -> Flask:
     # pylint: disable=W0611
     from scheduler import maintenance  # noqa: F401
 
-    #if apscheduler.running is False:
-    apscheduler.state = 0
+    if apscheduler.running:
+        apscheduler.shutdown(wait=False)
+
     apscheduler.init_app(app)
 
     logging.basicConfig(level=logging.WARNING)
