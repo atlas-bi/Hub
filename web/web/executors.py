@@ -208,6 +208,9 @@ def sub_enable_task(task_id: int) -> None:
             == int(task_id)
         ):
             send_task_to_scheduler(task_id)
+        else:
+            # make sure it is not in the scheduler.
+            requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id))
     else:
         send_task_to_scheduler(task_id)
 
