@@ -12,7 +12,7 @@
                 </option>
                 {% for s in ftp_dest %}
                     <option value="{{ s.id }}"
-                            {% if t and t.destination_ftp_id == s.id %} selected="selected" {% endif %}>
+                            {% if t and t.destination_ftp_id == s.id %}selected="selected"{% endif %}>
                         {{ s.name }}
                     </option>
                 {% endfor %}
@@ -25,6 +25,6 @@
             if (em.value ==""){
                 em.value = "{{ org.primary_contact_email }}";
             }
-                                </script>
-{% endif %}
+        </script>
+    {% endif %}
 {% endif %}

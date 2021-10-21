@@ -5,7 +5,7 @@ import time
 
 from requests import get
 
-from scheduler.extensions import db, scheduler
+from scheduler.extensions import db, apscheduler
 from scheduler.model import Task
 
 
@@ -16,7 +16,7 @@ def scheduler_delete_task(task_id: int) -> bool:
     :returns: true
     """
     status = False
-    for job in scheduler.get_jobs():
+    for job in apscheduler.get_jobs():
         if job.args and str(job.args[0]) == str(task_id):
             job.remove()
             status = True
@@ -34,7 +34,7 @@ def scheduler_task_runner(task_id: int) -> None:
     :param task_id: id of task to run
     """
     try:
-        with scheduler.app.app_context():
+        with apscheduler.app.app_context():
             # mark the task status as error in the
             # unlikely event that the runner is not
             # triggered.. then we will have the
@@ -43,7 +43,7 @@ def scheduler_task_runner(task_id: int) -> None:
             task.status_id = 2
             db.session.commit()
 
-            get(scheduler.app.config["RUNNER_HOST"] + "/" + task_id)
+            get(apscheduler.app.config["RUNNER_HOST"] + "/" + task_id)
     # pylint: disable=broad-except
     except BaseException as e:
         print("failed to run job.")  # noqa: T001
@@ -121,7 +121,7 @@ def scheduler_add_task(task_id: int) -> bool:
     # schedule cron
     if task.project.cron == 1:
         project = task.project
-        scheduler.add_job(
+        apscheduler.add_job(
             func=scheduler_task_runner,
             trigger="cron",
             second=project.cron_sec,
@@ -150,7 +150,7 @@ def scheduler_add_task(task_id: int) -> bool:
         minutes = project.intv_value or 999 if project.intv_type == "m" else 0
         seconds = project.intv_value or 999 if project.intv_type == "s" else 0
 
-        scheduler.add_job(
+        apscheduler.add_job(
             func=scheduler_task_runner,
             trigger="interval",
             seconds=seconds,
@@ -171,7 +171,7 @@ def scheduler_add_task(task_id: int) -> bool:
     if task.project.ooff == 1:
         project = task.project
         my_hash.update(str(time.time()).encode("utf-8"))
-        scheduler.add_job(
+        apscheduler.add_job(
             func=scheduler_task_runner,
             trigger="date",
             run_date=project.ooff_date,

@@ -3,15 +3,26 @@
     {% cache None %}
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <meta content="Atlas Automation Hub, running tasks on schedule." name="description"/>
+    <meta content="Atlas Automation Hub, running tasks on schedule."
+          name="description"/>
     <meta content="Christopher Pickering" name="author"/>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
-    <link href="{{ url_for('static', filename='apple-touch-icon.png') }}" rel="apple-touch-icon" sizes="180x180"/>
-    <link href="{{ url_for('static', filename='favicon-32x32.png') }}" rel="icon" sizes="32x32" type="image/png" />
-    <link href="{{ url_for('static', filename='favicon-16x16.png') }}" rel="icon" sizes="16x16" type="image/png" />
-    <link href="{{ url_for('static', filename='site.webmanifest') }}" rel="manifest"/>
-    <link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon"/>
+    <link href="{{ url_for('static', filename='apple-touch-icon.png') }}"
+          rel="apple-touch-icon"
+          sizes="180x180"/>
+    <link href="{{ url_for('static', filename='favicon-32x32.png') }}"
+          rel="icon"
+          sizes="32x32"
+          type="image/png"/>
+    <link href="{{ url_for('static', filename='favicon-16x16.png') }}"
+          rel="icon"
+          sizes="16x16"
+          type="image/png"/>
+    <link href="{{ url_for('static', filename='site.webmanifest') }}"
+          rel="manifest"/>
+    <link href="{{ url_for('static', filename='favicon.ico') }}"
+          rel="shortcut icon"/>
     {% assets "css" %}
         <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
@@ -29,6 +40,7 @@
 <body>
     {% if config['DEMO'] %}
         {% include 'demo.html.j2' %}
+
     {% endif %}
     {% block body_auth %}
         {% include "sections/head.html.j2" %}
@@ -54,8 +66,8 @@
     {% block js %}
     {% endblock js %}
 
-    </body>
-    {% assets "js" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
+</body>
+{% assets "js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 </html>

@@ -29,11 +29,7 @@
             New FTP Connection
         {% endif %}
     </h1>
-    <form action="{% if ftp -%}
-                      {{ url_for('connection_bp.edit_connection_ftp', ftp_id=ftp.id, connection_id=connection.id) }}
-                  {%- else -%}
-                      {{ url_for('connection_bp.new_connection_ftp', connection_id=connection.id) }}
-                  {%- endif %}"
+    <form action="{% if ftp -%} {{ url_for('connection_bp.edit_connection_ftp', ftp_id=ftp.id, connection_id=connection.id) }} {%- else -%} {{ url_for('connection_bp.new_connection_ftp', connection_id=connection.id) }} {%- endif %}"
           method="POST">
         <div class="field">
             <label class="label">
@@ -45,9 +41,7 @@
                    type="text"
                    name="name"
                    placeholder="friendly name"
-                   value="{% if ftp -%}
-                              {{ ftp.name }}
-                          {%- endif %}"/>
+                   value="{% if ftp -%}{{ ftp.name }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -59,9 +53,7 @@
                    type="text"
                    name="address"
                    placeholder="ftp.google.com"
-                   value="{% if ftp -%}
-                              {{ ftp.address or '' }}
-                          {%- endif %}"/>
+                   value="{% if ftp -%}{{ ftp.address or '' }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -69,58 +61,54 @@
                 <span class="has-text-grey">*</span>
             </label>
             <input class="input"
-                required
-                type="text"
-                name="path"
-                placeholder="/path/to/somewhere"
-                value="{% if ftp -%}{{ ftp.path or '' }}{%- endif %}"/>
-            </div>
-            <div class="field">
-                <label class="label">
-                    Username
-                    <span class="has-text-grey">*</span>
-                </label>
-                <input class="input"
-                       required
-                       type="text"
-                       name="username"
-                       placeholder="username"
-                       value="{% if ftp -%}
-                                  {{ ftp.username or '' }}
-                              {%- endif %}"/>
-            </div>
-            <div class="field">
-                <label class="label">
-                    Password
-                    <span class="has-text-grey">*</span>
-                </label>
-                <div class="field has-addons">
-                    <p class="control is-expanded">
-                        <input class="input"
-                               required
-                               type="password"
-                               name="password"
-                               placeholder="password"
-                               value="{% if ftp -%}
-                                          {{ ftp.password|decrypt or '' }}
-                                      {%- endif %}"/>
-                    </p>
-                    <div class="control">
-                        <a class="button toggle-pass "data-target="password">
-                            <span class="icon">
-                                <i class="fas fa-eye"></i>
-                            </span>
-                        </a>
-                    </div>
+                   required
+                   type="text"
+                   name="path"
+                   placeholder="/path/to/somewhere"
+                   value="{% if ftp -%}{{ ftp.path or '' }}{%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Username
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="username"
+                   placeholder="username"
+                   value="{% if ftp -%}{{ ftp.username or '' }}{%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Password
+                <span class="has-text-grey">*</span>
+            </label>
+            <div class="field has-addons">
+                <p class="control is-expanded">
+                    <input class="input"
+                           required
+                           type="password"
+                           name="password"
+                           placeholder="password"
+                           value="{% if ftp -%}{{ ftp.password|decrypt or '' }}{%- endif %}"/>
+                </p>
+                <div class="control">
+                    <a class="button toggle-pass "data-target="password">
+                        <span class="icon">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </a>
                 </div>
             </div>
-            <button class="button is-info is-fullwidth my-5" type="submit">
-                {% if ftp %}
-                    Save
-                {% else %}
-                    Add
-                {% endif %}
-                FTP Connection
-            </button>
-        </form>
-    {% endblock body %}
+        </div>
+        <button class="button is-info is-fullwidth my-5" type="submit">
+            {% if ftp %}
+                Save
+            {% else %}
+                Add
+            {% endif %}
+            FTP Connection
+        </button>
+    </form>
+{% endblock body %}

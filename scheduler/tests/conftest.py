@@ -4,13 +4,13 @@ import sys
 
 import pytest
 
-from scheduler import create_app as scheduler_create_app
+
 from scheduler.model import Project, Task
 from web.seed import get_or_create
 
 os.environ["FLASK_ENV"] = "test"
 os.environ["FLASK_APP"] = "scheduler"
-os.environ["FLASK_DEBUG"] = "False"
+os.environ["FLASK_DEBUG"] = "True"
 
 import subprocess
 from datetime import datetime
@@ -34,12 +34,12 @@ def client_fixture() -> Generator:
             ["lsof -i :5001 | grep 'python' | awk '{print $2}' | xargs kill -9"],
             shell=True,
         )
-
+    from scheduler import create_app as scheduler_create_app
     app = scheduler_create_app()
     with app.test_client() as client, app.app_context():
         assert app.config["ENV"] == "test"  # noqa: S101
 
-        from scheduler.extensions import db, scheduler
+        from scheduler.extensions import db, apscheduler
         from web.seed import seed
 
         db.drop_all()
@@ -50,19 +50,20 @@ def client_fixture() -> Generator:
 
         seed(db.session)
 
-        scheduler.remove_all_jobs()
+        apscheduler.remove_all_jobs()
 
-        assert scheduler.running  # noqa: S101
+        assert apscheduler.running  # noqa: S101
 
         yield client
 
-        if scheduler.running:
-            scheduler.shutdown(False)
+        if apscheduler.running:
+            apscheduler.shutdown(False)
 
 
 @pytest.fixture(scope="module")
 def event_fixture() -> Generator:
     """Create module scoped fixture to share fixture for tests."""
+
     if sys.platform == "darwin":
         print("killing 5002")
         subprocess.run(
@@ -74,12 +75,13 @@ def event_fixture() -> Generator:
             ["lsof -i :5001 | grep 'python' | awk '{print $2}' | xargs kill -9"],
             shell=True,
         )
+    from scheduler import create_app as scheduler_create_app
     app = scheduler_create_app()
     with app.test_client() as client, app.app_context():
 
         assert app.config["ENV"] == "test"  # noqa: S101
+        from scheduler.extensions import db, apscheduler
 
-        from scheduler.extensions import db, scheduler
         from web.seed import seed
 
         db.drop_all()
@@ -90,14 +92,14 @@ def event_fixture() -> Generator:
 
         seed(db.session)
 
-        scheduler.remove_all_jobs()
+        apscheduler.remove_all_jobs()
 
-        assert scheduler.running  # noqa: S101
+        assert apscheduler.running  # noqa: S101
 
         yield client
 
-        if scheduler.running:
-            scheduler.shutdown(False)
+        if apscheduler.running:
+            apscheduler.shutdown(False)
 
 
 # pylint: disable=W0613

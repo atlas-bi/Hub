@@ -40,12 +40,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <h3>
         Project:
         <a style="color: #6c7378;text-decoration: none"
-        href="{{ host }}/project/{{ task.projectId }}">{{ task.project.name }}</a>
+           href="{{ host }}/project/{{ task.projectId }}">
+            {{ task.project.name }}
+        </a>
         / Task:
-        <a style="color: #6c7378;text-decoration: none" href="{{ host }}/task/{{ task.id }}">{{ task.name }}</a>
+        <a style="color: #6c7378;text-decoration: none"
+           href="{{ host }}/task/{{ task.id }}">{{ task.name }}</a>
         / Run:
         <a style="color: #6c7378;text-decoration: none"
-        href="{{ host }}/task/{{ task.id }}/log/{{ task.lastRunJobId }}">{{ task.last_run_job_id }}</a>
+           href="{{ host }}/task/{{ task.id }}/log/{{ task.lastRunJobId }}">
+            {{ task.last_run_job_id }}
+        </a>
     </h3>
     <!-- message body -->
     {% if success == 1 %}
@@ -139,12 +144,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </thead>
             <tbody>
                 {% for log in logs %}
-                    <tr {% if log.statusId == 2 or log.error == 1 %} style="background-color: rgba(255,105,97,.2);" {% endif %}>
-                        <td style="padding: 10px 10px;
-                                   border-top: 1px solid #d9d9d9;">{{ log.status_date|datetime_format }}</td>
+                    <tr {% if log.statusId == 2 or log.error == 1 %}style="background-color: rgba(255,105,97,.2);"{% endif %}>
+                        <td style="padding: 10px 10px; border-top: 1px solid #d9d9d9;">{{ log.status_date|datetime_format }}</td>
                         <td style="padding: 10px 10px;
                                    border-top: 1px solid #d9d9d9;
-                                   border-left: 1px solid #d9d9d9;">{{ log.status.name }}</td>
+                                   border-left: 1px solid #d9d9d9;">
+                            {{ log.status.name }}
+                        </td>
                         <td style="padding: 10px 10px;
                                    border-top: 1px solid #d9d9d9;
                                    border-left: 1px solid #d9d9d9;">{{ log.message|e }}</td>

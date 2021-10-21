@@ -3,54 +3,57 @@
         <div class="navbar-brand">
             <a class="navbar-item" href="{{ url_for('dashboard_bp.dash') }}">
                 <img src="{{ url_for('static', filename='img/hub-logo.png') }}"
-                    width="235"
-                    height="50"
-                    alt="atlas automation hub logo"/>
-                </a>
-                <a role="button"
-                   class="navbar-burger"
-                   aria-label="menu"
-                   aria-expanded="false"
-                   data-target="atlas-main-nav">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-            <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">{% include 'sections/search.html.j2' %}
-            </div>
-            <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
-                <div class="navbar-end">
-                    <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                        <a class="navbar-link">Projects</a>
-                        <div class="navbar-dropdown">
-                            <hr class=" hide-desktop dropdown-divider"/>
-                            <a class="navbar-item" href="{{ url_for('project_bp.user_projects') }}">My Projects</a>
-                            <a class="navbar-item" href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
-                            <a class="navbar-item" href="{{ url_for('project_bp.new_project_form') }}">New Project</a>
-                        </div>
+                     width="235"
+                     height="50"
+                     alt="atlas automation hub logo"/>
+            </a>
+            <a role="button"
+               class="navbar-burger"
+               aria-label="menu"
+               aria-expanded="false"
+               data-target="atlas-main-nav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">
+            {% include 'sections/search.html.j2' %}
+
+        </div>
+        <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                    <a class="navbar-link">Projects</a>
+                    <div class="navbar-dropdown">
+                        <hr class=" hide-desktop dropdown-divider"/>
+                        <a class="navbar-item" href="{{ url_for('project_bp.user_projects') }}">My Projects</a>
+                        <a class="navbar-item" href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+                        <a class="navbar-item"
+                           href="{{ url_for('project_bp.new_project_form') }}">New Project</a>
                     </div>
-                    <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                        <a class="navbar-link">Tasks</a>
-                        <div class="navbar-dropdown">
-                            <hr class=" hide-desktop dropdown-divider"/>
-                            <a class="navbar-item" href="{{ url_for('task_bp.my_tasks') }}">My Tasks</a>
-                            <a class="navbar-item" href="{{ url_for('task_bp.all_tasks') }}">All Tasks</a>
-                        </div>
-                    </div>
-                    <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                        <a class="navbar-link">Connections</a>
-                        <div class="navbar-dropdown">
-                            <hr class=" hide-desktop dropdown-divider"/>
-                            <a class="navbar-item"
-                               href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
-                            <a class="navbar-item"
-                               href="{{ url_for('connection_bp.new_connection') }}">New Connections</a>
-                        </div>
-                    </div>
-                    <a class="navbar-item" href="{{ url_for('admin_bp.admin') }}">Admin</a>
-                    <a class="navbar-item" href="{{ url_for('dashboard_bp.dash') }}">Dashboard</a>
                 </div>
+                <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                    <a class="navbar-link">Tasks</a>
+                    <div class="navbar-dropdown">
+                        <hr class=" hide-desktop dropdown-divider"/>
+                        <a class="navbar-item" href="{{ url_for('task_bp.my_tasks') }}">My Tasks</a>
+                        <a class="navbar-item" href="{{ url_for('task_bp.all_tasks') }}">All Tasks</a>
+                    </div>
+                </div>
+                <div class="navbar-item has-dropdown is-hoverable is-boxed">
+                    <a class="navbar-link">Connections</a>
+                    <div class="navbar-dropdown">
+                        <hr class=" hide-desktop dropdown-divider"/>
+                        <a class="navbar-item"
+                           href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+                        <a class="navbar-item"
+                           href="{{ url_for('connection_bp.new_connection') }}">New Connections</a>
+                    </div>
+                </div>
+                <a class="navbar-item" href="{{ url_for('admin_bp.admin') }}">Admin</a>
+                <a class="navbar-item" href="{{ url_for('dashboard_bp.dash') }}">Dashboard</a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>

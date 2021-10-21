@@ -11,7 +11,8 @@
                     Choose one
                 </option>
                 {% for s in gpg_file %}
-                    <option value="{{ s.id }}" {% if t and t.file_gpg_id == s.id %}selected="selected"{% endif %}>
+                    <option value="{{ s.id }}"
+                            {% if t and t.file_gpg_id == s.id %}selected="selected"{% endif %}>
                         {{ s.name }}
                     </option>
                 {% endfor %}
@@ -24,6 +25,6 @@
             if (em.value ==""){
                 em.value = "{{ org.primary_contact_email }}";
             }
-                                </script>
-{% endif %}
+        </script>
+    {% endif %}
 {% endif %}

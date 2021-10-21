@@ -17,52 +17,50 @@
         <div class="notification is-info is-light">Get started by creating a connection!</div>
     {% else %}
         <div class="content">
-
-                {% for d in connections %}
-                    {% if loop.index0 > 0 and loop.index0 % 4 == 0 or loop.index==connections|length %} </div>{% endif %}
-                    {% if loop.index0 % 4 == 0 or loop.index0 ==0 %}
-                        <div class="tile is-ancestor">
-
-                    {% endif %}
-                    <div class="tile is-parent is-3">
-                        <article class="tile is-child box">
-                            <a href="{{ url_for('connection_bp.one_connection', connection_id=d.id) }}">
-                                <h3 class="title is-3 is-inline-block has-text-link">{{ d }}</h3>
-                                <span class="icon is-pulled-right is-medium ml-5 has-text-link">
-                                    <i class="far fa-external-link-alt"></i>
-                                </span>
-                            </a>
-                            {% if d.description %}
-                                <p class="subtitle">
-                                    {{ d.description }}
-                                </p>
-                            {% endif %}
-                            <div class="content">
-                                <h4 class="title is-4">Contact Information</h4>
-                                <p>
-                                    {% if d.address and d.address != "" %}
-                                        <h5 class="title is-5">Address</h5>
-                                        {{ d.address }}
-                                        <br />
-                                        <br />
-                                    {% endif %}
-                                    {% if d.primary_contact %}
-                                        Name: {{ d.primary_contact }}
-                                        <br />
-                                    {% endif %}
-                                    {% if d.primary_contact_email %}
-                                        Email:
-                                        <a href="mailto:{{ d.primary_contact_email }}"
-                                           title="send email">{{ d.primary_contact_email }}</a>
-                                        <br />
-                                    {% endif %}
-                                    {% if d.primary_contact_phone %}Phone: {{ d.primary_contact_phone }}{% endif %}
-                                </p>
-                            </div>
-                        </article></div>
-
-                {% endfor %}
-            </div>
-
+            {% for d in connections %}
+                {% if loop.index0 > 0 and loop.index0 % 4 == 0 or loop.index==connections|length %}
+                </div>
+            {% endif %}
+            {% if loop.index0 % 4 == 0 or loop.index0 ==0 %}
+                <div class="tile is-ancestor">
+                {% endif %}
+                <div class="tile is-parent is-3">
+                    <article class="tile is-child box">
+                        <a href="{{ url_for('connection_bp.one_connection', connection_id=d.id) }}">
+                            <h3 class="title is-3 is-inline-block has-text-link">{{ d }}</h3>
+                            <span class="icon is-pulled-right is-medium ml-5 has-text-link">
+                                <i class="far fa-external-link-alt"></i>
+                            </span>
+                        </a>
+                        {% if d.description %}
+                            <p class="subtitle">
+                                {{ d.description }}
+                            </p>
+                        {% endif %}
+                        <div class="content">
+                            <h4 class="title is-4">Contact Information</h4>
+                            <p>
+                                {% if d.address and d.address != "" %}
+                                    <h5 class="title is-5">Address</h5>
+                                    {{ d.address }}
+                                    <br />
+                                    <br />
+                                {% endif %}
+                                {% if d.primary_contact %}
+                                    Name: {{ d.primary_contact }}
+                                    <br />
+                                {% endif %}
+                                {% if d.primary_contact_email %}
+                                    Email:
+                                    <a href="mailto:{{ d.primary_contact_email }}" title="send email">{{ d.primary_contact_email }}</a>
+                                    <br />
+                                {% endif %}
+                                {% if d.primary_contact_phone %}Phone: {{ d.primary_contact_phone }}{% endif %}
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 {% endblock body %}

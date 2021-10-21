@@ -17,15 +17,19 @@
         {% if t.source_git and t.source_type_id == 1 and t.source_query_type_id == 1 %}
             <!-- code from git -->
             <div class="content">
-            <a title="open page" href="{{ t.source_git }}" target="_blank">{{ t.source_git }}</a></div>
-            <div class="em-ajaxContent" data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
+                <a title="open page" href="{{ t.source_git }}" target="_blank">{{ t.source_git }}</a>
+            </div>
+            <div class="em-ajaxContent"
+                 data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
                 <div class="loader"></div>
             </div>
         {% elif t.source_url and t.source_type_id == 1 and t.source_query_type_id == 3 %}
             <!-- code from url -->
             <div class="content">
-            <a title="open page" href="{{ t.source_url }}" target="_blank">{{ t.source_url }}</a></div>
-            <div class="em-ajaxContent" data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
+                <a title="open page" href="{{ t.source_url }}" target="_blank">{{ t.source_url }}</a>
+            </div>
+            <div class="em-ajaxContent"
+                 data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
                 <div class="loader"></div>
             </div>
         {% elif t.source_query_type_id == 2 and t.query_smb_conn %}
@@ -96,7 +100,8 @@
             <pre class="box"><code class="language-ini">{{ t.query_ftp_conn.username }}@{{ t.query_ftp_conn.address|clean_address }}{{ t.query_ftp_conn.path|clean_path }}{{ t.source_ftp_file }}</code></pre>
         {% elif t.source_code and t.source_query_type_id == 4 %}
             <!-- hand query -->
-            <div class="em-ajaxContent" data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
+            <div class="em-ajaxContent"
+                 data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
                 <div class="loader"></div>
             </div>
         {% endif %}

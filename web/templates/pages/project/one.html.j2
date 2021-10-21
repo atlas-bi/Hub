@@ -62,9 +62,7 @@
                     Run
                     <!-- month, year -->
                     <span class="em-pSection">
-                        {% if p.cron_month != None or p.cron_year != None %}
-                            <em>every</em>
-                        {% endif %}
+                        {% if p.cron_month != None or p.cron_year != None %}<em>every</em>{% endif %}
                         {% if p.cron_month != None %}<em>{{ p.cron_month|cron_month }},</em>{% endif %}
                         {% if p.cron_year != None %}<em>{{ p.cron_year }}</em>{% endif %}
                     </span>
@@ -154,16 +152,12 @@
         </div>
     {% else %}
         <article class="message is-danger">
-            <div class="message-body">
-                Project has no run schedule!
-            </div>
+            <div class="message-body">Project has no run schedule!</div>
         </article>
     {% endif %}
     {% if p.global_params %}
         <div class="box">
-            <h2 class="title is-2">
-                Global Parameters
-            </h2>
+            <h2 class="title is-2">Global Parameters</h2>
             <pre class="box"><code class="language-sql">{{ p.global_params }}</code></pre>
         </div>
     {% endif %}
@@ -173,7 +167,9 @@
         </h2>
         <div class="field has-addons">
             <p class="control">
-                <a class="button" title="New Task" href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id)}}">
+                <a class="button"
+                   title="New Task"
+                   href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id)}}">
                     <span class="icon">
                         <i class="fas fa-plus"></i>
                     </span>
@@ -219,7 +215,9 @@
                 </a>
             </p>
         </div>
-        <div class="em-ajaxTable no-tools no-box" data-theme="Exec" data-src="{{ url_for('table_bp.project_all_tasks', project_id=p.id) }}">
+        <div class="em-ajaxTable no-tools no-box"
+             data-theme="Exec"
+             data-src="{{ url_for('table_bp.project_all_tasks', project_id=p.id) }}">
             <div class="loader">
             </div>
         </div>

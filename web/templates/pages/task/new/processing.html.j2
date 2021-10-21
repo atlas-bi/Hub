@@ -7,7 +7,8 @@
                     None
                 </option>
                 {% for s in processing_type %}
-                    <option value="{{ s.id }}" {% if s.id == t.processing_type_id %}selected="selected" {% endif %}>
+                    <option value="{{ s.id }}"
+                            {% if s.id == t.processing_type_id %}selected="selected"{% endif %}>
                         {{ s.name }}
                     </option>
                 {% endfor %}
@@ -15,18 +16,21 @@
         </div>
     </div>
     <!-- SMB -->
-    <section class="task-processingSmb" {% if not t or t.processing_type_id != 1 %}style="display:none;"{% endif %}>
+    <section class="task-processingSmb"
+             {% if not t or t.processing_type_id != 1 %}style="display:none;"{% endif %}>
         <div class="field">
             <label class="label">Organization</label>
             <div class="select is-fullwidth">
-                <select class="input" name="smb_processing" data-smb="task-smb-processing-connection">
-                    <option {% if not t or not t.processing_smb_conn or not t.processing_smb_conn.connection.id %} selected="selected" {% endif %}
+                <select class="input"
+                        name="smb_processing"
+                        data-smb="task-smb-processing-connection">
+                    <option {% if not t or not t.processing_smb_conn or not t.processing_smb_conn.connection.id %}selected="selected"{% endif %}
                             value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_smb_conn and t.processing_smb_conn.connection.id == s.id %} selected="selected"{% endif %}>
+                                {% if t.processing_smb_conn and t.processing_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
                             {{ s.name }}
                         </option>
                     {% endfor %}
@@ -43,13 +47,10 @@
             <label class="label">File Name (path/to/file.py)</label>
             <label>
                 <small>
-                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline"
-                        data-tooltip="{% include '/sections/py_dates.html.j2' %}
-
-                        "
-                        title="variable usage"
-                        href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior"
-                    target="_blank">See documentation for variable use. Wildcard * can be used in filenames.</a>
+                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                          " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
+                        See documentation for variable use. Wildcard * can be used in filenames.
+                    </a>
                 </small>
             </label>
             <input class="input"
@@ -59,18 +60,21 @@
         </div>
     </section>
     <!-- SFTP -->
-    <section class="task-processingSftp" {% if not t or t.processing_type_id != 2 %}style="display:none;"{% endif %}>
+    <section class="task-processingSftp"
+             {% if not t or t.processing_type_id != 2 %}style="display:none;"{% endif %}>
         <div class="field">
             <label class="label">Organization</label>
             <div class="select is-fullwidth">
-                <select class="input" name="sftp_processing" data-sftp="task-sftp-processing-connection">
-                    <option {% if not t or not t.processing_sftp_conn or not t.processing_sftp_conn.connection.id %} selected="selected" {% endif %}
+                <select class="input"
+                        name="sftp_processing"
+                        data-sftp="task-sftp-processing-connection">
+                    <option {% if not t or not t.processing_sftp_conn or not t.processing_sftp_conn.connection.id %}selected="selected"{% endif %}
                             value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_sftp_conn and t.processing_sftp_conn.connection.id == s.id %} selected="selected" {% endif %}>
+                                {% if t.processing_sftp_conn and t.processing_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
                             {{ s.name }}
                         </option>
                     {% endfor %}
@@ -87,13 +91,10 @@
             <label class="label">File Name (path/to/file.py)</label>
             <label>
                 <small>
-                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline"
-                        data-tooltip="{% include '/sections/py_dates.html.j2' %}
-
-                        "
-                        title="variable usage"
-                        href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior"
-                    target="_blank">See documentation for variable use. Wildcard * can be used in filenames.</a>
+                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                          " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
+                        See documentation for variable use. Wildcard * can be used in filenames.
+                    </a>
                 </small>
             </label>
             <input class="input"
@@ -103,18 +104,21 @@
         </div>
     </section>
     <!-- FTP -->
-    <section class="task-processingFtp" {% if not t or t.processing_type_id != 3 %}style="display:none;"{% endif %}>
+    <section class="task-processingFtp"
+             {% if not t or t.processing_type_id != 3 %}style="display:none;"{% endif %}>
         <div class="field">
             <label class="label">Organization</label>
             <div class="select is-fullwidth">
-                <select class="input" name="ftp_processing" data-ftp="task-ftp-processing-connection">
-                    <option {% if not t or not t.processing_ftp_conn or not t.processing_ftp_conn.connection.id %} selected="selected" {% endif %}
+                <select class="input"
+                        name="ftp_processing"
+                        data-ftp="task-ftp-processing-connection">
+                    <option {% if not t or not t.processing_ftp_conn or not t.processing_ftp_conn.connection.id %}selected="selected"{% endif %}
                             value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_ftp_conn and t.processing_ftp_conn.connection.id == s.id %} selected="selected" {% endif %}>
+                                {% if t.processing_ftp_conn and t.processing_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
                             {{ s.name }}
                         </option>
                     {% endfor %}
@@ -131,13 +135,10 @@
             <label class="label">File Name (path/to/file.py)</label>
             <label>
                 <small>
-                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline"
-                        data-tooltip="{% include '/sections/py_dates.html.j2' %}
-
-                        "
-                        title="variable usage"
-                        href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior"
-                    target="_blank">See documentation for variable use. Wildcard * can be used in filenames.</a>
+                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                          " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
+                        See documentation for variable use. Wildcard * can be used in filenames.
+                    </a>
                 </small>
             </label>
             <input class="input"
@@ -147,39 +148,47 @@
         </div>
     </section>
     <!-- GIT -->
-    <section class="task-processingGit" {% if not t or t.processing_type_id != 4 %}style="display:none;"{% endif %}>
+    <section class="task-processingGit"
+             {% if not t or t.processing_type_id != 4 %}style="display:none;"{% endif %}>
         <div class="field">
             <label class="label">GIT Address</label>
             <div class="control">
-                <input class="input" name="processingGit" autocomplete="off" value="{{ t.processing_git or '' }}"/>
+                <input class="input"
+                       name="processingGit"
+                       autocomplete="off"
+                       value="{{ t.processing_git or '' }}"/>
             </div>
         </div>
     </section>
     <!-- URL -->
-    <section class="task-processingUrl" {% if not t or t.processing_type_id != 5 %}style="display:none;"{% endif %}>
+    <section class="task-processingUrl"
+             {% if not t or t.processing_type_id != 5 %}style="display:none;"{% endif %}>
         <div class="field">
             <label class="label">Web Address</label>
             <div class="control">
-                <input class="input" name="processingUrl" autocomplete="off" value="{{ t.processing_url or '' }}"/>
+                <input class="input"
+                       name="processingUrl"
+                       autocomplete="off"
+                       value="{{ t.processing_url or '' }}"/>
             </div>
         </div>
     </section>
     <!-- Code -->
-    <section class="task-processingCode" {% if not t or t.processing_type_id != 6 %}style="display:none;"{% endif %}>
+    <section class="task-processingCode"
+             {% if not t or t.processing_type_id != 6 %}style="display:none;"{% endif %}>
         <div class="field">
             <label class="label">Source Code</label>
-        <textarea  name="processingCode" autocomplete="off" rows="1">{{ t.processing_code or '' }}</textarea>
-    </div>
-</section>
-<section class="task-processingCommand"
-         {% if not t or not t.processing_type_id or t.processing_type_id == 6 %}
-             style="display:none;"
-         {% endif %}>
-    <div class="field">
-        <label class="label">
-            Command To Execute (ex: main.py) only required if a project directory was specified.
-        </label>
-        <input class="input" name="processingCommand" autocomplete="off" value="{{ t.processing_command or '' }}"/>
-    </div>
-</section>
+            <textarea  name="processingCode" autocomplete="off" rows="1">{{ t.processing_code or '' }}</textarea>
+        </div>
+    </section>
+    <section class="task-processingCommand"
+             {% if not t or not t.processing_type_id or t.processing_type_id == 6 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Command To Execute (ex: main.py) only required if a project directory was specified.</label>
+            <input class="input"
+                   name="processingCommand"
+                   autocomplete="off"
+                   value="{{ t.processing_command or '' }}"/>
+        </div>
+    </section>
 </div>

@@ -9,7 +9,7 @@ from itertools import groupby
 from flask import Blueprint, jsonify
 from werkzeug import Response
 
-from scheduler.extensions import scheduler
+from scheduler.extensions import apscheduler
 from scheduler.functions import (
     scheduler_add_task,
     scheduler_delete_task,
@@ -52,7 +52,7 @@ def schedule() -> Response:
 
     active_schedule = []
 
-    for job in scheduler.get_jobs():
+    for job in apscheduler.get_jobs():
         if (
             job.id == "job_sync"
             or not hasattr(job, "next_run_time")
@@ -153,7 +153,7 @@ def run_task_delay(task_id: int, minutes: str) -> Response:
     my_hash = hashlib.sha256()
     my_hash.update(str(time.time()).encode("utf-8"))
 
-    scheduler.add_job(
+    apscheduler.add_job(
         func=scheduler_task_runner,
         trigger="date",
         run_date=datetime.datetime.now() + datetime.timedelta(minutes=int(minutes)),
@@ -168,7 +168,7 @@ def run_task_delay(task_id: int, minutes: str) -> Response:
 @web_bp.route("/api/delete")
 def delete_all_tasks() -> Response:
     """Delete all scheduled tasks."""
-    for job in scheduler.get_jobs():
+    for job in apscheduler.get_jobs():
         if re.match(r"^\d+-\d+-.+?$", job.id):
             job.remove()
 
@@ -178,8 +178,8 @@ def delete_all_tasks() -> Response:
 @web_bp.route("/api/pause")
 def pause_all_tasks() -> Response:
     """Pause all tasks."""
-    if scheduler.running:
-        scheduler.pause()
+    if apscheduler.running:
+        apscheduler.pause()
 
         return jsonify({"message": "Scheduler: all jobs paused!"})
 
@@ -190,12 +190,12 @@ def pause_all_tasks() -> Response:
 def resume_all_tasks() -> Response:
     """Resume all tasks."""
     # pylint: disable=R1705
-    if scheduler.state == 2 and scheduler.running:
-        scheduler.resume()
+    if apscheduler.state == 2 and apscheduler.running:
+        apscheduler.resume()
 
         return jsonify({"message": "Scheduler: all jobs resumed!"})
 
-    elif scheduler.state == 1:
+    elif apscheduler.state == 1:
         return jsonify({"message": "Scheduler: all jobs resumed!"})
 
     return jsonify({"error": "Scheduler: scheduler not running, restart service!"})
@@ -204,7 +204,7 @@ def resume_all_tasks() -> Response:
 @web_bp.route("/api/kill")
 def kill() -> Response:
     """Kill scheduler."""
-    scheduler.shutdown(wait=False)
+    apscheduler.shutdown(wait=False)
     return jsonify({"message": "Scheduler: scheduler killed!"})
 
 
@@ -214,7 +214,7 @@ def get_jobs() -> Response:
     return jsonify(
         [
             int(job.id.split("-")[1])
-            for job in scheduler.get_jobs()
+            for job in apscheduler.get_jobs()
             if re.match(r"^\d+-\d+-.+?$", job.id)
         ]
     )
@@ -231,7 +231,7 @@ def get_jobs_details() -> Response:
                 "next_run_time": job.next_run_time,
                 "id": job.id.split("-")[1],
             }
-            for job in scheduler.get_jobs()
+            for job in apscheduler.get_jobs()
             if re.match(r"^\d+-\d+-.+?$", job.id)
         ]
     )
@@ -243,7 +243,7 @@ def get_scheduled_jobs() -> Response:
     return jsonify(
         [
             int(job.id.split("-")[1])
-            for job in scheduler.get_jobs()
+            for job in apscheduler.get_jobs()
             if job.next_run_time is not None and re.match(r"^\d+-\d+-.+?$", job.id)
         ]
     )
@@ -252,7 +252,7 @@ def get_scheduled_jobs() -> Response:
 @web_bp.route("/api/delete-orphans")
 def delete_orphans() -> Response:
     """Delete all orphaned jobs."""
-    for job in scheduler.get_jobs():
+    for job in apscheduler.get_jobs():
         if job.args and Task.query.filter_by(id=int(job.args[0])).count() == 0:
             job.remove()
 
