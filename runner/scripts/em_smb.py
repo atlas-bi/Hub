@@ -357,7 +357,7 @@ class Smb:
                             status_id=10,
                             error=1,
                             message="File already exists and will not be loaded: "
-                            + f"smb://{self.username}@{self.share_name} {self.server_ip})/{self.share_name}/{self.dest_path}",
+                            + f"smb://{self.username}@{self.server_name} {self.server_ip})/{self.share_name}/{self.dest_path}",
                         )
                         db.session.add(log)
                         db.session.commit()
@@ -374,7 +374,7 @@ class Smb:
                 task_id=self.task.id,
                 job_id=self.job_hash,
                 status_id=10,  # 10 = SMB
-                message=f"File saved: {self.file_path} to {self.username}@{self.share_name} {self.server_ip})/{self.share_name}/{self.dest_path}",
+                message=f"File saved: {self.file_path} to {self.username}@{self.server_name} {self.server_ip})/{self.share_name}/{self.dest_path}",
             )
             db.session.add(log)
             db.session.commit()
@@ -393,7 +393,7 @@ class Smb:
                 job_id=self.job_hash,
                 status_id=10,  # 10 = SMB
                 error=1,
-                message=f"Failed to load file {self.file_path} to {self.username}@{self.share_name} {self.server_ip})/{self.share_name}/{self.dest_path}\n"
+                message=f"Failed to load file {self.file_path} to {self.username}@{self.server_name} {self.server_ip})/{self.share_name}/{self.dest_path}\n"
                 + str(full_stack()),
             )
             db.session.add(log)
