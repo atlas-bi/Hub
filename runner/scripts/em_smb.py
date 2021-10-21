@@ -77,7 +77,10 @@ class Smb:
                 + self.file_name
             )
 
-        self.conn = self.__connect()
+        try:
+            self.conn = self.__connect()
+        except:
+            self.conn = None
 
     def __connect(self) -> SMBConnection:
         """Connect to SMB server.
@@ -166,6 +169,8 @@ class Smb:
     def list_dir(self) -> List:
         """Get list of directory contents."""
         # pylint: disable=broad-except
+        if self.conn is None:
+            return []
         try:
             try:
                 # verify that it is actually existing. if not exising
@@ -202,6 +207,8 @@ class Smb:
 
     def read(self) -> str:
         """Return file contents of network file path."""
+        if self.conn is None:
+            return ""
         try:
             # if there is a wildcard in the filename
             if "*" in self.file_path:
@@ -329,6 +336,8 @@ class Smb:
 
     def save(self) -> str:
         """Load data into network file path, creating location if not existing."""
+        if self.conn is None:
+            return ""
         try:
             # path must be created one folder at a time.. the docs say the path will all be
             # created if not existing, but it doesn't seem to be the case :)
