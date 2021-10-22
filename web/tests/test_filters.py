@@ -20,16 +20,17 @@ def test_year(client_fixture: fixture) -> None:
     from web.web.filters import year
 
     assert year(None) == datetime.date.today().year
-    assert year('asdf') == datetime.date.today().year
+    assert year("asdf") == datetime.date.today().year
 
 
 def test_clean_address(client_fixture: fixture) -> None:
     from web.web.filters import clean_address
 
     assert clean_address(None) == ""
-    assert clean_address('asdf') == 'asdf'
-    assert clean_address('asdf/') == 'asdf'
-    assert clean_address('/asdf/') == '/asdf'
+    assert clean_address("asdf") == "asdf"
+    assert clean_address("asdf/") == "asdf"
+    assert clean_address("/asdf/") == "/asdf"
+
 
 def test_duration(client_fixture: fixture) -> None:
     from web.web.filters import duration
@@ -153,11 +154,11 @@ def test_database_pass(client_fixture: fixture) -> None:
     assert database_pass("mr_cool:secret@asdf") is not None
     assert database_pass("mr_coolsecretasdf") is not None
 
+
 def test_filename(client_fixture: fixture) -> None:
     from web.web.filters import filename
 
-    assert filename("","") == ""
-    assert filename("test","t") == "test.t"
-    assert filename("test",None) == "test"
-    assert filename(None,"anything") == "System generated .anything"
-
+    assert filename("", "") == ""
+    assert filename("test", "t") == "test.t"
+    assert filename("test", None) == "test"
+    assert filename(None, "anything") == "System generated .anything"

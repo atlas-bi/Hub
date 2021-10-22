@@ -16,6 +16,7 @@ from typing import Any, Generator, Tuple
 
 from dateutil.tz import tzlocal
 
+
 @pytest.fixture(scope="module")
 def client_fixture() -> Generator:
     app = runner_create_app()

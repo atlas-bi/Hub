@@ -86,6 +86,7 @@ def test_projects_user(client_fixture: fixture) -> None:
     assert page.status_code == 200
     assert b"That user doesn't exist." in page.data
 
+
 def test_one_project(client_fixture: fixture) -> None:
     # get invalid project
     # should redirect to project page and flash error

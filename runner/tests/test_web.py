@@ -13,26 +13,26 @@ run with::
 """
 
 from pytest import fixture
-from runner.model import Task, Project
-from runner.extensions import db
 
-def test_source_code(client_fixture:fixture) -> None:
+from runner.extensions import db
+from runner.model import Project, Task
+
+
+def test_source_code(client_fixture: fixture) -> None:
     project = Project(name="demo")
     db.session.add(project)
     db.session.commit()
 
     task = Task(
-      name="blah",
-      source_query_type_id=1,
-      source_git=None,
-      project_id=project.id)
+        name="blah", source_query_type_id=1, source_git=None, project_id=project.id
+    )
     db.session.add(task)
     db.session.commit()
 
     page = client_fixture.get(f"/api/{task.id}/source_code")
-    assert b'code' in page.data
+    assert b"code" in page.data
 
 
 def test_alive(client_fixture: fixture) -> None:
-    page = client_fixture.get('/api')
+    page = client_fixture.get("/api")
     assert page.json == {"status": "alive"}

@@ -20,7 +20,7 @@ def test_year(client_fixture: fixture) -> None:
     from runner.web.filters import year
 
     assert year(None) == datetime.date.today().year
-    assert year('asdf') == datetime.date.today().year
+    assert year("asdf") == datetime.date.today().year
 
 
 def test_datetime_format(client_fixture: fixture) -> None:
