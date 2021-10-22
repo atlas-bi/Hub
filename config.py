@@ -31,7 +31,7 @@ class Config:
     # redis sessions
 
     redis_host = os.environ.get("REDIS_HOST", "localhost")
-    redis_port = os.environ.get("REDIS_PORT", 6379)
+    redis_port = int(os.environ.get("REDIS_PORT", 6379))
 
     # for flask-redis
     REDIS_URL = os.environ.get("REDIS_URL", f"redis://{redis_host}:{redis_port}")
@@ -266,7 +266,7 @@ class DevConfig(Config):
     )
 
     redis_host = os.environ.get("REDIS_HOST", "localhost")
-    redis_port = os.environ.get("REDIS_PORT", 6379)
+    redis_port = int(os.environ.get("REDIS_PORT", 6379))
 
     # for flask-redis
     REDIS_URL = os.environ.get("REDIS_URL", f"redis://{redis_host}:{redis_port}")

@@ -460,7 +460,6 @@ def schedule_enabled_tasks(*args: Any) -> str:
     """Sending enabled tasks to scheduler."""
     try:
         for task in Task.query.filter_by(enabled=1).all():
-            print(task)
             sub_enable_task(task.id)
 
         return "Tasks sent to scheduler."
