@@ -24,7 +24,7 @@ class LoadParams:
         self.task_params = self.task.query_params or ""
         self.project_params = self.task.project.global_params or ""
 
-    def parse_params(self, params: str) -> dict:
+    def _parse_params(self, params: str) -> dict:
         """Parse project and task params."""
         # split into key value pairs
         if not params:
@@ -33,7 +33,7 @@ class LoadParams:
         params_dict: Dict[Any, Any] = {}
 
         for param in params.splitlines():
-            if re.match(r"\s?:\s?|\s?=\s?", param.strip()):
+            if re.search(":|=", param.strip()):
                 param_group = re.split(r"\s?:\s?|\s?=\s?", param.strip())
                 params_dict[param_group[0]] = param_group[1]
 
@@ -53,7 +53,7 @@ class LoadParams:
 
     def get(self) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
         """Get current params."""
-        return self.parse_params(self.project_params), self.parse_params(
+        return self._parse_params(self.project_params), self._parse_params(
             self.task_params
         )
 

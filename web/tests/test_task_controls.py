@@ -2,11 +2,11 @@
 
 run with::
 
-   poetry run pytest tests/test_task_controls.py \
+   poetry run pytest web/tests/test_task_controls.py \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest tests/test_task_controls.py::test_delete_task \
+   poetry run pytest web/tests/test_task_controls.py::test_delete_task \
        --cov --cov-append --cov-branch  --cov-report=term-missing --disable-warnings
 
 
@@ -151,6 +151,7 @@ def test_delete_task(client_fixture: fixture) -> None:
         url_for("task_controls_bp.delete_task", task_id=t_id), follow_redirects=True
     )
     assert page.status_code == 200
+    assert b"Deleting task" in page.data
 
     # this will show in executor messages
     executor = client_fixture.get(url_for("executors_bp.executor_status"))

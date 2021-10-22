@@ -2,11 +2,11 @@
 
 run with::
 
-   poetry run pytest tests/test_filters.py \
+   poetry run web/pytest tests/test_filters.py \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest tests/test_filters.py::test_admin_online \
+   poetry run pytest web/tests/test_filters.py::test_filename \
        --cov --cov-append --cov-branch  --cov-report=term-missing --disable-warnings
 
 
@@ -15,6 +15,21 @@ import datetime
 
 from pytest import fixture
 
+
+def test_year(client_fixture: fixture) -> None:
+    from web.web.filters import year
+
+    assert year(None) == datetime.date.today().year
+    assert year('asdf') == datetime.date.today().year
+
+
+def test_clean_address(client_fixture: fixture) -> None:
+    from web.web.filters import clean_address
+
+    assert clean_address(None) == ""
+    assert clean_address('asdf') == 'asdf'
+    assert clean_address('asdf/') == 'asdf'
+    assert clean_address('/asdf/') == '/asdf'
 
 def test_duration(client_fixture: fixture) -> None:
     from web.web.filters import duration
@@ -125,7 +140,8 @@ def test_clean_path(client_fixture: fixture) -> None:
     from web.web.filters import clean_path
 
     assert clean_path("") == ""
-    assert clean_path("test") == "test/"
+    assert clean_path("/test") == "test/"
+    assert clean_path("/test/") == "test/"
     assert clean_path("test/stuff/") == "test/stuff/"
 
 
@@ -135,3 +151,13 @@ def test_database_pass(client_fixture: fixture) -> None:
     assert database_pass("PWD=asdf") is not None
     assert database_pass("password=asdf") is not None
     assert database_pass("mr_cool:secret@asdf") is not None
+    assert database_pass("mr_coolsecretasdf") is not None
+
+def test_filename(client_fixture: fixture) -> None:
+    from web.web.filters import filename
+
+    assert filename("","") == ""
+    assert filename("test","t") == "test.t"
+    assert filename("test",None) == "test"
+    assert filename(None,"anything") == "System generated .anything"
+

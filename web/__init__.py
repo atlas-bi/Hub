@@ -24,10 +24,7 @@ from error_print import full_stack  # isort:skip
 
 
 def create_app() -> Flask:
-    """Create app.
-
-    :returns: app.
-    """
+    """Create app."""
     # pylint: disable=W0621
     app = Flask(__name__)
 

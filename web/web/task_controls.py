@@ -171,44 +171,27 @@ def delete_task(task_id: int) -> Response:
 
     if task:
         project_id = task.project_id
-        try:
-            submit_executor("disable_task", task_id)
 
-            TaskLog.query.filter_by(task_id=task_id).delete()
-            db.session.commit()
-            TaskFile.query.filter_by(task_id=task_id).delete()
-            db.session.commit()
-            Task.query.filter_by(id=task_id).delete()
-            db.session.commit()
+        submit_executor("disable_task", task_id)
 
-            log = TaskLog(  # type: ignore[call-arg]
-                status_id=7,
-                message=(current_user.full_name or "none")
-                + ": Task deleted. ("
-                + str(task_id)
-                + ")",
-            )
-            db.session.add(log)
-            db.session.commit()
+        TaskLog.query.filter_by(task_id=task_id).delete()
+        db.session.commit()
+        TaskFile.query.filter_by(task_id=task_id).delete()
+        db.session.commit()
+        Task.query.filter_by(id=task_id).delete()
+        db.session.commit()
 
-            flash("Task deleted.")
+        log = TaskLog(  # type: ignore[call-arg]
+            status_id=7,
+            message=(current_user.full_name or "none")
+            + ": Task deleted. ("
+            + str(task_id)
+            + ")",
+        )
+        db.session.add(log)
+        db.session.commit()
 
-        # pylint: disable=broad-except
-        except BaseException as e:
-            log = TaskLog(  # type: ignore[call-arg]
-                status_id=7,
-                error=1,
-                message=(
-                    (current_user.full_name or "none")
-                    + ": Failed to delete task. ("
-                    + str(task_id)
-                    + ")\n"
-                    + str(e)
-                ),
-            )
-            db.session.add(log)
-            db.session.commit()
-            flash("Failed to delete task.")
+        flash("Deleting task.")
 
         return redirect(url_for("project_bp.one_project", project_id=project_id))
 

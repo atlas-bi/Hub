@@ -12,7 +12,7 @@ from runner.scripts.em_ftp import Ftp
 from runner.scripts.em_sftp import Sftp
 from runner.scripts.em_smb import Smb
 from runner.scripts.em_smtp import Smtp
-from runner.scripts.runner import Runner
+from runner.scripts.task_runner import Runner
 
 web_bp = Blueprint("web_bp", __name__)
 
@@ -190,7 +190,7 @@ def run(task_id: int) -> dict:
 
 
 @web_bp.route("/api/<task_id>/source_code")
-def task_get_git_code(task_id: int) -> dict:
+def task_get_source_code(task_id: int) -> dict:
     """Get source code for a task."""
     try:
         task = Task.query.filter_by(id=task_id).first()

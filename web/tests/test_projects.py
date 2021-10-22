@@ -2,11 +2,11 @@
 
 run with::
 
-   poetry run pytest tests/test_projects.py \
+   poetry run pytest web/tests/test_projects.py \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest tests/test_projects.py::test_run_all \
+   poetry run pytest web/tests/test_projects.py::test_projects_user \
        --cov --cov-append --cov-branch  --cov-report=term-missing --disable-warnings
 
 
@@ -81,6 +81,10 @@ def test_projects_user(client_fixture: fixture) -> None:
     assert "Projects" in page.get_data(as_text=True)
     assert my_user.full_name in page.get_data(as_text=True)
 
+    # check invalid user
+    page = client_fixture.get("/project/user/100", follow_redirects=True)
+    assert page.status_code == 200
+    assert b"That user doesn't exist." in page.data
 
 def test_one_project(client_fixture: fixture) -> None:
     # get invalid project

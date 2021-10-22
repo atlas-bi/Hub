@@ -159,8 +159,8 @@ class DateParsing:
         date_from_string = datetime.datetime.now() + my_delta
 
         my_string = (
-            my_string.replace("firstday", "1")
-            .replace("firstday0", "01")
+            my_string.replace("firstday0", "01")
+            .replace("firstday", "1")
             .replace(
                 "lastday",
                 str(
