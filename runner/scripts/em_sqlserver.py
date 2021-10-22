@@ -114,8 +114,9 @@ class SqlServer:
     def run(self) -> str:
         """Run a sql query and return temp file location.
 
-        Data from query is written to disk in a tempfile. Tempfile
-        must be removed after data is consumed!
+        Data is loaded into a temp file.
+
+        Returns a path or raises an exception.
         """
         if not self.conn or not self.cur:
             # pylint: disable=R1732

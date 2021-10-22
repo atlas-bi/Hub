@@ -70,7 +70,7 @@ def test_tasks_user(client_fixture: fixture) -> None:
     assert page.status_code == 200
 
     # bad user
-    page = client_fixture.get("/task/user/100", follow_redirects=False)
+    page = client_fixture.get("/task/user/100", follow_redirects=True)
     assert page.status_code == 200
     assert b"That user does not exist." in page.data
 

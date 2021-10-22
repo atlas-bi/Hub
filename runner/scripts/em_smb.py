@@ -207,7 +207,11 @@ class Smb:
             return []
 
     def read(self) -> str:
-        """Return file contents of network file path."""
+        """Read file contents of network file path.
+
+        Data is loaded into a temp file.
+
+        Returns a path or raises an exception."""
         if self.conn is None:
             return ""
         try:

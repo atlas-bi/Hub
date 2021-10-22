@@ -166,7 +166,7 @@ def test_delete_task_with_scheduler(client_fixture_with_scheduler: fixture) -> N
     )
     assert page.status_code == 200
 
-    assert "Task deleted." in page.get_data(as_text=True)
+    assert "Deleting task." in page.get_data(as_text=True)
     assert request.path == url_for("project_bp.one_project", project_id=p_id)
 
 

@@ -157,7 +157,9 @@ class Sftp:
     def read(self) -> str:
         """Read a file from FTP server.
 
-        :returns: file contents as string.
+        Data is loaded into a temp file.
+
+        Returns a path or raises an exception.
         """
         try:
             logging.info(
