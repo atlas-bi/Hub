@@ -25,9 +25,9 @@
                 <pre>
 <code class="language-{{ language or 'sql' }}">{{ code }}</code>
                                                                                                 </pre>
+            </div>
         </div>
-    </div>
-    <script>
+        <script>
                     var readyStateCheckInterval{{ rand }} = setInterval(function() {
                         if (document.readyState === "complete") {
                             clearInterval(readyStateCheckInterval{{ rand }});
@@ -60,6 +60,6 @@
                               };
                         }
                     }, 10);
-</script>
-{% endwith %}
+        </script>
+    {% endwith %}
 {% endif %}

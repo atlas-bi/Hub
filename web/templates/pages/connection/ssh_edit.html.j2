@@ -29,11 +29,7 @@
             New SSH Connection
         {% endif %}
     </h1>
-    <form action="{% if ssh -%}
-                      {{ url_for('connection_bp.edit_connection_ssh', ssh_id=ssh.id, connection_id=connection.id) }}
-                  {%- else -%}
-                      {{ url_for('connection_bp.new_connection_ssh', connection_id=connection.id) }}
-                  {%- endif %}"
+    <form action="{% if ssh -%} {{ url_for('connection_bp.edit_connection_ssh', ssh_id=ssh.id, connection_id=connection.id) }} {%- else -%} {{ url_for('connection_bp.new_connection_ssh', connection_id=connection.id) }} {%- endif %}"
           method="POST">
         <div class="field">
             <label class="label">
@@ -45,9 +41,7 @@
                    type="text"
                    name="name"
                    placeholder="friendly name"
-                   value="{% if ssh -%}
-                              {{ ssh.name }}
-                          {%- endif %}"/>
+                   value="{% if ssh -%}{{ ssh.name }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -59,9 +53,7 @@
                    type="text"
                    name="address"
                    placeholder="ssh.google.com"
-                   value="{% if ssh -%}
-                              {{ ssh.address or '' }}
-                          {%- endif %}"/>
+                   value="{% if ssh -%}{{ ssh.address or '' }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -73,9 +65,7 @@
                    type="number"
                    name="port"
                    placeholder="22"
-                   value="{% if ssh -%}
-                              {{ ssh.port or 22 }}
-                          {%- endif %}"/>
+                   value="{% if ssh -%}{{ ssh.port or 22 }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -87,9 +77,7 @@
                    type="text"
                    name="username"
                    placeholder="username"
-                   value="{% if ssh -%}
-                              {{ ssh.username or '' }}
-                          {%- endif %}"/>
+                   value="{% if ssh -%}{{ ssh.username or '' }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -103,9 +91,7 @@
                            type="password"
                            name="password"
                            placeholder="password"
-                           value="{% if ssh -%}
-                                      {{ ssh.password|decrypt or '' }}
-                                  {%- endif %}"/>
+                           value="{% if ssh -%}{{ ssh.password|decrypt or '' }}{%- endif %}"/>
                 </p>
                 <div class="control">
                     <a class="button toggle-pass "data-target="password">
@@ -116,14 +102,13 @@
                 </div>
             </div>
         </div>
-
-    <button class="button is-info is-fullwidth my-5" type="submit">
-        {% if ssh %}
-            Save
-        {% else %}
-            Add
-        {% endif %}
-        SSH Connection
-    </button>
-</form>
+        <button class="button is-info is-fullwidth my-5" type="submit">
+            {% if ssh %}
+                Save
+            {% else %}
+                Add
+            {% endif %}
+            SSH Connection
+        </button>
+    </form>
 {% endblock body %}

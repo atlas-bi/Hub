@@ -4,7 +4,7 @@ import sys
 
 import pytest
 
-from scheduler import create_app as scheduler_create_app
+
 from scheduler.model import Project, Task
 from web.seed import get_or_create
 
@@ -34,12 +34,12 @@ def client_fixture() -> Generator:
             ["lsof -i :5001 | grep 'python' | awk '{print $2}' | xargs kill -9"],
             shell=True,
         )
-
+    from scheduler import create_app as scheduler_create_app
     app = scheduler_create_app()
     with app.test_client() as client, app.app_context():
         assert app.config["ENV"] == "test"  # noqa: S101
 
-        from scheduler.extensions import db, scheduler
+        from scheduler.extensions import db, atlas_scheduler
         from web.seed import seed
 
         db.drop_all()
@@ -50,19 +50,20 @@ def client_fixture() -> Generator:
 
         seed(db.session)
 
-        scheduler.remove_all_jobs()
+        atlas_scheduler.remove_all_jobs()
 
-        assert scheduler.running  # noqa: S101
+        assert atlas_scheduler.running  # noqa: S101
 
         yield client
 
-        if scheduler.running:
-            scheduler.shutdown(False)
+        if atlas_scheduler.running:
+            atlas_scheduler.shutdown(False)
 
 
 @pytest.fixture(scope="module")
 def event_fixture() -> Generator:
     """Create module scoped fixture to share fixture for tests."""
+
     if sys.platform == "darwin":
         print("killing 5002")
         subprocess.run(
@@ -74,12 +75,13 @@ def event_fixture() -> Generator:
             ["lsof -i :5001 | grep 'python' | awk '{print $2}' | xargs kill -9"],
             shell=True,
         )
+    from scheduler import create_app as scheduler_create_app
     app = scheduler_create_app()
     with app.test_client() as client, app.app_context():
 
         assert app.config["ENV"] == "test"  # noqa: S101
+        from scheduler.extensions import db, atlas_scheduler
 
-        from scheduler.extensions import db, scheduler
         from web.seed import seed
 
         db.drop_all()
@@ -90,14 +92,14 @@ def event_fixture() -> Generator:
 
         seed(db.session)
 
-        scheduler.remove_all_jobs()
+        atlas_scheduler.remove_all_jobs()
 
-        assert scheduler.running  # noqa: S101
+        assert atlas_scheduler.running  # noqa: S101
 
         yield client
 
-        if scheduler.running:
-            scheduler.shutdown(False)
+        if atlas_scheduler.running:
+            atlas_scheduler.shutdown(False)
 
 
 # pylint: disable=W0613

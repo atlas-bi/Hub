@@ -29,11 +29,7 @@
             New SFTP Connection
         {% endif %}
     </h1>
-    <form action="{% if sftp -%}
-                      {{ url_for('connection_bp.edit_connection_sftp', sftp_id=sftp.id, connection_id=connection.id) }}
-                  {%- else -%}
-                      {{ url_for('connection_bp.new_connection_sftp', connection_id=connection.id) }}
-                  {%- endif %}"
+    <form action="{% if sftp -%} {{ url_for('connection_bp.edit_connection_sftp', sftp_id=sftp.id, connection_id=connection.id) }} {%- else -%} {{ url_for('connection_bp.new_connection_sftp', connection_id=connection.id) }} {%- endif %}"
           method="POST">
         <div class="field">
             <label class="label">
@@ -45,9 +41,7 @@
                    type="text"
                    name="name"
                    placeholder="friendly name"
-                   value="{% if sftp -%}
-                              {{ sftp.name }}
-                          {%- endif %}"/>
+                   value="{% if sftp -%}{{ sftp.name }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -59,9 +53,7 @@
                    type="text"
                    name="address"
                    placeholder="sftp.google.com"
-                   value="{% if sftp -%}
-                              {{ sftp.address or '' }}
-                          {%- endif %}"/>
+                   value="{% if sftp -%}{{ sftp.address or '' }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -73,9 +65,7 @@
                    type="number"
                    name="port"
                    placeholder="22"
-                   value="{% if sftp -%}
-                              {{ sftp.port or 22 }}
-                          {%- endif %}"/>
+                   value="{% if sftp -%}{{ sftp.port or 22 }}{%- endif %}"/>
         </div>
         <div class="field">
             <label class="label">
@@ -83,56 +73,52 @@
                 <span class="has-text-grey">*</span>
             </label>
             <input class="input"
-                required
-                type="text"
-                name="path"
-                placeholder="/path/to/somewhere"
-                value="{% if sftp -%}{{ sftp.path or '' }}{%- endif %}"/>
-            </div>
-            <div class="field">
-                <label class="label">
-                    Username
-                    <span class="has-text-grey">*</span>
-                </label>
-                <input class="input"
-                       required
-                       type="text"
-                       name="username"
-                       placeholder="username"
-                       value="{% if sftp -%}
-                                  {{ sftp.username or '' }}
-                              {%- endif %}"/>
-            </div>
-            <div class="field">
-                <label class="label">
-                    Password
-                    <span class="has-text-grey">*</span>
-                </label>
-                <div class="field has-addons">
-                    <p class="control is-expanded">
-                        <input class="input"
-                               required
-                               type="password"
-                               name="password"
-                               placeholder="password"
-                               value="{% if sftp -%}
-                                          {{ sftp.password|decrypt or '' }}
-                                      {%- endif %}"/>
-                    </p>
-                    <div class="control">
-                        <a class="button toggle-pass "data-target="password">
-                            <span class="icon">
-                                <i class="fas fa-eye"></i>
-                            </span>
-                        </a>
-                    </div>
+                   required
+                   type="text"
+                   name="path"
+                   placeholder="/path/to/somewhere"
+                   value="{% if sftp -%}{{ sftp.path or '' }}{%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Username
+                <span class="has-text-grey">*</span>
+            </label>
+            <input class="input"
+                   required
+                   type="text"
+                   name="username"
+                   placeholder="username"
+                   value="{% if sftp -%}{{ sftp.username or '' }}{%- endif %}"/>
+        </div>
+        <div class="field">
+            <label class="label">
+                Password
+                <span class="has-text-grey">*</span>
+            </label>
+            <div class="field has-addons">
+                <p class="control is-expanded">
+                    <input class="input"
+                           required
+                           type="password"
+                           name="password"
+                           placeholder="password"
+                           value="{% if sftp -%}{{ sftp.password|decrypt or '' }}{%- endif %}"/>
+                </p>
+                <div class="control">
+                    <a class="button toggle-pass "data-target="password">
+                        <span class="icon">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </a>
                 </div>
             </div>
-            <div class="field">
-                <label class="label">SSH Key</label>
-            </div>
-            <style>.CodeMirror {height: 100px;}</style>
-            <textarea class="connection_string"
+        </div>
+        <div class="field">
+            <label class="label">SSH Key</label>
+        </div>
+        <style>.CodeMirror {height: 100px;}</style>
+        <textarea class="connection_string"
                                                           name="ssh_key">{% if sftp and sftp.key -%}{{ sftp.key|decrypt }}{%- endif %}</textarea>
         <button class="button is-info is-fullwidth my-5" type="submit">
             {% if sftp %}

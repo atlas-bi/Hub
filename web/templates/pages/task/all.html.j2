@@ -36,7 +36,8 @@
         <h2 class="title is-2">Owners</h2>
         <div class="tags">
             {% for owner in owners %}
-                <a href="{{ url_for('task_bp.user_tasks', user_id=owner[1]) }}" title="open {{ owner[0] }}'s projects">
+                <a href="{{ url_for('task_bp.user_tasks', user_id=owner[1]) }}"
+                   title="open {{ owner[0] }}'s projects">
                     <span class="tag mr-1 is-light is-medium">
                         {{ owner[0] }}
                         <span class="ml-2 mb-0 tag is-info is-rounded">{{ owner[2] }}</span>
@@ -60,8 +61,8 @@
         </div>
     {% endif %}
     <div class="em-ajaxTable"
-        data-theme="Exec"
-        data-src="{% if user -%}{{ url_for('table_bp.task_list', my_type=user.id) }}{%- else -%}{{ url_for('table_bp.task_list', my_type='all') }}{%- endif %}">
+         data-theme="Exec"
+         data-src="{% if user -%}{{ url_for('table_bp.task_list', my_type=user.id) }}{%- else -%}{{ url_for('table_bp.task_list', my_type='all') }}{%- endif %}">
         <div class="loader"></div>
     </div>
 {% endblock body %}

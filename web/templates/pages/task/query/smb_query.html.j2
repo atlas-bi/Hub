@@ -11,7 +11,8 @@
                     Choose one
                 </option>
                 {% for s in smb_query %}
-                    <option value="{{ s.id }}" {% if t and t.query_smb_id == s.id %}selected="selected"{% endif %}>
+                    <option value="{{ s.id }}"
+                            {% if t and t.query_smb_id == s.id %}selected="selected"{% endif %}>
                         {{ s.name }}
                     </option>
                 {% endfor %}

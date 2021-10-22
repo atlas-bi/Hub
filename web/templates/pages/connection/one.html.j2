@@ -13,9 +13,7 @@
 
 {% block body %}
     <h1 class="title is-1">{{ connection }}</h1>
-    {% if connection.description %}
-        <h2 class="subtitle">{{ connection.description }}</h2>
-    {% endif %}
+    {% if connection.description %}<h2 class="subtitle">{{ connection.description }}</h2>{% endif %}
     <div class="field has-addons">
         <p class="control">
             <a class="button"
@@ -118,9 +116,7 @@
                    title="send email">{{ connection.primary_contact_email }}</a>
                 <br />
             {% endif %}
-            {% if connection.primary_contact_phone %}
-                Phone: {{ connection.primary_contact_phone }}
-            {% endif %}
+            {% if connection.primary_contact_phone %}Phone: {{ connection.primary_contact_phone }}{% endif %}
         </div>
     </div>
     {% if connection.database|length > 0 %}
@@ -544,7 +540,8 @@
         Tasks using this destination
     </h2>
     <!-- ajax table -->
-    <div class="em-ajaxTable mb-5" data-src="{{ url_for('table_bp.connection_tasks', connection_id=connection.id) }}">
+    <div class="em-ajaxTable mb-5"
+         data-src="{{ url_for('table_bp.connection_tasks', connection_id=connection.id) }}">
         <div class="loader">
         </div>
     </div>

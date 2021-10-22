@@ -275,21 +275,28 @@ function debounce(func, wait, immediate) {
       nav = level.cloneNode();
       nav.classList.add("log-group");
       nav.addEventListener("click", function(e){
-        collapse=this.querySelector('div[log_id]');
-        if(collapse.classList.contains('is-collapsed')){
-          collapse.classList.remove('is-collapsed');
-          var angle = this.querySelector('.fa-angle-right')
+        collapses=this.querySelectorAll('div[log_id]');
+        var angle = this.querySelector('.icon i.fa-angle-right, .icon i.fa-angle-down')
+
+        if(angle.classList.contains('fa-angle-right')){
+          for (var c=0;c<collapses.length;c++){
+          collapse=collapses[c]
+            collapse.classList.remove('is-collapsed');
+          }
+
           angle.classList.remove('fa-angle-right')
           angle.classList.add('fa-angle-down');
 
-        }
-        else{
-          collapse.classList.add('is-collapsed');
-          var angle  = this.querySelector('.fa-angle-down');
-          angle.classList.remove('fa-angle-down')
-          angle.classList.add('fa-angle-right');
-        }
-      })
+        } else {
+          for (var c=0;c<collapses.length;c++){
+            collapse=collapses[c]
+              collapse.classList.add('is-collapsed');
+            }
+            angle.classList.remove('fa-angle-down')
+            angle.classList.add('fa-angle-right');
+          }
+        })
+
         if (group[x]["location"] == "before"){
            updated.parentElement.insertBefore(nav, updated.parentElement.firstChild)
         } else {

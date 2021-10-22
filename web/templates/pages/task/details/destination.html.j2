@@ -7,14 +7,12 @@
                 File Name:
                 <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext)}}</span>
             </li>
-            
-                {% if t.destination_ignore_delimiter != 1 and t.destination_file_delimiter %}
+            {% if t.destination_ignore_delimiter != 1 and t.destination_file_delimiter %}
                 <li>
                     File Delimiter:
                     <span class="tag is-info is-light">{{ t.destination_file_delimiter or ',' }}</span>
-                    </li>
-                {% endif %}
-            
+                </li>
+            {% endif %}
             {% if t.destination_file_line_terminator %}
                 <li>Line End Appending</li>
                 <span class="em-gridValue">
@@ -55,9 +53,8 @@
                 <div class="message-body">This task will attempt to overwrite files with the same name.</div>
             </article>
         {% endif %}
-        <a
-            title="open connection"
-            href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_sftp_conn.connection.id) }}">
+        <a title="open connection"
+           href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_sftp_conn.connection.id) }}">
             {{ t.destination_sftp_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.destination_sftp_conn.name }}
@@ -88,9 +85,8 @@
                 <div class="message-body">This task will attempt to overwrite files with the same name.</div>
             </article>
         {% endif %}
-        <a
-            title="open connection"
-            href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_smb_conn.connection.id) }}">
+        <a title="open connection"
+           href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_smb_conn.connection.id) }}">
             {{ t.destination_smb_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.destination_smb_conn.name }}
@@ -102,30 +98,14 @@
         <h3 class="title is-3">Success Email</h3>
         <div class="content">
             <ul>
-                {% if t.email_completion_file == 1 %}
-                <li>
-                    Output file attached to email
-                </li>
-                {% endif %}
+                {% if t.email_completion_file == 1 %}<li>Output file attached to email</li>{% endif %}
                 {% if t.email_completion_file == 1 and t.email_completion_dont_send_empty_file == 1 %}
-                <li>
-                    
-                        Will not send with empty files
-                    
-                </li>
+                    <li>Will not send with empty files</li>
                 {% endif %}
                 {% if t.email_completion_file == 1 and t.email_completion_file_embed == 1 %}
-                <li>
-                    
-                        File will be embedded in email body
-                    
-                </li>
+                    <li>File will be embedded in email body</li>
                 {% endif %}
-                {% if t.email_completion_log == 1 %}
-                <li>
-                    Run logs embedded in email
-                </li>
-                {% endif %}
+                {% if t.email_completion_log == 1 %}<li>Run logs embedded in email</li>{% endif %}
                 <li>
                     Email Recipients:
                     <span class="tag is-info is-light">{{ t.email_completion_recipients or "None" }}</span>
@@ -133,23 +113,31 @@
             </ul>
         </div>
         {% if t.email_completion_message|length > 0 %}
-            <h4 class="title is-4">Message</h4>
+            <h4 class="title is-4">
+                Message
+            </h4>
             <pre class="box"><code class="language-text">{{ t.email_completion_message }}</code></pre>
         {% endif %}
     {% endif %}
     <!-- error emails -->
     {% if t.email_error == 1 %}
-        <h3 class="title is-3">Error Email</h3>
+        <h3 class="title is-3">
+            Error Email
+        </h3>
         <div class="content">
             <ul>
                 <li>
                     Email Recipients:
-                    <span class="tag is-info is-light">{{ t.email_error_recipients or "None" }}</span>
+                    <span class="tag is-info is-light">
+                        {{ t.email_error_recipients or "None" }}
+                    </span>
                 </li>
             </ul>
         </div>
         {% if t.email_error_message|length > 0 %}
-            <h4 class="title is-4">Message</h4>
+            <h4 class="title is-4">
+                Message
+            </h4>
             <pre class="box"><code class="language-text">{{ t.email_error_message }}</code></pre>
         {% endif %}
     {% endif %}

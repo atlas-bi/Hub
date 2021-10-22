@@ -38,7 +38,7 @@ import re
 from apscheduler.events import JobEvent, JobExecutionEvent, JobSubmissionEvent
 from dateutil.tz import tzlocal
 
-from scheduler.extensions import db, scheduler
+from scheduler.extensions import db, atlas_scheduler
 from scheduler.model import Task, TaskLog
 
 
@@ -50,7 +50,7 @@ def job_missed(event: JobEvent) -> None:
 
     job_id follows the pattern proj_id-task-id-stuff
     """
-    with scheduler.app.app_context():
+    with atlas_scheduler.app.app_context():
 
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
@@ -77,7 +77,7 @@ def job_missed(event: JobEvent) -> None:
 
 def job_error(event: JobEvent) -> None:
     """Capture execution errors."""
-    with scheduler.app.app_context():
+    with atlas_scheduler.app.app_context():
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
 
@@ -114,7 +114,7 @@ def job_error(event: JobEvent) -> None:
 
 def job_executed(event: JobExecutionEvent) -> None:
     """Event triggered when a job has been executed by scheduler."""
-    with scheduler.app.app_context():
+    with atlas_scheduler.app.app_context():
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
 
@@ -139,8 +139,8 @@ def job_executed(event: JobExecutionEvent) -> None:
 
 def job_added(event: JobEvent) -> None:
     """Event is triggered when job is first created in scheduler not for repeat runs."""
-    with scheduler.app.app_context():
-        job = scheduler.get_job(event.job_id)
+    with atlas_scheduler.app.app_context():
+        job = atlas_scheduler.get_job(event.job_id)
 
         # job and task just exist still
         if re.match(r"^\d+-\d+-.+?$", event.job_id) and job:
@@ -187,7 +187,7 @@ def job_added(event: JobEvent) -> None:
 
 def job_removed(event: JobEvent) -> None:
     """Event triggered when a job is removed."""
-    with scheduler.app.app_context():
+    with atlas_scheduler.app.app_context():
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
 
@@ -205,7 +205,7 @@ def job_removed(event: JobEvent) -> None:
 
 def job_submitted(event: JobSubmissionEvent) -> None:
     """Event is triggered when an already added job is run."""
-    with scheduler.app.app_context():
+    with atlas_scheduler.app.app_context():
 
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
@@ -214,7 +214,7 @@ def job_submitted(event: JobSubmissionEvent) -> None:
 
             if task:
                 # if job still exists (not one off..)
-                job = scheduler.get_job(event.job_id)
+                job = atlas_scheduler.get_job(event.job_id)
 
                 if task.next_run and task.next_run.replace(
                     tzinfo=tzlocal()

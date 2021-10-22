@@ -7,206 +7,210 @@
                 File
                 URL
 -->
-<div class="field">
-    <h2 class="title is-2">Query Location</h2>
-    <div class="select is-fullwidth">
-        <select class="input" name="sourceQueryType">
-            <option disabled="disabled"
-                    {% if not t or t.source_query_type_id == None %} selected="selected" {% endif %}>
-                Choose one
-            </option>
-            {% for s in source_query_type %}
-                <option value="{{ s.id }}" {% if s.id == t.source_query_type_id %} selected="selected" {% endif %}>
-                    {{ s.name }}
+    <div class="field">
+        <h2 class="title is-2">Query Location</h2>
+        <div class="select is-fullwidth">
+            <select class="input" name="sourceQueryType">
+                <option disabled="disabled"
+                        {% if not t or t.source_query_type_id == None %}selected="selected"{% endif %}>
+                    Choose one
                 </option>
-            {% endfor %}
-        </select>
+                {% for s in source_query_type %}
+                    <option value="{{ s.id }}"
+                            {% if s.id == t.source_query_type_id %}selected="selected"{% endif %}>
+                        {{ s.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
-</div>
-<!--
+    <!--
                 url to GIT or other source. Site settings must have base path configured. This site requires login
 -->
-<section class="task-sourceGit block" {% if not t or t.source_query_type_id != 1 %}style="display:none;"{% endif %}>
-    <div class="field">
-        <label class="label">GIT Address</label>
-        <div class="control">
-            <input class="input" name="sourceGit" autocomplete="off" value="{{ t.source_git or '' }}"/>
+    <section class="task-sourceGit block"
+             {% if not t or t.source_query_type_id != 1 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">GIT Address</label>
+            <div class="control">
+                <input class="input"
+                       name="sourceGit"
+                       autocomplete="off"
+                       value="{{ t.source_git or '' }}"/>
+            </div>
         </div>
-    </div>
-</section>
-<!--
+    </section>
+    <!--
                 smb
 -->
-<section class="task-sourceSmbQuery block"
-         {% if not t or t.source_query_type_id != 2 %}
-             style="display:none;"
-         {% endif %}>
-    <div class="field">
-        <label class="label">Organization</label>
-        <div class="select is-fullwidth">
-            <select class="input" name="smb_query" data-smb="task-query-smb-source-connection">
-                <option {% if not t or not t.query_smb_conn or not t.query_smb_conn.connection.id %} selected="selected" {% endif %}
-                        value="none">
-                    Choose one
-                </option>
-                {% for s in conn %}
-                    <option value="{{ s.id }}"
-                            {% if t.query_smb_conn and t.query_smb_conn.connection.id == s.id %} selected="selected"{% endif %}>
-                        {{ s.name }}
+    <section class="task-sourceSmbQuery block"
+             {% if not t or t.source_query_type_id != 2 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Organization</label>
+            <div class="select is-fullwidth">
+                <select class="input"
+                        name="smb_query"
+                        data-smb="task-query-smb-source-connection">
+                    <option {% if not t or not t.query_smb_conn or not t.query_smb_conn.connection.id %}selected="selected"{% endif %}
+                            value="none">
+                        Choose one
                     </option>
-                {% endfor %}
-            </select>
+                    {% for s in conn %}
+                        <option value="{{ s.id }}"
+                                {% if t.query_smb_conn and t.query_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
+                            {{ s.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-    </div>
-    <div class="task-query-smb-source-connection field">
-        {% if t and t.query_smb_id %}
-            {% include "pages/task/query/smb_query.html.j2" %}
+        <div class="task-query-smb-source-connection field">
+            {% if t and t.query_smb_id %}
+                {% include "pages/task/query/smb_query.html.j2" %}
 
-        {% endif %}
-    </div>
-    <div class="field">
-        <label class="label">File Name (path/to/file.csv)</label>
-        <label>
-            <small>
-                <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline"
-                    data-tooltip="{% include '/sections/py_dates.html.j2' %}
-
-                    "
-                    title="variable usage"
-                    href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior"
-                target="_blank">See documentation for variable use. Wildcard * can be used in filenames.</a>
-            </small>
-        </label>
-        <input class="input" name="sourceQuerySmbFile" autocomplete="off" value="{{ t.query_smb_file or '' }}"/>
-    </div>
-</section>
-<!--
+            {% endif %}
+        </div>
+        <div class="field">
+            <label class="label">File Name (path/to/file.csv)</label>
+            <label>
+                <small>
+                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                         " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
+                        See documentation for variable use. Wildcard * can be used in filenames.
+                    </a>
+                </small>
+            </label>
+            <input class="input"
+                   name="sourceQuerySmbFile"
+                   autocomplete="off"
+                   value="{{ t.query_smb_file or '' }}"/>
+        </div>
+    </section>
+    <!--
                 ftp
 -->
-<section class="task-sourceFtpQuery block"
-         {% if not t or t.source_query_type_id != 6 %}
-             style="display:none;"
-         {% endif %}>
-    <div class="field">
-        <label class="label">Organization</label>
-        <div class="select is-fullwidth">
-            <select class="input" name="ftp_query" data-ftp="task-query-ftp-source-connection">
-                <option {% if not t or not t.query_ftp_conn or not t.query_ftp_conn.connection.id %} selected="selected" {% endif %}
-                        value="none">
-                    Choose one
-                </option>
-                {% for s in conn %}
-                    <option value="{{ s.id }}"
-                            {% if t.query_ftp_conn and t.query_ftp_conn.connection.id == s.id %} selected="selected"{% endif %}>
-                        {{ s.name }}
+    <section class="task-sourceFtpQuery block"
+             {% if not t or t.source_query_type_id != 6 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Organization</label>
+            <div class="select is-fullwidth">
+                <select class="input"
+                        name="ftp_query"
+                        data-ftp="task-query-ftp-source-connection">
+                    <option {% if not t or not t.query_ftp_conn or not t.query_ftp_conn.connection.id %}selected="selected"{% endif %}
+                            value="none">
+                        Choose one
                     </option>
-                {% endfor %}
-            </select>
+                    {% for s in conn %}
+                        <option value="{{ s.id }}"
+                                {% if t.query_ftp_conn and t.query_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
+                            {{ s.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-    </div>
-    <div class="task-query-ftp-source-connection field">
-        {% if t and t.query_ftp_id %}
-            {% include "pages/task/query/ftp_query.html.j2" %}
+        <div class="task-query-ftp-source-connection field">
+            {% if t and t.query_ftp_id %}
+                {% include "pages/task/query/ftp_query.html.j2" %}
 
-        {% endif %}
-    </div>
-    <div class="field">
-        <label class="label">File Name (path/to/file.csv)</label>
-        <label>
-            <small>
-                <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline"
-                    data-tooltip="{% include '/sections/py_dates.html.j2' %}
-
-                    "
-                    title="variable usage"
-                    href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior"
-                target="_blank">See documentation for variable use. Wildcard * can be used in filenames.</a>
-            </small>
-        </label>
-        <input class="input" name="sourceQueryFtpFile" autocomplete="off" value="{{ t.query_ftp_file or '' }}"/>
-    </div>
-</section>
-<!--
+            {% endif %}
+        </div>
+        <div class="field">
+            <label class="label">File Name (path/to/file.csv)</label>
+            <label>
+                <small>
+                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                         " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
+                        See documentation for variable use. Wildcard * can be used in filenames.
+                    </a>
+                </small>
+            </label>
+            <input class="input"
+                   name="sourceQueryFtpFile"
+                   autocomplete="off"
+                   value="{{ t.query_ftp_file or '' }}"/>
+        </div>
+    </section>
+    <!--
                 sftp
 -->
-<section class="task-sourceSftpQuery block"
-         {% if not t or t.source_query_type_id != 5 %}
-             style="display:none;"
-         {% endif %}>
-    <div class="field">
-        <label class="label">Organization</label>
-        <div class="select is-fullwidth">
-            <select class="input" name="sftp_query" data-sftp="task-query-sftp-source-connection">
-                <option {% if not t or not t.query_sftp_conn or not t.query_sftp_conn.connection.id %} selected="selected" {% endif %}
-                        value="none">
-                    Choose one
-                </option>
-                {% for s in conn %}
-                    <option value="{{ s.id }}"
-                            {% if t.query_sftp_conn and t.query_sftp_conn.connection.id == s.id %} selected="selected"{% endif %}>
-                        {{ s.name }}
+    <section class="task-sourceSftpQuery block"
+             {% if not t or t.source_query_type_id != 5 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Organization</label>
+            <div class="select is-fullwidth">
+                <select class="input"
+                        name="sftp_query"
+                        data-sftp="task-query-sftp-source-connection">
+                    <option {% if not t or not t.query_sftp_conn or not t.query_sftp_conn.connection.id %}selected="selected"{% endif %}
+                            value="none">
+                        Choose one
                     </option>
-                {% endfor %}
-            </select>
+                    {% for s in conn %}
+                        <option value="{{ s.id }}"
+                                {% if t.query_sftp_conn and t.query_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
+                            {{ s.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-    </div>
-    <div class="task-query-sftp-source-connection field ">
-        {% if t and t.query_sftp_id %}
-            {% include "pages/task/query/sftp_query.html.j2" %}
+        <div class="task-query-sftp-source-connection field ">
+            {% if t and t.query_sftp_id %}
+                {% include "pages/task/query/sftp_query.html.j2" %}
 
-        {% endif %}
-    </div>
-    <div class="field">
-        <label class="label">File Name (path/to/file.csv)</label>
-        <label>
-            <small>
-                <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline"
-                    data-tooltip="{% include '/sections/py_dates.html.j2' %}
-
-                    "
-                    title="variable usage"
-                    href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior"
-                target="_blank">See documentation for variable use. Wildcard * can be used in filenames.</a>
-            </small>
-        </label>
-        <input class="input" name="sourceQuerySftpFile" autocomplete="off" value="{{ t.query_sftp_file or '' }}"/>
-    </div>
-</section>
-<!--
+            {% endif %}
+        </div>
+        <div class="field">
+            <label class="label">File Name (path/to/file.csv)</label>
+            <label>
+                <small>
+                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                         " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
+                        See documentation for variable use. Wildcard * can be used in filenames.
+                    </a>
+                </small>
+            </label>
+            <input class="input"
+                   name="sourceQuerySftpFile"
+                   autocomplete="off"
+                   value="{{ t.query_sftp_file or '' }}"/>
+        </div>
+    </section>
+    <!--
                 code url - cannot require password
 -->
-<section class="task-sourceURL block" {% if not t or t.source_query_type_id != 3 %}style="display:none;"{% endif %}>
-    <div class="field">
-        <label class="label">Web Address</label>
-        <div class="control">
-            <input class="input" name="sourceURL" autocomplete="off" value="{{ t.source_url or '' }}"/>
+    <section class="task-sourceURL block"
+             {% if not t or t.source_query_type_id != 3 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Web Address</label>
+            <div class="control">
+                <input class="input"
+                       name="sourceURL"
+                       autocomplete="off"
+                       value="{{ t.source_url or '' }}"/>
+            </div>
         </div>
+    </section>
+    <div class="field task-query-headers"
+         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
+        <input class="is-checkradio is-info"
+               id="task_include_query_headers"
+               type="checkbox"
+               {% if not t or (t and t.source_query_include_header == 1) %} checked="checked" {% endif %}/>
+        <label for="task_include_query_headers">Include Query Headers?</label>
+        <input type="hidden"
+               name="task_include_query_headers"
+               value="{% if not t or (t and t.source_query_include_header == 1) -%} 1 {%- else -%} 0 {%- endif %}"/>
     </div>
-</section>
-<div class="field task-query-headers"
-     {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %}
-         style="display:none;"
-     {% endif %}>
-    <input class="is-checkradio is-info"
-           id="task_include_query_headers"
-           type="checkbox"
-           {% if not t or (t and t.source_query_include_header == 1) %} checked="checked" {% endif %}/>
-    <label for="task_include_query_headers">Include Query Headers?</label>
-    <input type="hidden"
-           name="task_include_query_headers"
-           value="{% if not t or (t and t.source_query_include_header == 1) -%}
-                      1
-                  {%- else -%}
-                      0
-                  {%- endif %}"/>
-</div>
-<!--
+    <!--
                 raw code
 -->
-<section class="task-sourceCode block" {% if not t or t.source_query_type_id != 4 %}style="display:none;"{% endif %}>
-    <div class="field">
-        <label class="label">Source Code</label>
-    <textarea name="sourceCode" autocomplete="off" rows="1">{{ t.source_code or '' }}</textarea>
-</div>
-</section>
+    <section class="task-sourceCode block"
+             {% if not t or t.source_query_type_id != 4 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Source Code</label>
+            <textarea name="sourceCode" autocomplete="off" rows="1">{{ t.source_code or '' }}</textarea>
+        </div>
+    </section>
 </div>

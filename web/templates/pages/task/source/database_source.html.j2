@@ -10,7 +10,8 @@
                 Choose one
             </option>
             {% for s in database_source %}
-                <option value="{{ s.id }}" {% if t and t.source_database_id == s.id %} selected="selected" {% endif %}>
+                <option value="{{ s.id }}"
+                        {% if t and t.source_database_id == s.id %}selected="selected"{% endif %}>
                     {{ s.name }}
                 </option>
             {% endfor %}

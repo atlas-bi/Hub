@@ -2,9 +2,7 @@
     {% if schedule and schedule_index %}
         <div class="is-relative pb-5">
             <div class="em-timelineScale">
-                {% for index in schedule_index %}
-                    <div class="em-ScaleBar" data-attr="{{ index }}"></div>
-                {% endfor %}
+                {% for index in schedule_index %}<div class="em-ScaleBar" data-attr="{{ index }}"></div>{% endfor %}
                 <div class="em-ScaleBar">
                     <!-- blank for 0 -->
                 </div>
@@ -15,7 +13,8 @@
                         <div class="is-flex-grow-1 is-flex-shrink-1 "></div>
                         <div class="em-elBar has-background-info"
                              data-attr="{{ col.case }}"
-                             style="height:{% if col.count > 0 -%}{{ col.count / schedule_index[0] *100 }}%{%- else -%}0px{%- endif %}"></div>
+                             style="height:{% if col.count > 0 -%}{{ col.count / schedule_index[0] *100 }}%{%- else -%}0px{%- endif %}">
+                        </div>
                     </div>
                 {% endfor %}
             </div>

@@ -22,7 +22,7 @@ from dateutil.tz import tzlocal
 from flask import g, helpers
 from pytest import fixture
 
-from scheduler.extensions import db, scheduler
+from scheduler.extensions import db, atlas_scheduler
 from scheduler.model import Project, Task, User
 from web.seed import get_or_create
 
@@ -57,7 +57,7 @@ def test_schedule(client_fixture: fixture) -> None:
     assert t.enabled == 1
 
     # add a maintenance task
-    scheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="interval",
         hours=1,
@@ -83,7 +83,7 @@ def test_add_task(client_fixture: fixture) -> None:
     assert t.enabled == 1
 
     # check that job is in the scheduler
-    scheduled_task = scheduler.get_job(f"{p_id}-{t.id}-cron")
+    scheduled_task = atlas_scheduler.get_job(f"{p_id}-{t.id}-cron")
     assert scheduled_task.args[0] == str(t.id)
     assert (
         scheduled_task.next_run_time.isoformat()
@@ -234,7 +234,7 @@ def test_run_task_with_delay(client_fixture: fixture) -> None:
 
     # check that job is in scheduler
     scheduled_task = [
-        x for x in scheduler.get_jobs() if len(x.args) > 0 and x.args[0] == str(t_id)
+        x for x in atlas_scheduler.get_jobs() if len(x.args) > 0 and x.args[0] == str(t_id)
     ][0]
     assert (
         scheduled_task.next_run_time.replace(microsecond=0, second=0).isoformat()
@@ -250,12 +250,12 @@ def test_delete_all(client_fixture: fixture) -> None:
     assert page.status_code == 200
 
     # one maintenance job should be left
-    assert len(scheduler.get_jobs()) == 0
+    assert len(atlas_scheduler.get_jobs()) == 0
 
     # add a job with no args
     from .conftest import demo_task
 
-    scheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="interval",
         seconds=10,
@@ -274,7 +274,7 @@ def test_delete_all(client_fixture: fixture) -> None:
     assert page.json == {"message": "Scheduler: all jobs deleted!"}
     assert page.status_code == 200
     # one  job should be left
-    assert len(scheduler.get_jobs()) == 1
+    assert len(atlas_scheduler.get_jobs()) == 1
 
 
 def test_pause_resume(client_fixture: fixture) -> None:
@@ -290,23 +290,23 @@ def test_pause_resume(client_fixture: fixture) -> None:
     assert page.json == {"message": "Scheduler: all jobs paused!"}
     assert page.status_code == 200
 
-    assert scheduler.state == 2
-    assert scheduler.running == True
+    assert atlas_scheduler.state == 2
+    assert atlas_scheduler.running == True
 
     page = client_fixture.get(f"/api/resume")
     assert page.json == {"message": "Scheduler: all jobs resumed!"}
     assert page.status_code == 200
 
-    assert scheduler.state == 1
-    assert scheduler.running == True
+    assert atlas_scheduler.state == 1
+    assert atlas_scheduler.running == True
 
     # resume with scheduler already enabled
     page = client_fixture.get(f"/api/resume")
     assert page.json == {"message": "Scheduler: all jobs resumed!"}
     assert page.status_code == 200
 
-    assert scheduler.state == 1
-    assert scheduler.running == True
+    assert atlas_scheduler.state == 1
+    assert atlas_scheduler.running == True
 
 
 def test_kill(client_fixture: fixture) -> None:
@@ -314,8 +314,8 @@ def test_kill(client_fixture: fixture) -> None:
     assert page.json == {"message": "Scheduler: scheduler killed!"}
     assert page.status_code == 200
 
-    assert scheduler.state == 0
-    assert scheduler.running == False
+    assert atlas_scheduler.state == 0
+    assert atlas_scheduler.running == False
 
 
 def test_jobs(client_fixture: fixture) -> None:
@@ -345,7 +345,7 @@ def test_details(client_fixture: fixture) -> None:
     assert t.enabled == 1
 
     # job with no args
-    scheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="interval",
         seconds=10,
@@ -355,7 +355,7 @@ def test_details(client_fixture: fixture) -> None:
     )
 
     page = client_fixture.get(f"/api/details")
-    job = scheduler.get_job(f"{p_id}-{t.id}-cron")
+    job = atlas_scheduler.get_job(f"{p_id}-{t.id}-cron")
     text = page.json[0]
 
     del text["next_run_time"]
@@ -378,7 +378,7 @@ def test_scheduled(client_fixture: fixture) -> None:
     assert t.enabled == 1
 
     # job with no args
-    scheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="interval",
         seconds=10,
@@ -400,7 +400,7 @@ def test_delete_orphans(client_fixture: fixture) -> None:
     assert page.status_code == 200
 
     # manually add a job to scheduler
-    scheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="interval",
         seconds=10,
@@ -410,10 +410,10 @@ def test_delete_orphans(client_fixture: fixture) -> None:
         replace_existing=True,
     )
 
-    assert len(scheduler.get_jobs()) == 1
+    assert len(atlas_scheduler.get_jobs()) == 1
 
     # job with no args
-    scheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="interval",
         seconds=10,
@@ -422,13 +422,13 @@ def test_delete_orphans(client_fixture: fixture) -> None:
         replace_existing=True,
     )
 
-    assert len(scheduler.get_jobs()) == 2
+    assert len(atlas_scheduler.get_jobs()) == 2
 
     page = client_fixture.get(f"/api/delete-orphans")
     assert page.json == {"message": "Scheduler: orphans deleted!"}
     assert page.status_code == 200
 
-    assert len(scheduler.get_jobs()) == 1
+    assert len(atlas_scheduler.get_jobs()) == 1
 
 
 def test_400(client_fixture: fixture) -> None:

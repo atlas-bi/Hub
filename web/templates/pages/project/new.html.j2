@@ -19,7 +19,8 @@
     <h1 class="title is-1">
         {% if p %}
             Editing
-            <a title="open project" href="{{ url_for('project_bp.one_project', project_id =p.id) }}">{{ p }}</a>
+            <a title="open project"
+               href="{{ url_for('project_bp.one_project', project_id =p.id) }}">{{ p }}</a>
         {% else %}
             New Project
         {% endif %}
@@ -41,46 +42,57 @@
             <div class="field">
                 <label class="label">Description</label>
                 <div class="control">
-                <textarea class="textarea" name="project_desc">{{ p.description }}</textarea>
+                    <textarea class="textarea" name="project_desc">{{ p.description }}</textarea>
+                </div>
             </div>
-        </div>
-        {% if p %}
+            {% if p %}
+                <div class="field">
+                    <input class="is-checkradio is-info"
+                           id="project_take_ownership"
+                           type="checkbox"
+                           checked="checked"/>
+                    <label for="project_take_ownership">Take Ownership of Project</label>
+                    <input type="hidden" name="project_ownership" value="0"/>
+                </div>
+            {% endif %}
             <div class="field">
-                <input class="is-checkradio is-info" id="project_take_ownership" type="checkbox" checked="checked"/>
-                <label for="project_take_ownership">Take Ownership of Project</label>
-                <input type="hidden" name="project_ownership" value="0"/>
+                <input class="is-checkradio is-info"
+                       type="checkbox"
+                       id="run_tasks_in_sequence"
+                       {% if p.sequence_tasks == 1 %}checked="checked"{% endif %}/>
+                <label for="run_tasks_in_sequence">Run Tasks in Sequence</label>
+                <input type="hidden"
+                       name="run_tasks_in_sequence"
+                       value="{{ p.sequence_tasks or 0 }}"/>
             </div>
-        {% endif %}
-        <div class="field">
-            <input class="is-checkradio is-info"
-                   type="checkbox"
-                   id="run_tasks_in_sequence"
-                   {% if p.sequence_tasks == 1 %}checked="checked"{% endif %}/>
-            <label for="run_tasks_in_sequence">Run Tasks in Sequence</label>
-            <input type="hidden" name="run_tasks_in_sequence" value="{{ p.sequence_tasks or 0 }}"/>
         </div>
-    </div>
-    <div class="box">{% include "pages/project/cron.html.j2" %}
-    </div>
-    <div class="box">{% include "pages/project/interval.html.j2" %}
-    </div>
-    <div class="box">{% include "pages/project/oneoff.html.j2" %}
-    </div>
-    <div class="box">
-        <h2 class="title is-2">Global Parameters</h2>
-        <div class="field">
-            <div class="control">
-            <textarea class="textarea" name="globalParams" rows="1">{{ p.global_params or '' }}</textarea>
+        <div class="box">
+            {% include "pages/project/cron.html.j2" %}
+
         </div>
-    </div>
-</div>
-<button class="button is-info is-fullwidth mb-5" type="submit">
-    {% if p %}
-        Save
-    {% else %}
-        Add
-    {% endif %}
-    Project
-</button>
-</form>
+        <div class="box">
+            {% include "pages/project/interval.html.j2" %}
+
+        </div>
+        <div class="box">
+            {% include "pages/project/oneoff.html.j2" %}
+
+        </div>
+        <div class="box">
+            <h2 class="title is-2">Global Parameters</h2>
+            <div class="field">
+                <div class="control">
+                    <textarea class="textarea" name="globalParams" rows="1">{{ p.global_params or '' }}</textarea>
+                </div>
+            </div>
+        </div>
+        <button class="button is-info is-fullwidth mb-5" type="submit">
+            {% if p %}
+                Save
+            {% else %}
+                Add
+            {% endif %}
+            Project
+        </button>
+    </form>
 {% endblock body %}

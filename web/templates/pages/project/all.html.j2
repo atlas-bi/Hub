@@ -46,8 +46,8 @@
         {% endfor %}
     </div>
     <div class="em-ajaxTable"
-        data-theme="Exec"
-        data-src="{% if user -%}{{ url_for('table_bp.project_list', my_type=user.id) }}{%- else -%}{{ url_for('table_bp.project_list', my_type='all') }}{%- endif %}">
+         data-theme="Exec"
+         data-src="{% if user -%}{{ url_for('table_bp.project_list', my_type=user.id) }}{%- else -%}{{ url_for('table_bp.project_list', my_type='all') }}{%- endif %}">
         <div class="loader"></div>
     </div>
 {% endblock body %}

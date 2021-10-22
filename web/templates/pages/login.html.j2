@@ -4,50 +4,56 @@
     {% with messages = get_flashed_messages() %}
         <div class="container mt-5">
             <div class="columns is-centered mt-5">
-            <div class="column is-4 mt-5 box">
-                <form action="" method="post" autocomplete="off">
-                    <h1 class="title is-1">Atlas Automation Hub</h1>
-                    {% if messages %}
-                       <article class="message is-danger">
-  <div class="message-body">
-                            <span class="icon">
-  <i class="fas fa-exclamation-triangle"></i>
-</span>
-                            {% for message in messages %}{{ message }}{% endfor %}
-                        </div></article>
-                    {% endif %}
-                    {% if config['DEMO'] %}
-                        <input class="login-input" name="user" autocomplete="off" type="hidden" value="mr-cool"/>
-                        <button class="login-btn" type="submit" value="Submit">Log In To the Demo</button>
-                    {% else %}
-                        <div class="field">
-                            <label class="label">
-                                Username or Email (
-                                <em>ex</em>
-                                : joe-cool/joe@co.ol)
-                            </label>
-                            <input class="input" name="user" autocomplete="off"/>
-                        </div>
-                        <div class="field">
-                            <label class="label">
-                                Password (
-                                <em>ex</em>
-                                : d0n't4g@!)
-                            </label>
-                            <input class="input" type="password" name="password"/>
-                        </div>
-                        <button class="button is-info is-fullwidth" type="submit" value="Submit">Log In</button>
-                        <div class="has-text-grey mt-5">
-                            <em>Note: you must be part of the analytics team to access this website.</em>
-                        </div>
-                    {% endif %}
-                </form>
-                <div class="has-text-grey mt-5">
-                    &#169;
-                    <script>document.write(new Date().getFullYear())</script>
-                    Riverside Healthcare
+                <div class="column is-4 mt-5 box">
+                    <form action="" method="post" autocomplete="off">
+                        <h1 class="title is-1">Atlas Automation Hub</h1>
+                        {% if messages %}
+                            <article class="message is-danger">
+                                <div class="message-body">
+                                    <span class="icon">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </span>
+                                    {% for message in messages %}{{ message }}{% endfor %}
+                                </div>
+                            </article>
+                        {% endif %}
+                        {% if config['DEMO'] %}
+                            <input class="login-input"
+                                   name="user"
+                                   autocomplete="off"
+                                   type="hidden"
+                                   value="mr-cool"/>
+                            <button class="login-btn" type="submit" value="Submit">Log In To the Demo</button>
+                        {% else %}
+                            <div class="field">
+                                <label class="label">
+                                    Username or Email (
+                                    <em>ex</em>
+                                    : joe-cool/joe@co.ol)
+                                </label>
+                                <input class="input" name="user" autocomplete="off"/>
+                            </div>
+                            <div class="field">
+                                <label class="label">
+                                    Password (
+                                    <em>ex</em>
+                                    : d0n't4g@!)
+                                </label>
+                                <input class="input" type="password" name="password"/>
+                            </div>
+                            <button class="button is-info is-fullwidth" type="submit" value="Submit">Log In</button>
+                            <div class="has-text-grey mt-5">
+                                <em>Note: you must be part of the analytics team to access this website.</em>
+                            </div>
+                        {% endif %}
+                    </form>
+                    <div class="has-text-grey mt-5">
+                        &#169;
+                        <script>document.write(new Date().getFullYear())</script>
+                        Riverside Healthcare
+                    </div>
                 </div>
-            </div></div>
+            </div>
         </div>
     {% endwith %}
 {% endblock body_auth %}

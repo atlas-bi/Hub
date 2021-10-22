@@ -47,7 +47,7 @@ import logging
 from flask import Flask, jsonify, make_response
 from werkzeug import Response
 
-from scheduler.extensions import db, scheduler
+from scheduler.extensions import db, atlas_scheduler
 
 
 def create_app() -> Flask:
@@ -92,14 +92,14 @@ def create_app() -> Flask:
     # pylint: disable=W0611
     from scheduler import maintenance  # noqa: F401
 
-    scheduler.init_app(app)
+    atlas_scheduler.init_app(app)
 
     logging.basicConfig(level=logging.WARNING)
 
     with app.app_context():
         # pylint: disable=W0611
 
-        scheduler.start()
+        atlas_scheduler.start()
 
         # pylint: disable=C0415
         from apscheduler.events import (
@@ -128,12 +128,12 @@ def create_app() -> Flask:
         else:
             logging.getLogger("apscheduler").setLevel(logging.ERROR)
 
-        scheduler.add_listener(job_missed, EVENT_JOB_MISSED)
-        scheduler.add_listener(job_error, EVENT_JOB_ERROR)
-        scheduler.add_listener(job_executed, EVENT_JOB_EXECUTED)
-        scheduler.add_listener(job_added, EVENT_JOB_ADDED)
-        scheduler.add_listener(job_removed, EVENT_JOB_REMOVED)
-        scheduler.add_listener(job_submitted, EVENT_JOB_SUBMITTED)
+        atlas_scheduler.add_listener(job_missed, EVENT_JOB_MISSED)
+        atlas_scheduler.add_listener(job_error, EVENT_JOB_ERROR)
+        atlas_scheduler.add_listener(job_executed, EVENT_JOB_EXECUTED)
+        atlas_scheduler.add_listener(job_added, EVENT_JOB_ADDED)
+        atlas_scheduler.add_listener(job_removed, EVENT_JOB_REMOVED)
+        atlas_scheduler.add_listener(job_submitted, EVENT_JOB_SUBMITTED)
 
         @app.errorhandler(404)
         @app.errorhandler(500)

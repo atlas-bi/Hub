@@ -5,16 +5,19 @@
 {% endblock head %}
 
 {% block body_auth %}
-     <div class="container mt-5">
-            <div class="columns is-centered mt-5">
+    <div class="container mt-5">
+        <div class="columns is-centered mt-5">
             <div class="column is-4 mt-5 box">
-            <h1 class="title is-1 has-text-centered">Bye.</h1>
-            <a class="has-text-centered is-block" href="{{ url_for('auth_bp.login') }}" title="log in">log back in</a>
-            <div class="has-text-grey mt-5">
+                <h1 class="title is-1 has-text-centered">Bye.</h1>
+                <a class="has-text-centered is-block"
+                   href="{{ url_for('auth_bp.login') }}"
+                   title="log in">log back in</a>
+                <div class="has-text-grey mt-5">
                     &#169;
                     <script>document.write(new Date().getFullYear())</script>
                     Riverside Healthcare
                 </div>
+            </div>
         </div>
-    </div></div>
+    </div>
 {% endblock body_auth %}

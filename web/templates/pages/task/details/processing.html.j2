@@ -4,14 +4,16 @@
             <!-- code from git -->
             <h2 class="title is-2">Processing Script - GIT Address</h2>
             <a title="open page" href="{{ t.processing_git }}" target="_blank">{{ t.processing_git }}</a>
-            <div class="em-ajaxContent" data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
+            <div class="em-ajaxContent"
+                 data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
                 <div class="loader"></div>
             </div>
         {% elif t.processing_url and t.processing_type_id == 5 %}
             <!-- code from url -->
             <h2 class="title is-2">Processing Script - Web Address</h2>
             <a title="open page" href="{{ t.processing_url }}" target="_blank">{{ t.processing_url }}</a>
-            <div class="em-ajaxContent" data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
+            <div class="em-ajaxContent"
+                 data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
                 <div class="loader"></div>
             </div>
         {% elif t.processing_type_id == 1 and t.processing_smb_conn %}
@@ -75,17 +77,17 @@
             </a>
             <pre class="box"><code class="language-ini">{{ t.processing_ftp_conn.username }}@{{ t.processing_ftp_conn.address|clean_address }}&nbsp;{{ t.processing_ftp_conn.path|clean_path }}{{ t.processing_ftp_file }}
                 </code></pre>
-    {% elif t.processing_code and t.processing_type_id == 6 %}
-        <!-- hand query -->
-        <h2 class="title is-2">Processing Script - Source Code Connection</h2>
-        {% with code = t.processing_code %}
-            {% include "pages/task/code.html.j2" %}
+        {% elif t.processing_code and t.processing_type_id == 6 %}
+            <!-- hand query -->
+            <h2 class="title is-2">Processing Script - Source Code Connection</h2>
+            {% with code = t.processing_code %}
+                {% include "pages/task/code.html.j2" %}
 
-        {% endwith %}
-    {% endif %}
-    {% if t.processing_command %}
-        <h4 class="title is-4">Command</h4>
-        <pre class="box"><code class="language-py">{{ t.processing_command }}</code></pre>
-    {% endif %}
-</div>
+            {% endwith %}
+        {% endif %}
+        {% if t.processing_command %}
+            <h4 class="title is-4">Command</h4>
+            <pre class="box"><code class="language-py">{{ t.processing_command }}</code></pre>
+        {% endif %}
+    </div>
 {% endif %}
