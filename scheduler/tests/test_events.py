@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 
 from pytest import fixture
 
-from scheduler.extensions import apscheduler
+from scheduler.extensions import atlas_scheduler
 from scheduler.model import TaskLog
 
 from .conftest import bad_demo_task, create_demo_task, demo_task
@@ -28,7 +28,7 @@ def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
 
     # create an interval task (only interval and cron can capture
     # a missed job and add to logs. one-off jobs disappear after run.)
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -51,7 +51,7 @@ def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
     caplog.clear()
 
     # check without id
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id="asdf",
@@ -66,7 +66,7 @@ def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
 
     # task that does not exists
     p_id, t_id = (9, 9)
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -87,7 +87,7 @@ def test_job_error(event_fixture: fixture, caplog: fixture) -> None:
     p_id, t_id = create_demo_task()
 
     # add a task that will fail
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=bad_demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -111,7 +111,7 @@ def test_job_error(event_fixture: fixture, caplog: fixture) -> None:
 
     # try with invalid job
     p_id, t_id = (9, 9)
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=bad_demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -128,7 +128,7 @@ def test_job_error(event_fixture: fixture, caplog: fixture) -> None:
     assert log is None
 
     # test job without id
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=bad_demo_task,
         trigger="date",
         id="ooff",
@@ -144,7 +144,7 @@ def test_job_executed(event_fixture: fixture, caplog: fixture) -> None:
     p_id, t_id = create_demo_task()
 
     # add a task that will run
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -174,7 +174,7 @@ def test_job_executed(event_fixture: fixture, caplog: fixture) -> None:
 
     # try with invalid job
     p_id, t_id = (9, 9)
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -198,7 +198,7 @@ def test_job_executed(event_fixture: fixture, caplog: fixture) -> None:
     caplog.clear()
 
     # test job without id
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id="ooff",
@@ -217,7 +217,7 @@ def test_job_added(event_fixture: fixture, caplog: fixture) -> None:
     p_id, t_id = create_demo_task()
 
     # add a task that will run
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -241,7 +241,7 @@ def test_job_added(event_fixture: fixture, caplog: fixture) -> None:
 
     # test with invalid task id
     p_id, t_id = (9, 9)
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -266,7 +266,7 @@ def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
     p_id, t_id = create_demo_task()
 
     # add a task that will run
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -289,7 +289,7 @@ def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
     # try invalid task_id
 
     p_id, t_id = (9, 9)
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
@@ -310,7 +310,7 @@ def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
     caplog.clear()
 
     # test with no id
-    apscheduler.add_job(
+    atlas_scheduler.add_job(
         func=demo_task,
         trigger="date",
         id="ooff",
@@ -334,14 +334,14 @@ def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
 #    p_id,t_id = create_demo_task()
 
 #    # add a task that will run
-#    apscheduler.add_job(func=demo_task,
+#    atlas_scheduler.add_job(func=demo_task,
 #      trigger="interval",
 #      id=f"{p_id}-{t_id}-intv",
 #      name="test job 2",
 #      seconds=2,
 #      replace_existing=True,
 #    )
-#    apscheduler.pause_job(f"{p_id}-{t_id}-intv")
+#    atlas_scheduler.pause_job(f"{p_id}-{t_id}-intv")
 # #   job.resume()
 
 #    # give time to process. job must run, then be readded
@@ -357,7 +357,7 @@ def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
 #    # try invalid task_id
 
 #    p_id, t_id = (9,9)
-#    apscheduler.add_job(func=demo_task,
+#    atlas_scheduler.add_job(func=demo_task,
 #      trigger="date",
 #      id=f"{p_id}-{t_id}-ooff",
 #      name="test job 2",
@@ -376,7 +376,7 @@ def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
 #    caplog.clear()
 
 #    # test with no id
-#    apscheduler.add_job(func=demo_task,
+#    atlas_scheduler.add_job(func=demo_task,
 #      trigger="date",
 #      id=f"ooff",
 #      name="test job 2",

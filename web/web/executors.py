@@ -182,7 +182,6 @@ def sub_enable_task(task_id: int) -> None:
     task = Task.query.filter_by(id=task_id).first()
 
     # task only goes to scheduler if not sequence, or first in sequence.
-
     if task.project and task.project.sequence_tasks == 1:
         # only add job if its first in sequence
         if (
@@ -461,7 +460,8 @@ def schedule_enabled_tasks(*args: Any) -> str:
     """Sending enabled tasks to scheduler."""
     try:
         for task in Task.query.filter_by(enabled=1).all():
-            send_task_to_scheduler(task.id)
+            print(task)
+            sub_enable_task(task.id)
 
         return "Tasks sent to scheduler."
     # pylint: disable=W0703

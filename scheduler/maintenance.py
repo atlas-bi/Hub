@@ -2,12 +2,12 @@
 
 from sqlalchemy import update
 
-from scheduler.extensions import db, apscheduler
+from scheduler.extensions import db, atlas_scheduler
 from scheduler.functions import scheduler_add_task, scheduler_delete_task
 from scheduler.model import Task
 
 
-@apscheduler.task(
+@atlas_scheduler.task(
     "interval",
     id="job_sync",
     hours=1,
@@ -17,7 +17,7 @@ from scheduler.model import Task
 def job_sync() -> None:
     """Job to sync run times between model and scheduler."""
     try:
-        with apscheduler.app.app_context():
+        with atlas_scheduler.app.app_context():
 
             # remove next run date and duration from disabled jobs
             db.session.execute(
@@ -31,7 +31,7 @@ def job_sync() -> None:
             db.session.commit()
 
             # remove disabled jobs from the scheduler
-            scheduler_jobs = apscheduler.get_jobs()
+            scheduler_jobs = atlas_scheduler.get_jobs()
 
             for task in Task.query.filter_by(enabled=0).all():
                 for job in scheduler_jobs:
@@ -39,7 +39,7 @@ def job_sync() -> None:
                         job.remove()
 
             # check that enabled job are scheduled
-            scheduler_jobs = apscheduler.get_jobs()
+            scheduler_jobs = atlas_scheduler.get_jobs()
 
             tasks = Task.query.filter_by(enabled=1).all()
             for task in [u.__dict__ for u in tasks]:

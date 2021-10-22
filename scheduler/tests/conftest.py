@@ -10,7 +10,7 @@ from web.seed import get_or_create
 
 os.environ["FLASK_ENV"] = "test"
 os.environ["FLASK_APP"] = "scheduler"
-os.environ["FLASK_DEBUG"] = "True"
+os.environ["FLASK_DEBUG"] = "False"
 
 import subprocess
 from datetime import datetime
@@ -39,7 +39,7 @@ def client_fixture() -> Generator:
     with app.test_client() as client, app.app_context():
         assert app.config["ENV"] == "test"  # noqa: S101
 
-        from scheduler.extensions import db, apscheduler
+        from scheduler.extensions import db, atlas_scheduler
         from web.seed import seed
 
         db.drop_all()
@@ -50,14 +50,14 @@ def client_fixture() -> Generator:
 
         seed(db.session)
 
-        apscheduler.remove_all_jobs()
+        atlas_scheduler.remove_all_jobs()
 
-        assert apscheduler.running  # noqa: S101
+        assert atlas_scheduler.running  # noqa: S101
 
         yield client
 
-        if apscheduler.running:
-            apscheduler.shutdown(False)
+        if atlas_scheduler.running:
+            atlas_scheduler.shutdown(False)
 
 
 @pytest.fixture(scope="module")
@@ -80,7 +80,7 @@ def event_fixture() -> Generator:
     with app.test_client() as client, app.app_context():
 
         assert app.config["ENV"] == "test"  # noqa: S101
-        from scheduler.extensions import db, apscheduler
+        from scheduler.extensions import db, atlas_scheduler
 
         from web.seed import seed
 
@@ -92,14 +92,14 @@ def event_fixture() -> Generator:
 
         seed(db.session)
 
-        apscheduler.remove_all_jobs()
+        atlas_scheduler.remove_all_jobs()
 
-        assert apscheduler.running  # noqa: S101
+        assert atlas_scheduler.running  # noqa: S101
 
         yield client
 
-        if apscheduler.running:
-            apscheduler.shutdown(False)
+        if atlas_scheduler.running:
+            atlas_scheduler.shutdown(False)
 
 
 # pylint: disable=W0613
