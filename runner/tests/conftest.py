@@ -17,45 +17,16 @@ from typing import Any, Generator, Tuple
 from dateutil.tz import tzlocal
 
 
-# default scope is function.
-@pytest.fixture()
-def client_fixture() -> Generator:
-    """Runner client."""
-    app = runner_create_app()
-    with app.test_client() as client, app.app_context():
-        assert app.config["ENV"] == "test"  # noqa: S101
-
-        from runner.extensions import db, runner
-        from web.seed import seed
-
-        db.drop_all()
-        db.session.commit()
-
-        db.create_all()
-        db.session.commit()
-
-        seed(db.session)
-
-        runner.remove_all_jobs()
-
-        assert runner.running  # noqa: S101
-
-        yield client
-
-        if runner.running:
-            runner.shutdown(False)
-
-
 @pytest.fixture(scope="module")
-def event_fixture() -> Generator:
-    """Create module scoped fixture to share fixture for tests."""
+def client_fixture() -> Generator:
     app = runner_create_app()
     with app.test_client() as client, app.app_context():
 
-        assert app.config["ENV"] == "test"  # noqa: S101
+        assert app.config["ENV"] == "test"
 
         from runner.extensions import db
-        from web.seed import seed
+        from runner.model import User
+        from web.seed import get_or_create, seed
 
         db.drop_all()
         db.session.commit()
@@ -64,6 +35,15 @@ def event_fixture() -> Generator:
         db.session.commit()
 
         seed(db.session)
+
+        get_or_create(
+            db.session,
+            User,
+            full_name="Mr Cool",
+            first_name="Mr",
+            account_name="mr-cool",
+            email="mr@co.ol",
+        )
 
         yield client
 

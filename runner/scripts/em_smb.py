@@ -79,7 +79,8 @@ class Smb:
 
         try:
             self.conn = self.__connect()
-        except:
+        # pylint: disable=broad-except
+        except BaseException:
             self.conn = None
 
     def __connect(self) -> SMBConnection:

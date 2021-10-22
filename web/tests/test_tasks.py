@@ -2,11 +2,11 @@
 
 run with::
 
-   poetry run pytest tests/test_tasks.py \
+   poetry run pytest web/tests/test_tasks.py \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest tests/test_tasks.py::test_admin_online \
+   poetry run pytest web/tests/test_tasks.py::test_tasks_user \
        --cov --cov-append --cov-branch  --cov-report=term-missing --disable-warnings
 
 
@@ -68,6 +68,11 @@ def test_tasks_user(client_fixture: fixture) -> None:
     create_demo_task()
     page = client_fixture.get("/task/user/1", follow_redirects=False)
     assert page.status_code == 200
+
+    # bad user
+    page = client_fixture.get("/task/user/100", follow_redirects=False)
+    assert page.status_code == 200
+    assert b"That user does not exist." in page.data
 
 
 def test_one_task(client_fixture: fixture) -> None:

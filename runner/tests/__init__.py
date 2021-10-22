@@ -1,7 +1,7 @@
-"""Run web tests.
+"""Run runner tests.
 
 .. code::
 
-    poetry run pytest tests/ \
+    poetry run pytest runner/tests/ \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 """

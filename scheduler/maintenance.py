@@ -2,7 +2,7 @@
 
 from sqlalchemy import update
 
-from scheduler.extensions import db, atlas_scheduler
+from scheduler.extensions import atlas_scheduler, db
 from scheduler.functions import scheduler_add_task, scheduler_delete_task
 from scheduler.model import Task
 

@@ -2,11 +2,11 @@
 
 run with::
 
-   poetry run pytest tests/test_admin.py \
+   poetry run pytest web/tests/test_admin.py \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest tests/test_admin.py::test_reload_jobs \
+   poetry run pytest web/tests/test_admin.py::test_resume_with_scheduler \
        --cov --cov-append --cov-branch  --cov-report=term-missing --disable-warnings
 
 
@@ -42,9 +42,33 @@ def test_pause_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
     )
     assert "Scheduler: all jobs paused!" in page
 
+    # turn off scheduler and try to pause
+    check_url(client_fixture_with_scheduler, url_for("admin_bp.kill_scheduler"), True)
+
+    page = check_url(
+        client_fixture_with_scheduler, url_for("admin_bp.pause_scheduler"), True
+    )
+    assert "Scheduler: scheduler not running, restart service!" in page
+
 
 def test_resume(client_fixture: fixture) -> None:
-    check_url(client_fixture, url_for("admin_bp.resume_scheduler"), True)
+    page = check_url(client_fixture, url_for("admin_bp.resume_scheduler"), True)
+    assert "Failed to resume scheduler. Scheduler offline." in page
+
+
+def test_resume_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
+    page = check_url(
+        client_fixture_with_scheduler, url_for("admin_bp.resume_scheduler"), True
+    )
+    assert "Scheduler: all jobs resumed!" in page
+
+    # turn off scheduler and try to pause
+    check_url(client_fixture_with_scheduler, url_for("admin_bp.kill_scheduler"), True)
+
+    page = check_url(
+        client_fixture_with_scheduler, url_for("admin_bp.resume_scheduler"), True
+    )
+    assert "Scheduler: scheduler not running, restart service!" in page
 
 
 def test_kill(client_fixture: fixture) -> None:

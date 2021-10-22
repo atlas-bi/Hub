@@ -5,12 +5,12 @@ import logging
 import sys
 import tempfile
 import time
-from io import TextIOWrapper
 from pathlib import Path
-from typing import Any, Generator, Optional, Tuple, Union
+from typing import Generator, Optional, Tuple, Union
 
 import paramiko
 from flask import current_app as app
+from paramiko import RSAKey, SFTPClient, SFTPFile, Transport
 
 from runner import db
 from runner.model import ConnectionSftp, Task, TaskLog
@@ -54,10 +54,10 @@ class Sftp:
         self.file_name = file_name
         self.file_path = file_path
         self.job_hash = job_hash
-        self.key = None
+        self.key: Optional[RSAKey] = None
         self.transport, self.conn = self.__connect()
 
-    def __connect(self) -> Tuple[Any, Any, Any]:
+    def __connect(self) -> Tuple[Transport, SFTPClient]:
 
         try:
             logging.info(
@@ -106,6 +106,8 @@ class Sftp:
                     )
 
                     conn = paramiko.SFTPClient.from_transport(transport)
+                    if conn is None:
+                        raise ValueError("SFTP failed to create connection.")
 
                     break
                 except (paramiko.ssh_exception.AuthenticationException, EOFError) as e:
@@ -119,7 +121,7 @@ class Sftp:
 
                     else:
                         raise e
-            return transport, conn,
+            return (transport, conn)
 
         # pylint: disable=broad-except
         except BaseException as e:
@@ -167,7 +169,7 @@ class Sftp:
 
             file_path = self.conn.open(self.file_name, mode="r")
 
-            def load_data(file_obj: TextIOWrapper) -> Generator:
+            def load_data(file_obj: SFTPFile) -> Generator:
                 with file_obj as this_file:
                     while True:
                         data = this_file.read(1024).decode("utf-8")  # type: ignore[attr-defined]
@@ -292,7 +294,7 @@ class Sftp:
             except BaseException:
                 pass
 
-            self.conn.put(self.file_path, self.file_name, confirm=True)
+            self.conn.put(str(self.file_path), self.file_name, confirm=True)
 
             # file is now confirmed on server w/ confirm=True flag
             log = TaskLog(

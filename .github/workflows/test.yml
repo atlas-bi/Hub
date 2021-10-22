@@ -46,7 +46,7 @@ jobs:
         python -m pip install tox poetry codecov
         sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
     - name: test
-      run: tox -e scheduler,web,runner,cov
+      run: tox
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432

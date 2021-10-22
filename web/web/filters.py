@@ -160,25 +160,25 @@ def hide_smb_pass(my_string: str) -> str:
 @filters_bp.app_template_filter("clean_address")
 def clean_address(my_address: str) -> str:
     """Normalize a path."""
-    if len(my_address) > 0:
+    if my_address and len(my_address) > 0:
         if my_address[-1] == "/" or my_address[-1] == "\\":
             return my_address[:-1]
         return my_address
 
-    return my_address
+    return my_address or ""
 
 
 @filters_bp.app_template_filter("clean_path")
 def clean_path(my_path: str) -> str:
     """Normalize a path."""
-    if len(my_path) > 0:
+    if my_path and len(my_path) > 0:
         if not (my_path[-1] == "/" or my_path[-1] == "\\"):
             my_path = my_path + "/"
 
         if my_path[0] == "/" or my_path[0] == "\\":
             my_path = my_path[1:]
 
-    return my_path
+    return my_path or ""
 
 
 @filters_bp.app_template_filter("database_pass")

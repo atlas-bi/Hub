@@ -42,12 +42,14 @@ Database model should be cloned from `web` before running app.
 """
 
 
+import contextlib
 import logging
 
+from apscheduler.schedulers import SchedulerAlreadyRunningError
 from flask import Flask, jsonify, make_response
 from werkzeug import Response
 
-from scheduler.extensions import db, atlas_scheduler
+from scheduler.extensions import atlas_scheduler, db
 
 
 def create_app() -> Flask:
@@ -92,14 +94,18 @@ def create_app() -> Flask:
     # pylint: disable=W0611
     from scheduler import maintenance  # noqa: F401
 
-    atlas_scheduler.init_app(app)
+    with contextlib.suppress(SchedulerAlreadyRunningError):
+        # pytest imports twice, this will catch on the second import.
+        atlas_scheduler.init_app(app)
 
     logging.basicConfig(level=logging.WARNING)
 
     with app.app_context():
         # pylint: disable=W0611
-
-        atlas_scheduler.start()
+        if atlas_scheduler.running is False:
+            # pytest imports twice. this will save us on the
+            # second import.
+            atlas_scheduler.start()
 
         # pylint: disable=C0415
         from apscheduler.events import (
@@ -145,7 +151,6 @@ def create_app() -> Flask:
 
 
 app = create_app()
-
 
 if __name__ == "__main__":  # pragma: no cover
     app.run(port=5001)

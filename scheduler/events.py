@@ -38,7 +38,7 @@ import re
 from apscheduler.events import JobEvent, JobExecutionEvent, JobSubmissionEvent
 from dateutil.tz import tzlocal
 
-from scheduler.extensions import db, atlas_scheduler
+from scheduler.extensions import atlas_scheduler, db
 from scheduler.model import Task, TaskLog
 
 

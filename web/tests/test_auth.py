@@ -2,11 +2,11 @@
 
 run with::
 
-   poetry run pytest tests/test_auth.py \
+   poetry run pytest web/tests/test_auth.py \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest tests/test_auth.py::test_admin_online \
+   poetry run pytest web/tests/test_auth.py::test_next \
        --cov --cov-append --cov-branch  --cov-report=term-missing --disable-warnings
 
 """
@@ -96,3 +96,9 @@ def test_next(client_fixture: fixture) -> None:
     )
 
     assert page.status_code == 302
+
+    # check an invalid next
+    page = client_fixture.post(
+        "/login?next=https://google.com/", data={"user": username, "password": password}
+    )
+    assert page.status_code == 400

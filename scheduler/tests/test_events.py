@@ -2,25 +2,27 @@
 
 run with::
 
-   poetry run pytest tests/test_events.py \
+   poetry run pytest scheduler/tests/test_events.py \
    --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
    poetry run pytest tests/test_events.py::test_job_missed -v \
    --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 """
-
+print("importing tests")
 import time
 from datetime import datetime, timedelta
 
 from pytest import fixture
 
+print("importing scheduler")
 from scheduler.extensions import atlas_scheduler
 from scheduler.model import TaskLog
 
 from .conftest import bad_demo_task, create_demo_task, demo_task
 
 
+# assert 1==2
 def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
     # grace time is 30 seconds, so attempt to run 40 seconds ago
     # get a task ID.. task isnt' used

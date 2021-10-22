@@ -347,10 +347,10 @@ class Runner:
                     # potentially the task was disabled while running
                     # and removed from list. when that happens we should
                     # quit.
-                    if int(task_id) in task_id_list:
+                    if task.id in task_id_list:
                         next_task_id = task_id_list[
-                            task_id_list.index(int(task_id))
-                            + 1 : task_id_list.index(int(task_id))
+                            task_id_list.index(task.id)
+                            + 1 : task_id_list.index(task.id)
                             + 2
                         ]
                         if next_task_id:
@@ -366,6 +366,16 @@ class Runner:
                             db.session.add(log)
                             db.session.commit()
 
+                            log = TaskLog(
+                                task_id=next_task_id[0],
+                                status_id=8,
+                                message=(
+                                    f"Run triggered by previous sequence job:: {task.id}"
+                                ),
+                            )
+                            db.session.add(log)
+                            db.session.commit()
+
                             requests.get(
                                 app.config["RUNNER_HOST"] + "/" + str(next_task_id[0])
                             )
@@ -374,9 +384,7 @@ class Runner:
                                 task_id=task.id,
                                 job_id=self.job_hash,
                                 status_id=8,
-                                message=(
-                                    f"Sequence completed!"
-                                ),
+                                message=("Sequence completed!"),
                             )
                             db.session.add(log)
                             db.session.commit()

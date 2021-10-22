@@ -5,7 +5,7 @@ import time
 
 from requests import get
 
-from scheduler.extensions import db, atlas_scheduler
+from scheduler.extensions import atlas_scheduler, db
 from scheduler.model import Task
 
 
