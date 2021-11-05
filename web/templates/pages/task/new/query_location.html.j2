@@ -70,13 +70,10 @@
             {% endif %}
         </div>
         <div class="field">
-            <label class="label">File Name (path/to/file.csv)</label>
-            <label>
-                <small>
-                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
-                         " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
-                        See documentation for variable use. Wildcard * can be used in filenames.
-                    </a>
+            <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
+            <label class="label has-text-weight-normal">
+                <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                         ">Wildcards and <a href="" target="_blank" rel="noopener">strftime patterns</a> can be used in filenames.
                 </small>
             </label>
             <input class="input"
@@ -116,13 +113,10 @@
             {% endif %}
         </div>
         <div class="field">
-            <label class="label">File Name (path/to/file.csv)</label>
-            <label>
-                <small>
-                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
-                         " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
-                        See documentation for variable use. Wildcard * can be used in filenames.
-                    </a>
+            <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
+            <label class="label has-text-weight-normal">
+                <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                         ">Wildcards and <a href="" target="_blank" rel="noopener">strftime patterns</a> can be used in filenames.
                 </small>
             </label>
             <input class="input"
@@ -162,13 +156,10 @@
             {% endif %}
         </div>
         <div class="field">
-            <label class="label">File Name (path/to/file.csv)</label>
-            <label>
-                <small>
-                    <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
-                         " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
-                        See documentation for variable use. Wildcard * can be used in filenames.
-                    </a>
+            <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
+            <label class="label has-text-weight-normal">
+                <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                         ">Wildcards and <a href="" target="_blank" rel="noopener">strftime patterns</a> can be used in filenames.
                 </small>
             </label>
             <input class="input"
@@ -202,6 +193,28 @@
         <input type="hidden"
                name="task_include_query_headers"
                value="{% if not t or (t and t.source_query_include_header == 1) -%} 1 {%- else -%} 0 {%- endif %}"/>
+    </div>
+     <div class="field"
+         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
+        <input class="is-checkradio is-info"
+               id="task_enable_source_cache"
+               type="checkbox"
+               {% if not t or (t and t.enable_source_cache == 1) %} checked="checked" {% endif %}/>
+        <label for="task_enable_source_cache">Enable Query Cache?</label>
+        <input type="hidden"
+               name="task_enable_source_cache"
+               value="{% if not t or (t and t.enable_source_cache == 1) -%} 1 {%- else -%} 0 {%- endif %}"/>
+    </div>
+    <div class="field"
+         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
+        <input class="is-checkradio is-info"
+               id="task_require_sql_output"
+               type="checkbox"
+               {% if not t or (t and t.source_require_sql_output == 1) %} checked="checked" {% endif %}/>
+        <label for="task_require_sql_output">Require query output?</label>
+        <input type="hidden"
+               name="task_require_sql_output"
+               value="{% if not t or (t and t.source_require_sql_output == 1) -%} 1 {%- else -%} 0 {%- endif %}"/>
     </div>
     <!--
                 raw code

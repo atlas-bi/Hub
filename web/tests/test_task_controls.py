@@ -39,16 +39,16 @@ def test_run_task(client_fixture: fixture) -> None:
     assert "Failed to run task." in page.get_data(as_text=True)
 
 
-def test_run_task_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
+# def test_run_task_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
 
-    _, t_id = create_demo_task(2025)
+#     _, t_id = create_demo_task(2025)
 
-    page = client_fixture_with_scheduler.get(
-        url_for("task_controls_bp.run_task", task_id=t_id), follow_redirects=True
-    )
-    assert page.status_code == 200
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
-    assert "Task run started." in page.get_data(as_text=True)
+#     page = client_fixture_with_scheduler.get(
+#         url_for("task_controls_bp.run_task", task_id=t_id), follow_redirects=True
+#     )
+#     assert page.status_code == 200
+#     assert request.path == url_for("task_bp.one_task", task_id=t_id)
+#     assert "Task run started." in page.get_data(as_text=True)
 
 
 def test_scheduler_task(client_fixture: fixture) -> None:
@@ -74,16 +74,16 @@ def test_scheduler_task(client_fixture: fixture) -> None:
     assert b"Failed to schedule" in executor.data
 
 
-def test_scheduler_task_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
+# def test_scheduler_task_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
 
-    _, t_id = create_demo_task(2025)
+#     _, t_id = create_demo_task(2025)
 
-    page = client_fixture_with_scheduler.get(
-        url_for("task_controls_bp.schedule_task", task_id=t_id), follow_redirects=True
-    )
-    assert page.status_code == 200
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
-    assert "Scheduling task." in page.get_data(as_text=True)
+#     page = client_fixture_with_scheduler.get(
+#         url_for("task_controls_bp.schedule_task", task_id=t_id), follow_redirects=True
+#     )
+#     assert page.status_code == 200
+#     assert request.path == url_for("task_bp.one_task", task_id=t_id)
+#     assert "Scheduling task." in page.get_data(as_text=True)
 
 
 def test_enable_task(client_fixture: fixture) -> None:

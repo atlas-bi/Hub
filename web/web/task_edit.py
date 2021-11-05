@@ -97,6 +97,8 @@ def task_new(project_id: int) -> Union[str, Response]:
         source_sftp_ignore_delimiter=form.get(
             "task_sftp_ignore_delimiter", None, type=int
         ),
+        enable_source_cache=form.get("task_enable_source_cache", None, type=int),
+        source_require_sql_output=form.get("task_require_sql_output", None, type=int),
         source_sftp_delimiter=form.get("sourceSftpDelimiter", None, type=str),
         source_ftp_id=form.get("task-source-ftp", None, type=int),
         source_ftp_file=form.get("sourceFtpFile", None, type=str),
@@ -390,6 +392,10 @@ def task_edit_post(task_id: int) -> Response:
             source_ftp_file=form.get("sourceFtpFile", None, type=str),
             source_ftp_ignore_delimiter=form.get(
                 "task_ftp_ignore_delimiter", None, type=int
+            ),
+            enable_source_cache=form.get("task_enable_source_cache", None, type=int),
+            source_require_sql_output=form.get(
+                "task_require_sql_output", None, type=int
             ),
             source_ftp_delimiter=form.get("sourceFtpDelimiter", None, type=str),
             source_ssh_id=form.get("task-source-ssh", None, type=int),

@@ -310,3 +310,18 @@ class TestConfig(DevConfig):
     from apscheduler.executors.pool import ThreadPoolExecutor
 
     SCHEDULER_EXECUTORS = {"default": ThreadPoolExecutor(100)}
+
+    # logins for test.
+    # docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=@Passw0rd>" -p 1433:1433 --name sql1 -h sql1  -d mcr.microsoft.com/mssql/server:2017-latest
+    SQL_SERVER_CONN = "SERVER=127.0.0.1;UID=SA;PWD=@Passw0rd>"
+
+    PG_SERVER_CONN = "host=127.0.0.1 user=postgres password=12345"
+
+    # docker run -p 22:22 -d emberstack/sftp --name sftp
+    SFTP_SERVER_USER = "demo"
+    SFTP_SERVER_PASS = "demo"
+
+    # docker run -d --name ftpd_server -p 21:21  onekilo79/ftpd_test
+    # docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e FTP_USER_NAME=demo -e FTP_USER_PASS=demo -e FTP_USER_HOME=/home/demo -e "PUBLICHOST=localhost" -e "ADDED_FLAGS=-d -d" stilliard/pure-ftpd
+    FTP_SERVER_USER = "demo"
+    FTP_SERVER_PASS = "demo"

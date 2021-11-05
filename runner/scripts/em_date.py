@@ -24,9 +24,7 @@ allowed on
 import calendar
 import datetime
 import re
-import sys
 from collections import Counter
-from pathlib import Path
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
@@ -34,18 +32,15 @@ from typing import List, Optional
 
 from dateutil import relativedelta
 
-from runner import db
-from runner.model import Task, TaskLog
-
-sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from error_print import full_stack
+from runner.model import Task
+from runner.scripts.em_messages import RunnerException
 
 
 class DateParsing:
     """Used to convert a modified python strftime to a propert datetime."""
 
     # pylint: disable=too-few-public-methods
-    def __init__(self, task: Task, date_string: str, job_hash: str) -> None:
+    def __init__(self, task: Task, run_id: Optional[str], date_string: str) -> None:
         """Set up the class parameters.
 
         :param task: task object
@@ -53,7 +48,7 @@ class DateParsing:
         """
         self.date_string = date_string
         self.task = task
-        self.job_hash = job_hash
+        self.run_id = run_id
 
     @staticmethod
     def get_date_part(my_string: str) -> str:
@@ -91,7 +86,6 @@ class DateParsing:
 
         Dates parts can also have math performed on them. For example, %d-1 will result in
         yesterdays date.
-
         """
         microseconds = 0
         offset = re.findall(r"(?<=%f)[+|-]\d+", my_string)
@@ -178,9 +172,6 @@ class DateParsing:
 
         Input string is split into date parts. Each part is individually converted to a
         string. All string parts are then re-joined.
-
-        :returns: string of date, or input string if error.
-
         """
 
         def get_repeating_part(parts: List[str]) -> Optional[str]:
@@ -229,18 +220,10 @@ class DateParsing:
                 parts.append(self.date_string)
 
             self.date_string = ("").join([self.get_date_part(part) for part in parts])
+            return self.date_string
 
-        # pylint: disable=broad-except
-        except BaseException:
-
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=17,  # date parser
-                error=1,
-                message="Failed to parse date string.\n" + str(full_stack()),
+        except BaseException as e:
+            print(e)
+            raise RunnerException(
+                self.task, self.run_id, 17, f"Failed to parse date string.\n{e}"
             )
-            db.session.add(log)
-            db.session.commit()
-
-        return self.date_string

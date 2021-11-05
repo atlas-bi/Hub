@@ -71,6 +71,7 @@
   display: none !important;
 }
 
+#search-form:active #search-results,
 #search-form:focus-within #search-results
 {
   display:block;
@@ -113,6 +114,10 @@
   white-space:pre-line !important;
 }
 
+[data-tooltip]::before {
+  max-width:21rem !important;
+  width:21rem !important;
+}
 
 /* font */
 .is-size-6-5 {
@@ -235,4 +240,13 @@ position:relative;
 /* fix bulma + prism */
 code .number{
   all:unset
+}
+
+.is-inlineblock {
+  display: inline-block !important;
+}
+
+/* links in message */
+article.message a {
+  text-decoration: none !important;
 }

@@ -123,7 +123,14 @@
         <div class="box">
             <h2 class="title is-2">Database Connections</h2>
             {% for s in connection.database %}
-                <h3 class="title is-3">{{ s }} - {{ s.database_type.name }}</h3>
+                <div class="columns">
+                    <div class="column is-narrow">
+                        <h3 class="title is-3">{{ s }} - {{ s.database_type.name }}</h3>
+                    </div>
+                    <div class="column">
+                        <div class="em-ajaxContent is-inlineblock" data-src="{{ url_for('connection_bp.database_online', database_id=s.id) }}"><div class="loader"></div></div>
+                    </div>
+                </div>
                 <div class="field has-addons">
                     <p class="control">
                         <a class="button"
@@ -155,7 +162,14 @@
         <div class="box">
             <h2 class="title is-2">SFTP Connections</h2>
             {% for s in connection.sftp %}
-                <h3 class="title is-3">{{ s }}</h3>
+                <div class="columns">
+                    <div class="column is-narrow">
+                        <h3 class="title is-3">{{ s }}</h3>
+                    </div>
+                    <div class="column">
+                        <div class="em-ajaxContent is-inlineblock" data-src="{{ url_for('connection_bp.sftp_online',sftp_id=s.id) }}"><div class="loader"></div></div>
+                    </div>
+                </div>
                 <div class="field has-addons">
                     <p class="control">
                         <a class="button"
@@ -231,9 +245,14 @@
                 FTP Connections
             </h2>
             {% for s in connection.ftp %}
-                <h3 class="title is-3">
-                    {{ s }}
-                </h3>
+                <div class="columns">
+                    <div class="column is-narrow">
+                        <h3 class="title is-3">{{ s }}</h3>
+                    </div>
+                    <div class="column">
+                        <div class="em-ajaxContent is-inlineblock" data-src="{{ url_for('connection_bp.ftp_online',ftp_id=s.id) }}"><div class="loader"></div></div>
+                    </div>
+                </div>
                 <div class="field has-addons">
                     <p class="control">
                         <a class="button"
@@ -315,9 +334,14 @@
                 SMB Connections
             </h2>
             {% for s in connection.smb %}
-                <h3 class="title is-3">
-                    {{ s }}
-                </h3>
+                <div class="columns">
+                    <div class="column is-narrow">
+                        <h3 class="title is-3">{{ s }}</h3>
+                    </div>
+                    <div class="column">
+                        <div class="em-ajaxContent is-inlineblock" data-src="{{ url_for('connection_bp.smb_online',smb_id=s.id) }}"><div class="loader"></div></div>
+                    </div>
+                </div>
                 <div class="field has-addons">
                     <p class="control">
                         <a class="button"
@@ -409,9 +433,14 @@
                 SSH Connections
             </h2>
             {% for s in connection.ssh %}
-                <h3 class="title is-3">
-                    {{ s }}
-                </h3>
+                <div class="columns">
+                    <div class="column is-narrow">
+                        <h3 class="title is-3">{{ s }}</h3>
+                    </div>
+                    <div class="column">
+                        <div class="em-ajaxContent is-inlineblock" data-src="{{ url_for('connection_bp.ssh_online',ssh_id=s.id) }}"><div class="loader"></div></div>
+                    </div>
+                </div>
                 <div class="field has-addons">
                     <p class="control">
                         <a class="button"

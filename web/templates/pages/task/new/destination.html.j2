@@ -19,15 +19,15 @@
         </div>
     </div>
     <div class="field">
-        <label class="label">File Name</label>
+        <label class="label" data-docs="parameters">File Name</label>
         <label class="label has-text-weight-normal">
             <small>
                 If file type is "other" then include file extension in name.
                 <br />
-                <a class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
-                     " title="variable usage" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank">
-                    See documentation for variable use.
-                </a>
+                <span class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                         ">Wildcards and <a href="" target="_blank" rel="noopener">strftime patterns</a> can be used in filenames.
+                </span>
+            </label>
             </small>
         </label>
         <div class="control">
@@ -323,7 +323,7 @@
         </p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
-                <label class="label">Destination (separate addresses with ";")</label>
+                <label class="label" data-docs="tasks#email">Destination (separate addresses with ";")</label>
                 <input class="input"
                        name="completionEmailRecip"
                        autocomplete="off"
@@ -402,7 +402,7 @@
                value="{% if t and t.email_error == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
     </div>
     <article class="p-0 message box is-info task-destinationErrorEmail"
-             {% if not t or (t and t.email_completion != 1) %} style="display:none;" {% endif %}>
+             {% if not t or (t and t.email_error != 1) %} style="display:none;" {% endif %}>
         <p class="message-header">
             Error Email Settings
         </p>
@@ -412,7 +412,7 @@
             </h3>
             <!-- email recip and message -->
             <div class="field">
-                <label class="label">
+                <label class="label" data-docs="tasks#email">
                     Error Destination (separate addresses with ";")
                 </label>
                 <input class="input"

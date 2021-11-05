@@ -199,6 +199,9 @@ fmt_blue "Creating API db model"
 cp web/model.py runner/model.py
 cp web/model.py scheduler/model.py
 
+# install database migrations
+export FLASK_ENV=producion && export FLASK_DEBUG=0 && export FLASK_APP=web && .venv/bin/flask db migrate
+
 # update hash in gunicorn files
 fmt_blue "Updating gunicorn service files"
 sed -i -e "s/hash/$HASH/g" ./*/publish/gunicorn.service

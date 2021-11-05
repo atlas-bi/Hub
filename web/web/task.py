@@ -26,6 +26,7 @@ from web.model import (
     TaskLog,
     User,
 )
+from web.web import submit_executor
 
 task_bp = Blueprint("task_bp", __name__)
 
@@ -182,10 +183,21 @@ def task_get_source_code(task_id: int) -> str:
         db.session.commit()
         code = "error."
 
+    task = Task.query.filter_by(id=task_id).first()
     return render_template(
         "pages/task/code.html.j2",
         code=code,
+        cache_enabled=task.enable_source_cache,
+        task_id=task_id,
     )
+
+
+@task_bp.route("/task/<task_id>/refresh_cache")
+@login_required
+def refresh_cache(task_id: int) -> Response:
+    """Get source code for a task."""
+    submit_executor("refresh_cache", task_id)
+    return redirect(url_for("task_bp.one_task", task_id=task_id))
 
 
 @task_bp.route("/task/<task_id>/processing_code")

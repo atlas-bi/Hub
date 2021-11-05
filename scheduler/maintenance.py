@@ -3,7 +3,6 @@
 from sqlalchemy import update
 
 from scheduler.extensions import atlas_scheduler, db
-from scheduler.functions import scheduler_add_task, scheduler_delete_task
 from scheduler.model import Task
 
 
@@ -37,25 +36,6 @@ def job_sync() -> None:
                 for job in scheduler_jobs:
                     if job.args and str(job.args[0]) == str(task.id):
                         job.remove()
-
-            # check that enabled job are scheduled
-            scheduler_jobs = atlas_scheduler.get_jobs()
-
-            tasks = Task.query.filter_by(enabled=1).all()
-            for task in [u.__dict__ for u in tasks]:
-                for job in scheduler_jobs:
-                    if job.args and str(job.args[0]) == str(task.get("id")):
-                        # nested for should use break. otherwise continue
-                        break
-                else:
-                    # add if not found
-                    scheduler_add_task(task.get("id"))
-
-            # reschedule enabled jobs that do not have a next run date
-            tasks = Task.query.filter_by(enabled=1, next_run=None).all()
-            for task in [u.__dict__ for u in tasks]:
-                scheduler_delete_task(task.get("id"))
-                scheduler_add_task(task.get("id"))
 
     # pylint: disable=broad-except
     except BaseException as e:

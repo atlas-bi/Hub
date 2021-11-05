@@ -260,7 +260,7 @@ def enable_task(task_list: List[int]) -> str:
         return str(e)
 
 
-def run_project(project_list: List[int]) -> None:
+def run_project(project_list: List[int]) -> str:
     """Running enabled project tasks."""
     project_id: int = project_list[0]
     project = Project.query.filter_by(id=project_id).first()
@@ -279,17 +279,22 @@ def run_project(project_list: List[int]) -> None:
         )
         db.session.add(log)
         db.session.commit()
+        return "Project sequence run started."
 
-    else:
-        for task in tasks:
-            send_task_to_runner(task.id)
-            log = TaskLog(
-                task_id=tasks.id,
-                status_id=7,
-                message=(current_user.full_name or "none") + ": Task manually run.",
-            )
-            db.session.add(log)
-            db.session.commit()
+    for task in tasks:
+        send_task_to_runner(task.id)
+        log = TaskLog(
+            task_id=tasks.id,
+            status_id=7,
+            message=(current_user.full_name or "none") + ": Task manually run.",
+        )
+        db.session.add(log)
+        db.session.commit()
+
+    if len(tasks.all()):
+        return "Run started."
+
+    return "No enabled tasks to run."
 
 
 def disable_project(project_list: List[int]) -> str:
@@ -521,3 +526,15 @@ def run_errored_tasks(*args: Any) -> str:
         return "Started running all errored tasks."
     except ValueError:
         return "Failed to run errored tasks, Scheduler is offline."
+
+
+def refresh_cache(task_list: List[int]) -> str:
+    """Refreshing task cache."""
+    task_id: int = task_list[0]
+    try:
+        return requests.get(
+            f"{app.config['RUNNER_HOST']}/task/{task_id}/refresh_cache"
+        ).text
+
+    except BaseException:
+        return "Failed to refresh cache."

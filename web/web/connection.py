@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from typing import Union
 
+import requests
 from crypto import em_encrypt
 from flask import Blueprint
 from flask import current_app as app
@@ -835,3 +836,55 @@ def new_connection_database(connection_id: int) -> Union[Response, str]:
     return redirect(
         url_for("connection_bp.one_connection", connection_id=connection_id)
     )
+
+
+@connection_bp.route("/connection/ssh/<ssh_id>/status")
+@login_required
+def ssh_online(ssh_id: int) -> str:
+    """Check if connection is online."""
+    try:
+        return requests.get(f"{app.config['RUNNER_HOST']}/ssh/{ssh_id}/status").text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+
+
+@connection_bp.route("/connection/database/<database_id>/status")
+@login_required
+def database_online(database_id: int) -> str:
+    """Check if connection is online."""
+    try:
+        return requests.get(
+            f"{app.config['RUNNER_HOST']}/database/{database_id}/status"
+        ).text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+
+
+@connection_bp.route("/connection/sftp/<sftp_id>/status")
+@login_required
+def sftp_online(sftp_id: int) -> str:
+    """Check if connection is online."""
+    try:
+        return requests.get(f"{app.config['RUNNER_HOST']}/sftp/{sftp_id}/status").text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+
+
+@connection_bp.route("/connection/ftp/<ftp_id>/status")
+@login_required
+def ftp_online(ftp_id: int) -> str:
+    """Check if connection is online."""
+    try:
+        return requests.get(f"{app.config['RUNNER_HOST']}/ftp/{ftp_id}/status").text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+
+
+@connection_bp.route("/connection/smb/<smb_id>/status")
+@login_required
+def smb_online(smb_id: int) -> str:
+    """Check if connection is online."""
+    try:
+        return requests.get(f"{app.config['RUNNER_HOST']}/smb/{smb_id}/status").text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'

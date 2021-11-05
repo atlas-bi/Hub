@@ -1,4 +1,4 @@
-"""EM Web Startup."""
+"""Web Startup."""
 
 import sys
 from pathlib import Path

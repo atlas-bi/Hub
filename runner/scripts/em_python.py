@@ -1,18 +1,13 @@
 """Python script runner."""
 
-import logging
+
 import re
-import sys
 from itertools import chain
 from pathlib import Path
 
-from runner import db
-from runner.model import Task, TaskLog
+from runner.model import Task
 from runner.scripts.em_cmd import Cmd
-
-sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-
-from error_print import full_stack
+from runner.scripts.em_messages import RunnerException
 
 
 class PyProcesser:
@@ -22,33 +17,20 @@ class PyProcesser:
     cleanup by removing all files.
     """
 
-    # pylint: disable=too-few-public-methods
-    # pylint: disable=too-many-instance-attributes
-
-    def __init__(self, task: Task, script: str, input_path: str, job_hash: str) -> None:
-        """Set up class parameters.
-
-        :param task: task object
-        :param script: name of python function to run in environment
-        :param input_path (optional):  pass filename as parameter to script
-        """
+    def __init__(
+        self, task: Task, run_id: str, directory: Path, script: str, input_path: str
+    ) -> None:
+        """Set up class parameters."""
         self.task = task
-        self.job_hash = job_hash
+        self.run_id = run_id
         self.script = script
         self.input_path = input_path
         self.output = ""
 
-        self.env_name = self.job_hash + "_env"
-        self.job_path = (
-            str(Path(__file__).parent.parent)
-            + "/temp/"
-            + self.task.project.name.replace(" ", "_")
-            + "/"
-            + str(self.task.name).replace(" ", "_")
-            + "/"
-            + self.job_hash
-        )
-        self.base_path = self.job_path + "/venv/"
+        self.env_name = self.run_id + "_env"
+        self.job_path = directory
+
+        self.base_path = str(self.job_path / "venv")
 
         Path(self.base_path).mkdir(parents=True, exist_ok=True)
 
@@ -77,40 +59,22 @@ class PyProcesser:
 
         """
         try:
-            logging.info(
-                "PyProcesser: Building Env: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-
             Cmd(
-                self.task,
-                "virtualenv " + self.env_path,
-                "Environment  " + self.env_path + " created.",
-                "Failed to create environment  " + self.env_path,
-                self.job_hash,
+                task=self.task,
+                run_id=self.run_id,
+                cmd="virtualenv " + self.env_path,
+                success_msg="Environment  " + self.env_path + " created.",
+                error_msg="Failed to create environment  " + self.env_path,
             ).shell()
 
         # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "PyProcesser: Failed to build environment: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
+        except BaseException as e:
+            raise RunnerException(
+                self.task,
+                self.run_id,
+                14,
+                f"Failed to build environment.\n{self.base_path}\n{e}",
             )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=14,  # py
-                error=1,
-                message="Failed to build environment. "
-                + str(self.base_path)
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
 
     def __pip_install(self) -> None:
         r"""Get includes from script.
@@ -125,12 +89,6 @@ class PyProcesser:
         (?<=^from)\s+[^\.].+?(?=import)
         """
         try:
-            logging.info(
-                "PyProcesser: Pip Install: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-
             imports = []
 
             # find all scripts in dir, but not in venv
@@ -172,13 +130,13 @@ class PyProcesser:
             imports = [x for x in imports if x not in names]
 
             # remove preinstalled packages from imports
-            cmd = '"' + self.env_path + 'bin/python " -c "help(\'modules\')"'
+            cmd = f'"{self.env_path}bin/python " -c "help(\'modules\')"'
             built_in_packages = Cmd(
-                self.task,
-                cmd,
-                "Python packages loaded.",
-                "Failed to get preloaded packages: " + "\n" + cmd,
-                self.job_hash,
+                task=self.task,
+                run_id=self.run_id,
+                cmd=cmd,
+                success_msg="Python packages loaded.",
+                error_msg="Failed to get preloaded packages: " + "\n" + cmd,
             ).shell()
 
             built_in_packages = built_in_packages.split(
@@ -206,45 +164,27 @@ class PyProcesser:
                     + " ".join([str(x) for x in imports])
                 )
                 Cmd(
-                    self.task,
-                    cmd,
-                    "Imports succesfully installed: "
+                    task=self.task,
+                    run_id=self.run_id,
+                    cmd=cmd,
+                    success_msg="Imports succesfully installed: "
                     + ", ".join([str(x) for x in imports])
                     + " with command: "
                     + "\n"
                     + cmd,
-                    "Failed to install imports with command: " + "\n" + cmd,
-                    self.job_hash,
+                    error_msg="Failed to install imports with command: " + "\n" + cmd,
                 ).shell()
 
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "PyProcesser: Failed to install packages: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
+        except BaseException as e:
+            raise RunnerException(
+                self.task,
+                self.run_id,
+                14,
+                f"Failed to install packages.\n{self.base_path}\n{e}",
             )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=14,  # py
-                error=1,
-                message="Failed to build install packages. "
-                + str(self.base_path)
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
 
     def __run_script(self) -> None:
         try:
-            logging.info(
-                "PyProcesser: Running: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
             cmd = (
                 self.env_path
                 + 'bin/python "'
@@ -254,29 +194,17 @@ class PyProcesser:
             )
 
             self.output = Cmd(
-                self.task,
-                cmd,
-                "Script successfully run.",
-                "Failed run script: " + "\n" + cmd,
-                self.job_hash,
+                task=self.task,
+                run_id=self.run_id,
+                cmd=cmd,
+                success_msg="Script successfully run.",
+                error_msg="Failed run script: " + "\n" + cmd,
             ).shell()
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "PyProcesser: Failed to run script: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
+
+        except BaseException as e:
+            raise RunnerException(
+                self.task,
+                self.run_id,
+                14,
+                f"Failed to build run script.\n{self.base_path}\n{e}",
             )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=14,  # py
-                error=1,
-                message="Failed to build run script. "
-                + str(self.base_path)
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()

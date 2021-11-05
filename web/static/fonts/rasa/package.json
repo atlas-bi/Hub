@@ -1,8 +1,11 @@
 {
-  "author": "Lotus <declininglotus@gmail.com>",
+  "name": "@fontsource/rasa",
+  "version": "4.5.2",
   "description": "Self-host the Rasa font in a neatly bundled NPM package.",
-  "gitHead": "82c412e376eb24fc0150fb8cb9af703ad11f6b57",
-  "homepage": "https://github.com/fontsource/fontsource/tree/master/packages/rasa#readme",
+  "main": "index.css",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "fontsource",
     "font",
@@ -11,16 +14,13 @@
     "Rasa",
     "rasa"
   ],
+  "author": "Lotus <declininglotus@gmail.com>",
   "license": "MIT",
-  "main": "index.css",
-  "name": "@fontsource/rasa",
-  "publishConfig": {
-    "access": "public"
-  },
+  "homepage": "https://github.com/fontsource/fontsource/tree/master/packages/rasa#readme",
   "repository": {
-    "directory": "packages/rasa",
     "type": "git",
-    "url": "https://github.com/fontsource/fontsource.git"
+    "url": "https://github.com/fontsource/fontsource.git",
+    "directory": "packages/rasa"
   },
-  "version": "4.5.2"
+  "gitHead": "82c412e376eb24fc0150fb8cb9af703ad11f6b57"
 }

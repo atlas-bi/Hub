@@ -118,28 +118,30 @@ function debounce(func, wait, immediate) {
       var q = null;
       var reloadTimer,
         get_new_logs = function () {
-          if(q){q.abort()}
+          if(window.ajaxOn == true){
+            if(q){q.abort()}
 
-          // get the latest log row and reload from there.
-          // we will reload the full last block.. as last
-          // row is sometimes dynamic.
+            // get the latest log row and reload from there.
+            // we will reload the full last block.. as last
+            // row is sometimes dynamic.
 
-          last_id = container.querySelector('nav.log-group:last-of-type div[log_id]').getAttribute('log_id')
-          q = new XMLHttpRequest();
-          q.open(
-            "get",
-            url + "?gte="+last_id,
-            true
-          );
-          q.send();
+            last_id = container.querySelector('nav.log-group:last-of-type div[log_id]').getAttribute('log_id')
+            q = new XMLHttpRequest();
+            q.open(
+              "get",
+              url + "?gte="+last_id,
+              true
+            );
+            q.send();
 
-          q.onload = function () {
-            try {
-              appendLogs(JSON.parse(this.responseText), container);
-            } catch (e) {
-            console.log(e)
-            }
-          };
+            q.onload = function () {
+              try {
+                appendLogs(JSON.parse(this.responseText), container);
+              } catch (e) {
+              console.log(e)
+              }
+            };
+          }
             reloadTimer = window.setTimeout(get_new_logs, 2000);
           };
         window.setTimeout(get_new_logs, 2000);
@@ -193,8 +195,10 @@ function debounce(func, wait, immediate) {
     // build split array of logs from json. group results by "status", "job_id"
     var group = [];
     var section = {};
-    var job_id = "", status="";
-
+    // var job_id = "",
+    //     status="";
+     var job_id = "",
+        status=  "";
 
    for (x = 0; x < arr.length; x++) {
       var v = arr[x];
@@ -202,11 +206,20 @@ function debounce(func, wait, immediate) {
       var existing_log = container.querySelector('div[log_id="'+v["log_id"]+'"]');
       if(existing_log){
         existing_log.innerHTML=v["message"];
+        if(v["class"] == "error"){
+          // update icon with error icon
+          var old_icon = existing_log.closest('.log-group').querySelector(".has-text-grey-light.fa-check-circle");
+          if(old_icon){
+            old_icon.classList.remove('has-text-grey-light');
+            old_icon.classList.remove('fa-check-circle');
+            old_icon.classList.add('has-text-danger','fa-times-circle');
+          }
+        }
       }
       else{
         if(status==v["status"] && job_id==v["job_id"]){
           section["message"].push({"message": v["message"], "date":v["date"], "log_id": v["log_id"]})
-          section["class"] = v["class"] ? v["class"] !== "" : v["class"];
+          section["class"] =  v["class"] !== "" ? v["class"] : section["class"];
         }else {
 
           section={}
@@ -249,8 +262,7 @@ function debounce(func, wait, immediate) {
     updated.innerHTML = current_date
 
 
-    // group results by "status", "job_id"
-    var job_id = "", status="", nav, left, right;
+    var nav, left, right;
 
     for (var x = 0; x < group.length; x++) {
 
@@ -340,7 +352,7 @@ function debounce(func, wait, immediate) {
 
       // status
       var status_box = level_item.cloneNode();
-      status_box.classList.add("is-justify-content-left")
+      status_box.classList.add("is-justify-content-left","status")
       status_box.setAttribute('style',"min-width:110px;")
       status_box.innerHTML=group[x]["status"]
       left.appendChild(status_box);
@@ -376,6 +388,7 @@ function debounce(func, wait, immediate) {
         text.setAttribute("style","white-space:pre-wrap;word-break:break-word");
         text.innerHTML = group[x]["message"][m]["message"];
         text.setAttribute("log_id",group[x]["message"][m]["log_id"]);
+        text.setAttribute("job_id",group[x]["message"][m]["job_id"]);
 
         date = level_item.cloneNode();
         date.innerHTML = group[x]["job_id"] + " " + group[x]["message"][m]["date"]

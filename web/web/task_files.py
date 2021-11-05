@@ -12,10 +12,22 @@ from flask import jsonify, redirect, send_file, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
-from web import db
-from web.model import Task, TaskFile, TaskLog
+from runner.scripts.em_messages import RunnerLog
+from web.model import TaskFile
 
 task_files_bp = Blueprint("task_files_bp", __name__)
+
+
+@task_files_bp.route("/task/<task_id>/filename_preview")
+@login_required
+def filename_preview(task_id: int) -> str:
+    """Generate a task filename preview."""
+    try:
+        return requests.get(
+            f"{app.config['RUNNER_HOST']}/task/{task_id}/filename_preview"
+        ).text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
 
 
 @task_files_bp.route("/task/<task_id>/file/<file_id>/sendSftp")
@@ -24,47 +36,27 @@ def one_task_file_send_sftp(task_id: int, file_id: int) -> Response:
     """Reload task SFTP output."""
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
-        requests.get(
-            app.config["RUNNER_HOST"]
-            + "/send_sftp/"
-            + task_id
-            + "/"
-            + my_file.job_id
-            + "/"
-            + file_id
-        )
-        task = Task.query.filter_by(id=task_id).first()
+        output = requests.get(
+            f"{app.config['RUNNER_HOST']}/send_sftp/{task_id}/{my_file.job_id}/{file_id}"
+        ).json()
+        if output.get("error"):
+            raise ValueError(output.get("error"))
 
-        log = TaskLog(
-            task_id=task.id,
-            job_id=my_file.job_id,
-            status_id=7,
-            message="("
-            + (current_user.full_name or "none")
-            + ") Manually sending file to SFTP server: "
-            + task.destination_sftp_conn.path
-            + my_file.name,
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Manually sending file to SFTP server.\n{my_file.name}",
         )
-        db.session.add(log)
-        db.session.commit()
 
-    # pylint: disable=broad-except
     except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            task_id=task_id,
-            job_id=my_file.job_id,
-            error=1,
-            message=(
-                (current_user.full_name or "none")
-                + ": Failed to send file to SFTP server. ("
-                + str(task_id)
-                + ")\n"
-                + str(e)
-            ),
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Failed to manually sending file to SFTP server.\n{my_file.name}\n{e}",
+            1,
         )
-        db.session.add(log)
-        db.session.commit()
 
     return redirect(url_for("task_bp.one_task", task_id=task_id))
 
@@ -75,49 +67,27 @@ def one_task_file_send_ftp(task_id: int, file_id: int) -> Response:
     """Reload task FTP output."""
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
-        requests.get(
-            app.config["RUNNER_HOST"]
-            + "/send_ftp/"
-            + task_id
-            + "/"
-            + my_file.job_id
-            + "/"
-            + file_id
+        output = requests.get(
+            f"{app.config['RUNNER_HOST']}/send_ftp/{task_id}/{my_file.job_id}/{file_id}"
+        ).json()
+        if output.get("error"):
+            raise ValueError(output.get("error"))
+
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Manually sending file to FTP server.\n{my_file.name}",
         )
 
-        task = Task.query.filter_by(id=task_id).first()
-
-        log = TaskLog(
-            task_id=task.id,
-            job_id=my_file.job_id,
-            status_id=7,
-            message="("
-            + (current_user.full_name or "none")
-            + ") Manually sending file to FTP server: "
-            + task.destination_ftp_conn.path
-            + "/"
-            + my_file.name,
-        )
-        db.session.add(log)
-        db.session.commit()
-
-    # pylint: disable=broad-except
     except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            task_id=task_id,
-            job_id=my_file.job_id,
-            error=1,
-            message=(
-                (current_user.full_name or "none")
-                + ": Failed to send file to FTP server. ("
-                + str(task_id)
-                + ")\n"
-                + str(e)
-            ),
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Failed to manually sending file to FTP server.\n{my_file.name}\n{e}",
+            1,
         )
-        db.session.add(log)
-        db.session.commit()
 
     return redirect(url_for("task_bp.one_task", task_id=task_id))
 
@@ -127,49 +97,28 @@ def one_task_file_send_ftp(task_id: int, file_id: int) -> Response:
 def one_task_file_send_smb(task_id: int, file_id: int) -> Response:
     """Reload task SMB output."""
     try:
-        my_file = TaskFile.query.filter_by(id=file_id).first().job_id
-        requests.get(
-            app.config["RUNNER_HOST"]
-            + "/send_smb/"
-            + task_id
-            + "/"
-            + my_file.job_id
-            + "/"
-            + file_id
+        my_file = TaskFile.query.filter_by(id=file_id).first()
+        output = requests.get(
+            f"{app.config['RUNNER_HOST']}/send_smb/{task_id}/{my_file.job_id}/{file_id}"
+        ).json()
+        if output.get("error"):
+            raise ValueError(output.get("error"))
+
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Manually sending file to SMB server.\n{my_file.name}",
         )
 
-        task = Task.query.filter_by(id=task_id).first()
-
-        log = TaskLog(
-            task_id=task.id,
-            job_id=my_file.job_id,
-            status_id=7,
-            message="("
-            + (current_user.full_name or "none")
-            + ") Manually sending file to SMB server: "
-            + task.destination_smb_conn.path
-            + "/"
-            + my_file.name,
-        )
-        db.session.add(log)
-        db.session.commit()
-    # pylint: disable=broad-except
     except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            task_id=task_id,
-            job_id=my_file.job_id,
-            error=1,
-            message=(
-                (current_user.full_name or "none")
-                + ": Failed to send file to SMB server. ("
-                + str(task_id)
-                + ")\n"
-                + str(e)
-            ),
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Failed to manually sending file to SMB server.\n{my_file.name}\n{e}",
+            1,
         )
-        db.session.add(log)
-        db.session.commit()
 
     return redirect(url_for("task_bp.one_task", task_id=task_id))
 
@@ -180,46 +129,27 @@ def one_task_file_send_email(task_id: int, file_id: int) -> Response:
     """Resend task email output."""
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
-        requests.get(
-            app.config["RUNNER_HOST"]
-            + "/send_email/"
-            + task_id
-            + "/"
-            + my_file.job_id
-            + "/"
-            + file_id
+        output = requests.get(
+            f"{app.config['RUNNER_HOST']}/send_email/{task_id}/{my_file.job_id}/{file_id}"
+        ).json()
+        if output.get("error"):
+            raise ValueError(output.get("error"))
+
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Manually sending file to email.\n{my_file.name}",
         )
 
-        task = Task.query.filter_by(id=task_id).first()
-
-        log = TaskLog(
-            task_id=task.id,
-            job_id=my_file.job_id,
-            status_id=7,
-            message="("
-            + (current_user.full_name or "none")
-            + ") Manually sending email with file: "
-            + my_file.name,
-        )
-        db.session.add(log)
-        db.session.commit()
-    # pylint: disable=broad-except
     except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            task_id=task_id,
-            job_id=my_file.job_id,
-            error=1,
-            message=(
-                (current_user.full_name or "none")
-                + ": Failed to send email with file. ("
-                + str(task_id)
-                + ")\n"
-                + str(e)
-            ),
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Failed to manually sending file to email.\n{my_file.name}\n{e}",
+            1,
         )
-        db.session.add(log)
-        db.session.commit()
 
     return redirect(url_for("task_bp.one_task", task_id=task_id))
 
@@ -228,21 +158,15 @@ def one_task_file_send_email(task_id: int, file_id: int) -> Response:
 @login_required
 def one_task_file_download(file_id: int) -> Response:
     """Download task backup file."""
-    my_file = TaskFile.query.filter_by(id=file_id)
+    my_file = TaskFile.query.filter_by(id=file_id).first()
 
-    if my_file.count() > 0:
-        my_file = my_file.first()
-        log = TaskLog(
-            task_id=my_file.task_id,
-            job_id=my_file.job_id,
-            status_id=7,
-            message=(
-                "(%s) Manually downloading file %s."
-                % ((current_user.full_name or "none"), my_file.name)
-            ),
+    if my_file:
+        RunnerLog(
+            my_file.task,
+            my_file.job_id,
+            7,
+            f"{current_user.full_name} Manually downloading file.\n{my_file.name}",
         )
-        db.session.add(log)
-        db.session.commit()
 
         source_file = json.loads(
             requests.get("%s/file/%s" % (app.config["RUNNER_HOST"], file_id)).text
