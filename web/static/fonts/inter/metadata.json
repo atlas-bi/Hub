@@ -1,6 +1,14 @@
 {
+  "category": "sans-serif",
+  "defSubset": "latin",
   "fontId": "inter",
   "fontName": "Inter",
+  "lastModified": "2021-01-30",
+  "license": "https://fonts.google.com/attribution",
+  "source": "https://fonts.google.com/",
+  "styles": [
+    "normal"
+  ],
   "subsets": [
     "cyrillic",
     "cyrillic-ext",
@@ -10,17 +18,31 @@
     "latin-ext",
     "vietnamese"
   ],
-  "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
-  "styles": ["normal"],
-  "defSubset": "latin",
+  "type": "google",
   "variable": {
-    "slnt": { "default": "0", "min": "-10", "max": "0", "step": "1" },
-    "wght": { "default": "400", "min": "100", "max": "900", "step": "1" }
+    "slnt": {
+      "default": "0",
+      "max": "0",
+      "min": "-10",
+      "step": "1"
+    },
+    "wght": {
+      "default": "400",
+      "max": "900",
+      "min": "100",
+      "step": "1"
+    }
   },
-  "lastModified": "2021-01-30",
   "version": "v3",
-  "category": "sans-serif",
-  "source": "https://fonts.google.com/",
-  "license": "https://fonts.google.com/attribution",
-  "type": "google"
+  "weights": [
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900
+  ]
 }

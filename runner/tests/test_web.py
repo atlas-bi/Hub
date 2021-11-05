@@ -17,7 +17,6 @@ from pytest import fixture
 from runner.extensions import db
 from runner.model import Project, Task
 
-
 # def test_source_code(client_fixture: fixture) -> None:
 #     project = Project(name="demo")
 #     db.session.add(project)

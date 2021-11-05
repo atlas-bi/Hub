@@ -415,7 +415,7 @@ def test_complex_patterns(client_fixture: fixture) -> None:
     assert my_date_string == new_date.strftime("%m-%d-%Y-") + str(last_day)
 
     my_date_string = DateParsing(
-        task,None, "%m-6-%d-30-%Y+1-lastday_something_cool_%m+6-%d+30-%Y-1-lastday"
+        task, None, "%m-6-%d-30-%Y+1-lastday_something_cool_%m+6-%d+30-%Y-1-lastday"
     ).string_to_date()
 
     new_date = datetime.datetime.now() + relativedelta.relativedelta(

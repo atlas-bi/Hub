@@ -1,4 +1,4 @@
-version: "2"         # required to adjust maintainability checks
+version: '2'         # required to adjust maintainability checks
 
 checks:
   argument-count:
@@ -43,28 +43,28 @@ checks:
       threshold: #language-specific defaults. overrides affect all languages.
 
 exclude_patterns:
-- "tests/"
-- "migrations/"
-- "migrations_dev/"
-- "migrations_test/"
-- "node_modules/"
-- "**/lib/"
-- ".github/"
-- "docker/"
-- "docs/"
-- "config/"
-- "db/"
-- "dist/"
-- "features/"
-- "**/node_modules/"
-- "script/"
-- "**/spec/"
-- "**/test/"
-- "**/tests/"
-- "Tests/"
-- "**/vendor/"
-- "**/*_test.go"
-- "**/*.d.ts"
+- tests/
+- migrations/
+- migrations_dev/
+- migrations_test/
+- node_modules/
+- '**/lib/'
+- .github/
+- docker/
+- docs/
+- config/
+- db/
+- dist/
+- features/
+- '**/node_modules/'
+- script/
+- '**/spec/'
+- '**/test/'
+- '**/tests/'
+- Tests/
+- '**/vendor/'
+- '**/*_test.go'
+- '**/*.d.ts'
 
 plugins:
   bandit:
