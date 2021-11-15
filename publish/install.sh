@@ -182,6 +182,9 @@ fmt_blue "Installing dependencies"
 fmt_green "${UL}Env Info:"
 fmt_yellow "$(~webapp/.local/bin/poetry env info)"
 
+fmt_blue "Building static"
+npm install
+
 # echo -e "\n${GREEN}Dep Info.${RESET}"
 # echo -e "$($HOME/.poetry/bin/poetry" show --tree)"
 
