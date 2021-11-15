@@ -42,7 +42,7 @@ def file_size(size: str) -> str:
         step_unit = 1000.0
         out: float = float(size)
         for letters in ["bytes", "KB", "MB", "GB", "TB"]:
-            if float(size) < step_unit:
+            if float(out) < step_unit:
                 return "%3.1f %s" % (out, letters)
             out /= step_unit
 
