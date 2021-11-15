@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 import redis
 import saml2
@@ -32,12 +33,24 @@ class Config:
 
     redis_host = os.environ.get("REDIS_HOST", "localhost")
     redis_port = int(os.environ.get("REDIS_PORT", 6379))
+    SESSION_TYPE = "redis"
+    SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
+
+    if os.environ.get("REDIS_URL"):
+        url = urlparse(os.environ["REDIS_URL"])
+        redis_host = url.hostname or "localhost"
+        redis_port = url.port or 6379
+        SESSION_REDIS = redis.Redis(
+            host=url.hostname,
+            port=url.port,
+            username=url.username,
+            password=url.password,
+            ssl=True,
+            ssl_cert_reqs=None,
+        )
 
     # for flask-redis
     REDIS_URL = os.environ.get("REDIS_URL", f"redis://{redis_host}:{redis_port}")
-
-    SESSION_TYPE = "redis"
-    SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
 
     # authentication
     LOGIN_VIEW = "auth_bp.login"
