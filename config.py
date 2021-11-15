@@ -77,12 +77,14 @@ class Config:
     CACHE_DEFAULT_TIMEOUT = 300
 
     # database
+
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
         "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
             user="username", pw="password", url="server", db="atlas_automation_hub"
         ),
-    )
+    ).replace("postgres://", "postgresql://")
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         "max_overflow": 100,  # how many spare connections we can use?
@@ -280,7 +282,7 @@ class DevConfig(Config):
         "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
             user="username", pw="password", url="server", db="atlas_hub_dev"
         ),
-    )
+    ).replace("postgres://", "postgresql://")
 
     # migrations override
     MIGRATIONS = "migrations_dev"
