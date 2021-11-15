@@ -45,8 +45,6 @@ class Config:
             port=url.port,
             username=url.username,
             password=url.password,
-            ssl=True,
-            ssl_cert_reqs=None,
         )
 
     # for flask-redis
