@@ -271,6 +271,7 @@ class DevConfig(Config):
     AUTH_METHOD = "DEV"
 
     DEBUG = True
+    DEMO = True
 
     SESSION_COOKIE_SECURE = False
 
