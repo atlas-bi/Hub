@@ -1,22 +1,60 @@
 """FTP connection manager."""
 
 
+import csv
+import fnmatch
 import ftplib  # noqa: S402
-import logging
+import os
+import re
 import sys
+import tempfile
 import time
 from ftplib import FTP  # noqa: S402
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import IO, Any, Generator, List, Optional, Tuple
 
 from flask import current_app as app
 
-from runner import db
-from runner.model import ConnectionFtp, Task, TaskLog
+from runner.model import ConnectionFtp, Task
+from runner.scripts.em_messages import RunnerException, RunnerLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
-from error_print import full_stack
+
+
+def connect(connection: ConnectionFtp) -> FTP:
+    """Connect to ftp server."""
+    try:
+        # there is no timeout in paramiko so...
+        # continue to attemp to login during time limit
+        # if we are getting timeout exceptions
+        timeout = time.time() + 60 * 3  # 2 mins from now
+        while True:
+            try:
+                conn = FTP(connection.address or "")  # noqa: S321
+                conn.login(
+                    user=(connection.username or ""),
+                    passwd=(
+                        em_decrypt(connection.password, app.config["PASS_KEY"]) or ""
+                    ),
+                )
+                break
+            except ftplib.error_reply as e:
+                # pylint: disable=no-else-continue
+                if time.time() <= timeout:
+                    time.sleep(10)  # wait 10 sec before retrying
+                    continue
+                elif time.time() > timeout:
+                    # pylint: disable=raise-missing-from
+                    raise ValueError("Connection timeout.")
+
+                else:
+                    raise ValueError(f"Connection failed.\n{e}")
+
+        return conn
+
+    except BaseException as e:
+        raise ValueError(f"Connection failed.\n{e}")
 
 
 class Ftp:
@@ -27,274 +65,188 @@ class Ftp:
     specified in the task settings.
     """
 
-    # pylint: disable=too-few-public-methods
     def __init__(
         self,
         task: Task,
+        run_id: Optional[str],
         connection: ConnectionFtp,
-        overwrite: int,
-        file_name: str,
-        file_path: Optional[str],
-        job_hash: str,
-    ) -> None:
-        """Set up class parameters.
-
-        :param task: task object
-        :param connection: connection object
-        :param int overwrite: value determines if existing files should be overwriten
-        :param str file_name: name of file in motion
-        :param str file_path: local file path
-        """
-        # pylint: disable=too-many-arguments
+        directory: Path,
+    ):
+        """Set up class parameters."""
         self.task = task
+        self.run_id = run_id
         self.connection = connection
-        self.overwrite = overwrite
-        self.file_name = file_name
-        self.file_path = file_path
-        self.job_hash = job_hash
-        self.transport = ""
-        self.conn = FTP(self.connection.address or "")  # noqa: S321
+        self.dir = directory
+        self.conn = self.__connect()
 
-    def __connect(self) -> None:
+    def __connect(self) -> FTP:
 
         try:
-            logging.info(
-                "FTP: Connecting: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
+            return connect(self.connection)
+        except ValueError as e:
+            raise RunnerException(self.task, self.run_id, 13, str(e))
 
-            # there is no timeout in paramiko so...
-            # continue to attemp to login during time limit
-            # if we are getting timeout exceptions
-            timeout = time.time() + 60 * 3  # 2 mins from now
-            while True:
-                try:
-                    self.conn.login(
-                        user=(self.connection.username or ""),
-                        passwd=(
-                            em_decrypt(self.connection.password, app.config["PASS_KEY"])
-                            or ""
-                        ),
-                    )
-                    break
-                except ftplib.error_reply as e:
-                    # pylint: disable=no-else-continue
-                    if time.time() <= timeout:
-                        time.sleep(10)  # wait 10 sec before retrying
-                        continue
-                    elif time.time() > timeout:
-                        # pylint: disable=raise-missing-from
-                        raise ValueError("SFTP Connection timeout.")
+    def _walk(
+        self, directory: str
+    ) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
+        dirs = []
+        nondirs = []
 
-                    else:
-                        raise e
+        for name, stats in self.conn.mlsd(directory):
+            if stats["type"] == "dir":
+                dirs.append(name)
+            elif stats["type"] == "file":
+                nondirs.append(str(Path(directory).joinpath(name)))
 
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "FTP: Failed to Connect: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
-            )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=13,  # ftp
-                error=1,
-                message="Failed to connect to <a href='/connection/"
-                + str(self.connection.connection.id)
-                + "'>"
-                + str(self.connection.name)
-                + "("
-                + str(self.connection.username)
-                + ("@" if self.connection.username else "")
-                + str(self.connection.address)
-                + ")</a>\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
+        yield directory, dirs, nondirs
 
-    def read(self) -> str:
+        # Recurse into sub-directories
+        for dirname in dirs:
+            new_path = str(Path(directory).joinpath(dirname))
+            yield from self._walk(new_path)
+
+    def __load_file(self, file_name: str) -> IO[str]:
+        """Download file from sftp server."""
+        my_binary: List[bytes] = []
+
+        def handle_binary(more_data: bytes) -> None:
+            my_binary.append(more_data)
+
+        self.conn.retrbinary("RETR " + file_name, callback=handle_binary)
+        data = "".join([str(x) for x in my_binary])
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", delete=False, dir=self.dir
+        ) as data_file:
+
+            if (
+                self.task.source_sftp_ignore_delimiter != 1
+                and self.task.source_sftp_delimiter
+            ):
+                my_delimiter = self.task.source_sftp_delimiter or ","
+
+                csv_reader = csv.reader(
+                    data.splitlines(),
+                    delimiter=my_delimiter,
+                )
+                writer = csv.writer(data_file)
+                writer.writerows(csv_reader)
+
+            else:
+                data_file.write(data)
+
+            original_name = str(self.dir.joinpath(file_name.split("/")[-1]))
+            if os.path.islink(original_name):
+                os.unlink(original_name)
+            elif os.path.isfile(original_name):
+                os.remove(original_name)
+            os.link(data_file.name, original_name)
+            data_file.name = original_name  # type: ignore[misc]
+
+        return data_file
+
+    def __clean_path(self, path: str) -> str:
+
+        path = re.sub(r"/$", "", path, re.MULTILINE)
+        path = re.sub(r"^/", "", path, re.MULTILINE)
+
+        return "/" + path
+
+    def read(self, file_name: str) -> List[IO[str]]:
         """Read a file from FTP server.
 
-        :returns: file contents as string.
+        Data is loaded into a temp file.
+
+        Returns a path or raises an exception.
         """
-        self.__connect()
-
         try:
-            logging.info(
-                "FTP: Reading File: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-            self.conn.cwd(self.connection.path or "")
-            my_binary: List[bytes] = []
+            self.conn.cwd(self.__clean_path(self.connection.path or "/"))
 
-            def handle_binary(more_data: bytes) -> None:
-                my_binary.append(more_data)
+            if "*" in file_name:
+                RunnerLog(self.task, self.run_id, 13, "Searching for matching files...")
 
-            self.conn.retrbinary("RETR " + self.file_name, callback=handle_binary)
-            data = "".join([str(x) for x in my_binary])
+                # get the path up to the *
+                base_dir = str(Path(file_name.split("*")[0]).parent)
+
+                file_list = []
+                for _, _, walk_file_list in self._walk(base_dir):
+                    for this_file in walk_file_list:
+
+                        if fnmatch.fnmatch(this_file, file_name):
+                            file_list.append(this_file)
+
+                RunnerLog(
+                    self.task,
+                    self.run_id,
+                    13,
+                    "Found %d file%s.\n%s"
+                    % (
+                        len(file_list),
+                        ("s" if len(file_list) != 1 else ""),
+                        "\n".join(file_list),
+                    ),
+                )
+                return [self.__load_file(file_name) for file_name in file_list]
+
+            return [self.__load_file(file_name)]
 
         # pylint: disable=broad-except
         except BaseException as e:
-            data = ""
-            logging.error(
-                "FTP: Failed to Read File: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
+            raise RunnerException(
+                self.task,
+                self.run_id,
+                13,
+                f"File failed to load file from server.\n{e}",
             )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=13,  # fpt
-                error=1,
-                message="File failed to load file from server: "
-                + str(self.connection.path)
-                + self.file_name
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
 
-            raise e
-
-        self.__close()
-        return data
-
-    def save(self) -> Union[bool, str]:
+    def save(self, overwrite: int, file_name: str) -> None:
         """Use to copy local file to FTP server.
 
         :returns: true if successful.
         """
         self.__connect()
         try:
-            logging.info(
-                "FTP: Changing Dir: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-            self.conn.cwd(self.connection.path or "")
+            self.conn.cwd(self.connection.path or "/")
 
         # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "FTP: Failed to change Dir: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
-            )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=13,  # ftp
-                error=1,
-                message="File failed to change path to : "
-                + str(self.connection.path)
-                + self.file_name
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
+        except BaseException as e:
+            RunnerException(self.task, self.run_id, 13, f"Failed to change path.\n{e}")
 
-        if self.overwrite != 1:
+        if overwrite != 1:
             try:
-                self.conn.size(self.file_name)
-                log = TaskLog(
-                    task_id=self.task.id,
-                    job_id=self.job_hash,
-                    status_id=13,  # ftp
-                    error=1,
-                    message="File already exists and will not be loaded: "
-                    + str(self.connection.path)
-                    + self.file_name,
+                self.conn.size(file_name)
+                RunnerLog(
+                    self.task,
+                    self.run_id,
+                    13,
+                    "File already exists and will not be loaded.",
                 )
-                db.session.add(log)
-                db.session.commit()
-                return "File already exists."
+                self.__close()
+
+                return
 
             # pylint: disable=broad-except
             except BaseException:
                 pass
 
         try:
-            logging.info(
-                "FTP: Saving: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-            with open(str(self.file_path), "rb") as file:
-                self.conn.storbinary("STOR " + self.file_name, file)
+            with open(str(self.dir.joinpath(file_name)), "rb") as file:
+                self.conn.storbinary("STOR " + file_name, file)
 
-            # file is now confirmed on server w/ confirm=True flag
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=13,  # ftp
-                message="File loaded to server: "
-                + str(self.connection.path)
-                + "/"
-                + self.file_name,
-            )
-            db.session.add(log)
-            db.session.commit()
+            RunnerLog(self.task, self.run_id, 13, "File loaded to server.")
 
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "FTP: Failed to Save: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
-            )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=13,  # ftp
-                error=1,
-                message="File failed to finish loading to server: "
-                + str(self.connection.path)
-                + self.file_name
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
+            self.__close()
 
-        self.__close()
-        return True
+        except BaseException as e:
+            RunnerException(
+                self.task, self.run_id, 13, f"Failed to save file on server.\n{e}"
+            )
 
     def __close(self) -> None:
         try:
-            logging.info(
-                "FTP: Closing: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
             self.conn.close()
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "FTP: Failed to Close: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
+
+        except BaseException as e:
+            RunnerException(
+                self.task, self.run_id, 13, f"Failed to close connection.\n{e}"
             )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=13,  # ftp
-                error=1,
-                message="File failed to close connection: "
-                + str(self.connection.name)
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()

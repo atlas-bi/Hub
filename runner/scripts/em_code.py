@@ -1,23 +1,18 @@
 """Task source code handler."""
 
 
-import logging
 import re
-import sys
 import urllib.parse
-from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Optional
 
 import requests
 import urllib3
 from flask import current_app as app
 
-from runner import db
-from runner.model import Task, TaskLog
-from runner.scripts.em_params import LoadParams, ParamParser
-
-sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from error_print import full_stack
+from runner.extensions import db
+from runner.model import Task
+from runner.scripts.em_messages import RunnerException, RunnerLog
+from runner.scripts.em_params import ParamLoader
 
 urllib3.disable_warnings()
 
@@ -28,21 +23,14 @@ class SourceCode:
     def __init__(
         self,
         task: Task,
-        url: Optional[str],
-        job_hash: Optional[str],
-        query: str = None,
-        project_params: Optional[Dict[Any, Any]] = None,
-        task_params: Optional[Dict[Any, Any]] = None,
+        run_id: Optional[str],
+        params: ParamLoader,
+        refresh_cache: Optional[bool] = False,
     ) -> None:
-        """Set up class parameters.
-
-        :param task: task object
-        :param str url: web address of code source
-        """
-        self.url = url
+        """Set up class parameters."""
         self.task = task
-        self.job_hash = job_hash
-        self.query = query
+        self.run_id = run_id
+        self.params = params
         self.db_type = (
             "mssql"
             if self.task.source_database_conn
@@ -50,44 +38,35 @@ class SourceCode:
             else None
         )
 
-        if project_params is None and task_params is None:
-            self.project_params, self.task_params = LoadParams(
-                self.task, self.job_hash
-            ).get()
+        self.query: str = ""
+        self.refresh_cache = refresh_cache
 
-        else:
-            self.task_params = task_params or {}
-            self.project_params = project_params or {}
-
-    def gitlab(self) -> str:
-        """Get source code from gitlab using authentication.
-
-        :returns: String of source code if the url was valid.
-        """
+    def gitlab(self, url: str) -> str:
+        """Get source code from gitlab using authentication."""
         # pylint: disable=too-many-statements
-        if ".git" in str(self.url):
+        if ".git" in str(url):
             return ""
 
-        if self.url:
+        if url:
             try:
                 # convert the "raw" url into an api url
                 branch = urllib.parse.quote(
                     urllib.parse.unquote(
-                        re.findall(r"\/(?:raw|blob)\/(.+?)\/", self.url)[0]
+                        re.findall(r"\/(?:raw|blob)\/(.+?)\/", url)[0]
                     ),
                     safe="",
                 )
 
                 project = urllib.parse.quote(
                     urllib.parse.unquote(
-                        re.findall(r"\.(?:com|net|org)\/(.+?)\/-", self.url)[0]
+                        re.findall(r"\.(?:com|net|org)\/(.+?)\/-", url)[0]
                     ),
                     safe="",
                 )
 
                 file_path = urllib.parse.quote(
                     urllib.parse.unquote(
-                        re.findall(r"\/(?:raw|blob)\/.+?\/(.+?)$", self.url)[0]
+                        re.findall(r"\/(?:raw|blob)\/.+?\/(.+?)$", url)[0]
                     ),
                     safe="",
                 )
@@ -107,7 +86,7 @@ class SourceCode:
                 if page.status_code != 200:
                     raise Exception("Failed to get code: " + page.text)
 
-                if self.url.lower().endswith(".sql"):
+                if url.lower().endswith(".sql"):
                     self.query = page.text
                     self.db_type = (
                         "mssql"
@@ -115,6 +94,21 @@ class SourceCode:
                         and self.task.source_database_conn.type_id == 2
                         else None
                     )
+
+                    # save query cache before cleanup.
+                    if self.run_id or self.refresh_cache:
+                        self.task.source_cache = self.query
+                        db.session.commit()
+
+                        if self.refresh_cache:
+                            RunnerLog(
+                                self.task,
+                                self.run_id,
+                                15,
+                                "Source cache manually refreshed.",
+                            )
+
+                    # insert params
                     return self.cleanup()
 
                 return (
@@ -125,47 +119,56 @@ class SourceCode:
 
             # pylint: disable=broad-except
             except BaseException as e:
-                logging.error(
-                    "Source: Failed Getting GitLab: %s\n%s", self.url, str(full_stack())
-                )
-                log = TaskLog(
-                    task_id=self.task.id,
-                    error=1,
-                    job_id=self.job_hash,
-                    status_id=15,
-                    message="Failed to get source from "
-                    + self.url
-                    + "\n"
-                    + str(full_stack()),
-                )
-                db.session.add(log)
-                db.session.commit()
+                # only use cache if we have a run id. Otherwise failures are from code preview.
+                if (
+                    self.run_id
+                    and self.task.enable_source_cache == 1
+                    and self.task.source_cache
+                ):
+                    RunnerLog(
+                        self.task,
+                        self.run_id,
+                        15,
+                        f"Failed to get source from {url}. Using cached query.\nFull trace:\n{e}",
+                    )
 
-                raise e
+                    self.db_type = (
+                        "mssql"
+                        if self.task.source_database_conn
+                        and self.task.source_database_conn.type_id == 2
+                        else None
+                    )
 
-        log = TaskLog(
-            task_id=self.task.id,
-            error=1,
-            job_id=self.job_hash,
-            status_id=15,
-            message="(No Url?) Failed to get source from "
-            + str(self.url)
-            + "\n"
-            + str(full_stack()),
+                    self.query = self.task.source_cache
+                    return self.cleanup()
+
+                elif (
+                    self.run_id
+                    and self.task.enable_source_cache == 1
+                    and not self.task.source_cache
+                ):
+                    raise RunnerException(
+                        self.task,
+                        self.run_id,
+                        15,
+                        f"Failed to get source from {url}. Cache enabled, but no cache available.\n{e}",
+                    )
+                else:
+                    raise RunnerException(
+                        self.task,
+                        self.run_id,
+                        15,
+                        f"Failed to get source from {url}.\n{e}",
+                    )
+
+        raise RunnerException(
+            self.task, self.run_id, 15, "No url specified to get source from."
         )
-        db.session.add(log)
-        db.session.commit()
 
-        return ""
-
-    def web_url(self) -> str:
-        """Get contents of a webpage.
-
-        :returns: Contents of webpage.
-        """
+    def web_url(self, url: str) -> str:
+        """Get contents of a webpage."""
         try:
-            logging.info("Source: Getting Url: %s", self.url)
-            page = requests.get(str(self.url), verify=False)  # noqa: S501
+            page = requests.get(str(url), verify=False)  # noqa: S501
             self.query = page.text
             self.db_type = (
                 "mssql"
@@ -174,37 +177,66 @@ class SourceCode:
                 else None
             )
             if page.status_code != 200:
-                raise ValueError(f"{self.url} returned bad status: {page.status_code}")
+                raise ValueError(f"{url} returned bad status: {page.status_code}")
+
+            # save query cache before cleanup.
+            if self.run_id or self.refresh_cache:
+                self.task.source_cache = self.query
+                db.session.commit()
+
+                if self.refresh_cache:
+                    RunnerLog(
+                        self.task, self.run_id, 15, "Source cache manually refreshed."
+                    )
+
+            # insert params
             return self.cleanup()
 
         # pylint: disable=broad-except
         except BaseException as e:
-            logging.error(
-                "Source: Failed Getting GitLab: %s\n%s", self.url, str(full_stack())
-            )
-            log = TaskLog(
-                task_id=self.task.id,
-                error=1,
-                job_id=self.job_hash,
-                status_id=15,
-                message="(No Url?) Failed to get source from "
-                + str(self.url)
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
+            if (
+                self.run_id
+                and self.task.enable_source_cache == 1
+                and self.task.source_cache
+            ):
+                RunnerLog(
+                    self.task,
+                    self.run_id,
+                    15,
+                    f"Failed to get source from {url}. Using cached query.\nFull trace:\n{e}",
+                )
 
-            raise e
-        return -1
+                self.db_type = (
+                    "mssql"
+                    if self.task.source_database_conn
+                    and self.task.source_database_conn.type_id == 2
+                    else None
+                )
 
-    def source(self) -> Union[str, int]:
-        """Get task source code.
+                self.query = self.task.source_cache
 
-        :retruns: Cleaned source code.
-        """
+                return self.cleanup()
+
+            elif (
+                self.run_id
+                and self.task.enable_source_cache == 1
+                and not self.task.source_cache
+            ):
+                raise RunnerException(
+                    self.task,
+                    self.run_id,
+                    15,
+                    f"Failed to get source from {url}. Cache enabled, but no cache available.\n{e}",
+                )
+            else:
+                raise RunnerException(
+                    self.task, self.run_id, 15, f"Failed to get source from {url}\n{e}."
+                )
+
+    def source(self, query: Optional[str] = None) -> str:
+        """Get task source code."""
         try:
-            self.query = self.task.source_code
+            self.query = query or self.task.source_code or ""
             self.db_type = (
                 "mssql"
                 if self.task.source_database_conn
@@ -214,24 +246,12 @@ class SourceCode:
             return self.cleanup()
 
         # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "Source: Failed cleaning source code. %s\n%s",
-                None,
-                str(full_stack()),
+        except BaseException as e:
+            raise RunnerException(
+                self.task, self.run_id, 15, f"Failed to clean source code.\n{e}."
             )
-            log = TaskLog(
-                task_id=self.task.id,
-                error=1,
-                job_id=self.job_hash,
-                status_id=15,
-                message="Failed cleaning source code. " + "\n" + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
-        return -1
 
-    def cleanup(self) -> str:
+    def cleanup(self, query: Optional[str] = None) -> str:
         """Clean up source code.
 
         :param str query: query to clean
@@ -243,21 +263,24 @@ class SourceCode:
         """
         # remove database call
         # sql stuff
-        query = str(self.query)
-
-        query = re.sub(
-            re.compile(r"(^;?\s*;?)\buse\b\s+.+", flags=re.IGNORECASE | re.MULTILINE),
-            "",
-            query,
-        )
-        query = re.sub(
-            re.compile(r"(^;?\s*;?)\buse\b\s+.+?;", flags=re.IGNORECASE | re.MULTILINE),
-            "",
-            query,
-        )
+        query = query or self.query
 
         # only needed for mssql
-        if self.db_type == "mssql":
+        if self.task.source_type_id == 1 and self.db_type == "mssql":
+            query = re.sub(
+                re.compile(
+                    r"(^;?\s*;?)\buse\b\s+.+", flags=re.IGNORECASE | re.MULTILINE
+                ),
+                "",
+                query,
+            )
+            query = re.sub(
+                re.compile(
+                    r"(^;?\s*;?)\buse\b\s+.+?;", flags=re.IGNORECASE | re.MULTILINE
+                ),
+                "",
+                query,
+            )
 
             # add no count
             query = "SET NOCOUNT ON;\n" + query
@@ -268,14 +291,13 @@ class SourceCode:
             query = "SET STATISTICS IO OFF;\n" + query
             query = "SET STATISTICS TIME OFF;\n" + query
 
-        # remove " go"
-        query = re.sub(
-            re.compile(r"^;?\s*?;?\bgo\b\s*?;?", flags=re.IGNORECASE | re.MULTILINE),
-            r"",
-            query,
-        )
+            # remove " go"
+            query = re.sub(
+                re.compile(
+                    r"^;?\s*?;?\bgo\b\s*?;?", flags=re.IGNORECASE | re.MULTILINE
+                ),
+                r"",
+                query,
+            )
 
-        query = ParamParser(self.task, query, self.job_hash).insert_query_params()
-
-        # add two blank lines on end of query
-        return query + "\n\n"
+        return self.params.insert_query_params(query)

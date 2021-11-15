@@ -62,7 +62,9 @@ def project_list(my_type: str = "all") -> Response:
         "Tasks": text("count(*)"),
         "Enabled Tasks": text("sum(case when task.enabled = 1 then 1 else 0 end )"),
         "Running Tasks": text("sum(case when task.status_id = 1 then 1 else 0 end)"),
-        "Errored Tasks": text("sum(case when task.status_id = 2 then 1 else 0 end)"),
+        "Errored Tasks": text(
+            "sum(case when task.status_id = 2 and task.enabled = 1 then 1 else 0 end)"
+        ),
     }
 
     groups = {
@@ -183,7 +185,7 @@ def tasklog_userevents() -> Response:
                 if log["Task Name"]
                 else "N/A",
                 "Run Id": (
-                    "<a class='em-link' href='/task/"
+                    "<a  href='/task/"
                     + str(log["Task Id"])
                     + "/log/"
                     + str(log["Job Id"])
@@ -412,19 +414,17 @@ def connection_tasks(connection_id: int) -> Response:
                 if task["Project Id"]
                 else "Orphan :'(",
                 "Connection": task["Connection"],
-                "Enabled": "<a class='em-link' href=/task/"
+                "Enabled": "<a  href=/task/"
                 + str(task["Task Id"])
                 + "/disable>Disable</a>"
                 if task["Enabled"] == 1
-                else "<a class='em-link' href=/task/"
-                + str(task["Task Id"])
-                + "/enable>Enable</a>",
+                else "<a  href=/task/" + str(task["Task Id"]) + "/enable>Enable</a>",
                 "Last Run": datetime.datetime.strftime(
                     task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
                 )
                 if task["Last Run"] and isinstance(task["Last Run"], datetime.datetime)
                 else (task["Last Run"] if task["Last Run"] else "Never"),
-                "Run Now": "<a class='em-link' href='/task/"
+                "Run Now": "<a  href='/task/"
                 + str(task["Task Id"])
                 + "/run'>Run Now</a>",
                 "Status": task["Status"] if task["Status"] else "None",
@@ -469,7 +469,7 @@ def table_jobs_orphans() -> Response:
             if int(job["id"]) not in active_tasks:
                 table.append(
                     {
-                        "Action": "<a class='em-link' href='/task/"
+                        "Action": "<a  href='/task/"
                         + job["id"]
                         + "/delete'>Delete</a>",
                         "Name": job["name"],
@@ -536,7 +536,7 @@ def dash_tasks(task_type: str) -> Response:
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [{"head": '["Name", "Owner", "Last Run", "Next Run", "Enabled"]'}]
+    me = [{"head": '["Name", "Owner", "Last Run", "Next Run", "Actions"]'}]
 
     if task_type == "errored":
         tasks = tasks.filter(Task.status_id == 2, Task.enabled == 1)
@@ -600,7 +600,7 @@ def dash_tasks(task_type: str) -> Response:
                 "Owner": (
                     "<a href='project/user/"
                     + str(task["Owner Id"])
-                    + "' class='em-link'>"
+                    + "' >"
                     + task["Owner"]
                     + "</a>"
                     if task["Owner Id"]
@@ -617,15 +617,15 @@ def dash_tasks(task_type: str) -> Response:
                 )
                 if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                 else (task["Next Run"] if task["Next Run"] else "None"),
-                "Enabled": (
+                "Actions": (
                     (
-                        "<a class='em-link' href='/task/"
+                        "<a  href='/task/"
                         + str(task["Task Id"])
                         + "/run'>Run Now</a>&#8195;<span class='has-text-grey-light'>/</span>&#8195;"
                         if task_type != "active"
                         else ""
                     )
-                    + "<a class='em-link' href='/task/"
+                    + "<a  href='/task/"
                     + str(task["Task Id"])
                     + "/schedule'>Reschedule</a>"
                 ),
@@ -734,7 +734,7 @@ def task_list(my_type: str) -> Response:
             data["Owner"] = (
                 "<a href='project/user/"
                 + str(task["Owner Id"])
-                + "' class='em-link'>"
+                + "' >"
                 + task["Owner"]
                 + "</a>"
                 if task["Owner"]
@@ -967,7 +967,7 @@ def dash_log() -> Response:
                 "Owner": (
                     "<a href='project/user/"
                     + str(log["Owner Id"])
-                    + "' class='em-link'>"
+                    + "' >"
                     + log["Owner"]
                     + "</a>"
                     if log["Owner"]
@@ -983,7 +983,7 @@ def dash_log() -> Response:
                 "my_date_sort": log["Status Date"],
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": (
-                    "Run: <a class='em-link' href='/task/"
+                    "Run: <a  href='/task/"
                     + str(log["Task Id"])
                     + "/log/"
                     + log["Job Id"]
@@ -1074,7 +1074,7 @@ def dash_error_log() -> Response:
                 "Owner": (
                     "<a href='project/user/"
                     + str(log["Owner Id"])
-                    + "' class='em-link'>"
+                    + "' >"
                     + log["Owner"]
                     + "</a>"
                     if log["Owner"]
@@ -1090,7 +1090,7 @@ def dash_error_log() -> Response:
                 "my_date_sort": log["Status Date"],
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": (
-                    "Run: <a class='em-link' href='/task/"
+                    "Run: <a  href='/task/"
                     + str(log["Task Id"])
                     + "/log/"
                     + log["Job Id"]
@@ -1155,7 +1155,7 @@ def one_task_files(task_id: int) -> Response:
             me.append(
                 {
                     "File Name": my_file["File Name"],
-                    "Run Id": "<a class='em-link' href='/task/"
+                    "Run Id": "<a  href='/task/"
                     + str(task_id)
                     + "/log/"
                     + str(my_file["Run Id"])
@@ -1179,7 +1179,7 @@ def one_task_files(task_id: int) -> Response:
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
-                            + "/sendSftp' class='em-link'>Send to SFTP</a>\n"
+                            + "/sendSftp' >Send to SFTP</a><br />"
                             if task.destination_sftp == 1
                             else ""
                         )
@@ -1188,7 +1188,7 @@ def one_task_files(task_id: int) -> Response:
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
-                            + "/sendFtp' class='em-link'>Send to FTP</a>\n"
+                            + "/sendFtp' >Send to FTP</a><br />"
                             if task.destination_ftp == 1
                             else ""
                         )
@@ -1197,7 +1197,7 @@ def one_task_files(task_id: int) -> Response:
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
-                            + "/sendSmb' class='em-link'>Send to SMB</a>\n"
+                            + "/sendSmb' >Send to SMB</a><br />"
                             if task.destination_smb == 1
                             else ""
                         )
@@ -1206,14 +1206,15 @@ def one_task_files(task_id: int) -> Response:
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
-                            + "/sendEmail' class='em-link'>Send to Email</a>\n"
-                            if task.email_completion_file == 1
+                            + "/sendEmail' >Send to Email</a><br />"
+                            if task.email_completion == 1
+                            and task.email_completion_file == 1
                             else ""
                         )
                         + (
                             "<a href='/file/"
                             + str(my_file["File Id"])
-                            + "' class='em-link'>Download File</a>\n"
+                            + "' >Download File</a><br />"
                         )
                     ),
                 }

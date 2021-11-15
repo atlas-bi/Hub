@@ -665,6 +665,8 @@ class Task(db.Model):
     source_url: Optional[str] = None
     source_code: Optional[str] = None
 
+    source_require_sql_output: Optional[int] = None
+
     query_smb_id: Optional[int] = None
     query_smb_file: Optional[str] = None
     query_sftp_id: Optional[int] = None
@@ -689,6 +691,10 @@ class Task(db.Model):
     source_sftp_id: Optional[int] = None
 
     source_ssh_id: Optional[int] = None
+
+    # caching
+    source_cache: Optional[str] = None
+    enable_source_cache: Optional[int] = None
 
     # processing
     processing_type_id: Optional[int] = None
@@ -783,6 +789,7 @@ class Task(db.Model):
     )
     source_query_include_header = db.Column(db.Integer, nullable=True)
 
+    source_require_sql_output = db.Column(db.Integer, nullable=True)
     # source git
     source_git = db.Column(db.String(1000), nullable=True)
 
@@ -791,6 +798,10 @@ class Task(db.Model):
 
     # source typed code
     source_code = db.Column(db.String(8000), nullable=True)
+
+    # cached source query
+    source_cache = db.Column(db.Text, nullable=True)
+    enable_source_cache = db.Column(db.Integer, nullable=True, index=True)
 
     query_smb_id = db.Column(
         db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True, index=True
@@ -938,6 +949,15 @@ class Task(db.Model):
     # tasklog link
     task = db.relationship(
         "TaskLog",
+        backref="task",
+        lazy=True,
+        cascade="all, delete, delete-orphan",
+        passive_deletes=True,
+    )
+
+    # taskfiles link
+    task = db.relationship(
+        "TaskFile",
         backref="task",
         lazy=True,
         cascade="all, delete, delete-orphan",

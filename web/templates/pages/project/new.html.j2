@@ -16,7 +16,7 @@
 {% endblock crumbs %}
 
 {% block body %}
-    <h1 class="title is-1">
+    <h1 class="title is-1" data-docs="projects">
         {% if p %}
             Editing
             <a title="open project"
@@ -79,7 +79,8 @@
 
         </div>
         <div class="box">
-            <h2 class="title is-2">Global Parameters</h2>
+            <h2 class="title is-2" data-docs="parameters">Global Parameters</h2>
+            <p class="subtitle is-6">Parameters are <strong>key=value</strong> pairs, and can use <strong>parse(...)</strong> with embedded <a href="" target="_blank" rel="noopener">strftime patterns</a>. Project parameters are passed to child tasks.</p>
             <div class="field">
                 <div class="control">
                     <textarea class="textarea" name="globalParams" rows="1">{{ p.global_params or '' }}</textarea>

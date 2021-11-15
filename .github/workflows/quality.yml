@@ -7,24 +7,24 @@ on:
 
 jobs:
   lint:
-    name: "Pylint, Black, iSort, etc"
+    name: Pylint, Black, iSort, etc
 
     runs-on: macos-latest
 
     steps:
-      - name: "Check out the repo"
-        uses: "actions/checkout@v2"
+    - name: Check out the repo
+      uses: actions/checkout@v2
 
-      - name: "Install Python"
-        uses: "actions/setup-python@v2"
-        with:
-          python-version: "3.9"
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
 
-      - name: "Install Deps"
-        run: python -m pip install --no-cache-dir tox
+    - name: Install Deps
+      run: python -m pip install --no-cache-dir tox
 
-      - name: "Lint"
-        run: tox -e lint
+    - name: Lint
+      run: tox -e lint
 
   # static:
   #   name: "eslint, stylelint, etc"
@@ -55,21 +55,21 @@ jobs:
   #       run: tox -e static
 
   html:
-    name: "djlint"
+    name: djlint
 
     runs-on: macos-latest
 
     steps:
-      - name: "Check out the repo"
-        uses: "actions/checkout@v2"
+    - name: Check out the repo
+      uses: actions/checkout@v2
 
-      - name: "Install Python"
-        uses: "actions/setup-python@v2"
-        with:
-          python-version: "3.9"
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
 
-      - name: "Install Deps"
-        run: pip install --no-cache-dir tox
+    - name: Install Deps
+      run: pip install --no-cache-dir tox
 
-      - name: "Lint"
-        run: tox -e djlint
+    - name: Lint
+      run: tox -e djlint

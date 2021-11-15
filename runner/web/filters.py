@@ -15,9 +15,12 @@ def year(none: None) -> int:
 
 
 @filters_bp.app_template_filter("datetime_format")
-def datetime_format(my_date: datetime.datetime) -> str:
+def datetime_format(my_date: str) -> str:
     """Format date string."""
-    return datetime.datetime.strftime(
-        my_date,
-        "%a, %b %-d, %Y %H:%M:%S.%f",
-    )
+    if isinstance(my_date, datetime.datetime):
+        return datetime.datetime.strftime(
+            my_date,
+            "%a, %b %-d, %Y %H:%M:%S.%f",
+        )
+
+    return my_date

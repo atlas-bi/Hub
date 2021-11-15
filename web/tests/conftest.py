@@ -86,7 +86,7 @@ def client_fixture_with_scheduler(client_fixture: Generator) -> Generator:
     except requests.exceptions.ConnectionError:
         process = subprocess.Popen(
             [
-                "ls; FLASK_ENV=test; FLASK_DEBUG=True; FLASK_APP=scheduler; .tox/test/bin/python -m flask run --port 5001"
+                "FLASK_ENV=test; FLASK_DEBUG=True; FLASK_APP=scheduler; .tox/test/bin/python -m flask run --port 5001"
             ],
             shell=True,
             preexec_fn=os.setsid,

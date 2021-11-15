@@ -14642,6 +14642,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   display: none !important;
 }
 
+#search-form:active #search-results,
 #search-form:focus-within #search-results {
   display: block;
   -webkit-box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
@@ -14679,6 +14680,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 /*** multiline tooltip ***/
 [data-tooltip].has-tooltip-multiline::before {
   white-space: pre-line !important;
+}
+
+[data-tooltip]::before {
+  max-width: 21rem !important;
+  width: 21rem !important;
 }
 
 /* font */
@@ -14805,4 +14811,13 @@ input.transparent {
 /* fix bulma + prism */
 code .number {
   all: unset;
+}
+
+.is-inlineblock {
+  display: inline-block !important;
+}
+
+/* links in message */
+article.message a {
+  text-decoration: none !important;
 }

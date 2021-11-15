@@ -1,23 +1,86 @@
 """SFTP connection manager."""
 
 
-import logging
+import csv
+import fnmatch
+import os
+import re
 import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import Generator, Optional, Tuple, Union
+from stat import S_ISDIR
+from typing import IO, Any, Generator, List, Optional, Tuple
 
 import paramiko
 from flask import current_app as app
-from paramiko import RSAKey, SFTPClient, SFTPFile, Transport
+from paramiko import SFTPClient, SFTPFile, Transport
 
-from runner import db
-from runner.model import ConnectionSftp, Task, TaskLog
+from runner.model import ConnectionSftp, Task
+from runner.scripts.em_messages import RunnerException, RunnerLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
-from error_print import full_stack
+
+
+def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
+    """Connect to sftp server."""
+    try:
+        # there is no timeout in paramiko so...
+        # continue to attemp to login during time limit
+        # if we are getting timeout exceptions
+        timeout = time.time() + 60 * 3  # 2 mins from now
+        while True:
+            try:
+                transport = paramiko.Transport(
+                    f"{connection.address}:{(connection.port or 22)}"
+                )
+
+                # build ssh key file
+                key = None
+                if connection.key:
+                    with tempfile.NamedTemporaryFile(mode="w+", newline="") as key_file:
+                        key_file.write(
+                            em_decrypt(connection.key, app.config["PASS_KEY"])
+                        )
+                        key_file.seek(0)
+
+                        key = paramiko.RSAKey.from_private_key_file(
+                            key_file.name,
+                            password=em_decrypt(
+                                connection.password, app.config["PASS_KEY"]
+                            ),
+                        )
+
+                transport.connect(
+                    username=str(connection.username),
+                    password=(
+                        em_decrypt(connection.password, app.config["PASS_KEY"])
+                        if key is None
+                        else ""
+                    ),
+                    pkey=key,
+                )
+
+                conn = paramiko.SFTPClient.from_transport(transport)
+                if conn is None:
+                    raise ValueError("Failed to create connection.")
+
+                break
+            except (paramiko.ssh_exception.AuthenticationException, EOFError) as e:
+                # pylint: disable=no-else-continue
+                if str(e) == "Authentication timeout." and time.time() <= timeout:
+                    time.sleep(10)  # wait 10 sec before retrying
+                    continue
+                elif time.time() > timeout:
+                    raise ValueError("Connection timeout.")
+
+                raise ValueError(f"Connection failed.\n{e}")
+
+        return (transport, conn)
+
+    except BaseException as e:
+        raise ValueError(f"Connection failed.\n{e}")
 
 
 class Sftp:
@@ -28,338 +91,209 @@ class Sftp:
     specified in the task settings.
     """
 
-    # pylint: disable=too-few-public-methods
-    # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         task: Task,
+        run_id: Optional[str],
         connection: ConnectionSftp,
-        overwrite: int,
-        file_name: str,
-        file_path: Optional[str],
-        job_hash: str,
+        directory: Path,
     ):
-        """Set up class parameters.
-
-        :param task: task object
-        :param connection: connection object
-        :param int overwrite: value determines if existing files should be overwriten
-        :param str file_name: name of file in motion
-        :param str file_path: local file path
-        """
+        """Set up class parameters."""
         self.task = task
+        self.run_id = run_id
         self.connection = connection
-        self.overwrite = overwrite
-        self.file_name = file_name
-        self.file_path = file_path
-        self.job_hash = job_hash
-        self.key: Optional[RSAKey] = None
+        self.dir = directory
         self.transport, self.conn = self.__connect()
 
     def __connect(self) -> Tuple[Transport, SFTPClient]:
 
         try:
-            logging.info(
-                "SFTP: Connecting: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
+            return connect(self.connection)
+        except ValueError as e:
 
-            # there is no timeout in paramiko so...
-            # continue to attemp to login during time limit
-            # if we are getting timeout exceptions
-            timeout = time.time() + 60 * 3  # 2 mins from now
-            while True:
-                try:
-                    transport = paramiko.Transport(
-                        str(self.connection.address)
-                        + ":"
-                        + str((self.connection.port or 22))
+            raise RunnerException(self.task, self.run_id, 9, str(e))
+
+    def _walk(
+        self, directory: str
+    ) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
+        dirs = []
+        nondirs = []
+
+        for entry in self.conn.listdir_attr(directory):
+
+            if S_ISDIR(entry.st_mode or 0):
+                dirs.append(entry.filename)
+            else:
+                nondirs.append(str(Path(directory).joinpath(entry.filename)))
+
+        yield directory, dirs, nondirs
+
+        # Recurse into sub-directories
+        for dirname in dirs:
+            new_path = str(Path(directory).joinpath(dirname))
+            yield from self._walk(new_path)
+
+    def __load_file(self, file_name: str) -> IO[str]:
+        """Download file from sftp server."""
+        sftp_file = self.conn.open(file_name, mode="r")
+
+        def load_data(file_obj: SFTPFile) -> Generator:
+            with file_obj as this_file:
+                while True:
+                    data = this_file.read(1024).decode("utf-8")  # type: ignore[attr-defined]
+                    if not data:
+                        break
+                    yield data
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", delete=False, dir=self.dir
+        ) as data_file:
+            for data in load_data(sftp_file):
+
+                if (
+                    self.task.source_sftp_ignore_delimiter != 1
+                    and self.task.source_sftp_delimiter
+                ):
+                    my_delimiter = self.task.source_sftp_delimiter or ","
+
+                    csv_reader = csv.reader(
+                        data.splitlines(),
+                        delimiter=my_delimiter,
                     )
+                    writer = csv.writer(data_file)
+                    writer.writerows(csv_reader)
 
-                    # build ssh key file
-                    if self.connection.key:
-                        with tempfile.NamedTemporaryFile(
-                            mode="w+", newline=""
-                        ) as key_file:
-                            key_file.write(
-                                em_decrypt(self.connection.key, app.config["PASS_KEY"])
-                            )
-                            key_file.seek(0)
+                else:
+                    data_file.write(data)
 
-                            self.key = paramiko.RSAKey.from_private_key_file(
-                                key_file.name,
-                                password=em_decrypt(
-                                    self.connection.password, app.config["PASS_KEY"]
-                                ),
-                            )
+            original_name = str(self.dir.joinpath(file_name.split("/")[-1]))
+            if os.path.islink(original_name):
+                os.unlink(original_name)
+            elif os.path.isfile(original_name):
+                os.remove(original_name)
+            os.link(data_file.name, original_name)
+            data_file.name = original_name  # type: ignore[misc]
 
-                    transport.connect(
-                        username=str(self.connection.username),
-                        password=(
-                            em_decrypt(self.connection.password, app.config["PASS_KEY"])
-                            if self.key is None
-                            else ""
-                        ),
-                        pkey=self.key,
-                    )
+        sftp_file.close()
 
-                    conn = paramiko.SFTPClient.from_transport(transport)
-                    if conn is None:
-                        raise ValueError("SFTP failed to create connection.")
+        return data_file
 
-                    break
-                except (paramiko.ssh_exception.AuthenticationException, EOFError) as e:
-                    # pylint: disable=no-else-continue
-                    if str(e) == "Authentication timeout." and time.time() <= timeout:
-                        time.sleep(10)  # wait 10 sec before retrying
-                        continue
-                    elif time.time() > timeout:
-                        # pylint: disable=raise-missing-from
-                        raise ValueError("SFTP Connection timeout.")
+    def __clean_path(self, path: str) -> str:
 
-                    else:
-                        raise e
-            return (transport, conn)
+        path = re.sub(r"/$", "", path, re.MULTILINE)
+        path = re.sub(r"^/", "", path, re.MULTILINE)
 
-        # pylint: disable=broad-except
-        except BaseException as e:
-            logging.error(
-                "SFTP: Failed to Connect: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
-            )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=9,
-                error=1,
-                message="Failed to connect to <a  href='/connection/"
-                + str(self.connection.connection.id)
-                + "'>"
-                + str(self.connection.name)
-                + "("
-                + str(self.connection.username)
-                + "@"
-                + str(self.connection.address)
-                + ":"
-                + str((self.connection.port or 22))
-                + "</a>\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
+        return "/" + path
 
-            raise e
-
-    def read(self) -> str:
+    def read(self, file_name: str) -> List[IO[str]]:
         """Read a file from FTP server.
 
-        :returns: file contents as string.
+        Data is loaded into a temp file.
+
+        Returns a path or raises an exception.
         """
         try:
-            logging.info(
-                "SFTP: Reading: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-            self.conn.chdir(self.connection.path or "")
 
-            file_path = self.conn.open(self.file_name, mode="r")
+            self.conn.chdir(self.__clean_path(self.connection.path or "/"))
 
-            def load_data(file_obj: SFTPFile) -> Generator:
-                with file_obj as this_file:
-                    while True:
-                        data = this_file.read(1024).decode("utf-8")  # type: ignore[attr-defined]
-                        if not data:
-                            break
-                        yield data
+            if "*" in file_name:
+                RunnerLog(self.task, self.run_id, 9, "Searching for matching files...")
 
-            with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
-                for data in load_data(file_path):
-                    temp.write(data)
+                # get the path up to the *
+                base_dir = str(Path(file_name.split("*")[0]).parent)
 
-            file_path.close()
+                file_list = []
+                for _, _, walk_file_list in self._walk(base_dir):
+                    for this_file in walk_file_list:
 
-            name = temp.name
+                        if fnmatch.fnmatch(this_file, file_name):
+                            file_list.append(this_file)
 
-        # pylint: disable=broad-except
+                RunnerLog(
+                    self.task,
+                    self.run_id,
+                    9,
+                    "Found %d file%s.\n%s"
+                    % (
+                        len(file_list),
+                        ("s" if len(file_list) != 1 else ""),
+                        "\n".join(file_list),
+                    ),
+                )
+                return [self.__load_file(file_name) for file_name in file_list]
+
+            return [self.__load_file(file_name)]
+
         except BaseException as e:
-            logging.error(
-                "SFTP: Failed to Read File: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
+            raise RunnerException(
+                self.task, self.run_id, 9, f"File failed to load file from server.\n{e}"
             )
-            name = ""
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=9,
-                error=1,
-                message="File failed to load file from server: "
-                + str(self.connection.path)
-                + self.file_name
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
 
-            raise e
-
-        self.__close()
-        return name
-
-    def save(self) -> Optional[Union[str, bool]]:
+    def save(self, overwrite: int, file_name: str) -> None:
         """Use to copy local file to FTP server.
 
         :returns: true if successful.
         """
         try:
-            logging.info(
-                "SFTP: Changing Dir: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-            self.conn.chdir(self.connection.path)
+            self.conn.chdir(self.__clean_path(self.connection.path or "/"))
 
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "SFTP: Failed to change Dir: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
-            )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=9,
-                error=1,
-                message="File failed to change path to: "
-                + str(self.connection.path)
-                + self.file_name
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
+        except BaseException as e:
+            RunnerException(self.task, self.run_id, 9, f"Failed to change path.\n{e}")
 
-        if self.overwrite != 1:
+        if overwrite != 1:
             try:
-                self.conn.stat(self.file_name)
-                log = TaskLog(
-                    task_id=self.task.id,
-                    job_id=self.job_hash,
-                    status_id=9,
-                    error=1,
-                    message="File already exists and will not be loaded: "
-                    + str(self.connection.path)
-                    + self.file_name,
+                self.conn.stat(file_name)
+                RunnerLog(
+                    self.task,
+                    self.run_id,
+                    9,
+                    "File already exists and will not be loaded.",
                 )
-                db.session.add(log)
-                db.session.commit()
-                self.__close()
-                return "File already exists."
 
-            # pylint: disable=broad-except
+                self.__close()
+
+                return
+
             except BaseException:
+                # continue of file does not exist.
                 pass
 
         try:
-            logging.info(
-                "SFTP: Saving: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
-
             #  some sftp server do not allow overwrites. When attempted will
             #  return a permission error or other. So we log if the file exists
             #  to help with debugging.
             try:
-                self.conn.stat(self.file_name)
-                log = TaskLog(
-                    task_id=self.task.id,
-                    job_id=self.job_hash,
-                    status_id=9,
-                    message="File already exists will attempt to overwrite.",
+                self.conn.stat(file_name)
+                RunnerLog(
+                    self.task,
+                    self.run_id,
+                    9,
+                    "File already exist. Attempting to overwrite.",
                 )
-                db.session.add(log)
-                db.session.commit()
 
             # pylint: disable=broad-except
             except BaseException:
+                # continue of file does not exist.
                 pass
 
-            self.conn.put(str(self.file_path), self.file_name, confirm=True)
+            self.conn.put(str(self.dir.joinpath(file_name)), file_name, confirm=True)
 
             # file is now confirmed on server w/ confirm=True flag
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=9,
-                message="File verified on server: "
-                + str(self.connection.path)
-                + self.file_name,
-            )
-            db.session.add(log)
-            db.session.commit()
+            RunnerLog(self.task, self.run_id, 9, "File verified on server.")
 
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "SFTP: Failed to Save: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
-            )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=9,
-                error=1,
-                message="File failed to finish loading to server: "
-                + str(self.connection.path)
-                + self.file_name
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()
+            self.__close()
 
-        self.__close()
-        return True
+        except BaseException as e:
+            RunnerException(
+                self.task, self.run_id, 9, f"Failed to save file on server.\n{e}"
+            )
 
     def __close(self) -> None:
         try:
-            logging.info(
-                "SFTP: Closing: Task: %s, with run: %s",
-                str(self.task.id),
-                str(self.job_hash),
-            )
             self.conn.close()
             self.transport.close()
 
-        # pylint: disable=broad-except
-        except BaseException:
-            logging.error(
-                "FTP: Failed to Close: Task: %s, with run: %s\n%s",
-                str(self.task.id),
-                str(self.job_hash),
-                str(full_stack()),
+        except BaseException as e:
+            RunnerException(
+                self.task, self.run_id, 9, f"Failed to close connection.\n{e}"
             )
-            log = TaskLog(
-                task_id=self.task.id,
-                job_id=self.job_hash,
-                status_id=9,
-                error=1,
-                message="File failed to close connection: "
-                + str(self.connection.name)
-                + "\n"
-                + str(full_stack()),
-            )
-            db.session.add(log)
-            db.session.commit()

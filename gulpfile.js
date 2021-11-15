@@ -17,7 +17,7 @@ gulp.task('font:rasa', function() {
 gulp.task('fontawesome', function(done) {
     del.sync('web/static/fonts/fontawesome/webfonts', {force:true});
     fontawesomeSubset.fontawesomeSubset({
-      regular:['play-circle'],
+      regular:['play-circle', 'question-circle'],
       solid: ['exclamation-triangle', 'angle-down', 'pause-circle', 'sign-in-alt', 'users','eye', 'eye-slash', 'external-link-alt', 'calendar', 'stop-circle','question-circle', 'circle-notch','times-circle', 'check-circle', 'angle-right', 'file-download', 'info-circle', 'search', 'edit', 'trash', 'backspace', 'sort', 'terminal', 'list', 'ban', 'toggle-on', 'toggle-off', 'plus', 'sync-alt', 'download', 'copy', 'check']
           }, 'web/static/fonts/fontawesome/webfonts')
 
