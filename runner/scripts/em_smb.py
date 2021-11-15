@@ -14,7 +14,7 @@ from typing import IO, Any, Generator, List, Optional, Tuple
 
 from flask import current_app as app
 from pathvalidate import sanitize_filename
-from smb.base import SMBTimeout
+from smb.base import NotConnectedError, SMBTimeout
 from smb.smb_structs import OperationFailure
 from smb.SMBConnection import SMBConnection
 
@@ -75,7 +75,12 @@ def connect(
                     raise AssertionError()
                 break
 
-            except (AssertionError, ConnectionResetError, SMBTimeout) as e:
+            except (
+                AssertionError,
+                ConnectionResetError,
+                SMBTimeout,
+                NotConnectedError,
+            ) as e:
 
                 # pylint: disable=no-else-continue
                 if time.time() <= timeout:
