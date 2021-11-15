@@ -3,7 +3,12 @@
         {% if t.processing_git and t.processing_type_id == 4 %}
             <!-- code from git -->
             <h2 class="title is-2">Processing Script - GIT Address</h2>
-            <a title="open page" class="is-inlineblock mb-3" href="{{ t.processing_git }}" target="_blank">{{ t.processing_git }}</a>
+            <a title="open page"
+               class="is-inlineblock mb-3"
+               href="{{ t.processing_git }}"
+               target="_blank">
+                {{ t.processing_git }}
+            </a>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
                 <div class="loader"></div>
@@ -11,7 +16,12 @@
         {% elif t.processing_url and t.processing_type_id == 5 %}
             <!-- code from url -->
             <h2 class="title is-2">Processing Script - Web Address</h2>
-            <a title="open page" class="is-inlineblock mb-3" href="{{ t.processing_url }}" target="_blank">{{ t.processing_url }}</a>
+            <a title="open page"
+               class="is-inlineblock mb-3"
+               href="{{ t.processing_url }}"
+               target="_blank">
+                {{ t.processing_url }}
+            </a>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
                 <div class="loader"></div>
@@ -34,7 +44,10 @@
                 <span class="has-text-grey-light">/</span>
                 &#8195;{{ t.processing_smb_conn.name }}
             </a>
-            <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.smb_online', smb_id=t.processing_smb_file.id) }}"><div class="loader"></div></div>
+            <div class="em-ajaxContent is-inline ml-3"
+                 data-src="{{ url_for('connection_bp.smb_online', smb_id=t.processing_smb_file.id) }}">
+                <div class="loader"></div>
+            </div>
             <pre class="box"><code class="language-ini">smb://{{ t.processing_smb_conn.username }}:...@{{ t.processing_smb_conn.server_ip }}({{ t.processing_smb_conn.server_name }})/{{ t.processing_smb_conn.share_name }}/{{ t.processing_smb_conn.path|clean_path }}{{ t.processing_smb_file }}</code></pre>
         {% elif t.processing_type_id == 2 and t.processing_sftp_conn %}
             <!-- processing SFTP -->
@@ -54,7 +67,10 @@
                 <span class="has-text-grey-light">/</span>
                 &#8195;{{ t.processing_sftp_conn.name }}
             </a>
-            <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.processing_sftp_conn.id) }}"><div class="loader"></div></div>
+            <div class="em-ajaxContent is-inline ml-3"
+                 data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.processing_sftp_conn.id) }}">
+                <div class="loader"></div>
+            </div>
             <pre class="box"><code class="language-bash">{{ t.processing_sftp_conn.username }}@{{ t.processing_sftp_conn.address }}:{{ t.processing_sftp_conn.port or '22' }}&nbsp;{{ t.processing_sftp_conn.path|clean_path }}{{ t.processing_sftp_file }}</code></pre>
         {% elif t.processing_type_id == 3 and t.processing_ftp_conn %}
             <!-- processing FTP -->
@@ -80,7 +96,10 @@
                 <span class="has-text-grey-light">/</span>
                 &#8195;{{ t.processing_ftp_conn.name }}
             </a>
-            <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.processing_ftp_conn.id) }}"><div class="loader"></div></div>
+            <div class="em-ajaxContent is-inline ml-3"
+                 data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.processing_ftp_conn.id) }}">
+                <div class="loader"></div>
+            </div>
             <pre class="box"><code class="language-ini">{{ t.processing_ftp_conn.username }}@{{ t.processing_ftp_conn.address|clean_address }}&nbsp;{{ t.processing_ftp_conn.path|clean_path }}{{ t.processing_ftp_file }}
                 </code></pre>
         {% elif t.processing_code and t.processing_type_id == 6 %}

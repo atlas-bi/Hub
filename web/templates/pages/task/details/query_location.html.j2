@@ -13,19 +13,22 @@
                     query headers
                 </li>
                 <li>
-                    {% if t.enable_source_cache ==1 %}Query cache enabled{% else %}Query cache not enabled{% endif %}
+                    {% if t.enable_source_cache ==1 %}
+                        Query cache enabled
+                    {% else %}
+                        Query cache not enabled
+                    {% endif %}
                 </li>
-                {% if t.source_require_sql_output ==1 %}
-                <li>
-                    SQL output is required for task to be successful
-                </li>
-                {% endif %}
+                {% if t.source_require_sql_output ==1 %}<li>SQL output is required for task to be successful</li>{% endif %}
             </ul>
         </div>
         {% if t.source_git and t.source_type_id == 1 and t.source_query_type_id == 1 %}
             <!-- code from git -->
             <div class="content">
-                <a title="open page" class="is-inlineblock mb-3" href="{{ t.source_git }}" target="_blank">{{ t.source_git }}</a>
+                <a title="open page"
+                   class="is-inlineblock mb-3"
+                   href="{{ t.source_git }}"
+                   target="_blank">{{ t.source_git }}</a>
             </div>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
@@ -34,7 +37,10 @@
         {% elif t.source_url and t.source_type_id == 1 and t.source_query_type_id == 3 %}
             <!-- code from url -->
             <div class="content">
-                <a title="open page" class="is-inlineblock mb-3" href="{{ t.source_url }}" target="_blank">{{ t.source_url }}</a>
+                <a title="open page"
+                   class="is-inlineblock mb-3"
+                   href="{{ t.source_url }}"
+                   target="_blank">{{ t.source_url }}</a>
             </div>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
@@ -58,7 +64,10 @@
                 <span class="has-text-grey-light">/</span>
                 &#8195;{{ t.query_smb_conn.name }}
             </a>
-            <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.smb_online', smb_id=t.query_smb_conn.id) }}"><div class="loader"></div></div>
+            <div class="em-ajaxContent is-inline ml-3"
+                 data-src="{{ url_for('connection_bp.smb_online', smb_id=t.query_smb_conn.id) }}">
+                <div class="loader"></div>
+            </div>
             <pre class="box"><code class="language-ini">smb://{{ t.query_smb_conn.username }}:...@{{ t.query_smb_conn.server_ip }}({{ t.query_smb_conn.server_name }})/{{ t.query_smb_conn.share_name }}/{{ t.query_smb_conn.path|clean_path }}{{ t.query_smb_file }}</code></pre>
         {% elif t.source_query_type_id == 5 and t.query_sftp_conn %}
             <!-- source SFTP -->
@@ -76,16 +85,18 @@
                         </li>
                     {% endif %}
                 </ul>
-
             </div>
             <a title="open connection"
                class="is-inlineblock mb-3"
-                   href="{{ url_for('connection_bp.one_connection', connection_id=t.query_sftp_conn.connection.id) }}">
-                    {{ t.query_sftp_conn.connection.name }}&#8195;
-                    <span class="has-text-grey-light">/</span>
-                    &#8195;{{ t.query_sftp_conn.name }}
-                </a>
-                <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.query_sftp_conn.id) }}"><div class="loader"></div></div>
+               href="{{ url_for('connection_bp.one_connection', connection_id=t.query_sftp_conn.connection.id) }}">
+                {{ t.query_sftp_conn.connection.name }}&#8195;
+                <span class="has-text-grey-light">/</span>
+                &#8195;{{ t.query_sftp_conn.name }}
+            </a>
+            <div class="em-ajaxContent is-inline ml-3"
+                 data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.query_sftp_conn.id) }}">
+                <div class="loader"></div>
+            </div>
             <pre class="box"><code class="language-bash">{{ t.query_sftp_conn.username }}@{{ t.query_sftp_conn.address }}:{{ t.query_sftp_conn.port or '22' }}&nbsp;{{ t.query_sftp_conn.path|clean_path }}{{ t.query_sftp_file }}</code></pre>
         {% elif t.source_query_type_id == 6  and t.query_ftp_conn %}
             <!-- source FTP -->
@@ -106,12 +117,15 @@
             </div>
             <a title="open connection"
                class="is-inlineblock mb-3"
-                   href="{{ url_for('connection_bp.one_connection', connection_id=t.query_ftp_conn.connection.id) }}">
-                    {{ t.query_ftp_conn.connection.name }}&#8195;
-                    <span class="has-text-grey-light">/</span>
-                    &#8195;{{ t.query_ftp_conn.name }}
-                </a>
-                <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.query_ftp_conn.id) }}"><div class="loader"></div></div>
+               href="{{ url_for('connection_bp.one_connection', connection_id=t.query_ftp_conn.connection.id) }}">
+                {{ t.query_ftp_conn.connection.name }}&#8195;
+                <span class="has-text-grey-light">/</span>
+                &#8195;{{ t.query_ftp_conn.name }}
+            </a>
+            <div class="em-ajaxContent is-inline ml-3"
+                 data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.query_ftp_conn.id) }}">
+                <div class="loader"></div>
+            </div>
             <pre class="box"><code class="language-ini">{{ t.query_ftp_conn.username }}@{{ t.query_ftp_conn.address|clean_address }}{{ t.query_ftp_conn.path|clean_path }}{{ t.source_ftp_file }}</code></pre>
         {% elif t.source_code and t.source_query_type_id == 4 %}
             <!-- hand query -->

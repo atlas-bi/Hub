@@ -4,7 +4,7 @@
 import re
 from itertools import chain
 from pathlib import Path
-from typing import List, Optional
+from typing import IO, List, Optional
 
 from runner.model import Task
 from runner.scripts.em_cmd import Cmd
@@ -24,7 +24,7 @@ class PyProcesser:
         run_id: str,
         directory: Path,
         script: str,
-        source_files: List[Path],
+        source_files: List[IO[str]],
     ) -> None:
         """Set up class parameters."""
         self.task = task
@@ -130,7 +130,7 @@ class PyProcesser:
             # remove any relative imports
             names = [my_file.stem for my_file in paths]
 
-            imports = list(set([x for x in imports if x not in names]))
+            imports = list(set(imports) - set(names))
 
             # remove preinstalled packages from imports
             cmd = f'"{self.env_path}/bin/python" -c "help(\'modules\')"'

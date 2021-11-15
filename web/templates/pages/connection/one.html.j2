@@ -128,7 +128,10 @@
                         <h3 class="title is-3">{{ s }} - {{ s.database_type.name }}</h3>
                     </div>
                     <div class="column">
-                        <div class="em-ajaxContent is-inline" data-src="{{ url_for('connection_bp.database_online', database_id=s.id) }}"><div class="loader"></div></div>
+                        <div class="em-ajaxContent is-inline"
+                             data-src="{{ url_for('connection_bp.database_online', database_id=s.id) }}">
+                            <div class="loader"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="field has-addons">
@@ -167,7 +170,10 @@
                         <h3 class="title is-3">{{ s }}</h3>
                     </div>
                     <div class="column">
-                        <div class="em-ajaxContent is-inline" data-src="{{ url_for('connection_bp.sftp_online',sftp_id=s.id) }}"><div class="loader"></div></div>
+                        <div class="em-ajaxContent is-inline"
+                             data-src="{{ url_for('connection_bp.sftp_online',sftp_id=s.id) }}">
+                            <div class="loader"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="field has-addons">
@@ -199,12 +205,16 @@
                     {% if s.path %}
                         <br />
                         Path:
-                        <span class="tag is-light">{{ s.path|clean_path or "/" }}</span>
+                        <span class="tag is-light">
+                            {{ s.path|clean_path or "/" }}
+                        </span>
                     {% endif %}
                     {% if s.username %}
                         <br />
                         Username:
-                        <span class="tag is-light">{{ s.username }}</span>
+                        <span class="tag is-light">
+                            {{ s.username }}
+                        </span>
                     {% endif %}
                     {% if s.password %}
                         <br />
@@ -247,10 +257,16 @@
             {% for s in connection.ftp %}
                 <div class="columns">
                     <div class="column is-narrow">
-                        <h3 class="title is-3">{{ s }}</h3>
+                        <h3 class="title is-3">
+                            {{ s }}
+                        </h3>
                     </div>
                     <div class="column">
-                        <div class="em-ajaxContent is-inline" data-src="{{ url_for('connection_bp.ftp_online',ftp_id=s.id) }}"><div class="loader"></div></div>
+                        <div class="em-ajaxContent is-inline"
+                             data-src="{{ url_for('connection_bp.ftp_online',ftp_id=s.id) }}">
+                            <div class="loader">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="field has-addons">
@@ -336,10 +352,16 @@
             {% for s in connection.smb %}
                 <div class="columns">
                     <div class="column is-narrow">
-                        <h3 class="title is-3">{{ s }}</h3>
+                        <h3 class="title is-3">
+                            {{ s }}
+                        </h3>
                     </div>
                     <div class="column">
-                        <div class="em-ajaxContent is-inline" data-src="{{ url_for('connection_bp.smb_online',smb_id=s.id) }}"><div class="loader"></div></div>
+                        <div class="em-ajaxContent is-inline"
+                             data-src="{{ url_for('connection_bp.smb_online',smb_id=s.id) }}">
+                            <div class="loader">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="field has-addons">
@@ -435,10 +457,16 @@
             {% for s in connection.ssh %}
                 <div class="columns">
                     <div class="column is-narrow">
-                        <h3 class="title is-3">{{ s }}</h3>
+                        <h3 class="title is-3">
+                            {{ s }}
+                        </h3>
                     </div>
                     <div class="column">
-                        <div class="em-ajaxContent is-inline" data-src="{{ url_for('connection_bp.ssh_online',ssh_id=s.id) }}"><div class="loader"></div></div>
+                        <div class="em-ajaxContent is-inline"
+                             data-src="{{ url_for('connection_bp.ssh_online',ssh_id=s.id) }}">
+                            <div class="loader">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="field has-addons">

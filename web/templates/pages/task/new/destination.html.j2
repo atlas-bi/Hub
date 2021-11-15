@@ -25,9 +25,11 @@
                 If file type is "other" then include file extension in name.
                 <br />
                 <span class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
-                         ">Wildcards and <a href="" target="_blank" rel="noopener">strftime patterns</a> can be used in filenames.
+                     ">
+                    Wildcards and
+                    <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                    can be used in filenames.
                 </span>
-            </label>
             </small>
         </label>
         <div class="control">
@@ -38,7 +40,7 @@
         </div>
     </div>
     <div class="task-delimiter block"
-         {% if not t or (t and t.destination_file_type_id != 2 and t.destination_file_type_id != 4) %}style="display:none"{% endif %}>
+         {% if not t or (t and t.destination_file_type_id != 2 and t.destination_file_type_id != 4) %} style="display:none" {% endif %}>
         <div class="field">
             <label class="label">File Delimiter (defaults to comma)</label>
             <input class="input"
@@ -89,7 +91,7 @@
                value="{% if t and t.destination_create_zip == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
     </div>
     <article class="p-0 message box is-info task-destinationZip"
-             {% if not t or (t and t.destination_create_zip != 1) %} style="display:none;"{% endif %}>
+             {% if not t or (t and t.destination_create_zip != 1) %} style="display:none;" {% endif %}>
         <p class="message-header">
             Zip Details
         </p>
@@ -115,7 +117,7 @@
                value="{% if t and t.file_gpg == 1 -%}1{%- else -%}0{%- endif %}"/>
     </div>
     <article class="p-0 message box is-info task-destinationGpg"
-             {% if not t or (t and t.file_gpg != 1) %} style="display:none;"{% endif %}>
+             {% if not t or (t and t.file_gpg != 1) %} style="display:none;" {% endif %}>
         <p class="message-header">
             File Encryption
         </p>
@@ -157,7 +159,7 @@
                value="{% if t and t.destination_sftp == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
     </div>
     <article class="p-0 message box is-info task-destinationSftp"
-             {% if not t or (t and t.destination_sftp != 1) %} style="display:none;"{% endif %}>
+             {% if not t or (t and t.destination_sftp != 1) %} style="display:none;" {% endif %}>
         <p class="message-header">
             SFTP Location
         </p>

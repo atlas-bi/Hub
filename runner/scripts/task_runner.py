@@ -519,7 +519,7 @@ class Runner:
                         % (url, str(self.temp_path))
                     )
 
-                    output = Cmd(
+                    Cmd(
                         self.task,
                         self.run_id,
                         cmd,
@@ -527,7 +527,6 @@ class Runner:
                         "Failed to clone repo: %s" % (self.task.processing_git,),
                     ).shell()
 
-                    processing_script_name = None
                 # pylint: disable=broad-except
                 except BaseException:
                     raise RunnerException(
@@ -548,7 +547,7 @@ class Runner:
                         % (self.task.processing_url, str(self.temp_path))
                     )
 
-                    output = Cmd(
+                    Cmd(
                         task=self.task,
                         run_id=self.run_id,
                         cmd=cmd,

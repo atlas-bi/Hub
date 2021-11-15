@@ -213,16 +213,12 @@ def send_email(run_id: int, file_id: int) -> dict:
         temp_path.mkdir(parents=True, exist_ok=True)
 
         # download the file
-        downloaded_file = (
-            Smb(
-                task=task,
-                run_id=my_file.job_id,
-                connection=None,  # "default",
-                directory=temp_path,
-            )
-            .read(my_file.path)[0]
-            .name
-        )
+        downloaded_files = Smb(
+            task=task,
+            run_id=my_file.job_id,
+            connection=None,  # "default",
+            directory=temp_path,
+        ).read(my_file.path)
 
         # send the file
 
@@ -234,6 +230,7 @@ def send_email(run_id: int, file_id: int) -> dict:
             task=task,
             run_id=str(run_id),
             recipients=task.email_completion_recipients,
+            short_message=f"Atlas Hub: {task.name} data emailed.",
             subject="(Manual Send) Project: "
             + task.project.name
             + " / Task: "
@@ -244,8 +241,7 @@ def send_email(run_id: int, file_id: int) -> dict:
                 date=date,
                 logs=[],
             ),
-            attachment=downloaded_file,
-            attachment_name=my_file.name,
+            attachments=[x.name for x in downloaded_files],
         )
 
         return jsonify({"message": "successfully sent file."})
