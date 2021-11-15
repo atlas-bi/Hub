@@ -78,7 +78,10 @@ class SourceCode:
                     branch,
                 )
 
-                headers = {"PRIVATE-TOKEN": app.config["GIT_TOKEN"]}
+                headers = {
+                    "PRIVATE-TOKEN": app.config["GIT_TOKEN"],
+                    "Connection": "close",
+                }
                 page = requests.get(
                     api_url, verify=False, headers=headers
                 )  # noqa: S501

@@ -59,7 +59,7 @@
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.destination_sftp_conn.name }}
         </a>
-        <div class="em-ajaxContent is-inlineblock ml-3" data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.destination_sftp_conn.id) }}"><div class="loader"></div></div>
+        <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.destination_sftp_conn.id) }}"><div class="loader"></div></div>
         <pre class="box"><code class="language-bash">{{ t.destination_sftp_conn.username }}@{{ t.destination_sftp_conn.address }}:{{ t.destination_sftp_conn.port or '22' }}&nbsp;{{ t.destination_sftp_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
     {% endif %}
     {% if t.destination_ftp and t.destination_ftp_conn %}
@@ -76,7 +76,7 @@
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.destination_ftp_conn.name }}
         </a>
-        <div class="em-ajaxContent is-inlineblock ml-3" data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.destination_ftp_conn.id) }}"><div class="loader"></div></div>
+        <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.destination_ftp_conn.id) }}"><div class="loader"></div></div>
         <pre class="box"><code class="language-bash">{{ t.destination_ftp_conn.username }}@{{ t.destination_ftp_conn.address|clean_address }}&nbsp;{{ t.destination_ftp_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
     {% endif %}
     {% if t.destination_smb and t.destination_smb_conn %}
@@ -93,7 +93,7 @@
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.destination_smb_conn.name }}
         </a>
-        <div class="em-ajaxContent is-inlineblock ml-3" data-src="{{ url_for('connection_bp.smb_online', smb_id=t.destination_smb_conn.id) }}"><div class="loader"></div></div>
+        <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.smb_online', smb_id=t.destination_smb_conn.id) }}"><div class="loader"></div></div>
         <pre class="box"><code class="language-ini">smb://{{ t.destination_smb_conn.username }}:...@{{ t.destination_smb_conn.server_ip }}({{ t.destination_smb_conn.server_name }})/{{ t.destination_smb_conn.share_name }}/{{ t.destination_smb_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
     {% endif %}
     {% if t.email_completion == 1 %}

@@ -77,8 +77,11 @@ class Config:
     CACHE_DEFAULT_TIMEOUT = 300
 
     # database
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="username", pw="password", url="server", db="atlas_automation_hub"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="username", pw="password", url="server", db="atlas_automation_hub"
+        ),
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -263,7 +266,7 @@ class DevConfig(Config):
     # pylint: disable=too-few-public-methods
 
     # authentication override
-    AUTH_METHOD = "LDAP"
+    AUTH_METHOD = "DEV"
 
     DEBUG = True
 
@@ -272,8 +275,11 @@ class DevConfig(Config):
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     # database overrides
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="username", pw="password", url="server", db="atlas_hub_dev"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="username", pw="password", url="server", db="atlas_hub_dev"
+        ),
     )
 
     # migrations override
