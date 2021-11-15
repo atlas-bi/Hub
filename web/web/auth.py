@@ -4,7 +4,7 @@ from typing import Union
 
 from flask import Blueprint, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request
+from flask import flash, redirect, render_template, request, session
 from flask_login import current_user, login_user, logout_user
 from is_safe_url import is_safe_url
 from werkzeug import Response
@@ -43,6 +43,9 @@ def login() -> Union[str, Response]:
 
     # if demo, login as first user
     if app.config.get("DEMO"):
+
+        session.pop("_flashes", None)
+
         user = User.query.first()
 
         if user:
