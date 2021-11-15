@@ -77,8 +77,11 @@ class Config:
     CACHE_DEFAULT_TIMEOUT = 300
 
     # database
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
-        user="username", pw="password", url="server", db="atlas_automation_hub"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(
+            user="username", pw="password", url="server", db="atlas_automation_hub"
+        ),
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
