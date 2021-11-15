@@ -1,5 +1,6 @@
 """Default Configuration."""
 
+import logging
 import os
 from pathlib import Path
 from urllib.parse import urlparse
@@ -35,6 +36,8 @@ class Config:
     redis_port = int(os.environ.get("REDIS_PORT", 6379))
     SESSION_TYPE = "redis"
     SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
+
+    logging.warning(os.environ.get("REDIS_URL"))
 
     if os.environ.get("REDIS_URL"):
         url = urlparse(os.environ["REDIS_URL"])
