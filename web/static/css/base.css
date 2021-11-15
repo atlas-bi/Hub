@@ -14813,11 +14813,16 @@ code .number {
   all: unset;
 }
 
-.is-inlineblock {
+.is-inline {
   display: inline-block !important;
 }
 
 /* links in message */
 article.message a {
   text-decoration: none !important;
+}
+
+/* ajax loader */
+.em-ajaxContent.is-inline div {
+  display: inline-block;
 }
