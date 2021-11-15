@@ -515,23 +515,18 @@ class Runner:
 
                     cmd = (
                         "$(which git) clone -q --depth 1 "
-                        + "--recurse-submodules --shallow-submodules %s %s"
-                        % (url, self.temp_path)
+                        + '--recurse-submodules --shallow-submodules %s "%s"'
+                        % (url, str(self.temp_path))
                     )
 
-                    output = Cmd(
+                    Cmd(
                         self.task,
+                        self.run_id,
                         cmd,
                         "Repo cloned.",
                         "Failed to clone repo: %s" % (self.task.processing_git,),
-                        self.run_id,
                     ).shell()
 
-                    processing_script_name = self.temp_path + (
-                        self.task.processing_command
-                        if self.task.processing_command is not None
-                        else ""
-                    )
                 # pylint: disable=broad-except
                 except BaseException:
                     raise RunnerException(
@@ -548,11 +543,11 @@ class Runner:
 
                     cmd = (
                         "$(which git) clone -q --depth 1 "
-                        + "--recurse-submodules --shallow-submodules %s %s"
-                        % (self.task.processing_url, self.temp_path)
+                        + '--recurse-submodules --shallow-submodules %s "%s"'
+                        % (self.task.processing_url, str(self.temp_path))
                     )
 
-                    output = Cmd(
+                    Cmd(
                         task=self.task,
                         run_id=self.run_id,
                         cmd=cmd,
@@ -561,7 +556,7 @@ class Runner:
                         % (self.task.processing_url,),
                     ).shell()
 
-                    processing_script_name = self.temp_path + (
+                    processing_script_name = str(self.temp_path) + (
                         self.task.processing_command
                         if self.task.processing_command is not None
                         else ""
@@ -600,16 +595,16 @@ class Runner:
             )
 
         # run processing script
-        self.data_files = PyProcesser(
+        output = PyProcesser(
             task=self.task,
             run_id=self.run_id,
             directory=self.temp_path,
-            script=str(processing_script_name),
-            input_path=self.task.processing_command,
+            source_files=self.source_files,
+            script=self.task.processing_command or processing_script_name.name,
         ).run()
 
         # # allow processer to rename file
-        if output and output != "":
+        if output:
             RunnerLog(self.task, self.run_id, 8, f"Processing script output:\n{output}")
             self.data_files = output
 

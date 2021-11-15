@@ -223,7 +223,6 @@ class DateParsing:
             return self.date_string
 
         except BaseException as e:
-            print(e)
             raise RunnerException(
                 self.task, self.run_id, 17, f"Failed to parse date string.\n{e}"
             )

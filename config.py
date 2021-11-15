@@ -41,8 +41,8 @@ class Config:
         redis_host = url.hostname or "localhost"
         redis_port = url.port or 6379
         SESSION_REDIS = redis.Redis(
-            host=url.hostname,
-            port=url.port,
+            host=redis_host,
+            port=redis_port,
             username=url.username,
             password=url.password,
         )

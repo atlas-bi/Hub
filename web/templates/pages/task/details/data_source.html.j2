@@ -4,12 +4,16 @@
         <h2 class="title is-2">Data Source - Database Connection</h2>
         <div class="content">
             <a title="open connection"
+               class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.source_database_conn.connection.id) }}">
                 {{ t.source_database_conn.connection }}&#8195;
                 <span class="has-text-grey-light">/</span>
                 &#8195;{{ t.source_database_conn }}
             </a>
-            <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.database_online', database_id=t.source_database_conn.id) }}"><div class="loader"></div></div>
+            <div class="em-ajaxContent is-inline ml-3"
+                 data-src="{{ url_for('connection_bp.database_online', database_id=t.source_database_conn.id) }}">
+                <div class="loader"></div>
+            </div>
             <pre class="box"><code class="language-ini">{{ t.source_database_conn.connection_string|decrypt|database_pass }}</code></pre>
         </div>
     {% elif t.source_type_id == 3 and  t.source_sftp_conn %}
@@ -30,12 +34,16 @@
             </ul>
         </div>
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_sftp_conn.connection.id) }}">
             {{ t.source_sftp_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.source_sftp_conn.name }}
         </a>
-        <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.source_sftp_conn.id) }}"><div class="loader"></div></div>
+        <div class="em-ajaxContent is-inline ml-3"
+             data-src="{{ url_for('connection_bp.sftp_online', sftp_id=t.source_sftp_conn.id) }}">
+            <div class="loader"></div>
+        </div>
         <pre class="box"><code class="language-bash">{{ t.source_sftp_conn.username }}@{{ t.source_sftp_conn.address }}:{{ t.source_sftp_conn.port or '22' }}&nbsp;{{ t.source_sftp_conn.path|clean_path }}{{ t.source_sftp_file }}</code></pre>
     {% elif t.source_type_id == 4 and t.source_ftp_conn %}
         <!-- source FTP -->
@@ -55,12 +63,16 @@
             </ul>
         </div>
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_ftp_conn.connection.id) }}">
             {{ t.source_ftp_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.source_ftp_conn.name }}
         </a>
-        <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.source_ftp_conn.id) }}"><div class="loader"></div></div>
+        <div class="em-ajaxContent is-inline ml-3"
+             data-src="{{ url_for('connection_bp.ftp_online', ftp_id=t.source_ftp_conn.id) }}">
+            <div class="loader"></div>
+        </div>
         <pre class="box"><code class="language-ini">{{ t.source_ftp_conn.username }}@{{ t.source_ftp_conn.address|clean_address }}&nbsp;{{ t.source_ftp_conn.path|clean_path }}{{ t.source_ftp_file }}
         </code></pre>
     {% elif t.source_type_id == 2 and t.source_smb_conn %}
@@ -81,24 +93,31 @@
             </ul>
         </div>
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_smb_conn.connection.id) }}">
             {{ t.source_smb_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.source_smb_conn.name }}
         </a>
-        <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.smb_online', smb_id=t.source_smb_conn.id) }}"><div class="loader"></div></div>
+        <div class="em-ajaxContent is-inline ml-3"
+             data-src="{{ url_for('connection_bp.smb_online', smb_id=t.source_smb_conn.id) }}">
+            <div class="loader"></div>
+        </div>
         <pre class="box"><code class="language-ini">smb://{{ t.source_smb_conn.username }}:...@{{ t.source_smb_conn.server_ip }}({{ t.source_smb_conn.server_name }})/{{ t.source_smb_conn.share_name }}/{{ t.source_smb_conn.path|clean_path }}{{ t.source_smb_file }}</code></pre>
     {% elif t.source_type_id == 6 and t.source_ssh_conn %}
         <!-- source Ssh -->
         <h2 class="title is-2">Data Source - SSH Connection</h2>
-
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_ssh_conn.connection.id) }}">
             {{ t.source_ssh_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
             &#8195;{{ t.source_ssh_conn.name }}
         </a>
-        <div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('connection_bp.ssh_online', ssh_id=t.source_ssh_conn.id) }}"><div class="loader"></div></div>
+        <div class="em-ajaxContent is-inline ml-3"
+             data-src="{{ url_for('connection_bp.ssh_online', ssh_id=t.source_ssh_conn.id) }}">
+            <div class="loader"></div>
+        </div>
         <pre class="box"><code class="language-bash">{{ t.source_ssh_conn.username }}@{{ t.source_ssh_conn.address }}:{{ t.source_ssh_conn.port or '22' }}</code></pre>
     {% endif %}
 </div>
