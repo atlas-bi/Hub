@@ -278,27 +278,10 @@ class DevConfig(Config):
         user="username", pw="password", url="server", db="atlas_hub_dev"
     )
 
-    redis_host = os.environ.get("REDIS_HOST", "localhost")
-    redis_port = int(os.environ.get("REDIS_PORT", 6379))
-
-    # for flask-redis
-    REDIS_URL = os.environ.get("REDIS_URL", f"redis://{redis_host}:{redis_port}")
-
     # migrations override
     MIGRATIONS = "migrations_dev"
 
-    SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
-
     ASSETS_DEBUG = True
-
-    SCHEDULER_JOBSTORES = {
-        "default": RedisJobStore(
-            jobs_key="atlas_hub_jobs",
-            run_times_key="atlas_hub_running",
-            host=redis_host,
-            port=redis_port,
-        )
-    }
 
 
 class TestConfig(DevConfig):
