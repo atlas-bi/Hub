@@ -4,6 +4,7 @@
 import re
 from itertools import chain
 from pathlib import Path
+from typing import List, Optional
 
 from runner.model import Task
 from runner.scripts.em_cmd import Cmd
@@ -18,25 +19,29 @@ class PyProcesser:
     """
 
     def __init__(
-        self, task: Task, run_id: str, directory: Path, script: str, input_path: str
+        self,
+        task: Task,
+        run_id: str,
+        directory: Path,
+        script: str,
+        source_files: List[Path],
     ) -> None:
         """Set up class parameters."""
         self.task = task
         self.run_id = run_id
         self.script = script
-        self.input_path = input_path
         self.output = ""
 
         self.env_name = self.run_id + "_env"
         self.job_path = directory
-
+        self.source_files = source_files
         self.base_path = str(self.job_path / "venv")
 
         Path(self.base_path).mkdir(parents=True, exist_ok=True)
 
         self.env_path = self.base_path  # + self.env_name
 
-    def run(self) -> str:
+    def run(self) -> Optional[List[Path]]:
         """Run processing script.
 
         :returns: Any output from the script.
@@ -45,9 +50,11 @@ class PyProcesser:
         self.__pip_install()
         self.__run_script()
 
-        if self.output != "":
+        # if output is not a file list, then swallow it.
+
+        if isinstance(self.output, List):
             return self.output
-        return ""
+        return None
 
     def __build_env(self) -> None:
         """Build a virtual environment.
@@ -62,9 +69,9 @@ class PyProcesser:
             Cmd(
                 task=self.task,
                 run_id=self.run_id,
-                cmd="virtualenv " + self.env_path,
-                success_msg="Environment  " + self.env_path + " created.",
-                error_msg="Failed to create environment  " + self.env_path,
+                cmd=f'virtualenv "{self.env_path}"',
+                success_msg=f"Environment created.\n{self.env_path}",
+                error_msg=f"Failed to create environment.\n{self.env_path}",
             ).shell()
 
         # pylint: disable=broad-except
@@ -115,22 +122,18 @@ class PyProcesser:
 
             # clean list
             imports = [
-                str(
-                    package_map.get(
-                        x[0].strip().split(".")[0], x[0].strip().split(".")[0]
-                    )
-                )
+                str(package_map.get(x.strip().split(".")[0], x.strip().split(".")[0]))
                 for x in imports
-                if x != []
+                if x.strip() != ""
             ]
 
             # remove any relative imports
             names = [my_file.stem for my_file in paths]
 
-            imports = [x for x in imports if x not in names]
+            imports = list(set([x for x in imports if x not in names]))
 
             # remove preinstalled packages from imports
-            cmd = f'"{self.env_path}bin/python " -c "help(\'modules\')"'
+            cmd = f'"{self.env_path}/bin/python" -c "help(\'modules\')"'
             built_in_packages = Cmd(
                 task=self.task,
                 run_id=self.run_id,
@@ -154,13 +157,16 @@ class PyProcesser:
             ]
 
             # remove default python packages from list
-            imports = [x for x in imports if x not in cleaned_built_in_packages]
+            imports = [
+                x.strip()
+                for x in imports
+                if x not in cleaned_built_in_packages and x.strip()
+            ]
 
             # try to install
             if len(imports) > 0:
                 cmd = (
-                    self.env_path
-                    + "bin/pip install --disable-pip-version-check --quiet "
+                    f'"{self.env_path}/bin/pip" install --disable-pip-version-check --quiet '
                     + " ".join([str(x) for x in imports])
                 )
                 Cmd(
@@ -185,13 +191,10 @@ class PyProcesser:
 
     def __run_script(self) -> None:
         try:
+            # if data files exist, pass them as a param.
             cmd = (
-                self.env_path
-                + 'bin/python "'
-                + self.script
-                + '"'
-                + (" " + self.input_path if self.input_path is not None else "")
-            )
+                f'"{self.env_path}/bin/python" "{self.job_path}/{self.script}" '
+            ) + " ".join([f'"{x.name}"' for x in self.source_files])
 
             self.output = Cmd(
                 task=self.task,

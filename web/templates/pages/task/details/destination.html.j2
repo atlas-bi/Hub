@@ -1,42 +1,46 @@
+{% if t.destination_file_name or t.file_gpg_id and t.file_gpg or t.destination_sftp_conn and t.destination_sftp or t.destination_ftp and t.destination_ftp_conn or t.destination_smb and t.destination_smb_conn or t.email_completion == 1 or t.email_error == 1 %}
 <div class="box">
     <h2 class="title is-2">Destination</h2>
-    <h3 class="title is-3">File Information</h3>
-    <div class="content">
-        <ul>
-            <li>
-                File Name:
-                <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext)}}</span><div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('task_files_bp.filename_preview',task_id=t.id) }}"><div class="loader"></div></div>
-            </li>
-            {% if t.destination_ignore_delimiter != 1 and t.destination_file_delimiter %}
+    {% if t.destination_file_name %}
+        <h3 class="title is-3">File Information</h3>
+        <div class="content">
+            <ul>
                 <li>
-                    File Delimiter:
-                    <span class="tag is-info is-light">{{ t.destination_file_delimiter or ',' }}</span>
+                    File Name:
+                    <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext)}}</span><div class="em-ajaxContent is-inline ml-3" data-src="{{ url_for('task_files_bp.filename_preview',task_id=t.id) }}"><div class="loader"></div></div>
                 </li>
-            {% endif %}
-            {% if t.destination_file_line_terminator %}
-                <li>Line End Appending</li>
-                <span class="em-gridValue">
-                    <span class="tag is-info is-light">{{ t.destination_file_line_terminator or '' }}</span>
-                </span>
-            {% endif %}
-            {% if t.destination_quote_level_id %}
-                <li>
-                    Quote Level:
-                    <span class="tag is-info is-light">{{ t.destination_file_quote_level.name or 'default' }}</span>
-                </li>
-            {% endif %}
-            {% if t.destination_create_zip == 1 %}
-                <li>
-                    ZIP archive name:
-                    <span class="tag is-info is-light">{{ t.destination_zip_name }}</span>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
+                {% if t.destination_ignore_delimiter != 1 and t.destination_file_delimiter %}
+                    <li>
+                        File Delimiter:
+                        <span class="tag is-info is-light">{{ t.destination_file_delimiter or ',' }}</span>
+                    </li>
+                {% endif %}
+                {% if t.destination_file_line_terminator %}
+                    <li>Line End Appending</li>
+                    <span class="em-gridValue">
+                        <span class="tag is-info is-light">{{ t.destination_file_line_terminator or '' }}</span>
+                    </span>
+                {% endif %}
+                {% if t.destination_quote_level_id %}
+                    <li>
+                        Quote Level:
+                        <span class="tag is-info is-light">{{ t.destination_file_quote_level.name or 'default' }}</span>
+                    </li>
+                {% endif %}
+                {% if t.destination_create_zip == 1 %}
+                    <li>
+                        ZIP archive name:
+                        <span class="tag is-info is-light">{{ t.destination_zip_name }}</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
     {% if t.file_gpg_id and t.file_gpg %}
         <!-- encryption -->
         <h3 class="title is-3">GPG Encryption</h3>
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.file_gpg_conn.connection.id) }}">
             {{ t.file_gpg_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
@@ -54,6 +58,7 @@
             </article>
         {% endif %}
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_sftp_conn.connection.id) }}">
             {{ t.destination_sftp_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
@@ -71,6 +76,7 @@
             </article>
         {% endif %}
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_ftp_conn.connection.id) }}">
             {{ t.destination_ftp_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
@@ -88,6 +94,7 @@
             </article>
         {% endif %}
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_smb_conn.connection.id) }}">
             {{ t.destination_smb_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
@@ -145,3 +152,4 @@
         {% endif %}
     {% endif %}
 </div>
+{% endif %}

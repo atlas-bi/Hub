@@ -3,7 +3,7 @@
         {% if t.processing_git and t.processing_type_id == 4 %}
             <!-- code from git -->
             <h2 class="title is-2">Processing Script - GIT Address</h2>
-            <a title="open page" href="{{ t.processing_git }}" target="_blank">{{ t.processing_git }}</a>
+            <a title="open page" class="is-inlineblock mb-3" href="{{ t.processing_git }}" target="_blank">{{ t.processing_git }}</a>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
                 <div class="loader"></div>
@@ -11,7 +11,7 @@
         {% elif t.processing_url and t.processing_type_id == 5 %}
             <!-- code from url -->
             <h2 class="title is-2">Processing Script - Web Address</h2>
-            <a title="open page" href="{{ t.processing_url }}" target="_blank">{{ t.processing_url }}</a>
+            <a title="open page" class="is-inlineblock mb-3" href="{{ t.processing_url }}" target="_blank">{{ t.processing_url }}</a>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
                 <div class="loader"></div>
@@ -28,6 +28,7 @@
                 </ul>
             </div>
             <a title="open connection"
+               class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.processing_smb_conn.connection.id) }}">
                 {{ t.processing_smb_conn.connection.name }}&#8195;
                 <span class="has-text-grey-light">/</span>
@@ -47,6 +48,7 @@
                 </ul>
             </div>
             <a title="open connection"
+               class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.processing_sftp_conn.connection.id) }}">
                 {{ t.processing_sftp_conn.connection.name }}&#8195;
                 <span class="has-text-grey-light">/</span>
@@ -72,6 +74,7 @@
                 </ul>
             </div>
             <a title="open connection"
+               class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.processing_ftp_conn.connection.id) }}">
                 {{ t.processing_ftp_conn.connection.name }}&#8195;
                 <span class="has-text-grey-light">/</span>

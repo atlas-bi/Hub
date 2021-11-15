@@ -4,6 +4,7 @@
         <h2 class="title is-2">Data Source - Database Connection</h2>
         <div class="content">
             <a title="open connection"
+               class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.source_database_conn.connection.id) }}">
                 {{ t.source_database_conn.connection }}&#8195;
                 <span class="has-text-grey-light">/</span>
@@ -30,6 +31,7 @@
             </ul>
         </div>
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_sftp_conn.connection.id) }}">
             {{ t.source_sftp_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
@@ -55,6 +57,7 @@
             </ul>
         </div>
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_ftp_conn.connection.id) }}">
             {{ t.source_ftp_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
@@ -81,6 +84,7 @@
             </ul>
         </div>
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_smb_conn.connection.id) }}">
             {{ t.source_smb_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>
@@ -93,6 +97,7 @@
         <h2 class="title is-2">Data Source - SSH Connection</h2>
 
         <a title="open connection"
+           class="is-inlineblock mb-3"
            href="{{ url_for('connection_bp.one_connection', connection_id=t.source_ssh_conn.connection.id) }}">
             {{ t.source_ssh_conn.connection.name }}&#8195;
             <span class="has-text-grey-light">/</span>

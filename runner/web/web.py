@@ -428,7 +428,7 @@ def filename_preview(task_id: int) -> str:
         # parse python dates
         file_name = DateParsing(task, None, file_name).string_to_date()
 
-        if task.file_type:
+        if task.file_type and task.file_type.id != 4:
             file_name = f"{file_name}.{task.file_type.ext}"
 
         return f'<span class="tag is-success is-light">ex: {file_name}</span>'

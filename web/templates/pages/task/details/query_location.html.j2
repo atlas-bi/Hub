@@ -25,7 +25,7 @@
         {% if t.source_git and t.source_type_id == 1 and t.source_query_type_id == 1 %}
             <!-- code from git -->
             <div class="content">
-                <a title="open page" href="{{ t.source_git }}" target="_blank">{{ t.source_git }}</a>
+                <a title="open page" class="is-inlineblock mb-3" href="{{ t.source_git }}" target="_blank">{{ t.source_git }}</a>
             </div>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
@@ -34,7 +34,7 @@
         {% elif t.source_url and t.source_type_id == 1 and t.source_query_type_id == 3 %}
             <!-- code from url -->
             <div class="content">
-                <a title="open page" href="{{ t.source_url }}" target="_blank">{{ t.source_url }}</a>
+                <a title="open page" class="is-inlineblock mb-3" href="{{ t.source_url }}" target="_blank">{{ t.source_url }}</a>
             </div>
             <div class="em-ajaxContent"
                  data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
@@ -52,6 +52,7 @@
                 </ul>
             </div>
             <a title="open connection"
+               class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.query_smb_conn.connection.id) }}">
                 {{ t.query_smb_conn.connection.name }}&#8195;
                 <span class="has-text-grey-light">/</span>
@@ -78,6 +79,7 @@
 
             </div>
             <a title="open connection"
+               class="is-inlineblock mb-3"
                    href="{{ url_for('connection_bp.one_connection', connection_id=t.query_sftp_conn.connection.id) }}">
                     {{ t.query_sftp_conn.connection.name }}&#8195;
                     <span class="has-text-grey-light">/</span>
@@ -103,6 +105,7 @@
                 </ul>
             </div>
             <a title="open connection"
+               class="is-inlineblock mb-3"
                    href="{{ url_for('connection_bp.one_connection', connection_id=t.query_ftp_conn.connection.id) }}">
                     {{ t.query_ftp_conn.connection.name }}&#8195;
                     <span class="has-text-grey-light">/</span>
