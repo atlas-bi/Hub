@@ -630,7 +630,7 @@ class Runner:
                 ).save()
 
             except BaseException as e:
-                RunnerException(
+                raise RunnerException(
                     self.task, self.run_id, 11, f"Failed to create data file.\n{e}"
                 )
 

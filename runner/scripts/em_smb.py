@@ -20,6 +20,7 @@ from smb.SMBConnection import SMBConnection
 
 from runner import redis_client
 from runner.model import ConnectionSmb, Task
+from runner.scripts.em_file import file_size
 from runner.scripts.em_messages import RunnerException, RunnerLog
 from runner.scripts.smb_fix import SMBHandler
 
@@ -205,7 +206,6 @@ class Smb:
             mode="w+", delete=False, dir=self.dir
         ) as data_file:
             for data in load_data(open_file_for_read):
-
                 if (
                     self.task.source_smb_ignore_delimiter != 1
                     and self.task.source_smb_delimiter
@@ -336,14 +336,19 @@ class Smb:
                 with open(
                     str(self.dir.joinpath(file_name)), "rb", buffering=0
                 ) as file_obj:
-                    self.conn.storeFile(self.share_name, dest_path, file_obj)
+                    uploaded_size = self.conn.storeFile(
+                        self.share_name, dest_path, file_obj
+                    )
+
+            server_name = (
+                "backup" if self.connection is None else self.connection.server_name
+            )
 
             RunnerLog(
                 self.task,
                 self.run_id,
                 10,
-                "File stored on %sserver."
-                % ("backup " if self.connection is None else ""),
+                f"{file_size(uploaded_size)} uploaded to {server_name} server.",
             )
 
             return dest_path

@@ -17,6 +17,7 @@ from flask import current_app as app
 from paramiko import SFTPClient, SFTPFile, Transport
 
 from runner.model import ConnectionSftp, Task
+from runner.scripts.em_file import file_size
 from runner.scripts.em_messages import RunnerException, RunnerLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
@@ -135,6 +136,13 @@ class Sftp:
 
     def __load_file(self, file_name: str) -> IO[str]:
         """Download file from sftp server."""
+        RunnerLog(
+            self.task,
+            self.run_id,
+            9,
+            f"Downloading {file_size(self.conn.stat(file_name).st_size or 0)} from {file_name}.",
+        )
+
         sftp_file = self.conn.open(file_name, mode="r")
 
         def load_data(file_obj: SFTPFile) -> Generator:
@@ -149,7 +157,6 @@ class Sftp:
             mode="w", delete=False, dir=self.dir
         ) as data_file:
             for data in load_data(sftp_file):
-
                 if (
                     self.task.source_sftp_ignore_delimiter != 1
                     and self.task.source_sftp_delimiter
@@ -175,6 +182,12 @@ class Sftp:
             data_file.name = original_name  # type: ignore[misc]
 
         sftp_file.close()
+        RunnerLog(
+            self.task,
+            self.run_id,
+            9,
+            f"{file_size(Path(data_file.name).stat().st_size)} saved  to {file_name}.",
+        )
 
         return data_file
 
@@ -279,7 +292,12 @@ class Sftp:
             self.conn.put(str(self.dir.joinpath(file_name)), file_name, confirm=True)
 
             # file is now confirmed on server w/ confirm=True flag
-            RunnerLog(self.task, self.run_id, 9, "File verified on server.")
+            RunnerLog(
+                self.task,
+                self.run_id,
+                9,
+                f"{file_size(self.conn.stat(file_name).st_size or 0)} stored on server as {file_name}.",
+            )
 
             self.__close()
 

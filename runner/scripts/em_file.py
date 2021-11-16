@@ -2,10 +2,11 @@
 
 import csv
 import hashlib
+import os
 import sys
 import zipfile
 from pathlib import Path
-from typing import IO, Optional, Tuple
+from typing import IO, Optional, Tuple, Union
 
 import gnupg
 from crypto import em_decrypt
@@ -33,12 +34,12 @@ while True:
         MAX_INT = int(MAX_INT / 10)
 
 
-def file_size(size: str) -> str:
+def file_size(size: Union[str, int]) -> str:
     """Convert file size from bytes to appropriate file size string.
 
     Input size (int) must be a # of bytes.
     """
-    if size.isdigit():
+    if isinstance(size, int) or size.isdigit():
         step_unit = 1000.0
         out: float = float(size)
         for letters in ["bytes", "KB", "MB", "GB", "TB"]:
@@ -137,6 +138,16 @@ class File:
 
         self.file_path = str(Path(self.base_path).joinpath(self.file_name))
 
+        # if the source name matches the destination name, rename the source and update tmp file name.
+        if self.data_file.name == self.file_path:
+            data_file_as_path = Path(self.data_file.name)
+            new_data_file_name = str(
+                data_file_as_path.parent
+                / (data_file_as_path.stem + "_tmp" + data_file_as_path.suffix)
+            )
+            os.rename(self.data_file.name, new_data_file_name)
+            self.data_file.name = new_data_file_name  # type: ignore[misc]
+
         with open(self.data_file.name, "r", newline="") as data_file:
             reader = csv.reader(data_file)
 
@@ -206,7 +217,12 @@ class File:
                     for line in data_file:
                         myfile.write(line)
 
-        RunnerLog(self.task, self.run_id, 11, f"File created.\n{self.file_path}")
+        RunnerLog(
+            self.task,
+            self.run_id,
+            11,
+            f"File {self.file_name} created. Size: {file_size(Path(self.file_path).stat().st_size)}.\n{self.file_path}",
+        )
 
         # encrypt file
         if self.task.file_gpg == 1:
