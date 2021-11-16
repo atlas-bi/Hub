@@ -121,7 +121,7 @@ class File:
 
             # insert params
             self.file_name = self.params.insert_file_params(
-                self.task.destination_file_name
+                self.task.destination_file_name.strip()
             )
 
             # parse python dates
