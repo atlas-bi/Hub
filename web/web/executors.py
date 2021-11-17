@@ -513,16 +513,10 @@ def disabled_scheduled_tasks(*args: Any) -> str:
 # pylint: disable=W0613
 def run_errored_tasks(*args: Any) -> str:
     """Running all errored tasks."""  # noqa: D401
-    tasks = (
-        db.session.query()
-        .select_from(Task)
-        .filter_by(Task.status_id == 2, Task.enabled == 1)
-        .add_columns(text("task.id"))
-        .all()
-    )
+    tasks = Task.query.filter_by(status_id=2, enabled=1).all()
     try:
         for task in tasks:
-            send_task_to_runner(task[0])
+            send_task_to_runner(task.id)
         return "Started running all errored tasks."
     except ValueError:
         return "Failed to run errored tasks, Scheduler is offline."
