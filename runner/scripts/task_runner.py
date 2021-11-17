@@ -145,106 +145,50 @@ class Runner:
 
         RunnerLog(self.task, self.run_id, 8, "Completed task!")
 
-        # set status to completed if no error logs
-        error_logs = (
-            TaskLog.query.filter_by(task_id=self.task.id, job_id=self.run_id, error=1)
-            .order_by(TaskLog.status_date)
-            .all()
-        )
+        # remove any retry tracking
+        redis_client.delete(f"runner_{task_id}_attempt")
+        task.status_id = 4
+        task.est_duration = (datetime.datetime.now() - task.last_run).total_seconds()
 
-        if len(error_logs) > 0:
-            # increment attempt counter
-            redis_client.zincrby("runner_" + str(task_id) + "_attempt", 1, "inc")
-            task.status_id = 2
-
-            # if task ended with a non-catastrophic error, it is possible that we can rerun it.
-            if (
-                redis_client.zincrby("runner_" + str(task_id) + "_attempt", 0, "inc")
-                or 1
-            ) <= (task.max_retries or 0):
-                # schedule a rerun in 5 minutes.
-                RunnerLog(
-                    self.task,
-                    self.run_id,
-                    8,
-                    "Scheduling re-attempt %d of %d."
-                    % (
-                        redis_client.zincrby(
-                            "runner_" + str(task_id) + "_attempt", 0, "inc"
-                        ),
-                        task.max_retries,
-                    ),
-                )
-
-                requests.get(
-                    "%s/run/%s/delay/5" % (app.config["SCHEDULER_HOST"], task_id)
-                )
-            else:
-                redis_client.delete("runner_" + str(task_id) + "_attempt")
-
-                # if the project runs in series, mark all following enabled tasks as errored
-                if task.project.sequence_tasks == 1:
-                    task_id_list = [
-                        x.id
-                        for x in Task.query.filter_by(enabled=1)
-                        .filter_by(project_id=task.project_id)
-                        .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
-                        .all()
-                    ]
-                    for this_id in task_id_list[task_id_list.index(int(task_id)) + 1 :]:
-                        Task.query.filter_by(id=this_id).update({"status_id": 2})
-
-        else:
-            # remove any retry tracking
-            redis_client.delete("runner_" + str(task_id) + "_attempt")
-            task.status_id = 4
-            task.est_duration = (
-                datetime.datetime.now() - task.last_run
-            ).total_seconds()
-
-            # if this is a sequence job, trigger the next job.
-            if task.project.sequence_tasks == 1:
-                task_id_list = [
-                    x.id
-                    for x in Task.query.filter_by(enabled=1)
-                    .filter_by(project_id=task.project_id)
-                    .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
-                    .all()
+        # if this is a sequence job, trigger the next job.
+        if task.project.sequence_tasks == 1:
+            task_id_list = [
+                x.id
+                for x in Task.query.filter_by(enabled=1)
+                .filter_by(project_id=task.project_id)
+                .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
+                .all()
+            ]
+            # potentially the task was disabled while running
+            # and removed from list. when that happens we should
+            # quit.
+            if task.id in task_id_list:
+                next_task_id = task_id_list[
+                    task_id_list.index(task.id) + 1 : task_id_list.index(task.id) + 2
                 ]
-                # potentially the task was disabled while running
-                # and removed from list. when that happens we should
-                # quit.
-                if task.id in task_id_list:
-                    next_task_id = task_id_list[
-                        task_id_list.index(task.id)
-                        + 1 : task_id_list.index(task.id)
-                        + 2
-                    ]
-                    if next_task_id:
+                if next_task_id:
 
-                        # trigger next task
-                        RunnerLog(
-                            self.task,
-                            self.run_id,
-                            8,
-                            f"Triggering run of next sequence job: {next_task_id}.",
-                        )
+                    # trigger next task
+                    RunnerLog(
+                        self.task,
+                        self.run_id,
+                        8,
+                        f"Triggering run of next sequence job: {next_task_id}.",
+                    )
 
-                        next_task = Task.query.filter_by(id=next_task_id[0]).first()
+                    next_task = Task.query.filter_by(id=next_task_id[0]).first()
 
-                        RunnerLog(
-                            next_task,
-                            None,
-                            8,
-                            f"Run triggered by previous sequence job: {task.id}.",
-                        )
+                    RunnerLog(
+                        next_task,
+                        None,
+                        8,
+                        f"Run triggered by previous sequence job: {task.id}.",
+                    )
 
-                        requests.get(
-                            app.config["RUNNER_HOST"] + "/" + str(next_task_id[0])
-                        )
+                    requests.get(app.config["RUNNER_HOST"] + "/" + str(next_task_id[0]))
 
-                    else:
-                        RunnerLog(self.task, self.run_id, 8, "Sequence completed!")
+                else:
+                    RunnerLog(self.task, self.run_id, 8, "Sequence completed!")
 
         task.last_run_job_id = None
         task.last_run = datetime.datetime.now()
