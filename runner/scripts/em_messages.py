@@ -7,9 +7,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Union
 
+import requests
+from flask import current_app as app
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-from runner.extensions import db
+from runner.extensions import db, redis_client
 from runner.model import Task, TaskLog
 from runner.scripts.em_smtp import Smtp
 from runner.web.filters import datetime_format
@@ -108,6 +110,45 @@ class RunnerException(Exception):
                 or f"Atlas Hub task {task} failed.",
                 attachments=[],
             )
+
+        # if the error is coming from a run, we may need to trigger a retry.
+        if run_id:
+            # increment attempt counter
+            redis_client.zincrby(f"runner_{task.id}_attempt", 1, "inc")
+            task.status_id = 2
+
+            # if task ended with a non-catastrophic error, it is possible that we can rerun it.
+            if (redis_client.zincrby(f"runner_{task.id}_attempt", 0, "inc") or 1) <= (
+                task.max_retries or 0
+            ):
+                run_number = (
+                    redis_client.zincrby(f"runner_{task.id}_attempt", 0, "inc") or 1
+                )
+                # schedule a rerun in 5 minutes.
+                RunnerLog(
+                    task,
+                    run_id,
+                    8,
+                    f"Scheduling re-attempt {run_number} of {task.max_retries}.",
+                )
+
+                requests.get(
+                    "%s/run/%s/delay/5" % (app.config["SCHEDULER_HOST"], task.id)
+                )
+            else:
+                redis_client.delete(f"runner_{task.id}_attempt")
+
+                # if the project runs in series, mark all following enabled tasks as errored
+                if task.project.sequence_tasks == 1:
+                    task_id_list = [
+                        x.id
+                        for x in Task.query.filter_by(enabled=1)
+                        .filter_by(project_id=task.project_id)
+                        .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
+                        .all()
+                    ]
+                    for this_id in task_id_list[task_id_list.index(task.id) + 1 :]:
+                        Task.query.filter_by(id=this_id).update({"status_id": 2})
 
 
 @dataclass
