@@ -1,0 +1,42 @@
+Source: atlas-hub
+Section: unknown
+Priority: optional
+Maintainer: Christopher Pickering <christopher@atlas.bi>
+Build-Depends: debhelper-compat (= 12)
+Standards-Version: 4.5.1
+Rules-Requires-Root: no
+Homepage: https://atlas.bi
+Description: Atlas Automation Hub
+
+#Vcs-Browser: https://atlas-bi.github.io/ppa/
+#Vcs-Git: https://github.com/atlas-bi/ppa.git
+
+Package: atlas-hub
+Architecture: all
+Depends: apt-utils,
+         pkg-config,
+         build-essential,
+         libssl-dev,
+         libffi-dev,
+         curl,
+         git,
+         wget,
+         libldap2-dev,
+         python3-dev,
+         python3-pip,
+         python3-setuptools,
+         unixodbc,
+         unixodbc-dev,
+         libpq-dev,
+         nginx,
+         sqlite3,
+         libsqlite3-0,
+         libsasl2-dev,
+         libxml2-dev,
+         libxmlsec1-dev,
+         libxmlsec1-dev,
+         redis-server,
+         gnupg,
+         postgresql,
+         postgresql-contrib,
+         python3.8-venv

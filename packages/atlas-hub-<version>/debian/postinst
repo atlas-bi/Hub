@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/atlas-hub/install.sh --no-warn-script-location

@@ -1,0 +1,2 @@
+install.sh usr/bin/atlas-hub/
+atlas_hub_supervisord.conf usr/bin/atlas-hub/
