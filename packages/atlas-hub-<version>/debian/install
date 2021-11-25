@@ -1,0 +1,5 @@
+functions.sh usr/lib/atlas-hub
+installers.py usr/lib/atlas-hub
+config.ini usr/lib/atlas-hub
+supervisord.conf usr/lib/atlas-hub
+atlas-hub usr/bin/

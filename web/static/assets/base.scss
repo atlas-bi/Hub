@@ -7,6 +7,10 @@
 @import '../../../node_modules/bulma-switch/src/sass';
 @import '../../../node_modules/bulma-tooltip/src/sass';
 
+.column {
+  min-width:0px;
+}
+
 .atlas-navbar {
   padding: 16px 0;
 

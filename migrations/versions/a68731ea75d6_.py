@@ -22,31 +22,31 @@ def upgrade():
     op.create_index(op.f("ix_task_next_run"), "task", ["next_run"], unique=False)
 
     # these are auto added by postgres, but added to this file so they will not be added again.
-    op.create_index(
-        op.f("ix_connection_database_type_id"),
-        "connection_database",
-        ["type_id"],
-        unique=False,
-    )
-    op.create_index(
-        op.f("ix_task_destination_file_type_id"),
-        "task",
-        ["destination_file_type_id"],
-        unique=False,
-    )
-    op.create_index(
-        op.f("ix_task_processing_type_id"), "task", ["processing_type_id"], unique=False
-    )
-    op.create_index(
-        op.f("ix_task_source_query_type_id"),
-        "task",
-        ["source_query_type_id"],
-        unique=False,
-    )
-    op.create_index(
-        op.f("ix_task_source_type_id"), "task", ["source_type_id"], unique=False
-    )
-    op.create_index(op.f("ix_task_status_id"), "task", ["status_id"], unique=False)
+    # op.create_index(
+    #     op.f("ix_connection_database_type_id"),
+    #     "connection_database",
+    #     ["type_id"],
+    #     unique=False,
+    # )
+    # op.create_index(
+    #     op.f("ix_task_destination_file_type_id"),
+    #     "task",
+    #     ["destination_file_type_id"],
+    #     unique=False,
+    # )
+    # op.create_index(
+    #     op.f("ix_task_processing_type_id"), "task", ["processing_type_id"], unique=False
+    # )
+    # op.create_index(
+    #     op.f("ix_task_source_query_type_id"),
+    #     "task",
+    #     ["source_query_type_id"],
+    #     unique=False,
+    # )
+    # op.create_index(
+    #     op.f("ix_task_source_type_id"), "task", ["source_type_id"], unique=False
+    # )
+    # op.create_index(op.f("ix_task_status_id"), "task", ["status_id"], unique=False)
 
 
 # ### end Alembic commands ###

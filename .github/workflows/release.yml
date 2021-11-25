@@ -1,0 +1,91 @@
+name: build deb
+
+on:
+  release:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install deps
+      run: |
+        sudo apt-get update
+        sudo apt-get install dh-make devscripts dpkg-dev gzip apt-utils -y
+
+    - name: Load GPG Keys
+      run: |
+        # gpg  --export-secret-keys <key id> | base64
+        echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+      env:
+        GPG_SIGNING_KEY: ${{ secrets.PPA_GPG_SECRET }}
+
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+        path: atlas
+
+    - name: Build deb
+      run: |
+        cd atlas/scripts
+        cp -r "atlas-hub-<version>" "atlas-hub-$VERSION"
+        cd "atlas-hub-$VERSION"
+        find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} +
+        echo "building"
+        debuild --no-tgz-check -us -uc
+        cd ..
+        ls
+      env:
+        VERSION: ${{ github.event.release.tag_name }}
+
+    - name: Clone PPA
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+        repository: atlas-bi/ppa
+        token: ${{ secrets.PPA_REPO_PAT }}
+        path: ppa
+
+    - name: Move deb to PPA
+      run: |
+        cp ./atlas/packages/*.deb ./ppa/deb
+
+    - name: Update Lists
+      run: |
+        cd ./ppa/deb
+
+        # Packages & Packages.gz
+        dpkg-scanpackages --multiversion . > Packages
+        gzip -k -f Packages
+
+        # Release, Release.gpg & InRelease
+        apt-ftparchive release . > Release
+        gpg -abs -o - Release > Release.gpg
+        gpg --clearsign -o - Release > InRelease
+
+        # update list
+        echo "deb https://atlas-bi.github.io/ppa/deb ./" > atlas.list
+
+        cd ..
+        ls
+
+    - name: Commit changes
+      run: |
+        cd ./ppa
+        git config --local user.name "$USER"
+        git config --local user.email "$EMAIL"
+        git add .
+        git commit -m "added release $VERSION"
+      env:
+        VERSION: ${{ github.event.release.tag_name }}
+        USER: ${{ secrets.GIT_USER }}
+        EMAIL: ${{ secrets.GIT_EMAIL }}
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PPA_REPO_PAT }}
+        branch: master
+        directory: ppa
+        repository: atlas-bi/ppa

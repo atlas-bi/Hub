@@ -18,7 +18,7 @@
   "description": "A task scheduling tool.",
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
-  "name": "Atlas Automation Hub",
+  "name": "atlas_automation_hub",
   "private": true,
   "repository": {
     "type": "git",
