@@ -2,6 +2,7 @@ name: build deb
 
 on:
   release:
+    types: [published]
 
 jobs:
   build:

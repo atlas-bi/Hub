@@ -151,8 +151,6 @@ class Config(BaseConfig):
             config += f"    LDAP_USERNAME=\"{configuration['LDAP']['LDAP_USERNAME']}\""
         if "LDAP_PASSWORD" in configuration["LDAP"]:
             config += f"    LDAP_PASSWORD=\"{configuration['LDAP']['LDAP_PASSWORD']}\""
-        if "LDAP_USE_SSL" in configuration["LDAP"]:
-            config += f"    LDAP_USE_SSL=\"{configuration['LDAP']['LDAP_USE_SSL']}\""
 
     if (
         configuration.has_section("SAML")
@@ -241,12 +239,12 @@ class Config(BaseConfig):
         ],
     }},
     "debug": 1,
-    "key_file": "{saml_cert_key}",  # private part
-    "cert_file": "{saml_cert_file}",  # public part
+    "key_file": "{saml_cert_key}",
+    "cert_file": "{saml_cert_file}",
     "encryption_keypairs": [
         {{
-            "key_file": "{saml_cert_key}",  # private part
-            "cert_file": "{saml_cert_file}",  # public part
+            "key_file": "{saml_cert_key}",
+            "cert_file": "{saml_cert_file}",
         }}
     ],
     "contact_person": [
@@ -270,7 +268,7 @@ class Config(BaseConfig):
     config_file.write_text(config)
 
 
-def build_nginx_configuration(install_dir: str, config_ini: str) -> None:
+def build_nginx_configuration(config_ini: str) -> None:
     """Build nginx config from config.ini."""
     atlas_config = configparser.ConfigParser()
     atlas_config.read(config_ini)
