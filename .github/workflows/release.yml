@@ -27,7 +27,7 @@ jobs:
 
     - name: Build deb
       run: |
-        cd atlas/scripts
+        cd ./atlas/packages
         cp -r "atlas-hub-<version>" "atlas-hub-$VERSION"
         cd "atlas-hub-$VERSION"
         find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} +
