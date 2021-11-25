@@ -36,10 +36,8 @@ fmt_yellow() {
 
 color
 
-VERSION=<version>
-
 BASE_DIR="/usr/lib/atlas-hub"
-INSTALL_DIR="$BASE_DIR/atlas-automation-hub-$VERSION"
+INSTALL_DIR="$BASE_DIR/app"
 USER_DIR="/etc/atlas-hub"
 BACKUP_DIR="$USER_DIR/backup"
 LOG_DIR="/var/log/atlas-hub"
@@ -90,7 +88,7 @@ configure(){
     python3 -c "from installers import build_web_configuration; build_web_configuration(\"$INSTALL_DIR\", \"/etc/atlas-hub/config.ini\")"
 
     fmt_yellow "Configuring Nginx"
-    python3 -c "from installers import build_nginx_configuration;build_nginx_configuration(\"$INSTALL_DIR\", \"/etc/atlas-hub/config.ini\", \"$VERSION\")"
+    python3 -c "from installers import build_nginx_configuration;build_nginx_configuration(\"/etc/atlas-hub/config.ini\")"
 
     fmt_yellow "Starting services"
     start_services

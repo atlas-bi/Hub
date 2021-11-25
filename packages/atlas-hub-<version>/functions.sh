@@ -114,7 +114,7 @@ start_services(){
 
       "$INSTALL_DIR/.venv/bin/python" -m pip install supervisor gevent gunicorn -q
       "$INSTALL_DIR/.venv/bin/supervisord" -c "$BASE_DIR/supervisord.conf" -e debug
-      "$INSTALL_DIR/.venv/bin/supervisorctl" -c "$BASE_DIR/supervisord.conf" restart all
+      "$INSTALL_DIR/.venv/bin/supervisorctl" -c "$BASE_DIR/supervisord.conf" start all
 
 
       # cd /usr/lib/atlas-hub/atlas-automation-
@@ -130,7 +130,7 @@ start_services(){
 postgres_init(){
 
     # ensure pg is running
-    /etc/init.d/postgresql start
+    /etc/init.d/postgresql start 1>/dev/null
 
     #  call function by "postgres_init $BASE_DIR"
     PASS=$(cat "$1/secrets.json" | jq .PG_PASS)

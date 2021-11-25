@@ -61,7 +61,7 @@ stop_services
 
 cd $BASE_DIR
 fmt_blue "Configuring Nginx"
-python3 -c "from installers import build_nginx_configuration;build_nginx_configuration(\"$INSTALL_DIR\", \"/etc/atlas-hub/config.ini\")"
+python3 -c "from installers import build_nginx_configuration;build_nginx_configuration(\"/etc/atlas-hub/config.ini\")"
 
 if [ "$(pidof systemd)" != "" ]; then
     fmt_blue "Configuring Gunicorn"
@@ -72,13 +72,15 @@ fi
 
 cd $INSTALL_DIR
 
+# not a docker image.. has systemd installed and running
+fmt_blue "Starting services"
+start_services
+
 # configure database
 fmt_blue "Setting Up Database"
 postgres_init $BASE_DIR
 
-# not a docker image.. has systemd installed and running
-fmt_blue "Starting services"
-start_services
+
 
 # copy model between apps
 fmt_blue "Creating API db model"
