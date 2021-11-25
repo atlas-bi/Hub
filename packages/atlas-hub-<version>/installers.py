@@ -82,75 +82,75 @@ class Config(BaseConfig):
     if configuration.has_section("MASTER"):
         master = configuration["MASTER"]
         if "MIN_DISK_SPACE" in configuration["MASTER"]:
-            config += f"    MIN_DISK_SPACE={master['MIN_DISK_SPACE']}"
+            config += f"\n    MIN_DISK_SPACE={master['MIN_DISK_SPACE']}"
 
         if "MIN_FREE_MEM_PERC" in master:
-            config += f"    MIN_FREE_MEM_PERC={master['MIN_FREE_MEM_PERC']}"
+            config += f"\n    MIN_FREE_MEM_PERC={master['MIN_FREE_MEM_PERC']}"
 
         if "MIN_FREE_CPU_PERC" in master:
-            config += f"    MIN_FREE_CPU_PERC={master['MIN_FREE_CPU_PERC']}"
+            config += f"\n    MIN_FREE_CPU_PERC={master['MIN_FREE_CPU_PERC']}"
 
         if "GIT_URL" in master:
-            config += f"    GIT_URL=\"{master['GIT_URL']}\""
+            config += f"\n    GIT_URL={master['GIT_URL']}"
 
         if "GIT_USERNAME" in master:
-            config += f"    GIT_USERNAME=\"{master['GIT_USERNAME']}\""
+            config += f"\n    GIT_USERNAME={master['GIT_USERNAME']}"
 
         if "GIT_PASSWORD" in master:
-            config += f"    GIT_PASSWORD=\"{master['GIT_PASSWORD']}\""
+            config += f"\n    GIT_PASSWORD={master['GIT_PASSWORD']}"
 
         if "GIT_TOKEN" in master:
-            config += f"    GIT_TOKEN=\"{master['GIT_TOKEN']}\""
+            config += f"\n    GIT_TOKEN={master['GIT_TOKEN']}"
 
         if "SMB_USERNAME" in master:
-            config += f"    SMB_USERNAME=\"{master['SMB_USERNAME']}\""
+            config += f"\n    SMB_USERNAME={master['SMB_USERNAME']}"
 
         if "SMB_PASSWORD" in master:
-            config += f"    SMB_PASSWORD=\"{master['SMB_PASSWORD']}\""
+            config += f"\n    SMB_PASSWORD={master['SMB_PASSWORD']}"
 
         if "SMB_SERVER_IP" in master:
-            config += f"    SMB_SERVER_IP=\"{master['SMB_SERVER_IP']}\""
+            config += f"\n    SMB_SERVER_IP={master['SMB_SERVER_IP']}"
 
         if "SMB_SERVER_NAME" in master:
-            config += f"    SMB_SERVER_NAME=\"{master['SMB_SERVER_NAME']}\""
+            config += f"\n    SMB_SERVER_NAME={master['SMB_SERVER_NAME']}"
 
         if "SMB_DEFAULT_SHARE" in master:
-            config += f"    SMB_DEFAULT_SHARE=\"{master['SMB_DEFAULT_SHARE']}\""
+            config += f"\n    SMB_DEFAULT_SHARE={master['SMB_DEFAULT_SHARE']}"
         if "SMTP_SERVER" in master:
-            config += f"    SMTP_SERVER=\"{master['SMTP_SERVER']}\""
+            config += f"\n    SMTP_SERVER={master['SMTP_SERVER']}"
         if "SMTP_PORT" in master:
-            config += f"    SMTP_PORT=\"{master['SMTP_PORT']}\""
+            config += f"\n    SMTP_PORT={master['SMTP_PORT']}"
         if "SMTP_SENDER_NAME" in master:
-            config += f"    SMTP_SENDER_NAME=\"{master['SMTP_SENDER_NAME']}\""
+            config += f"\n    SMTP_SENDER_NAME={master['SMTP_SENDER_NAME']}"
         if "SMTP_SENDER_EMAIL" in master:
-            config += f"    SMTP_SENDER_EMAIL=\"{master['SMTP_SENDER_EMAIL']}\""
+            config += f"\n    SMTP_SENDER_EMAIL={master['SMTP_SENDER_EMAIL']}"
         if "SMTP_DEFAULT_RECIEVER" in master:
-            config += f"    SMTP_DEFAULT_RECIEVER=\"{master['SMTP_DEFAULT_RECIEVER']}\""
+            config += f"\n    SMTP_DEFAULT_RECIEVER={master['SMTP_DEFAULT_RECIEVER']}"
 
         if "SMTP_SUBJECT_PREFIX" in master:
-            config += f"    SMTP_SUBJECT_PREFIX=\"{master['SMTP_SUBJECT_PREFIX']}\""
+            config += f"\n    SMTP_SUBJECT_PREFIX={master['SMTP_SUBJECT_PREFIX']}"
         if "ORG_NAME" in master:
-            config += f"    ORG_NAME=\"{master['ORG_NAME']}\""
+            config += f"\n    ORG_NAME={master['ORG_NAME']}"
         if "AUTH_METHOD" in master:
-            config += f"    AUTH_METHOD=\"{master['AUTH_METHOD']}\""
+            config += f"\n    AUTH_METHOD={master['AUTH_METHOD']}"
 
     if configuration.has_section("LDAP"):
 
         if "REQUIRED_GROUPS" in configuration["LDAP"]:
             config += (
-                f"    REQUIRED_GROUPS=\"{configuration['LDAP']['REQUIRED_GROUPS']}\""
+                f"\n    REQUIRED_GROUPS={configuration['LDAP']['REQUIRED_GROUPS']}"
             )
 
         if "LDAP_HOST" in configuration["LDAP"]:
-            config += f"    LDAP_HOST=\"{configuration['LDAP']['LDAP_HOST']}\""
+            config += f"\n    LDAP_HOST={configuration['LDAP']['LDAP_HOST']}"
         if "LDAP_BASE_DN" in configuration["LDAP"]:
-            config += f"    LDAP_BASE_DN=\"{configuration['LDAP']['LDAP_BASE_DN']}\""
+            config += f"\n    LDAP_BASE_DN={configuration['LDAP']['LDAP_BASE_DN']}"
         if "LDAP_USER_OBJECT_FILTER" in configuration["LDAP"]:
-            config += f"    LDAP_USER_OBJECT_FILTER=\"{configuration['LDAP']['LDAP_USER_OBJECT_FILTER']}\""
+            config += f"\n    LDAP_USER_OBJECT_FILTER={configuration['LDAP']['LDAP_USER_OBJECT_FILTER']}"
         if "LDAP_USERNAME" in configuration["LDAP"]:
-            config += f"    LDAP_USERNAME=\"{configuration['LDAP']['LDAP_USERNAME']}\""
+            config += f"\n    LDAP_USERNAME={configuration['LDAP']['LDAP_USERNAME']}"
         if "LDAP_PASSWORD" in configuration["LDAP"]:
-            config += f"    LDAP_PASSWORD=\"{configuration['LDAP']['LDAP_PASSWORD']}\""
+            config += f"\n    LDAP_PASSWORD={configuration['LDAP']['LDAP_PASSWORD']}"
 
     if (
         configuration.has_section("SAML")
@@ -203,7 +203,7 @@ class Config(BaseConfig):
             else ""
         )
 
-        config += f"""    {{
+        config += f"""\n    SAML_CONFIG = {{
     "xmlsec_binary": "{xmlsec}",
     "entityid": BASE_URL + "saml2/metadata/",
     "allow_unknown_attributes": True,

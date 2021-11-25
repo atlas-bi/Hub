@@ -91,7 +91,7 @@ chown -R www-data "$INSTALL_DIR"
 
 # install database migrations
 fmt_blue "Installing database migrations"
-export FLASK_ENV=production && export FLASK_DEBUG=0 && export FLASK_APP=web && .venv/bin/flask db upgrade
+export FLASK_ENV=production && export FLASK_DEBUG=0 && export FLASK_APP=web && .venv/bin/flask db upgrade && .venv/bin/flask cli seed
 
 echo ""
 fmt_green "Thanks for installing Atlas Automation Hub!"
