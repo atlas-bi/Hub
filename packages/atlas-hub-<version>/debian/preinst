@@ -1,0 +1,20 @@
+#!/bin/sh
+
+BASE_DIR="/usr/lib/atlas-hub"
+
+# remove old install
+if [ -d "$BASE_DIR" ]; then
+    cd "${BASE_DIR:?}" || exit; rm -rf *
+fi
+
+# create log directory
+mkdir -p "/var/log/atlas-hub"
+
+# create log files
+touch /var/log/atlas-hub/supervisord.log
+touch /var/log/atlas-hub/error.log
+touch /var/log/atlas-hub/access.log
+
+chown -R www-data /var/log/atlas-hub
+
+### proceed with install ###

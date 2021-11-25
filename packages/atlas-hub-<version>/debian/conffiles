@@ -1,4 +1,2 @@
 # user configuration
 # startup services
-
-/etc/init.d/atlas-hub

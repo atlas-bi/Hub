@@ -16,7 +16,7 @@ copy files to ppa repo
 
 ## To run in local docker
 ```sh
-docker run --rm -it -v $(PWD):/atlas ubuntu:latest /bin/bash
+docker run --rm -it -p 8080:80 -v $(PWD):/atlas ubuntu:latest /bin/bash
 
 apt-get update; \
 apt-get install dh-make devscripts -y; \
@@ -41,3 +41,11 @@ curl -s --compressed "https://atlas-bi.github.io/ppa/deb/KEY.gpg" | sudo apt-key
 sudo curl -s --compressed -o /etc/apt/sources.list.d/atlas.list "https://atlas-bi.github.io/ppa/deb/atlas.list"
 sudo apt update
 sudo apt install atlas-hub
+```
+
+## Where the files should end up
+
+`usr/bin/atlas-hub` > cli application
+`usr/lib/atlas-hub`  > install directory for webapp
+`etc/atlas-hub` > config directory
+`var/log/atlas-hub` > log directory

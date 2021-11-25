@@ -6,10 +6,6 @@ Build-Depends: debhelper-compat (= 12)
 Standards-Version: 4.5.1
 Rules-Requires-Root: no
 Homepage: https://atlas.bi
-Description: Atlas Automation Hub
-
-#Vcs-Browser: https://atlas-bi.github.io/ppa/
-#Vcs-Git: https://github.com/atlas-bi/ppa.git
 
 Package: atlas-hub
 Architecture: all
@@ -18,7 +14,6 @@ Depends: apt-utils,
          build-essential,
          libssl-dev,
          libffi-dev,
-         curl,
          git,
          wget,
          libldap2-dev,
@@ -39,4 +34,10 @@ Depends: apt-utils,
          gnupg,
          postgresql,
          postgresql-contrib,
-         python3.8-venv
+         python3.8-venv,
+         redis-server,
+         jq
+Description: Atlas Automation Hub
+  Atlas Automation Hub is a task scheduling tool intended to be used
+  with getting data from a source and depositing it in a destination,
+  primarily sql queries to SFTP servers.

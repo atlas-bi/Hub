@@ -54,7 +54,7 @@ class Config:
     LOGIN_VIEW = "auth_bp.login"
     REQUIRED_GROUPS = [b"Analytics"]
     LOGIN_MESSAGE = "Please login to access this page."
-    AUTH_METHOD = "SAML"  # LDAP, SAML, or DEV for no pass.
+    AUTH_METHOD = "DEV"  # LDAP, SAML, or DEV for no pass.
     LOGIN_REDIRECT_URL = "/"
     NOT_AUTHORIZED_URL = "auth_bp.not_authorized"
 

@@ -1,5 +1,5 @@
-scripts/atlas-hub_*.*
-scripts/atlas-hub-[0-9]*.[0-9]*.[0-9]*
+packages/atlas-hub_*.*
+packages/atlas-hub-[0-9]*.[0-9]*.[0-9]*
 config_cust.py
 
 package-lock.json
