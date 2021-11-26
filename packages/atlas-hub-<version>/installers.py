@@ -50,8 +50,11 @@ def build_web_configuration(install_dir: str, config_ini: str) -> None:
     configuration = configparser.ConfigParser()
     configuration.read(config_ini)
 
-    if configuration.has_section("MASTER") and "HOST" in configuration["MASTER"]:
-        hostname = configuration["MASTER"]["HOST"]
+    if (
+        configuration.has_section("MASTER")
+        and "EXTERNAL_URL" in configuration["MASTER"]
+    ):
+        hostname = configuration["MASTER"]["EXTERNAL_URL"]
     else:
         hostname = socket.gethostname()
 
@@ -274,8 +277,9 @@ def build_nginx_configuration(config_ini: str) -> None:
     atlas_config.read(config_ini)
 
     hostname = (
-        atlas_config["MASTER"]["HOST"]
-        if atlas_config.has_section("MASTER") and "HOST" in atlas_config["MASTER"]
+        atlas_config["MASTER"]["EXTERNAL_URL"]
+        if atlas_config.has_section("MASTER")
+        and "EXTERNAL_URL" in atlas_config["MASTER"]
         else socket.gethostname()
     )
 

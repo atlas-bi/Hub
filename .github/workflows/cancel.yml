@@ -5,6 +5,8 @@ name: cancel
 
 on:
   push:
+    branches:
+    - '!master'
 
 jobs:
   cancel:

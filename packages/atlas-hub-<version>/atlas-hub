@@ -41,6 +41,7 @@ INSTALL_DIR="$BASE_DIR/app"
 USER_DIR="/etc/atlas-hub"
 BACKUP_DIR="$USER_DIR/backup"
 LOG_DIR="/var/log/atlas-hub"
+EXTERNAL_URL=${EXTERNAL_URL:-$HOSTNAME}
 
 HIST_DATE=$(date +"%s_%Y_%m_%d")
 
@@ -85,6 +86,9 @@ configure(){
     python3 -c "from installers import build_secrets; build_secrets()"
 
     fmt_yellow "Updating configuration"
+
+    install_configuration
+
     python3 -c "from installers import build_web_configuration; build_web_configuration(\"$INSTALL_DIR\", \"/etc/atlas-hub/config.ini\")"
 
     fmt_yellow "Configuring Nginx"

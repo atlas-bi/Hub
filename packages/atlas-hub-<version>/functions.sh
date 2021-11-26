@@ -48,6 +48,19 @@ name() {
 
 }
 
+install_configuration(){
+  # install default configuration if missing
+  if [ ! -e "$USER_DIR/config.ini" ]
+  then
+    if [ ! -d "$USER_DIR" ]; then
+      mkdir -p "$USER_DIR"
+    fi
+    # apply initial external url
+    sed -i -e "s/EXTERNAL_URL='localhost'/EXTERNAL_URL='${EXTERNAL_URL}'/g" "$BASE_DIR/config.ini" > /dev/null
+    cp "$BASE_DIR/config.ini" /etc/atlas-hub/config.ini
+  fi
+}
+
 stop_services(){
   BASE_DIR="/usr/lib/atlas-hub"
   INSTALL_DIR="$BASE_DIR/app"
