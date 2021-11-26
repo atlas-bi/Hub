@@ -66,7 +66,7 @@ jobs:
         gpg --clearsign -o - Release > InRelease
 
         # update list
-        echo "deb https://atlas-bi.github.io/ppa/deb ./" > atlas.list
+        echo "deb https://packages.atlas.bi/deb ./" > atlas.list
 
         cd ..
         ls
