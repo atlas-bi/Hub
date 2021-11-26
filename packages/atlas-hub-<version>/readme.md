@@ -29,9 +29,8 @@ cp -r "atlas-hub-<version>" "atlas-hub-$VERSION" \
 && find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} + \
 && debuild --no-tgz-check -us -uc \
 && cd .. \
+&& EXPORT EXTERNAL_URL="$HOSTNAME"; apt-get install ./atlas-hub_*.deb -y
 && apt-get install ./atlas-hub_*.deb -y
-
-
 ```
 
 ## To install a build
@@ -41,6 +40,10 @@ curl -s --compressed "https://atlas-bi.github.io/ppa/deb/KEY.gpg" | sudo apt-key
 sudo curl -s --compressed -o /etc/apt/sources.list.d/atlas.list "https://atlas-bi.github.io/ppa/deb/atlas.list"
 sudo apt update
 sudo apt install atlas-hub
+
+# or to specify the external url directory
+EXPORT EXTERNAL_URL='https://google.com'; sudo apt install atlas-hub
+
 ```
 
 ## Where the files should end up

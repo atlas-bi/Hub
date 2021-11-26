@@ -2,6 +2,7 @@
 python3 -m pip install colorama tqdm requests -q --no-warn-script-location
 
 VERSION=<version>
+EXTERNAL_URL=${EXTERNAL_URL:-$HOSTNAME}
 
 BASE_DIR="/usr/lib/atlas-hub"
 INSTALL_DIR="$BASE_DIR/app"
@@ -18,18 +19,7 @@ cd "$BASE_DIR"
 # create pass file
 python3 -c "from installers import build_secrets; build_secrets()"
 
-
-
-# install default configuration if missing
-if [ ! -e "$USER_DIR/config.ini" ]
-then
-  if [ ! -d "$USER_DIR" ]; then
-    mkdir -p "$USER_DIR"
-  fi
-  mv $BASE_DIR/config.ini /etc/atlas-hub/config.ini
-else
-  rm $BASE_DIR/config.ini
-fi
+install_configuration
 
 # download app
 python3 -c "from installers import download; download(\"https://github.com/atlas-bi/atlas-automation-hub/archive/refs/tags/$VERSION.tar.gz\", \"Atlas Hub $VERSION\", \"app.tar.gz\")" 
