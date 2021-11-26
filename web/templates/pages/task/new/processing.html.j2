@@ -25,7 +25,7 @@
                         name="smb_processing"
                         data-smb="task-smb-processing-connection">
                     <option {% if not t or not t.processing_smb_conn or not t.processing_smb_conn.connection.id %}selected="selected"{% endif %}
-                            value="none">
+                                                                                                                            value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
@@ -68,7 +68,7 @@
                         name="sftp_processing"
                         data-sftp="task-sftp-processing-connection">
                     <option {% if not t or not t.processing_sftp_conn or not t.processing_sftp_conn.connection.id %}selected="selected"{% endif %}
-                            value="none">
+                                                                                                                              value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
@@ -111,7 +111,7 @@
                         name="ftp_processing"
                         data-ftp="task-ftp-processing-connection">
                     <option {% if not t or not t.processing_ftp_conn or not t.processing_ftp_conn.connection.id %}selected="selected"{% endif %}
-                            value="none">
+                                                                                                                            value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
@@ -175,7 +175,7 @@
              {% if not t or t.processing_type_id != 6 %}style="display:none;"{% endif %}>
         <div class="field">
             <label class="label">Source Code</label>
-            <textarea  name="processingCode" autocomplete="off" rows="1">{{ t.processing_code or '' }}</textarea>
+            <textarea name="processingCode" autocomplete="off" rows="1">{{ t.processing_code or '' }}</textarea>
         </div>
     </section>
     <section class="task-processingCommand"

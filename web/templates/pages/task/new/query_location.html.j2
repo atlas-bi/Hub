@@ -51,7 +51,7 @@
                         name="smb_query"
                         data-smb="task-query-smb-source-connection">
                     <option {% if not t or not t.query_smb_conn or not t.query_smb_conn.connection.id %}selected="selected"{% endif %}
-                            value="none">
+                                                                                                                  value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
@@ -96,7 +96,7 @@
                         name="ftp_query"
                         data-ftp="task-query-ftp-source-connection">
                     <option {% if not t or not t.query_ftp_conn or not t.query_ftp_conn.connection.id %}selected="selected"{% endif %}
-                            value="none">
+                                                                                                                  value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
@@ -141,7 +141,7 @@
                         name="sftp_query"
                         data-sftp="task-query-sftp-source-connection">
                     <option {% if not t or not t.query_sftp_conn or not t.query_sftp_conn.connection.id %}selected="selected"{% endif %}
-                            value="none">
+                                                                                                                    value="none">
                         Choose one
                     </option>
                     {% for s in conn %}
@@ -198,7 +198,7 @@
         <label for="task_include_query_headers">Include Query Headers?</label>
         <input type="hidden"
                name="task_include_query_headers"
-               value="{% if not t or (t and t.source_query_include_header == 1) -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if not t or (t and t.source_query_include_header == 1) -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <div class="field"
          {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
@@ -209,7 +209,7 @@
         <label for="task_enable_source_cache">Enable Query Cache?</label>
         <input type="hidden"
                name="task_enable_source_cache"
-               value="{% if not t or (t and t.enable_source_cache == 1) -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if not t or (t and t.enable_source_cache == 1) -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <div class="field"
          {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
@@ -220,7 +220,7 @@
         <label for="task_require_sql_output">Require query output?</label>
         <input type="hidden"
                name="task_require_sql_output"
-               value="{% if not t or (t and t.source_require_sql_output == 1) -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if not t or (t and t.source_require_sql_output == 1) -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <!--
                 raw code

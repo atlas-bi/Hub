@@ -13,7 +13,7 @@
                         <div class="is-flex-grow-1 is-flex-shrink-1 "></div>
                         <div class="em-elBar has-background-info"
                              data-attr="{{ col.case }}"
-                             style="height:{% if col.count > 0 -%}{{ col.count / schedule_index[0] *100 }}%{%- else -%}0px{%- endif %}">
+                             style="height:{%- if col.count > 0 -%}{{ col.count / schedule_index[0] *100 }}%{%- else -%}0px{%- endif -%}">
                         </div>
                     </div>
                 {% endfor %}

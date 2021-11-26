@@ -6,7 +6,7 @@
         <div class="select is-fullwidth">
             <select class="input" name="fileType" required="required">
                 <option {% if not t or not t.sftp or not t.sftp.destination.id %}selected="selected"{% endif %}
-                        value="none">
+                                                                                           value="none">
                     Choose one
                 </option>
                 {% for s in file_type %}
@@ -56,7 +56,7 @@
             <label for="task_ignore_file_delimiter">Ignore Delimiter?</label>
             <input type="hidden"
                    name="task_ignore_file_delimiter"
-                   value="{% if t and t.destination_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                   value="{%- if t and t.destination_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
         </div>
         <div class="field">
             <label class="label">Line End Appending (defaults to "", normally this is not used. ex: ~)</label>
@@ -88,7 +88,7 @@
         <label for="task_create_zip">Save into a ZIP archive?</label>
         <input type="hidden"
                name="task_create_zip"
-               value="{% if t and t.destination_create_zip == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if t and t.destination_create_zip == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <article class="p-0 message box is-info task-destinationZip"
              {% if not t or (t and t.destination_create_zip != 1) %} style="display:none;" {% endif %}>
@@ -114,7 +114,7 @@
         <label for="task_file_gpg">Encrypt file with GPG key?</label>
         <input type="hidden"
                name="task_file_gpg"
-               value="{% if t and t.file_gpg == 1 -%}1{%- else -%}0{%- endif %}"/>
+               value="{%- if t and t.file_gpg == 1 -%}1{%- else -%}0{%- endif -%}"/>
     </div>
     <article class="p-0 message box is-info task-destinationGpg"
              {% if not t or (t and t.file_gpg != 1) %} style="display:none;" {% endif %}>
@@ -127,7 +127,7 @@
                 <div class="select is-fullwidth">
                     <select class="input" name="gpg_file" data-gpg="task-gpg-connection">
                         <option {% if not t or not t.file_gpg_conn or not t.file_gpg_conn.connection.id %}selected="selected"{% endif %}
-                                value="none">
+                                                                                                                    value="none">
                             Choose one
                         </option>
                         {% for s in conn %}
@@ -156,7 +156,7 @@
         <label for="task_save_sftp">Upload files to SFTP server?</label>
         <input type="hidden"
                name="task_save_sftp"
-               value="{% if t and t.destination_sftp == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if t and t.destination_sftp == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <article class="p-0 message box is-info task-destinationSftp"
              {% if not t or (t and t.destination_sftp != 1) %} style="display:none;" {% endif %}>
@@ -171,7 +171,7 @@
                             name="sftp_destination"
                             data-sftp="task-sftp-connection">
                         <option {% if not t or not t.destination_sftp_conn or not t.destination_sftp_conn.connection.id %} selected="selected" {% endif %}
-                                value="none">
+                                                                                                                                     value="none">
                             Choose one
                         </option>
                         {% for s in conn %}
@@ -197,7 +197,7 @@
                 <label for="task_overwrite_sftp_if_exists">Overwrite file if exists?</label>
                 <input type="hidden"
                        name="task_overwrite_sftp"
-                       value="{% if not t or t.destination_sftp_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                       value="{%- if not t or t.destination_sftp_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
         </div>
     </article>
@@ -211,7 +211,7 @@
         <label for="task_save_smb">Upload files to SMB server (network file path)?</label>
         <input type="hidden"
                name="task_save_smb"
-               value="{% if t and t.destination_smb == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if t and t.destination_smb == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <article class="p-0 message box is-info task-destinationSmb"
              {% if not t or (t and t.destination_smb != 1) %} style="display:none;" {% endif %}>
@@ -224,7 +224,7 @@
                 <div class="select is-fullwidth">
                     <select class="input" name="smb_destination" data-smb="task-smb-connection">
                         <option {% if not t or not t.destination_smb_conn or not t.destination_smb_conn.connection.id %}selected="selected"{% endif %}
-                                value="none">
+                                                                                                                                  value="none">
                             Choose one
                         </option>
                         {% for s in conn %}
@@ -250,7 +250,7 @@
                 <label for="task_overwrite_smb_if_exists">Overwrite if exists?</label>
                 <input type="hidden"
                        name="task_overwrite_smb"
-                       value="{% if not t or t.destination_smb_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                       value="{%- if not t or t.destination_smb_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
         </div>
     </article>
@@ -263,7 +263,7 @@
         <label for="task_save_ftp">Upload files to FTP server (network file path)?</label>
         <input type="hidden"
                name="task_save_ftp"
-               value="{% if t and t.destination_ftp == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if t and t.destination_ftp == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <article class="p-0 message box is-info task-destinationFtp"
              {% if not t or (t and t.destination_ftp != 1) %} style="display:none;" {% endif %}>
@@ -276,7 +276,7 @@
                 <div class="select is-fullwidth">
                     <select class="input" name="ftp_destination" data-ftp="task-ftp-connection">
                         <option {% if not t or not t.destination_ftp_conn or not t.destination_ftp_conn.connection.id %}selected="selected"{% endif %}
-                                value="none">
+                                                                                                                                  value="none">
                             Choose one
                         </option>
                         {% for s in conn %}
@@ -302,7 +302,7 @@
                 <label for="task_overwrite_ftp_if_exists">Overwrite if exists?</label>
                 <input type="hidden"
                        name="task_overwrite_ftp"
-                       value="{% if not t or t.destination_ftp_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                       value="{%- if not t or t.destination_ftp_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
         </div>
     </article>
@@ -316,7 +316,7 @@
         <label for="send_completion_email_check">Send Success Email?</label>
         <input type="hidden"
                name="task_send_completion_email"
-               value="{% if t and t.email_completion == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if t and t.email_completion == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <article class="p-0 message box is-info task-destinationEmail"
              {% if not t or (t and t.email_completion != 1) %} style="display:none;" {% endif %}>
@@ -333,9 +333,7 @@
             </div>
             <div class="field">
                 <label class="label">Message</label>
-                <textarea class="textarea"
-                  name="completion_email_msg"
-                              autocomplete="off">{{ t.email_completion_message or '' }}</textarea>
+                <textarea class="textarea" name="completion_email_msg" autocomplete="off">{{ t.email_completion_message or '' }}</textarea>
             </div>
             <!-- include run log? check -->
             <div class="field">
@@ -346,7 +344,7 @@
                 <label for="send_completion_email_log_check">Include run logs?</label>
                 <input type="hidden"
                        name="task_send_completion_email_log"
-                       value="{% if t and t.email_completion_log == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                       value="{%- if t and t.email_completion_log == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
             <!-- attach file to email? -->
             <div class="field">
@@ -359,7 +357,7 @@
                 </label>
                 <input type="hidden"
                        name="task_send_output"
-                       value="{% if t and t.email_completion_file == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                       value="{%- if t and t.email_completion_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
             <!-- don't send email if file is empty? -->
             <div class="field">
@@ -372,7 +370,7 @@
                 </label>
                 <input type="hidden"
                        name="task_dont_send_empty"
-                       value="{% if t and t.email_completion_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                       value="{%- if t and t.email_completion_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
             <!-- embed file in email? -->
             <div class="field">
@@ -385,7 +383,7 @@
                 </label>
                 <input type="hidden"
                        name="task_embed_output"
-                       value="{% if t and t.email_completion_file_embed == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+                       value="{%- if t and t.email_completion_file_embed == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
         </div>
     </article>
@@ -401,7 +399,7 @@
         </label>
         <input type="hidden"
                name="task_send_error_email"
-               value="{% if t and t.email_error == 1 -%} 1 {%- else -%} 0 {%- endif %}"/>
+               value="{%- if t and t.email_error == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
     </div>
     <article class="p-0 message box is-info task-destinationErrorEmail"
              {% if not t or (t and t.email_error != 1) %} style="display:none;" {% endif %}>
@@ -446,6 +444,6 @@
         </label>
         <input type="hidden"
                name="task-ooff"
-               value="{% if not t or t.enabled == 1 -%}1{%- else -%}0{%- endif %}"/>
+               value="{%- if not t or t.enabled == 1 -%}1{%- else -%}0{%- endif -%}"/>
     </div>
 </div>
