@@ -2,6 +2,9 @@
 
 
 import json
+import platform
+import re
+import subprocess
 
 import requests
 from flask import Blueprint
@@ -15,6 +18,34 @@ from web.model import Task, TaskLog
 from web.web import submit_executor
 
 admin_bp = Blueprint("admin_bp", __name__)
+
+
+@admin_bp.route("/admin/version")
+@login_required
+def version() -> str:
+    """Check installed version."""
+    if platform.system() == "Linux":
+
+        installed_version = None
+        upgrade_version = None
+
+        out = subprocess.check_output(["apt-cache", "policy", "atlas-hub"])
+        installed = re.search(r"Installed:\s(.+?)$", out.decode("utf8"), flags=re.M)
+        upgrade = re.search(r"Candidate:\s(.+?)$", out.decode("utf8"), flags=re.M)
+
+        if installed:
+            installed_version = installed.group(1)
+
+        if upgrade:
+            upgrade_version = upgrade.group(1)
+
+        return render_template(
+            "pages/version.html.j2",
+            installed_version=installed_version,
+            upgrade_version=upgrade_version,
+        )
+
+    return ""
 
 
 @admin_bp.route("/admin")

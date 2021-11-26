@@ -1,7 +1,11 @@
 {% extends "layout.html.j2" %}
 
 {% block body %}
-    <h1 class="title is-1">Admin Area</h1>
+    <h1 class="title is-1">
+        Admin Area
+        <div class="em-ajaxContent is-inline is-pulled-right"
+             data-src="{{ url_for('admin_bp.version') }}"></div>
+    </h1>
     <div class="box">
         <h2 class="title is-2">App Tasks</h2>
         <div class="field has-addons">

@@ -21,7 +21,7 @@ docker run --rm -it -p 8080:80 -v $(PWD):/atlas ubuntu:latest /bin/bash
 apt-get update; \
 apt-get install dh-make devscripts -y; \
 cd /atlas; \
-VERSION=0.0.1-rc.1; \
+VERSION=0.0.1-rc.3; \
 apt-get remove atlas-hub -y 2>/dev/null; \
 rm -r "atlas-hub-$VERSION" 2>/dev/null; \
 cp -r "atlas-hub-<version>" "atlas-hub-$VERSION" \

@@ -14,7 +14,7 @@ from flask import Blueprint
 from flask import current_app as app
 from flask import jsonify
 from flask_login import current_user, login_required
-from sqlalchemy import and_, or_, text
+from sqlalchemy import and_, or_
 
 from web import db, executor, redis_client
 from web.model import Project, Task, TaskLog

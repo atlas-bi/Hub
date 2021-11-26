@@ -26,7 +26,7 @@
         {% endif %}
     </h1>
     <form method="post"
-          action="{% if p -%}{{ url_for('project_bp.edit_project', project_id=p.id) }}{%- else -%}{{ url_for('project_bp.new_project') }}{%- endif %}"
+          action="{%- if p -%}{{ url_for('project_bp.edit_project', project_id=p.id) }}{%- else -%}{{ url_for('project_bp.new_project') }}{%- endif -%}"
           id="project-new">
         <div class="box">
             <div class="field">
