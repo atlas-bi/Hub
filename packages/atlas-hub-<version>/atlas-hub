@@ -130,6 +130,12 @@ EOF
   exit
 }
 
+upgrade() {
+  apt update
+  apt install atlas-hub
+}
+
+
 cleanup() {
   trap - SIGINT SIGTERM ERR EXIT
 }
@@ -144,6 +150,7 @@ parse_params() {
     case "${1-}" in
     -h | --help) usage;break ;;
     -b | --backup) backup;break ;;
+    -u | --upgrade) upgrade;break ;;
 #    --no-color) NO_COLOR=1 ;;
     -c | --configure) configure;break ;; # example flag
     -?*) die "${RED}${BOLD}Unknown option: $1. Run $(basename ${BASH_SOURCE[0]}) -h for help.${RESET}";break ;;
