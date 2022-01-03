@@ -37,7 +37,7 @@ def one_task_file_send_sftp(task_id: int, file_id: int) -> Response:
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         output = requests.get(
-            f"{app.config['RUNNER_HOST']}/send_sftp/{task_id}/{my_file.job_id}/{file_id}"
+            f"{app.config['RUNNER_HOST']}/send_sftp/{my_file.job_id}/{file_id}"
         ).json()
         if output.get("error"):
             raise ValueError(output.get("error"))
@@ -99,7 +99,7 @@ def one_task_file_send_smb(task_id: int, file_id: int) -> Response:
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         output = requests.get(
-            f"{app.config['RUNNER_HOST']}/send_smb/{task_id}/{my_file.job_id}/{file_id}"
+            f"{app.config['RUNNER_HOST']}/send_smb/{my_file.job_id}/{file_id}"
         ).json()
         if output.get("error"):
             raise ValueError(output.get("error"))
