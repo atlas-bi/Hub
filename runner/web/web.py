@@ -96,7 +96,7 @@ def send_ftp(task_id: int, run_id: int, file_id: int) -> dict:
         return jsonify({"error": str(e)})
 
 
-@web_bp.route("/api/send_sftp/<task_id>/<run_id>/<file_id>")
+@web_bp.route("/api/send_sftp/<run_id>/<file_id>")
 def send_sftp(run_id: int, file_id: int) -> dict:
     """Send file to SFPT server specified in the task.
 
@@ -143,7 +143,7 @@ def send_sftp(run_id: int, file_id: int) -> dict:
         return jsonify({"error": str(e)})
 
 
-@web_bp.route("/api/send_smb/<task_id>/<run_id>/<file_id>")
+@web_bp.route("/api/send_smb/<run_id>/<file_id>")
 def send_smb(run_id: int, file_id: int) -> dict:
     """Send file to SMB server specified in the task.
 
