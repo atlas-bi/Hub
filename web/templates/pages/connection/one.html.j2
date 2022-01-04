@@ -97,6 +97,7 @@
             </a>
         </p>
     </div>
+    {% if connection.address or connection.primary_contact or connection.primary_contact or connection.primary_contact_email or connection.primary_contact_phone %}
     <div class="box">
         <h2 class="title is-2">Contact Information</h2>
         <div class="content">
@@ -119,6 +120,7 @@
             {% if connection.primary_contact_phone %}Phone: {{ connection.primary_contact_phone }}{% endif %}
         </div>
     </div>
+    {% endif %}
     {% if connection.database|length > 0 %}
         <div class="box">
             <h2 class="title is-2">Database Connections</h2>

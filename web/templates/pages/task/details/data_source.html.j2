@@ -1,3 +1,4 @@
+{% if t.source_type_id in [1,2,3,4] %}
 <div class="box">
     {% if t.source_type_id == 1 and  t.source_database_conn %}
         <!-- source database -->
@@ -121,3 +122,4 @@
         <pre class="box"><code class="language-bash">{{ t.source_ssh_conn.username }}@{{ t.source_ssh_conn.address }}:{{ t.source_ssh_conn.port or '22' }}</code></pre>
     {% endif %}
 </div>
+{% endif %}
