@@ -35,6 +35,8 @@ gulp.task('sass', function() {
     .pipe(
       purgecss({
         content: ['web/static/lib/**/*.js', 'web/static/js/**/*.js', 'web/templates/**/*.html.j2', 'runner/templates/**/*.html.j2', 'scheduler/templates/**/*.html.j2'],
+        safelist: ['has-text-success', 'mr-3', 'has-text-warning'],
+        whitelist: ['has-text-success', 'mr-3', 'has-text-warning']
       })
     )
     .pipe(autoprefexer({
