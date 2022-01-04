@@ -44,39 +44,9 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('web/static/css/'))
 });
 
-gulp.task('js', function() {
-  return gulp.src(["web/static/lib/codemirror/codemirror.js",
-    "web/static/lib/codemirror/gfm.js",
-    "web/static/lib/codemirror/overlay.js",
-    "web/static/lib/codemirror/sql.js",
-    "web/static/lib/codemirror/python.js",
-    "web/static/lib/codemirror/matchbrackets.js",
-    "web/static/lib/codemirror/simplescrollbars.js",
-    "web/static/lib/flatpickr/flatpickr.js",
-    "web/static/js/base.js",
-    "web/static/js/ajax.js",
-    "web/static/lib/prism/prism.js",
-    "web/static/lib/prism/prism_line_numbers.js",
-    "web/static/js/task.js",
-    "web/static/lib/table/table.js",
-    "web/static/lib/table/logs.js",
-    "web/static/lib/scroll/scroll.js",
-    "web/static/js/password.js",
-    "web/static/js/project.js",
-    "web/static/js/tabs.js",
-    "web/static/js/executor_status.js",
-    "web/static/js/flashes.js",
-    "web/static/js/functions.js",
-    "web/static/js/connection.js"])
-    .pipe(concat('scripts.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('web/static/js_build/'))
-});
-
-gulp.task('build', gulp.parallel('font:inter','font:rasa', 'js', gulp.series('fontawesome','sass')));
+gulp.task('build', gulp.parallel('font:inter','font:rasa', gulp.series('fontawesome','sass')));
 
 gulp.task('watch', gulp.series('build', function (cb) {
-    gulp.watch('web/static/js/**/*.js', gulp.series('js', 'sass'));
     gulp.watch('web/static/assets/**/*.scss', gulp.series('sass'));
     gulp.watch('web/fonts/fontawesome/**/*.scss', gulp.series('fontawesome','sass'));
     cb();
