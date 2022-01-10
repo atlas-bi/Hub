@@ -29,15 +29,15 @@ def version() -> str:
         installed_version = None
         upgrade_version = None
 
-        out = subprocess.check_output(["apt-cache", "policy", "atlas-hub"])
-        installed = re.search(r"Installed:\s(.+?)$", out.decode("utf8"), flags=re.M)
-        upgrade = re.search(r"Candidate:\s(.+?)$", out.decode("utf8"), flags=re.M)
+        # out = subprocess.check_output("apt-cache policy atlas-hub", shell=True)
+        # installed = re.search(r"Installed:\s(.+?)$", out.decode("utf8"), flags=re.M)
+        # upgrade = re.search(r"Candidate:\s(.+?)$", out.decode("utf8"), flags=re.M)
 
-        if installed:
-            installed_version = installed.group(1)
+        # if installed:
+        #     installed_version = installed.group(1)
 
-        if upgrade:
-            upgrade_version = upgrade.group(1)
+        # if upgrade:
+        #     upgrade_version = upgrade.group(1)
 
         return render_template(
             "pages/version.html.j2",
