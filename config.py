@@ -112,7 +112,7 @@ class Config:
     MIGRATIONS = "migrations"
 
     # saml config
-    BASE_DIR = Path(__file__).resolve().parent.parent
+    BASE_DIR = Path(__file__).resolve().parent
     BASE_URL = "https://automationhub.MyOrg.net/"
     # pylint: disable=C0301
     SAML_CONFIG = {
