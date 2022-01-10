@@ -514,10 +514,12 @@ def disabled_scheduled_tasks(*args: Any) -> str:
 def run_errored_tasks(*args: Any) -> str:
     """Running all errored tasks."""  # noqa: D401
     tasks = Task.query.filter_by(status_id=2, enabled=1).all()
+
     try:
         for task in tasks:
-            send_task_to_runner(task.id)
-        return "Started running all errored tasks."
+            if task.project.cron == 1 or task.project.intv == 1:
+                send_task_to_runner(task.id)
+        return "Started running all errored tasks that have a schedule."
     except ValueError:
         return "Failed to run errored tasks, Scheduler is offline."
 
