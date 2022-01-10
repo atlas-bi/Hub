@@ -128,6 +128,7 @@ class Runner:
 
         # load file/ run query/ etc to get some sort of data or process something.
         self.source_loader = SourceCode(self.task, self.run_id, self.param_loader)
+        self.source_files = []
         self.__get_source()
 
         # any data post-processing
