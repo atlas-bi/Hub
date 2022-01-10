@@ -691,10 +691,7 @@ class Runner:
                         self.task.email_completion_dont_send_empty_file == 1
                         and output_file
                         # if query and data is blank, or other types and file is 0
-                        and (
-                            (self.task.source_type_id == 1)
-                            or os.path.getsize(output_file) == 0
-                        )
+                        and os.path.getsize(output_file) == 0
                     ):
                         empty = 1
 
