@@ -203,7 +203,7 @@ class Smb:
         # send back contents
 
         with tempfile.NamedTemporaryFile(
-            mode="w+", delete=False, dir=self.dir
+            mode="wb+", delete=False, dir=self.dir
         ) as data_file:
             for data in load_data(open_file_for_read):
                 if (
@@ -220,7 +220,7 @@ class Smb:
                     writer.writerows(csv_reader)
 
                 else:
-                    data_file.write(data.decode())
+                    data_file.write(data)
 
             original_name = str(self.dir.joinpath(file_name.split("/")[-1]))
             if os.path.islink(original_name):
