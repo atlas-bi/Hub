@@ -80,6 +80,12 @@ class Ssh:
         self.__connect()
         timeout = 600
         try:
+            RunnerLog(
+                self.task,
+                self.run_id,
+                19,
+                "Starting command.",
+            )
             # pylint: disable=W0612
             stdin, stdout, stderr = self.session.exec_command(  # noqa: S601
                 self.command, timeout=timeout
@@ -101,13 +107,13 @@ class Ssh:
                 got_chunk = False
                 readq, _, _ = select.select([stdout.channel], [], [], timeout)
 
-                for c in readq:
-                    if c.recv_ready():
-                        stdout_data += stdout.channel.recv(len(c.in_buffer))
+                for chunk in readq:
+                    if chunk.recv_ready():
+                        stdout_data += stdout.channel.recv(len(chunk.in_buffer))
                         got_chunk = True
-                    if c.recv_stderr_ready():
+                    if chunk.recv_stderr_ready():
                         stderr_data += stderr.channel.recv_stderr(
-                            len(c.in_stderr_buffer)
+                            len(chunk.in_stderr_buffer)
                         )
                         got_chunk = True
 
