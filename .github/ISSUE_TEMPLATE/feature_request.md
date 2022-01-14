@@ -13,8 +13,8 @@ labels: enhancement
     Have you...
 -->
 
-- [ ] I've searched the [issues](https://github.com/atlas-bi/atlas-bi-library/issues)
-- [ ] I've read the [docs](https://www.atlas.bi/docs/bi_library/)
+- [ ] I've searched the [issues](https://github.com/atlas-bi/atlas-automation-hub/issues)
+- [ ] I've read the [docs](https://www.atlas.bi/docs/automation-hub/)
 
 ## Feature Request
 

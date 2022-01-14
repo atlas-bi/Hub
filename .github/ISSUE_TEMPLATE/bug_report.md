@@ -11,9 +11,9 @@ labels: bug
     Have you...
 -->
 
-- [ ] I'm on the [latest version](https://github.com/atlas-bi/atlas-bi-library)
-- [ ] I've searched the [issues](https://github.com/atlas-bi/atlas-bi-library/issues)
-- [ ] I've read the [docs](https://www.atlas.bi/docs/bi_library/)
+- [ ] I'm on the [latest version](https://github.com/atlas-bi/atlas-automation-hub)
+- [ ] I've searched the [issues](https://github.com/atlas-bi/atlas-automation-hub/issues)
+- [ ] I've read the [docs](https://www.atlas.bi/docs/automation-hub/)
 
 ## System Info
  - Browser: e.g. IE 11
