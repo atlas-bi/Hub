@@ -263,7 +263,7 @@ function debounce(func, wait, immediate) {
 
 
     var nav, left, right;
-
+    var drag = false;
     for (var x = 0; x < group.length; x++) {
 
 
@@ -286,7 +286,10 @@ function debounce(func, wait, immediate) {
 
       nav = level.cloneNode();
       nav.classList.add("log-group");
-      nav.addEventListener("click", function(e){
+      nav.addEventListener("mousedown", function(e){drag=false;})
+      nav.addEventListener("mousemove", function(e){drag=true;})
+      nav.addEventListener("mouseup", function(e){
+        if (drag === true){return !1;}
         collapses=this.querySelectorAll('div[log_id]');
         var angle = this.querySelector('.icon i.fa-angle-right, .icon i.fa-angle-down')
 
