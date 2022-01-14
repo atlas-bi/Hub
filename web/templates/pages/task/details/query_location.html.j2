@@ -2,26 +2,28 @@
     <div class="box">
         <h2 class="title is-2">Query</h2>
         <h4 class="title is-4">Settings</h4>
-        <div class="content">
-            <ul>
-                <li>
-                    {% if t.source_query_include_header !=1 %}
-                        Do not include
-                    {% else %}
-                        Include
-                    {% endif %}
-                    query headers
-                </li>
-                <li>
-                    {% if t.enable_source_cache ==1 %}
-                        Query cache enabled
-                    {% else %}
-                        Query cache not enabled
-                    {% endif %}
-                </li>
-                {% if t.source_require_sql_output ==1 %}<li>SQL output is required for task to be successful</li>{% endif %}
-            </ul>
-        </div>
+        {% if t.source_type_id == 1 %}
+            <div class="content">
+                <ul>
+                    <li>
+                        {% if t.source_query_include_header !=1 %}
+                            Do not include
+                        {% else %}
+                            Include
+                        {% endif %}
+                        query headers
+                    </li>
+                    <li>
+                        {% if t.enable_source_cache ==1 %}
+                            Query cache enabled
+                        {% else %}
+                            Query cache not enabled
+                        {% endif %}
+                    </li>
+                    {% if t.source_require_sql_output ==1 %}<li>SQL output is required for task to be successful</li>{% endif %}
+                </ul>
+            </div>
+        {% endif %}
         {% if t.source_git and t.source_type_id == 1 and t.source_query_type_id == 1 %}
             <!-- code from git -->
             <div class="content">

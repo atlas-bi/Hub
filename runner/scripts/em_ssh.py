@@ -1,5 +1,7 @@
 """SSH connection handler."""
+import select
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -72,28 +74,64 @@ class Ssh:
         """Run an SSH Command.
 
         First, this will make a connection then run the command
-
+        Some code from https://stackoverflow.com/a/32758464 - thanks!
         :returns: Output from command.
         """
         self.__connect()
-
+        timeout = 600
         try:
+            RunnerLog(
+                self.task,
+                self.run_id,
+                19,
+                "Starting command.",
+            )
             # pylint: disable=W0612
             stdin, stdout, stderr = self.session.exec_command(  # noqa: S601
-                self.command, timeout=5000
+                self.command, timeout=timeout
             )
+
+            channel = stdout.channel
+
+            stdin.close()
+            channel.shutdown_write()
 
             stderr_data = b""
             stdout_data = b""
 
-            while not stdout.channel.exit_status_ready():
-                stdout_data += stdout.channel.recv(1024)
+            while (
+                not channel.closed
+                or channel.recv_ready()
+                or channel.recv_stderr_ready()
+            ):
+                got_chunk = False
+                readq, _, _ = select.select([stdout.channel], [], [], timeout)
 
-            for line in iter(stdout.readline, ""):
-                stdout_data += bytes(line, "utf8")
+                for chunk in readq:
+                    if chunk.recv_ready():
+                        stdout_data += stdout.channel.recv(len(chunk.in_buffer))
+                        got_chunk = True
+                    if chunk.recv_stderr_ready():
+                        stderr_data += stderr.channel.recv_stderr(
+                            len(chunk.in_stderr_buffer)
+                        )
+                        got_chunk = True
 
-            for line in iter(stderr.readline, ""):
-                stderr_data += bytes(line, "utf8")
+                    if (
+                        not got_chunk
+                        and stdout.channel.exit_status_ready()
+                        and not stderr.channel.recv_stderr_ready()
+                        and not stdout.channel.recv_ready()
+                    ):
+                        # indicate that we're not going to read from this channel anymore
+                        stdout.channel.shutdown_read()
+                        # close the channel
+                        stdout.channel.close()
+                        break  # exit as remote side is finished and our buffers are empty
+
+                time.sleep(0.01)
+
+                # timeout after a few minutes
 
             out = stdout_data.decode("utf-8") or "None"
             err = stderr_data.decode("utf-8") or "None"
