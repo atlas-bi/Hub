@@ -11,7 +11,7 @@ import sys
 import time
 import urllib.parse
 from pathlib import Path
-from typing import IO, List
+from typing import IO, List, Optional
 
 import requests
 from flask import current_app as app
@@ -127,6 +127,7 @@ class Runner:
         self.param_loader = ParamLoader(self.task, self.run_id)
 
         # load file/ run query/ etc to get some sort of data or process something.
+        self.query_output_size: Optional[int] = None
         self.source_loader = SourceCode(self.task, self.run_id, self.param_loader)
         self.source_files = []
         self.__get_source()
@@ -215,7 +216,7 @@ class Runner:
 
             if external_db.database_type.id == 1:  # postgres
                 try:
-                    self.source_files = Postgres(
+                    self.query_output_size, self.source_files = Postgres(
                         task=self.task,
                         run_id=self.run_id,
                         connection=em_decrypt(
@@ -234,7 +235,7 @@ class Runner:
 
             elif external_db.database_type.id == 2:  # mssql
                 try:
-                    self.source_files = SqlServer(
+                    self.query_output_size, self.source_files = SqlServer(
                         task=self.task,
                         run_id=self.run_id,
                         connection=em_decrypt(
@@ -566,7 +567,11 @@ class Runner:
 
         for file_counter, this_file in enumerate(self.source_files, 1):
 
-            this_file_size = Path(this_file.name).stat().st_size
+            this_file_size = (
+                self.query_output_size
+                if self.query_output_size is not None
+                else Path(this_file.name).stat().st_size
+            )
 
             # get file name. if no name specified in task setting, then use temp name.
             try:
