@@ -565,6 +565,9 @@ class Runner:
         )
 
         for file_counter, this_file in enumerate(self.source_files, 1):
+
+            this_file_size = Path(this_file.name).stat().st_size
+
             # get file name. if no name specified in task setting, then use temp name.
             try:
                 file_name, file_path, file_hash = File(
@@ -591,36 +594,72 @@ class Runner:
             # store
             # send to sftp
             if self.task.destination_sftp == 1 and self.task.destination_sftp_conn:
-                Sftp(
-                    task=self.task,
-                    run_id=self.run_id,
-                    connection=self.task.destination_sftp_conn,
-                    directory=self.temp_path,
-                ).save(
-                    overwrite=self.task.destination_sftp_overwrite, file_name=file_name
-                )
+                if (
+                    self.task.destination_sftp_dont_send_empty_file == 1
+                    and this_file_size == 0
+                ):
+                    RunnerLog(
+                        self.task,
+                        self.run_id,
+                        8,
+                        f"Skipping SFTP, file is empty.",
+                    )
+                else:
+                    Sftp(
+                        task=self.task,
+                        run_id=self.run_id,
+                        connection=self.task.destination_sftp_conn,
+                        directory=self.temp_path,
+                    ).save(
+                        overwrite=self.task.destination_sftp_overwrite,
+                        file_name=file_name,
+                    )
 
             # send to ftp
             if self.task.destination_ftp == 1 and self.task.destination_ftp_conn:
-                Ftp(
-                    task=self.task,
-                    run_id=self.run_id,
-                    connection=self.task.destination_ftp_conn,
-                    directory=self.temp_path,
-                ).save(
-                    overwrite=self.task.destination_ftp_overwrite, file_name=file_name
-                )
+                if (
+                    self.task.destination_ftp_dont_send_empty_file == 1
+                    and this_file_size == 0
+                ):
+                    RunnerLog(
+                        self.task,
+                        self.run_id,
+                        8,
+                        f"Skipping FTP, file is empty.",
+                    )
+                else:
+                    Ftp(
+                        task=self.task,
+                        run_id=self.run_id,
+                        connection=self.task.destination_ftp_conn,
+                        directory=self.temp_path,
+                    ).save(
+                        overwrite=self.task.destination_ftp_overwrite,
+                        file_name=file_name,
+                    )
 
             # save to smb
             if self.task.destination_smb == 1 and self.task.destination_smb_conn:
-                Smb(
-                    task=self.task,
-                    run_id=self.run_id,
-                    connection=self.task.destination_smb_conn,
-                    directory=self.temp_path,
-                ).save(
-                    overwrite=self.task.destination_smb_overwrite, file_name=file_name
-                )
+                if (
+                    self.task.destination_smb_dont_send_empty_file == 1
+                    and this_file_size == 0
+                ):
+                    RunnerLog(
+                        self.task,
+                        self.run_id,
+                        8,
+                        f"Skipping SMB, file is empty.",
+                    )
+                else:
+                    Smb(
+                        task=self.task,
+                        run_id=self.run_id,
+                        connection=self.task.destination_smb_conn,
+                        directory=self.temp_path,
+                    ).save(
+                        overwrite=self.task.destination_smb_overwrite,
+                        file_name=file_name,
+                    )
 
             # save historical copy
             smb_path = Smb(

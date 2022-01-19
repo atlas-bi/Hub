@@ -61,6 +61,11 @@
                     <div class="message-body">This task will attempt to overwrite files with the same name.</div>
                 </article>
             {% endif %}
+            {% if t.destination_sftp_dont_send_empty_file == 1 %}
+                <article class="message is-warning">
+                    <div class="message-body">This task will not upload empty files.</div>
+                </article>
+            {% endif %}
             <a title="open connection"
                class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_sftp_conn.connection.id) }}">
@@ -82,6 +87,11 @@
                     <div class="message-body">This task will attempt to overwrite files with the same name.</div>
                 </article>
             {% endif %}
+            {% if t.destination_ftp_dont_send_empty_file == 1 %}
+                <article class="message is-warning">
+                    <div class="message-body">This task will not upload empty files.</div>
+                </article>
+            {% endif %}
             <a title="open connection"
                class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.destination_ftp_conn.connection.id) }}">
@@ -101,6 +111,11 @@
             {% if t.destination_smb_overwrite == 1 %}
                 <article class="message is-warning">
                     <div class="message-body">This task will attempt to overwrite files with the same name.</div>
+                </article>
+            {% endif %}
+            {% if t.destination_smb_dont_send_empty_file == 1 %}
+                <article class="message is-warning">
+                    <div class="message-body">This task will not upload empty files.</div>
                 </article>
             {% endif %}
             <a title="open connection"

@@ -724,14 +724,17 @@ class Task(db.Model):
     destination_sftp: Optional[int] = None
     destination_sftp_overwrite: Optional[int] = None
     destination_sftp_id: Optional[int] = None
+    destination_sftp_dont_send_empty_file: Optional[int] = None
 
     destination_ftp: Optional[int] = None
     destination_ftp_overwrite: Optional[int] = None
     destination_ftp_id: Optional[int] = None
+    destination_ftp_dont_send_empty_file: Optional[int] = None
 
     destination_smb: Optional[int] = None
     destination_smb_overwrite: Optional[int] = None
     destination_smb_id: Optional[int] = None
+    destination_smb_dont_send_empty_file: Optional[int] = None
 
     file_gpg: Optional[int] = None
     file_gpg_id: Optional[int] = None
@@ -903,12 +906,15 @@ class Task(db.Model):
     destination_sftp_id = db.Column(
         db.Integer, db.ForeignKey(ConnectionSftp.id), nullable=True, index=True
     )
+    destination_sftp_dont_send_empty_file = db.Column(db.Integer, nullable=True)
+
     # save to ftp server
     destination_ftp = db.Column(db.Integer, nullable=True, index=True)
     destination_ftp_overwrite = db.Column(db.Integer, nullable=True)
     destination_ftp_id = db.Column(
         db.Integer, db.ForeignKey(ConnectionFtp.id), nullable=True, index=True
     )
+    destination_ftp_dont_send_empty_file = db.Column(db.Integer, nullable=True)
 
     # save to smb server
     destination_smb = db.Column(db.Integer, nullable=True, index=True)
@@ -916,6 +922,7 @@ class Task(db.Model):
     destination_smb_id = db.Column(
         db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True, index=True
     )
+    destination_smb_dont_send_empty_file = db.Column(db.Integer, nullable=True)
 
     file_gpg = db.Column(db.Integer, nullable=True, index=True)
     file_gpg_id = db.Column(

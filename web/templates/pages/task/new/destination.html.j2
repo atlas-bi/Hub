@@ -191,6 +191,18 @@
             </div>
             <div class="field">
                 <input class="is-checkradio is-info"
+                       id="task_sftp_dont_send_empty"
+                       type="checkbox"
+                       {% if t and t.destination_sftp_dont_send_empty_file == 1 %}checked="checked"{% endif %}/>
+                <label for="task_sftp_dont_send_empty">
+                    Don't upload if file is empty?
+                </label>
+                <input type="hidden"
+                       name="task_sftp_dont_send_empty"
+                       value="{%- if t and t.destination_sftp_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
+            </div>
+            <div class="field">
+                <input class="is-checkradio is-info"
                        id="task_overwrite_sftp_if_exists"
                        type="checkbox"
                        {% if not t or t.destination_sftp_overwrite == 1 %}checked="checked"{% endif %}/>
@@ -244,6 +256,18 @@
             </div>
             <div class="field">
                 <input class="is-checkradio is-info"
+                       id="task_smb_dont_send_empty"
+                       type="checkbox"
+                       {% if t and t.destination_smb_dont_send_empty_file == 1 %}checked="checked"{% endif %}/>
+                <label for="task_smb_dont_send_empty">
+                    Don't upload if file is empty?
+                </label>
+                <input type="hidden"
+                       name="task_smb_dont_send_empty"
+                       value="{%- if t and t.destination_smb_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
+            </div>
+            <div class="field">
+                <input class="is-checkradio is-info"
                        id="task_overwrite_smb_if_exists"
                        type="checkbox"
                        {% if not t or t.destination_smb_overwrite == 1 %}checked="checked"{% endif %}/>
@@ -293,6 +317,18 @@
                     {% include "pages/task/dest/ftp_dest.html.j2" %}
 
                 {% endif %}
+            </div>
+            <div class="field">
+                <input class="is-checkradio is-info"
+                       id="task_ftp_dont_send_empty"
+                       type="checkbox"
+                       {% if t and t.destination_ftp_dont_send_empty_file == 1 %}checked="checked"{% endif %}/>
+                <label for="task_ftp_dont_send_empty">
+                    Don't upload if file is empty?
+                </label>
+                <input type="hidden"
+                       name="task_ftp_dont_send_empty"
+                       value="{%- if t and t.destination_ftp_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
             </div>
             <div class="field">
                 <input class="is-checkradio is-info"

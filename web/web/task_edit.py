@@ -148,12 +148,21 @@ def task_new(project_id: int) -> Union[str, Response]:
         destination_sftp=form.get("task_save_sftp", 0, type=int),
         destination_sftp_id=form.get("task-destination-sftp", None, type=int),
         destination_sftp_overwrite=form.get("task_overwrite_sftp", None, type=int),
+        destination_sftp_dont_send_empty_file=form.get(
+            "task_sftp_dont_send_empty", 0, type=int
+        ),
         destination_ftp=form.get("task_save_ftp", 0, type=int),
         destination_ftp_id=form.get("task-destination-ftp", None, type=int),
         destination_ftp_overwrite=form.get("task_overwrite_ftp", None, type=int),
+        destination_ftp_dont_send_empty_file=form.get(
+            "task_ftp_dont_send_empty", 0, type=int
+        ),
         destination_smb=form.get("task_save_smb", 0, type=int),
         destination_smb_id=form.get("task-destination-smb", None, type=int),
         destination_smb_overwrite=form.get("task_overwrite_smb", None, type=int),
+        destination_smb_dont_send_empty_file=form.get(
+            "task_smb_dont_send_empty", 0, type=int
+        ),
         email_completion=form.get("task_send_completion_email", 0, type=int),
         email_completion_recipients=form.get("completionEmailRecip", "", type=str),
         email_completion_message=form.get("completion_email_msg", "", type=str),
@@ -440,12 +449,21 @@ def task_edit_post(task_id: int) -> Response:
             destination_sftp=form.get("task_save_sftp", 0, type=int),
             destination_sftp_id=form.get("task-destination-sftp", None, type=int),
             destination_sftp_overwrite=form.get("task_overwrite_sftp", None, type=int),
+            destination_sftp_dont_send_empty_file=form.get(
+                "task_sftp_dont_send_empty", 0, type=int
+            ),
             destination_ftp=form.get("task_save_ftp", 0, type=int),
             destination_ftp_id=form.get("task-destination-ftp", None, type=int),
             destination_ftp_overwrite=form.get("task_overwrite_ftp", None, type=int),
+            destination_ftp_dont_send_empty_file=form.get(
+                "task_ftp_dont_send_empty", 0, type=int
+            ),
             destination_smb=form.get("task_save_smb", 0, type=int),
             destination_smb_id=form.get("task-destination-smb", None, type=int),
             destination_smb_overwrite=form.get("task_overwrite_smb", None, type=int),
+            destination_smb_dont_send_empty_file=form.get(
+                "task_smb_dont_send_empty", 0, type=int
+            ),
             email_completion=form.get("task_send_completion_email", 0, type=int),
             email_completion_recipients=form.get("completionEmailRecip", "", type=str),
             email_completion_message=form.get("completion_email_msg", "", type=str),
