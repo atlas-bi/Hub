@@ -32,7 +32,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="my-3 p-0 box em-codeBox line-numbers" style="height:500px;">
+        <div class="my-3 p-0 box em-codeBox line-numbers" id="git_code_{{ rand }}" style="height:500px;">
             <div ss-container="ss-container" class="ss-preview" style="height:100%">
                 <pre>
 <code class="language-{{ language or 'sql' }}">{{ code }}</code>
@@ -40,7 +40,7 @@
             </div>
         </div>
         <script>
-                    var readyStateCheckInterval{{ rand }} = setInterval(function() {
+                 (function(){   var readyStateCheckInterval{{ rand }} = setInterval(function() {
                         if (document.readyState === "complete") {
                             clearInterval(readyStateCheckInterval{{ rand }});
 
@@ -72,6 +72,7 @@
                               };
                         }
                     }, 10);
+                 })()
         </script>
     {% endwith %}
 {% endif %}
