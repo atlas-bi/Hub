@@ -115,4 +115,4 @@ class SqlServer:
         if self.task.source_require_sql_output == 1 and self.row_count == 0:
             raise ValueError("SQL output is required but no records returned.")
 
-        return [data_file]
+        return self.row_count, [data_file]
