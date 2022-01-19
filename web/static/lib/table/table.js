@@ -99,6 +99,7 @@
         r[++j] = '<div class="box">';
     }
       if(!el.classList.contains("no-tools")){
+        var ticks = new Date().getTime();
         r[++j] =
           '<div class="em-tableTools">'
           + '<div class="field is-grouped">'
@@ -107,7 +108,7 @@
           + '<p class="control"><button class="button em-tableCopy" title="copy table"><span class="icon"><i class="fas fa-copy"></i></span><span>Copy</span></button></p>'
           + '<p class="control"><button class="button em-tableSave" title="download table"><span class="icon"><i class="fas fa-download"></i></span><span>Download</span></button></p>'
           + '</div>'
-          + '<div class="field"><p class="control ml-2 mr-0 mt-2"><input id="reload-switch-' + j + '" type="checkbox" class="switch is-rounded is-info"><label for="reload-switch-' + j + '">Auto Refresh</label><p></div>'
+          + '<div class="field"><p class="control ml-2 mr-0 mt-2"><input id="reload-switch-' + ticks + '" type="checkbox" class="switch is-rounded is-info"><label for="reload-switch-' + ticks + '">Auto Refresh</label><p></div>'
           + '</div></div>';
 
           }
