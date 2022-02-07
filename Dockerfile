@@ -3,7 +3,7 @@ FROM python:3.9
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
 	PYTHONUNBUFFERED=1 \
-    REMOTE=https://github.com/Riverside-Healthcare/extract_management.git
+    REMOTE=https://github.com/atlas-bi/atlas-automation-hub.git
 
 RUN apt-get update -qq \
      && apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config postgresql postgresql-contrib > /dev/null
