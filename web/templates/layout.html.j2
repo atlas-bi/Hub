@@ -3,7 +3,7 @@
     {% cache None %}
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="noindex, nofollow" />
     <meta content="Atlas Automation Hub, running tasks on schedule."
           name="description"/>
     <meta content="Christopher Pickering" name="author"/>
@@ -28,47 +28,44 @@
         <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
 {% endcache %}
-{% assets "js_search" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
 <title>Atlas Automation Hub - {{ title }}</title>
 <link rel="preload"
-      href="/static/fonts/inter/files/inter-latin-400-normal.woff2"
+      href="{{ url_for('static', filename='fonts/inter/files/inter-latin-400-normal.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
 <link rel="preload"
-      href="/static/fonts/inter/files/inter-latin-500-normal.woff2"
+      href="{{ url_for('static', filename='fonts/inter/files/inter-latin-500-normal.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
 <link rel="preload"
-      href="/static/fonts/inter/files/inter-latin-600-normal.woff2"
+      href="{{ url_for('static', filename='fonts/inter/files/inter-latin-600-normal.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
 <link rel="preload"
-      href="/static/fonts/inter/files/inter-latin-300-normal.woff2"
+      href="{{ url_for('static', filename='fonts/inter/files/inter-latin-300-normal.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
 <link rel="preload"
-      href="/static/fonts/inter/files/inter-latin-700-normal.woff2"
+      href="{{ url_for('static', filename='fonts/inter/files/inter-latin-700-normal.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
 <link rel="preload"
-      href="/static/fonts/rasa/files/rasa-latin-600-normal.woff2"
+      href="{{ url_for('static', filename='fonts/rasa/files/rasa-latin-600-normal.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
 <link rel="preload"
-      href="/static/fonts/fontawesome/webfonts/fa-regular-400.woff2"
+      href="{{ url_for('static', filename='fonts/fontawesome/webfonts/fa-regular-400.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
 <link rel="preload"
-      href="/static/fonts/fontawesome/webfonts/fa-solid-900.woff2"
+      href="{{ url_for('static', filename='fonts/fontawesome/webfonts/fa-solid-900.woff2') }}"
       as="font"
       type="font/woff2"
       crossorigin/>
@@ -108,6 +105,9 @@
     {% endblock js %}
 
 </body>
+{% assets "js_search" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% assets "js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}

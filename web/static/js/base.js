@@ -1,10 +1,8 @@
-
-document.addEventListener('click', function(e) {
-  if(e.target.closest('.notification .delete')){
-    el = e.target.closest('.notification');
+document.addEventListener('click', function (e) {
+  if (e.target.closest('.notification .delete')) {
+    var el = e.target.closest('.notification');
     el.parentNode.removeChild(el);
   }
-
 });
 
 var debounce = function debounce(func, wait, immediate) {
@@ -32,9 +30,7 @@ var debounce = function debounce(func, wait, immediate) {
 (function () {
   window.ajaxOn = true;
 
-  var timeOnPage = new Date(),
-    sessionTimerId,
-    analitycsUpdateTimeoutId,
+  var sessionTimerId,
     startPageTimer = function () {
       var sessionTimeout = 2 * 6000;
       sessionTimerId = window.setTimeout(doInactive, sessionTimeout);
@@ -46,38 +42,38 @@ var debounce = function debounce(func, wait, immediate) {
           startPageTimer();
           window.ajaxOn = true;
         })(),
-        500
+        500,
       );
     },
     doInactive = function () {
       window.ajaxOn = false;
     },
     setupPageTimer = function () {
-      document.addEventListener("mousemove", resetPageTimer, false);
-      document.addEventListener("mousedown", resetPageTimer, false);
-      document.addEventListener("keypress", resetPageTimer, false);
-      document.addEventListener("touchmove", resetPageTimer, false);
+      document.addEventListener('mousemove', resetPageTimer, false);
+      document.addEventListener('mousedown', resetPageTimer, false);
+      document.addEventListener('keypress', resetPageTimer, false);
+      document.addEventListener('touchmove', resetPageTimer, false);
       document.addEventListener(
-        "scroll",
+        'scroll',
         resetPageTimer,
         {
           passive: true,
         },
-        false
+        false,
       );
       startPageTimer();
     };
 
   // if document is already loaded
-  if (document.readyState == "complete") {
+  if (document.readyState == 'complete') {
     setupPageTimer();
   }
   // if document has not loaded yet
   window.addEventListener(
-    "load",
+    'load',
     function () {
       setupPageTimer();
     },
-    false
+    false,
   );
 })();

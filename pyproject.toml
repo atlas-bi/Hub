@@ -33,7 +33,8 @@ exclude = '''
 [tool.djlint]
 blank_line_after_tag = "load,extends,include,endblock"
 profile = "jinja"
-ignore = "H011,H021,H023"
+ignore = "H011,H021,H023,H031"
+format_attribute_template_tags = true
 
 [tool.isort]
 profile = "black"

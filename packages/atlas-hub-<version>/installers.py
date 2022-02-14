@@ -84,6 +84,9 @@ class Config(BaseConfig):
 
     if configuration.has_section("MASTER"):
         master = configuration["MASTER"]
+        if "DATABASE" in configuration["MASTER"]:
+            config += f"\n    DATABASE={master['DATABASE']}"
+
         if "MIN_DISK_SPACE" in configuration["MASTER"]:
             config += f"\n    MIN_DISK_SPACE={master['MIN_DISK_SPACE']}"
 

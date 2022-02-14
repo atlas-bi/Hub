@@ -1,7 +1,6 @@
 {
   "author": "Lotus <declininglotus@gmail.com>",
   "description": "Self-host the Inter font in a neatly bundled NPM package.",
-  "gitHead": "136545a8c7a59c170249a46673efedb9c2627c1d",
   "homepage": "https://github.com/fontsource/fontsource/tree/master/packages/inter#readme",
   "keywords": [
     "fontsource",
@@ -22,5 +21,5 @@
     "type": "git",
     "url": "https://github.com/fontsource/fontsource.git"
   },
-  "version": "4.5.0"
+  "version": "4.5.4"
 }

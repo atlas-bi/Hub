@@ -14,7 +14,7 @@ from runner.model import Task
 from runner.scripts.em_messages import RunnerException, RunnerLog
 from runner.scripts.em_params import ParamLoader
 
-urllib3.disable_warnings()
+urllib3.disable_warnings()  # type: ignore
 
 
 class SourceCode:

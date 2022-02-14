@@ -87,7 +87,7 @@ class Postgres:
     def __close(self) -> None:
         self.conn.close()
 
-    def run(self, query: str) -> List[IO[str]]:
+    def run(self, query: str) -> Tuple[int, List[IO[str]]]:
         """Run a sql query.
 
         Data is loaded into a temp file.

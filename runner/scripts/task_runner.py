@@ -607,7 +607,7 @@ class Runner:
                         self.task,
                         self.run_id,
                         8,
-                        f"Skipping SFTP, file is empty.",
+                        "Skipping SFTP, file is empty.",
                     )
                 else:
                     Sftp(
@@ -630,7 +630,7 @@ class Runner:
                         self.task,
                         self.run_id,
                         8,
-                        f"Skipping FTP, file is empty.",
+                        "Skipping FTP, file is empty.",
                     )
                 else:
                     Ftp(
@@ -653,7 +653,7 @@ class Runner:
                         self.task,
                         self.run_id,
                         8,
-                        f"Skipping SMB, file is empty.",
+                        "Skipping SMB, file is empty.",
                     )
                 else:
                     Smb(

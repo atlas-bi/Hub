@@ -12,3 +12,4 @@ paths-ignore:
 - runner/tests
 - scheduler/tests
 - publish
+- web/static/lib

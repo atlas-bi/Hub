@@ -184,7 +184,14 @@ def sub_enable_task(task_id: int) -> None:
     # task only goes to scheduler if not sequence, or first in sequence.
     if task.project and task.project.sequence_tasks == 1:
         # only add job if its first in sequence
-        if (
+        if Task.query.filter(
+            or_(  # type: ignore[type-var]
+                and_(Task.project_id == task.project_id, Task.enabled == 1),
+                Task.id == task_id,
+            )
+        ).order_by(
+            Task.order.asc(), Task.name.asc()  # type: ignore[union-attr]
+        ).first() is not None and (
             Task.query.filter(
                 or_(  # type: ignore[type-var]
                     and_(Task.project_id == task.project_id, Task.enabled == 1),
@@ -193,18 +200,8 @@ def sub_enable_task(task_id: int) -> None:
             )
             .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
             .first()
-            is not None
-            and (
-                Task.query.filter(
-                    or_(  # type: ignore[type-var]
-                        and_(Task.project_id == task.project_id, Task.enabled == 1),
-                        Task.id == task_id,
-                    )
-                )
-                .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
-                .first()
-            ).id
-            == int(task_id)
+        ).id == int(
+            task_id
         ):
             send_task_to_scheduler(task_id)
         else:
