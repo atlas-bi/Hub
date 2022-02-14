@@ -3,8 +3,6 @@
 
 import json
 import platform
-import re
-import subprocess
 
 import requests
 from flask import Blueprint
@@ -16,6 +14,10 @@ from werkzeug import Response
 from web import db
 from web.model import Task, TaskLog
 from web.web import submit_executor
+
+# import re
+# import subprocess
+
 
 admin_bp = Blueprint("admin_bp", __name__)
 
@@ -29,6 +31,7 @@ def version() -> str:
         installed_version = None
         upgrade_version = None
 
+        # this is working on docker ubuntu, but not ubuntu server...
         # out = subprocess.check_output("apt-cache policy atlas-hub", shell=True)
         # installed = re.search(r"Installed:\s(.+?)$", out.decode("utf8"), flags=re.M)
         # upgrade = re.search(r"Candidate:\s(.+?)$", out.decode("utf8"), flags=re.M)

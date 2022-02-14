@@ -127,16 +127,23 @@
             </a>
             <div class="em-ajaxContent is-inline ml-3"
                  data-src="{{ url_for('connection_bp.smb_online', smb_id=t.destination_smb_conn.id) }}">
-                <div class="loader"></div>
+                <div class="loader">
+                </div>
             </div>
             <pre class="box"><code class="language-ini">smb://{{ t.destination_smb_conn.username }}:...@{{ t.destination_smb_conn.server_ip }}({{ t.destination_smb_conn.server_name }})/{{ t.destination_smb_conn.share_name }}/{{ t.destination_smb_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
         {% endif %}
         {% if t.email_completion == 1 %}
             <!-- success emails -->
-            <h3 class="title is-3">Success Email</h3>
+            <h3 class="title is-3">
+                Success Email
+            </h3>
             <div class="content">
                 <ul>
-                    {% if t.email_completion_file == 1 %}<li>Output file attached to email</li>{% endif %}
+                    {% if t.email_completion_file == 1 %}
+                        <li>
+                            Output file attached to email
+                        </li>
+                    {% endif %}
                     {% if t.email_completion_file == 1 and t.email_completion_dont_send_empty_file == 1 %}
                         <li>
                             Will not send with empty files

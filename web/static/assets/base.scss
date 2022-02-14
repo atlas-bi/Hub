@@ -1,12 +1,12 @@
-$fontDir: "/static/fonts/inter/";
-@import "../../../node_modules/@fontsource/inter/scss/mixins";
+$fontDir: '/static/fonts/inter/';
+@import '../../../node_modules/@fontsource/inter/scss/mixins';
 
 @include fontFace(
   $fontName: Inter,
   $weight: 300,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/fonts/inter/files"
+  $fontDir: '/static/fonts/inter/files'
 );
 
 @include fontFace(
@@ -14,7 +14,7 @@ $fontDir: "/static/fonts/inter/";
   $weight: 400,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/fonts/inter/files"
+  $fontDir: '/static/fonts/inter/files'
 );
 
 @include fontFace(
@@ -22,7 +22,7 @@ $fontDir: "/static/fonts/inter/";
   $weight: 500,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/fonts/inter/files"
+  $fontDir: '/static/fonts/inter/files'
 );
 
 @include fontFace(
@@ -30,7 +30,7 @@ $fontDir: "/static/fonts/inter/";
   $weight: 600,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/fonts/inter/files"
+  $fontDir: '/static/fonts/inter/files'
 );
 
 @include fontFace(
@@ -38,48 +38,46 @@ $fontDir: "/static/fonts/inter/";
   $weight: 700,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/fonts/inter/files"
+  $fontDir: '/static/fonts/inter/files'
 );
 
-
-$fontDir: "/static/fonts/rasa/";
-@import "../../../node_modules/@fontsource/rasa/scss/mixins";
+$fontDir: '/static/fonts/rasa/';
+@import '../../../node_modules/@fontsource/rasa/scss/mixins';
 
 @include fontFace(
   $fontName: Rasa,
   $weight: 600,
   $display: swap,
   $unicodeMap: latin,
-  $fontDir: "/static/fonts/rasa/files"
+  $fontDir: '/static/fonts/rasa/files'
 );
 
-$title-family: "Rasa", "Georgia", "Times New Roman", serif;
+$title-family: 'Rasa', 'Georgia', 'Times New Roman', serif;
 
-$family-sans-serif:'Inter', -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue",
-  "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif, "Apple Color Emoji",
-  "Segoe UI Emoji", "Segoe UI Symbol";
+$family-sans-serif: 'Inter', -apple-system, 'BlinkMacSystemFont', 'Segoe UI',
+  'Roboto', 'Helvetica Neue', 'Lucida Sans Unicode', 'Lucida Grande', 'Arial',
+  sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
 @import '../../../node_modules/bulma-checkradio/src/sass';
-@import "../../../node_modules/bulma/bulma";
+@import '../../../node_modules/bulma/bulma';
 
 @import '../../../node_modules/bulma-switch/src/sass';
 @import '../../../node_modules/bulma-tooltip/src/sass';
 
-
 /* purgecss start ignore */
-@import "../fonts/fontawesome/stylesheet";
-@import "../lib/codemirror/codemirror";
-@import "../lib/codemirror/ttcn";
-@import "../lib/codemirror/simplescrollbars";
-@import "../lib/scroll/scroll";
-@import "../lib/prism/prism";
-@import "../lib/table/table";
-@import "../lib/prism/prism_line_numbers";
-@import "../lib/flatpickr/flatpickr";
-@import "../lib/table/table";
+@import '../fonts/fontawesome/stylesheet';
+@import '../lib/codemirror/codemirror';
+@import '../lib/codemirror/ttcn';
+@import '../lib/codemirror/simplescrollbars';
+@import '../lib/scroll/scroll';
+@import '../lib/prism/prism';
+@import '../lib/table/table';
+@import '../lib/prism/prism_line_numbers';
+@import '../lib/flatpickr/flatpickr';
+@import '../lib/table/table';
 
 .column {
-  min-width:0px;
+  min-width: 0px;
 }
 
 .atlas-navbar {
@@ -111,13 +109,11 @@ $family-sans-serif:'Inter', -apple-system, "BlinkMacSystemFont", "Segoe UI", "Ro
   }
 }
 
-
 @media screen and (min-width: $desktop) {
   .atlas-navbar .navbar-start {
     padding-top: 0 !important;
   }
 }
-
 
 @media screen and (min-width: $desktop) {
   .hide-desktop {
@@ -125,16 +121,15 @@ $family-sans-serif:'Inter', -apple-system, "BlinkMacSystemFont", "Segoe UI", "Ro
   }
 }
 
-
 /* search */
 
 #search-form {
-  position:relative;
+  position: relative;
 }
 #search-results {
-  position:absolute;
-  top:50px;
-  left:0;
+  position: absolute;
+  top: 50px;
+  left: 0;
   min-width: 100%;
   min-width: max(50vw, 100%);
   max-width: 800px;
@@ -151,15 +146,13 @@ $family-sans-serif:'Inter', -apple-system, "BlinkMacSystemFont", "Segoe UI", "Ro
   }
 }
 
-
-
 #search-results:empty {
   display: none !important;
 }
 
 #search-results:active,
 #search-results.search-focus {
-  display:block;
+  display: block;
   box-shadow: $shadow;
   border: 1px solid $border;
 }
@@ -192,7 +185,6 @@ $family-sans-serif:'Inter', -apple-system, "BlinkMacSystemFont", "Segoe UI", "Ro
   color: $info;
 }
 
-
 /*** tabs ***/
 
 .tab-cnt > .tab-dta:not(.is-active) {
@@ -208,17 +200,17 @@ $family-sans-serif:'Inter', -apple-system, "BlinkMacSystemFont", "Segoe UI", "Ro
 /*** multiline tooltip ***/
 
 [data-tooltip].has-tooltip-multiline::before {
-  white-space:pre-line !important;
+  white-space: pre-line !important;
 }
 
 [data-tooltip]::before {
-  max-width:21rem !important;
-  width:21rem !important;
+  max-width: 21rem !important;
+  width: 21rem !important;
 }
 
 /* font */
 .is-size-6-5 {
-  font-size: .85rem !important
+  font-size: 0.85rem !important;
 }
 
 /* input */
@@ -229,31 +221,30 @@ input.transparent {
 }
 
 /* pagination */
-.pagination.is-close ul li:not(:first-of-type) .pagination-link{
-margin-left:0;
-border-top-left-radius:0;
-border-bottom-left-radius:0;
+.pagination.is-close ul li:not(:first-of-type) .pagination-link {
+  margin-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
-.pagination.is-close ul li:not(:last-child)  .pagination-link{
-margin-right:-1px;
-border-top-right-radius:0;
-border-bottom-right-radius:0;
-
+.pagination.is-close ul li:not(:last-child) .pagination-link {
+  margin-right: -1px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
-.pagination.is-close ul li:not(:last-child)  .pagination-link:hover{
-  margin-right:0px;
-  z-index:4;
+.pagination.is-close ul li:not(:last-child) .pagination-link:hover {
+  margin-right: 0px;
+  z-index: 4;
 }
-.pagination.is-close ul li:not(:last-child):hover + li .pagination-link{
-  margin-left:-1px
+.pagination.is-close ul li:not(:last-child):hover + li .pagination-link {
+  margin-left: -1px;
 }
 
 /* logs */
 .log-group div[log_id].is-collapsed {
-  height:20px;
-  overflow:hidden;
-  align-items:baseline;
+  height: 20px;
+  overflow: hidden;
+  align-items: baseline;
 }
 
 .log-group.first-of-type {
@@ -272,46 +263,43 @@ border-bottom-right-radius:0;
   padding: 1em 0 0 1em;
   margin: 0 !important;
   overflow: hidden !important;
-
 }
 
 .em-codeBox code {
   padding-right: 130px;
 }
 
-
 .em-timelineScale {
-  position:absolute;
-  width:100%;
-  bottom:0;
-  top:0;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  top: 0;
 }
 .em-timelineLiner {
-padding-left:50px;
-position:relative;
-&::before {
-  content: "runs/\A   time";
-  position:absolute;
-  left: 0;
-  bottom: -20px;
-  white-space: pre-wrap;
-}
-
+  padding-left: 50px;
+  position: relative;
+  &::before {
+    content: 'runs/\A   time';
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    white-space: pre-wrap;
+  }
 }
 .em-el {
-  height:200px;
+  height: 200px;
 }
 
 .em-elBar {
-  position:relative;
+  position: relative;
   height: 0;
   &::before {
     content: attr(data-attr);
-    position:absolute;
+    position: absolute;
     bottom: -30px;
     background: $white;
-    right:0;
-    left:0;
+    right: 0;
+    left: 0;
   }
 }
 .em-ScaleBar {
@@ -319,15 +307,15 @@ position:relative;
   width: 100%;
   background: $grey-light;
   position: relative;
-  margin-bottom:50px;
-  &::before{
+  margin-bottom: 50px;
+  &::before {
     content: attr(data-attr);
-    position:absolute;
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: $white;
-    padding-right:10px;
-    color:$grey-dark;
+    padding-right: 10px;
+    color: $grey-dark;
   }
   &:last-of-type {
     background: transparent;
@@ -335,8 +323,8 @@ position:relative;
 }
 
 /* fix bulma + prism */
-code .number{
-  all:unset
+code .number {
+  all: unset;
 }
 
 .is-inlineblock {

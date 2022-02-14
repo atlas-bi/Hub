@@ -194,9 +194,7 @@
                        id="task_sftp_dont_send_empty"
                        type="checkbox"
                        {% if t and t.destination_sftp_dont_send_empty_file == 1 %}checked="checked"{% endif %}/>
-                <label for="task_sftp_dont_send_empty">
-                    Don't upload if file is empty?
-                </label>
+                <label for="task_sftp_dont_send_empty">Don't upload if file is empty?</label>
                 <input type="hidden"
                        name="task_sftp_dont_send_empty"
                        value="{%- if t and t.destination_sftp_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
@@ -259,9 +257,7 @@
                        id="task_smb_dont_send_empty"
                        type="checkbox"
                        {% if t and t.destination_smb_dont_send_empty_file == 1 %}checked="checked"{% endif %}/>
-                <label for="task_smb_dont_send_empty">
-                    Don't upload if file is empty?
-                </label>
+                <label for="task_smb_dont_send_empty">Don't upload if file is empty?</label>
                 <input type="hidden"
                        name="task_smb_dont_send_empty"
                        value="{%- if t and t.destination_smb_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
@@ -323,9 +319,7 @@
                        id="task_ftp_dont_send_empty"
                        type="checkbox"
                        {% if t and t.destination_ftp_dont_send_empty_file == 1 %}checked="checked"{% endif %}/>
-                <label for="task_ftp_dont_send_empty">
-                    Don't upload if file is empty?
-                </label>
+                <label for="task_ftp_dont_send_empty">Don't upload if file is empty?</label>
                 <input type="hidden"
                        name="task_ftp_dont_send_empty"
                        value="{%- if t and t.destination_ftp_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
@@ -361,14 +355,18 @@
         </p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
-                <label class="label" data-docs="tasks#email">Destination (separate addresses with ";")</label>
+                <label class="label" data-docs="tasks#email">
+                    Destination (separate addresses with ";")
+                </label>
                 <input class="input"
                        name="completionEmailRecip"
                        autocomplete="off"
                        value="{{ t.email_completion_recipients or '' }}"/>
             </div>
             <div class="field">
-                <label class="label">Message</label>
+                <label class="label">
+                    Message
+                </label>
                 <textarea class="textarea" name="completion_email_msg" autocomplete="off">{{ t.email_completion_message or '' }}</textarea>
             </div>
             <!-- include run log? check -->
@@ -377,7 +375,9 @@
                        type="checkbox"
                        id="send_completion_email_log_check"
                        {% if t and t.email_completion_log == 1 %}checked="checked"{% endif %}/>
-                <label for="send_completion_email_log_check">Include run logs?</label>
+                <label for="send_completion_email_log_check">
+                    Include run logs?
+                </label>
                 <input type="hidden"
                        name="task_send_completion_email_log"
                        value="{%- if t and t.email_completion_log == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
