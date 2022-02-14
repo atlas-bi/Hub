@@ -409,8 +409,8 @@ def test_complex_patterns(client_fixture: fixture) -> None:
     )
 
     last_day = calendar.monthrange(
-        int(datetime.datetime.now().strftime("%Y")),
-        int(datetime.datetime.now().strftime("%m")),
+        int(new_date.strftime("%Y")),
+        int(new_date.strftime("%m")),
     )[1]
     assert my_date_string == new_date.strftime("%m-%d-%Y-") + str(last_day)
 
