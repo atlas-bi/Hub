@@ -556,7 +556,9 @@ def dash_tasks(task_type: str) -> Response:
 
     elif task_type == "active":
         try:
-            tasks = tasks.filter(Task.status_id == 1)  # running
+            tasks = tasks.filter(Task.status_id == 1).filter(
+                Task.enabled == 1
+            )  # running and enabled
         except (
             requests.exceptions.ConnectionError,
             urllib3.exceptions.NewConnectionError,
