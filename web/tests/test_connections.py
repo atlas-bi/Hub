@@ -420,7 +420,7 @@ def test_new_smb(client_fixture: fixture) -> None:
     )
 
     soup = BeautifulSoup(response.data, features="lxml")
-    url = soup.find("form", attrs={"method": "POST"})["action"]
+    url = soup.find("form", attrs={"method": "post"})["action"]
 
     data = {
         "name": "Test SMB",
@@ -526,7 +526,7 @@ def test_new_ssh(client_fixture: fixture) -> None:
     )
 
     soup = BeautifulSoup(response.data, features="lxml")
-    url = soup.find("form", attrs={"method": "POST"})["action"]
+    url = soup.find("form", attrs={"method": "post"})["action"]
 
     data = {
         "name": "Test SSH",
@@ -624,7 +624,7 @@ def test_new_gpg(client_fixture: fixture) -> None:
     )
 
     soup = BeautifulSoup(response.data, features="lxml")
-    url = soup.find("form", attrs={"method": "POST"})["action"]
+    url = soup.find("form", attrs={"method": "post"})["action"]
 
     data = {"name": "Test GPG", "key": "cool key"}
 

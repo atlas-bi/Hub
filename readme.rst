@@ -3,7 +3,7 @@
 Atlas Automation Hub
 ====================
 
-.. image:: images/em2.png
+.. image:: https://www.atlas.bi/static/img/automation-hub/dashboard.png
   :alt: Demo Image
   :width: 100%
 
@@ -29,22 +29,12 @@ Possibilities are almost unlimited....
 Documentation
 -------------
 
-Read the `documentation <https://www.atlas.bi/docs/automation_hub/>`_.
+Read the `documentation <https://www.atlas.bi/docs/automation-hub/>`_.
 
 Demo
 ----
 
 Try out the `demo <https://atlas-hub.atlas.bi>`_!
-
-Run with Docker
-~~~~~~~~~~~~~~~
-
-Or, you can run your own docker image:
-
-.. code:: sh
-
-    docker run -i -t -p 5003:5003 -e PORT=5003 -u 0 christopherpickering/extract_management:latest
-    # access on http://localhost:5003
 
 
 Run from Source
@@ -78,17 +68,8 @@ Finally, to run the three site, you will need to run each command in a separate 
 Credits
 -------
 
-Atlas was created by the Riverside Healthcare Analytics team -
+Atlas was created by the Riverside Healthcare Analytics team. See the `credits <https://www.atlas.bi/about/>`_ for more details.
 
-- Paula Courville
-- `Darrel Drake <https://www.linkedin.com/in/darrel-drake-57562529>`_
-- `Dee Anna Hillebrand <https://github.com/DHillebrand2016>`_
-- `Scott Manley <https://github.com/Scott-Manley>`_
-- `Madeline Matz <mailto:mmatz@RHC.net>`_
-- `Christopher Pickering <https://github.com/christopherpickering>`_
-- `Dan Ryan <https://github.com/danryan1011>`_
-- `Richard Schissler <https://github.com/schiss152>`_
-- `Eric Shultz <https://github.com/eshultz>`_
 
 .. |python-version| image:: https://img.shields.io/badge/Python-3.7%20%7C%203.8%20%7C%203.9-blue
    :target: https://github.com/atlas-bi/atlas-automation-hub

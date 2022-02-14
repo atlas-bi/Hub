@@ -190,8 +190,8 @@ def sub_enable_task(task_id: int) -> None:
                 Task.id == task_id,
             )
         ).order_by(
-            Task.order.asc(), Task.name.asc()
-        ).first() is not None and (  # type: ignore[union-attr]
+            Task.order.asc(), Task.name.asc()  # type: ignore[union-attr]
+        ).first() is not None and (
             Task.query.filter(
                 or_(  # type: ignore[type-var]
                     and_(Task.project_id == task.project_id, Task.enabled == 1),
