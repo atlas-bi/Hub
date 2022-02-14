@@ -126,7 +126,7 @@ def test_new_database(client_fixture: fixture) -> None:
     )
 
     soup = BeautifulSoup(response.data, features="lxml")
-    url = soup.find("form", attrs={"method": "POST"})["action"]
+    url = soup.find("form", attrs={"method": "post"})["action"]
 
     data = {
         "name": "Test Database",
@@ -215,7 +215,7 @@ def test_new_sftp(client_fixture: fixture) -> None:
     )
 
     soup = BeautifulSoup(response.data, features="lxml")
-    url = soup.find("form", attrs={"method": "POST"})["action"]
+    url = soup.find("form", attrs={"method": "post"})["action"]
 
     data = {
         "name": "Test SFTP",
@@ -321,7 +321,7 @@ def test_new_ftp(client_fixture: fixture) -> None:
     )
 
     soup = BeautifulSoup(response.data, features="lxml")
-    url = soup.find("form", attrs={"method": "POST"})["action"]
+    url = soup.find("form", attrs={"method": "post"})["action"]
 
     data = {
         "name": "Test FTP",
