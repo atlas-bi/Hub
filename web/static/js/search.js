@@ -83,7 +83,36 @@ function search(){
     }
 
     searchResultsContainer.innerHTML = output;
+    searchResultsContainer.classList.add('search-focus');
+    document.getElementById('search-background').style.display = 'block';
   }
 
 }
+
+
+function closeSearch() {
+  (document.querySelectorAll('.search-focus') || []).forEach(function (el) {
+    el.classList.remove('search-focus');
+  });
+
+  document.getElementById('search-background').style.display = 'none';
+}
+
+document
+  .getElementById('search-background')
+  .addEventListener('click', function (event) {
+    closeSearch();
+  });
+
+// do search as a modal as search-focus and links doesn't work well on safari :(
+// Add a keyboard event to close all modals
+document.addEventListener('keydown', function (event) {
+  var e = event || window.event;
+  if (e.keyCode === 27) {
+    // Escape key
+    closeSearch();
+  }
+});
+
+
 })();

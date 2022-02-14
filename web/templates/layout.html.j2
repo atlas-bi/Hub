@@ -28,9 +28,6 @@
         <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
     {% endassets %}
 {% endcache %}
-{% assets "js_search" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
 <title>Atlas Automation Hub - {{ title }}</title>
 <link rel="preload"
       href="/static/fonts/inter/files/inter-latin-400-normal.woff2"
@@ -108,6 +105,9 @@
     {% endblock js %}
 
 </body>
+{% assets "js_search" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% assets "js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
