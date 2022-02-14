@@ -292,12 +292,14 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionSftp, ConnectionSftp.id == Task.source_sftp_id)
         .filter(ConnectionSftp.connection_id == connection_id)
+        .filter(Task.source_type_id == 3)  # sftp
     )
     d_sftp = (
         db.session.query()
         .select_from(Task)
         .join(ConnectionSftp, ConnectionSftp.id == Task.destination_sftp_id)
         .filter(ConnectionSftp.connection_id == connection_id)
+        .filter(Task.destination_sftp == 1)  # enabled
         .add_columns(Task.id, ConnectionSftp.name)
     )
     q_sftp = (
@@ -305,6 +307,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionSftp, ConnectionSftp.id == Task.query_sftp_id)
         .filter(ConnectionSftp.connection_id == connection_id)
+        .filter(Task.source_query_type_id == 3)  # sftp
         .add_columns(Task.id, ConnectionSftp.name)
     )
 
@@ -313,6 +316,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionSsh, ConnectionSsh.id == Task.source_ssh_id)
         .filter(ConnectionSsh.connection_id == connection_id)
+        .filter(Task.source_type_id == 6)  # ssh
         .add_columns(Task.id, ConnectionSsh.name)
     )
 
@@ -321,6 +325,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionFtp, ConnectionFtp.id == Task.source_ftp_id)
         .filter(ConnectionFtp.connection_id == connection_id)
+        .filter(Task.source_type_id == 4)  # ftp
         .add_columns(Task.id, ConnectionFtp.name)
     )
     d_ftp = (
@@ -328,6 +333,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionFtp, ConnectionFtp.id == Task.destination_ftp_id)
         .filter(ConnectionFtp.connection_id == connection_id)
+        .filter(Task.destination_ftp == 1)  # enabled
         .add_columns(Task.id, ConnectionFtp.name)
     )
     q_ftp = (
@@ -335,6 +341,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionFtp, ConnectionFtp.id == Task.query_ftp_id)
         .filter(ConnectionFtp.connection_id == connection_id)
+        .filter(Task.source_query_type_id == 4)  # ftp
         .add_columns(Task.id, ConnectionFtp.name)
     )
 
@@ -343,6 +350,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionSmb, ConnectionSmb.id == Task.source_smb_id)
         .filter(ConnectionSmb.connection_id == connection_id)
+        .filter(Task.source_type_id == 2)  # smb
         .add_columns(Task.id, ConnectionSmb.name)
     )
     d_smb = (
@@ -350,6 +358,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionSmb, ConnectionSmb.id == Task.destination_smb_id)
         .filter(ConnectionSmb.connection_id == connection_id)
+        .filter(Task.destination_smb == 1)  # enabled
         .add_columns(Task.id, ConnectionSmb.name)
     )
     q_smb = (
@@ -357,6 +366,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionSmb, ConnectionSmb.id == Task.query_smb_id)
         .filter(ConnectionSmb.connection_id == connection_id)
+        .filter(Task.source_query_type_id == 2)  # smb
         .add_columns(Task.id, ConnectionSmb.name)
     )
 
@@ -365,6 +375,7 @@ def connection_tasks(connection_id: int) -> Response:
         .select_from(Task)
         .join(ConnectionDatabase, ConnectionDatabase.id == Task.source_database_id)
         .filter(ConnectionDatabase.connection_id == connection_id)
+        .filter(Task.source_type_id == 1)  # database
         .add_columns(Task.id, ConnectionDatabase.name)
     )
 
