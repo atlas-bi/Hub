@@ -88,7 +88,7 @@ def test_valid_connection(client_fixture: fixture) -> None:
     # run a valid query
     data_file = sql_instance.run("SELECT * FROM pg_database ;")
 
-    assert len(data_file) == 1
+    assert len(data_file) == 2
 
     # check with query headers
     task.source_query_include_header = 1
@@ -101,7 +101,7 @@ def test_valid_connection(client_fixture: fixture) -> None:
     # run a valid query
     data_file = sql_instance.run("SELECT * FROM pg_database ;")
 
-    assert len(data_file) == 1
+    assert len(data_file) == 2
 
     # check for error on reusing a connection
     with pytest.raises(BaseException) as e:
@@ -113,4 +113,4 @@ def test_valid_connection(client_fixture: fixture) -> None:
         task, None, str(task.source_database_conn.connection_string), temp_dir
     )
     data_file = sql_instance.run("SELECT * FROM pg_database where 1=2;")
-    assert len(data_file) == 1
+    assert len(data_file) == 2
