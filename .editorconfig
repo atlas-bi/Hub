@@ -23,7 +23,11 @@ indent_size = 2
 indent_size = 2
 insert_final_newline = ignore
 
-[**/admin/js/vendor/**]
+[**/web/static/lib/**]
+indent_style = ignore
+indent_size = ignore
+
+[**/web/static/fonts/**]
 indent_style = ignore
 indent_size = ignore
 

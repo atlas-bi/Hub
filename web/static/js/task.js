@@ -11,7 +11,7 @@
     task_id = d.querySelector('h1.title[task_id]');
 
   function taskHello(task_id) {
-    if (window.ajaxOn == true) {
+    if (window.ajaxOn === true) {
       var q = new XMLHttpRequest();
       q.open('get', '/task/{}/hello'.format(task_id), true);
       q.send();
