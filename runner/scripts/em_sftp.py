@@ -251,7 +251,9 @@ class Sftp:
             self.conn.chdir(self.__clean_path(self.connection.path or "/"))
 
         except BaseException as e:
-            RunnerException(self.task, self.run_id, 9, f"Failed to change path.\n{e}")
+            raise RunnerException(
+                self.task, self.run_id, 9, f"Failed to change path.\n{e}"
+            )
 
         if overwrite != 1:
             try:
@@ -302,7 +304,7 @@ class Sftp:
             self.__close()
 
         except BaseException as e:
-            RunnerException(
+            raise RunnerException(
                 self.task, self.run_id, 9, f"Failed to save file on server.\n{e}"
             )
 
@@ -312,6 +314,6 @@ class Sftp:
             self.transport.close()
 
         except BaseException as e:
-            RunnerException(
+            raise RunnerException(
                 self.task, self.run_id, 9, f"Failed to close connection.\n{e}"
             )

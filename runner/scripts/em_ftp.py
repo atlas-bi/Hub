@@ -210,7 +210,9 @@ class Ftp:
 
         # pylint: disable=broad-except
         except BaseException as e:
-            RunnerException(self.task, self.run_id, 13, f"Failed to change path.\n{e}")
+            raise RunnerException(
+                self.task, self.run_id, 13, f"Failed to change path.\n{e}"
+            )
 
         if overwrite != 1:
             try:
@@ -238,7 +240,7 @@ class Ftp:
             self.__close()
 
         except BaseException as e:
-            RunnerException(
+            raise RunnerException(
                 self.task, self.run_id, 13, f"Failed to save file on server.\n{e}"
             )
 
@@ -247,6 +249,6 @@ class Ftp:
             self.conn.close()
 
         except BaseException as e:
-            RunnerException(
+            raise RunnerException(
                 self.task, self.run_id, 13, f"Failed to close connection.\n{e}"
             )

@@ -355,6 +355,6 @@ class Smb:
 
         # pylint: disable=broad-except
         except BaseException as e:
-            RunnerException(
+            raise RunnerException(
                 self.task, self.run_id, 10, f"Failed to save file on server.\n{e}"
             )

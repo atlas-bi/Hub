@@ -110,7 +110,7 @@ class Runner:
             system_monitor()
 
         except ValueError as message:
-            RunnerException(self.task, self.run_id, 18, message)
+            raise RunnerException(self.task, self.run_id, 18, message)
 
         # create temp folder for output
         self.temp_path = Path(
