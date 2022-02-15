@@ -52,6 +52,10 @@ exclude_patterns:
 - .github/
 - docker/
 - docs/
+- web/static/lib/
+- web/static/fonts/
+# this is only build output
+- web/static/css/
 - config/
 - db/
 - dist/
@@ -69,12 +73,17 @@ exclude_patterns:
 plugins:
   bandit:
     enabled: true
+    checks:
+      blacklist:
+        enabled: false
   eslint:
     enabled: true
+  # no developed css in project
   csslint:
-    enabled: true
+    enabled: false
+  # disabled as we cannot use the pyproject.toml config from the project/check tox results in gihub action.
   pylint:
-    enabled: true
+    enabled: false
   radon:
     enabled: true
   scss-lint:
@@ -83,5 +92,8 @@ plugins:
     enabled: true
   sonar-python:
     enabled: true
+    checks:
+      python:S125:
+        enabled: false
   stylelint:
     enabled: true
