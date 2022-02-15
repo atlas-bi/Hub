@@ -5,8 +5,6 @@ color() {
   GREEN=$(printf '\033[32m')
   YELLOW=$(printf '\033[33m')
   BLUE=$(printf '\033[34m')
-  UL=$(printf '\033[4m')
-  BOLD=$(printf '\033[1m')
   RESET=$(printf '\033[0m') # No Color
 }
 
@@ -146,7 +144,7 @@ postgres_init(){
     /etc/init.d/postgresql start 1>/dev/null
 
     #  call function by "postgres_init $BASE_DIR"
-    PASS=$(cat "$1/secrets.json" | jq .PG_PASS)
+    PASS=$(jq .PG_PASS < "$1/secrets.json")
 
     # setup user
     if [ ! "$( su - postgres -c "psql -tAc \"SELECT 1 FROM pg_roles where pg_roles.rolname = 'atlas_me'\"" )" = '1' ]; then

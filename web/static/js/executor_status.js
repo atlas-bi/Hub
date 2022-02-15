@@ -1,7 +1,7 @@
 (function () {
   var myTimeout = 1000;
   function executorStatus() {
-    if (window.ajaxOn == true) {
+    if (window.ajaxOn === true) {
       // only do ajax if enabled.
       var q = new XMLHttpRequest();
       q.open('get', '/executor/status', true);
