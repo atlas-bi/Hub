@@ -1,7 +1,7 @@
 maintainability:
   stage: static
   needs: []
-  image: python:3.8-slim
+  image: python:3.10-slim
   interruptible: true
   before_script:
   - pip install --no-cache-dir anybadge tox
