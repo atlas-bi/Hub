@@ -152,7 +152,7 @@ git = "https://github.com/Kronuz/pyScss.git"
 rev = "6bf001e"
 
 [tool.poetry.dependencies.pytest]
-version = "^6.2.4"
+version = "^7.0.0"
 optional = true
 
 [tool.poetry.dependencies.pytest-cov]
@@ -176,7 +176,7 @@ Flask-DebugToolbar = "^0.13.0"
 tox = "^3.20.1"
 pre-commit = "^2.9.3"
 toml = "^0.10.2"
-pytest = "^6.2.3"
+pytest = "^7.0.0"
 pytest-cov = "^3.0.0"
 
 [tool.poetry.extras]
