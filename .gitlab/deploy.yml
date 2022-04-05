@@ -1,6 +1,6 @@
 deploy:
   stage: deploy
-  image: python:3.9
+  image: python:3.10
   when: manual
   only:
   - master
