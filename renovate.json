@@ -9,19 +9,14 @@
     ":npm",
     "npm:unpublishSafe"
   ],
-  "ignoreDeps": ["@fortawesome/fontawesome-free", "chart.js"],
-  "packageRules": [
-    {
-      "assignees": [
-        "christopherpickering"
-      ],
-      "assigneesSampleSize": 2,
-      "bumpVersion": "patch",
-      "commitMessagePrefix": "chore(deps)",
-      "labels": [
-        "maintenance", 
-        "renovate"
-      ]
-    }
+  "ignoreDeps": ["@fortawesome/fontawesome-free"],
+  "assignees": [
+    "christopherpickering"
+  ],
+  "bumpVersion": "patch",
+  "commitMessagePrefix": "chore(deps)",
+  "labels": [
+    "maintenance", 
+    "renovate"
   ]
 }
