@@ -3,7 +3,7 @@
   "defSubset": "latin",
   "fontId": "inter",
   "fontName": "Inter",
-  "lastModified": "2021-11-10",
+  "lastModified": "2022-02-23",
   "license": "https://fonts.google.com/attribution",
   "source": "https://fonts.google.com/",
   "styles": [
@@ -33,7 +33,7 @@
       "step": "1"
     }
   },
-  "version": "v7",
+  "version": "v8",
   "weights": [
     100,
     200,

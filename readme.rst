@@ -1,4 +1,4 @@
-|python-version| |travis| |codecov| |codacy| |codeql| |climate| |github|
+|python-version| |travis| |codecov| |codacy| |codeql| |github|
 
 Atlas Automation Hub
 ====================
@@ -82,10 +82,6 @@ Atlas was created by the Riverside Healthcare Analytics team. See the `credits <
 
 .. |codacy| image:: https://app.codacy.com/project/badge/Grade/4fcece7632434b7a98902bc1c02fed80
    :target: https://www.codacy.com/gh/atlas-bi/atlas-automation-hub/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/atlas-automation-hub&amp;utm_campaign=Badge_Grade
-
-.. |climate| image:: https://api.codeclimate.com/v1/badges/269dcafa25cf15a571b3/maintainability
-   :target: https://codeclimate.com/github/atlas-bi/atlas-automation-hub/maintainability
-   :alt: Maintainability
 
 .. |codeql| image:: https://github.com/atlas-bi/atlas-automation-hub/actions/workflows/quality.yml/badge.svg
    :target: https://github.com/atlas-bi/atlas-automation-hub/actions/workflows/quality.yml
