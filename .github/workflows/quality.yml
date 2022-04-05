@@ -54,22 +54,22 @@ jobs:
   #     - name: "Test"
   #       run: tox -e static
 
-  html:
-    name: djlint
+  # html:
+  #   name: djlint
 
-    runs-on: macos-latest
+  #   runs-on: macos-latest
 
-    steps:
-    - name: Check out the repo
-      uses: actions/checkout@v3
+  #   steps:
+  #   - name: Check out the repo
+  #     uses: actions/checkout@v3
 
-    - name: Install Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.9'
+  #   - name: Install Python
+  #     uses: actions/setup-python@v3
+  #     with:
+  #       python-version: '3.9'
 
-    - name: Install Deps
-      run: pip install --no-cache-dir tox
+  #   - name: Install Deps
+  #     run: pip install --no-cache-dir tox
 
-    - name: Lint
-      run: tox -e djlint
+  #   - name: Lint
+  #     run: tox -e djlint
