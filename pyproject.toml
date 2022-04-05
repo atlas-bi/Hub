@@ -156,7 +156,7 @@ version = "^6.2.4"
 optional = true
 
 [tool.poetry.dependencies.pytest-cov]
-version = "^2.10.1"
+version = "^3.0.0"
 optional = true
 
 [tool.poetry.dependencies.sqlalchemy-stubs]
@@ -177,7 +177,7 @@ tox = "^3.20.1"
 pre-commit = "^2.9.3"
 toml = "^0.10.2"
 pytest = "^6.2.3"
-pytest-cov = "^2.12.1"
+pytest-cov = "^3.0.0"
 
 [tool.poetry.extras]
 test = ["tox", "Pygments", "pytest-cov", "pytest", "pytest-flask", "toml", "coverage", "Flask-DebugToolbar", "sqlalchemy-stubs"]
