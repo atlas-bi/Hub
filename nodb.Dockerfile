@@ -40,4 +40,6 @@ ENV FLASK_ENV=development \
     FLASK_DEBUG=False \
     FLASK_APP=web
 
+RUN flask db migrate && flask db upgrade
+
 CMD (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT
