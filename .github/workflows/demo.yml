@@ -13,12 +13,20 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v3
 
-    - name: Reset database
+    - name: Remove database
       uses: weareangular/heroku-gh-actions@master
       with:
-        args: pg:reset DATABASE --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+        args: addons:destroy heroku-postgresql:hobby-dev --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+    - name: Add database
+      uses: weareangular/heroku-gh-actions@master
+      with:
+        args: addons:create heroku-postgresql:hobby-dev --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
     - name: Heroku login credentials
       run: |
         cat > ~/.netrc <<EOF
