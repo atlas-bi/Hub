@@ -37,6 +37,10 @@ jobs:
         # heroku addons:create heroku-postgresql:hobby-dev --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
         # heroku addons:remove heroku-redis --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
         # heroku addons:create heroku-redis:hobby-dev --maxmemory_policy allkeys-lru --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
     # - name: Deploy to Heroku
     #   uses: gonuit/heroku-docker-deploy@v1.3.3
     #   with:
