@@ -4,6 +4,8 @@ build:
 
 release:
   image: web
+  command:
+    - ./release-tasks.sh
 
 setup:
   addons:
