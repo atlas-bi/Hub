@@ -29,7 +29,7 @@ jobs:
         HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
     - name: Reset Redis
       run: |
-        echo $HEROKU_API_KEY | docker login --username=$HEROKU_EMAIL registry.heroku.com --password-stdin
+        echo $HEROKU_API_KEY | docker login --username="$HEROKU_EMAIL" registry.heroku.com --password-stdin
         docker build --file nodb.Dockerfile --tag "registry.heroku.com/$HEROKU_APP_NAME/web" .
         heroku container:release web --app $HEROKU_APP_NAME
 
