@@ -39,18 +39,8 @@ jobs:
       env:
         HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
 
-    - name: Docker Build Release
-      run: docker build --file release.Dockerfile --tag "registry.heroku.com/$HEROKU_APP_NAME/release" .
-      env:
-        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-
-    - name: Docker Push Release
-      run: docker push "registry.heroku.com/$HEROKU_APP_NAME/release"
-      env:
-        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-
     - name: Release
-      run: heroku container:release web release --app $HEROKU_APP_NAME
+      run: heroku container:release web --app $HEROKU_APP_NAME
       env:
         HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
 
