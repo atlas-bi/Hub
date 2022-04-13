@@ -28,8 +28,9 @@ Atlas Automation Hub is a task scheduling tool for getting data from a source an
 <a href="https://github.com/atlas-bi/atlas-automation-hub/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/atlas-automation-hub" /></a>
 </p>
 
-<img alt="demo" src="https://www.atlas.bi/static/img/automation-hub/dashboard.png" width=520 />
-
+<p align="center">
+    <img alt="demo" src="https://www.atlas.bi/static/img/automation-hub/dashboard.png" width=520 />
+</p>
 ## :thinking: What Can It Do?
 
 Tasks can run at any time and on any schedule.
