@@ -230,6 +230,9 @@ class Config:
     GIT_USERNAME = "username"
     GIT_PASSWORD = r"password"  # noqa: S105
     GIT_TOKEN = r"token"  # noqa: S105
+    GIT_VERIFY_SSL = False
+
+    HTTP_VERIFY_SSL = False
 
     """
         SMB Connection for file storage

@@ -171,7 +171,9 @@ class SourceCode:
     def web_url(self, url: str) -> str:
         """Get contents of a webpage."""
         try:
-            page = requests.get(str(url), verify=False)  # noqa: S501
+            page = requests.get(
+                str(url), verify=app.config["HTTP_VERIFY_SSL"]
+            )  # noqa: S501
             self.query = page.text
             self.db_type = (
                 "mssql"
