@@ -3,7 +3,7 @@
 <h1 align="center">
     <br>
     <a href="https://www.atlas.bi">
-        <img alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/atlas-automation-hub/master/web/share/logo.png" width=520 />
+        <img alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/atlas-automation-hub/master/share/logo.png" width=520 />
     </a>
     <br>
 </h1>
@@ -28,7 +28,9 @@ Atlas Automation Hub is a task scheduling tool for getting data from a source an
 <a href="https://github.com/atlas-bi/atlas-automation-hub/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/atlas-automation-hub" /></a>
 </p>
 
-<img alt="demo" src="https://www.atlas.bi/static/img/automation-hub/dashboard.png" width=520 />
+<p align="center">
+    <img alt="demo" src="https://www.atlas.bi/static/img/automation-hub/dashboard.png" width=520 />
+</p>
 
 ## :thinking: What Can It Do?
 
