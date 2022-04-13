@@ -83,7 +83,7 @@ class SourceCode:
                     "Connection": "close",
                 }
                 page = requests.get(
-                    api_url, verify=False, headers=headers
+                    api_url, verify=app.config["GIT_VERIFY_SSL"], headers=headers
                 )  # noqa: S501
 
                 if page.status_code != 200:

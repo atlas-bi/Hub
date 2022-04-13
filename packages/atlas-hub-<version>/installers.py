@@ -108,6 +108,9 @@ class Config(BaseConfig):
         if "GIT_TOKEN" in master:
             config += f"\n    GIT_TOKEN={master['GIT_TOKEN']}"
 
+        if "GIT_VERIFY_SSL" in master:
+            config += f"\n    GIT_VERIFY_SSL={master['GIT_VERIFY_SSL']}"
+
         if "SMB_USERNAME" in master:
             config += f"\n    SMB_USERNAME={master['SMB_USERNAME']}"
 
