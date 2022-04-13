@@ -58,7 +58,7 @@ authors = [
 ]
 maintainers = ["Christopher Pickering <cpickering@rhc.net>"]
 license = "GPL-3.0-or-later"
-readme = "readme.rst"
+readme = "readme.md"
 homepage = "https://atlas-hub.atlas.bi"
 repository = "https://github.com/atlas-bi/atlas-automation-hub"
 documentation = "https://www.atlas.bi/docs/automation_hub/"
