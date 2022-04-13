@@ -1,19 +1,40 @@
-name: build deb
+name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [master]
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
+
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v3
+      id: semantic
+      with:
+        semantic_version: 18
+        extra_plugins: |
+          @semantic-release/changelog@6
+          @semantic-release/exec
+          @semantic-release/git@10
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
+
     - name: Install deps
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         sudo apt-get update
         sudo apt-get install dh-make devscripts dpkg-dev gzip apt-utils -y
 
     - name: Load GPG Keys
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         # gpg  --export-secret-keys <key id> | base64
         echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
@@ -21,12 +42,14 @@ jobs:
         GPG_SIGNING_KEY: ${{ secrets.PPA_GPG_SECRET }}
 
     - name: Check out repository
+      if: steps.semantic.outputs.new_release_published == 'true'
       uses: actions/checkout@v3
       with:
         persist-credentials: false
         path: atlas
 
     - name: Build deb
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         cd ./atlas/packages
         cp -r "atlas-hub-<version>" "atlas-hub-$VERSION"
@@ -37,9 +60,10 @@ jobs:
         cd ..
         ls
       env:
-        VERSION: ${{ github.event.release.tag_name }}
+        VERSION: ${{ steps.semantic.outputs.new_release_version }}
 
     - name: Clone PPA
+      if: steps.semantic.outputs.new_release_published == 'true'
       uses: actions/checkout@v3
       with:
         persist-credentials: false
@@ -49,10 +73,12 @@ jobs:
         path: ppa
 
     - name: Move deb to PPA
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         cp ./atlas/packages/*.deb ./ppa/deb
 
     - name: Update Lists
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         cd ./ppa/deb
 
@@ -72,6 +98,7 @@ jobs:
         ls
 
     - name: Commit changes
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         cd ./ppa
         git config --local user.name "$USER"
@@ -79,7 +106,7 @@ jobs:
         git add .
         git commit -m "added release $VERSION"
       env:
-        VERSION: ${{ github.event.release.tag_name }}
+        VERSION: ${{ steps.semantic.outputs.new_release_version }}
         USER: ${{ secrets.GIT_USER }}
         EMAIL: ${{ secrets.GIT_EMAIL }}
 
