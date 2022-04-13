@@ -4,10 +4,12 @@ build:
 
 release:
   image: web
+  command:
+    - ./release_tasks.sh
 
-# setup:
-#   addons:
-#   - plan: heroku-postgresql
-#     as: DATABASE
-#   - plan: heroku-redis
-#     as: REDIS
+setup:
+  addons:
+  - plan: heroku-postgresql
+    as: DATABASE
+  - plan: heroku-redis
+    as: REDIS

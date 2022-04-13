@@ -40,11 +40,4 @@ ENV FLASK_ENV=development \
     FLASK_DEBUG=False \
     FLASK_APP=web
 
-RUN rm -rf migrations_dev \
-    flask db init \
-    flask db migrate \
-    flask db upgrade \
-    flask cli seed \
-    flask cli seed_demo
-
 CMD (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

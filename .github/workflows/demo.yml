@@ -13,7 +13,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v3
 
-    - name: Heroku login credentials
+    - name: Heroku Login
       run: |
         cat > ~/.netrc <<EOF
           machine api.heroku.com
@@ -23,20 +23,39 @@ jobs:
             login $HEROKU_EMAIL
             password $HEROKU_API_KEY
         EOF
+        heroku container:login
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-    - name: Reset Redis
-      run: |
-        heroku addons:destroy heroku-postgresql:hobby-dev --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
-        heroku addons:create heroku-postgresql:hobby-dev --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
-        heroku addons:remove heroku-redis --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
-        heroku addons:create heroku-redis:hobby-dev --maxmemory_policy allkeys-lru --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
-    - name: Deploy to Heroku
-      uses: gonuit/heroku-docker-deploy@v1.3.3
-      with:
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-        email: ${{ secrets.HEROKU_EMAIL }}
-        dockerfile_name: nodb.Dockerfile
-        docker_options: --no-cache
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+    - name: Push
+      run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+
+    # - name: Docker Build
+    #   run: docker build --file nodb.Dockerfile --tag "registry.heroku.com/$HEROKU_APP_NAME/web" .
+    #   env:
+    #     HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+    # - name: Docker Push
+    #   run: docker push "registry.heroku.com/$HEROKU_APP_NAME/web"
+    #   env:
+    #     HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+    # - name: Release
+    #   run: heroku container:release web --app $HEROKU_APP_NAME
+    #   env:
+    #     HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+        # heroku addons:destroy heroku-postgresql:hobby-dev --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+        # heroku addons:create heroku-postgresql:hobby-dev --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+        # heroku addons:remove heroku-redis --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+        # heroku addons:create heroku-redis:hobby-dev --maxmemory_policy allkeys-lru --app ${{ secrets.HEROKU_APP_NAME }} --confirm ${{ secrets.HEROKU_APP_NAME }}
+    # - name: Deploy to Heroku
+    #   uses: gonuit/heroku-docker-deploy@v1.3.3
+    #   with:
+    #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+    #     heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+    #     email: ${{ secrets.HEROKU_EMAIL }}
+    #     dockerfile_name: nodb.Dockerfile
+    #     docker_options: --no-cache
