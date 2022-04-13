@@ -55,5 +55,6 @@
     "test:eslint": "eslint \"./web/**/*.js\" --color",
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\"",
     "watch": "gulp watch"
-  }
+  },
+  "version": "1.0.0"
 }
