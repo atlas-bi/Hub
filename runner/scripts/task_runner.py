@@ -222,7 +222,8 @@ class Runner:
                         connection=em_decrypt(
                             external_db.connection_string, app.config["PASS_KEY"]
                         ),
-                        timeout=external_db.timeout,
+                        timeout=external_db.timeout
+                        or app.config["DEFAULT_SQL_TIMEOUT"],
                         directory=self.temp_path,
                     ).run(query)
 
@@ -778,7 +779,6 @@ class Runner:
             )
 
     def __clean_up(self) -> None:
-
         # remove file
         try:
             if Path(self.temp_path).exists():
