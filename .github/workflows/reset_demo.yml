@@ -1,0 +1,34 @@
+name: reset demo
+
+on:
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  heroku-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Heroku Login
+      run: |
+        cat > ~/.netrc <<EOF
+          machine api.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_API_KEY
+          machine git.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_API_KEY
+        EOF
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+    - name: Reset db
+      run: heroku pg:reset DATABASE --app atlas-automation-hub --confirm atlas-automation-hub
+      env:
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
