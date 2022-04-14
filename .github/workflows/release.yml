@@ -15,8 +15,12 @@ jobs:
       with:
         fetch-depth: 0
         persist-credentials: false
+    - name: Setup Poetry
+      uses: snok/install-poetry@v1
+
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v3
+
       id: semantic
       with:
         semantic_version: 18
