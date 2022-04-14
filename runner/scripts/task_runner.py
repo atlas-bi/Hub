@@ -222,6 +222,7 @@ class Runner:
                         connection=em_decrypt(
                             external_db.connection_string, app.config["PASS_KEY"]
                         ),
+                        timeout=external_db.timeout,
                         directory=self.temp_path,
                     ).run(query)
 
@@ -241,6 +242,8 @@ class Runner:
                         connection=em_decrypt(
                             external_db.connection_string, app.config["PASS_KEY"]
                         ),
+                        timeout=external_db.timeout
+                        or app.config["DEFAULT_SQL_TIMEOUT"],
                         directory=self.temp_path,
                     ).run(query)
 

@@ -583,6 +583,7 @@ class ConnectionDatabase(db.Model):
     name: Optional[str] = None
     connection_string: Optional[str] = None
     connection_id: Optional[int] = None
+    timeout: Optional[int] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     type_id = db.Column(
@@ -593,6 +594,7 @@ class ConnectionDatabase(db.Model):
     )
     name = db.Column(db.String(500), nullable=True)
     connection_string = db.Column(db.Text, nullable=True)
+    timeout = db.Column(db.Integer, nullable=True)
     task_source = db.relationship(
         "Task",
         backref="source_database_conn",

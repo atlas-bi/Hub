@@ -48,7 +48,7 @@ def test_connection_failure(client_fixture: fixture) -> None:
 
     with pytest.raises(ValueError) as e:
         pg = Postgres(
-            task, None, str(task.source_database_conn.connection_string), temp_dir
+            task, None, str(task.source_database_conn.connection_string), 90, temp_dir
         )
         assert "Failed to connect to database" in e
         assert 'missing "=" after "asdf"' in e
@@ -82,7 +82,7 @@ def test_valid_connection(client_fixture: fixture) -> None:
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     sql_instance = Postgres(
-        task, None, str(task.source_database_conn.connection_string), temp_dir
+        task, None, str(task.source_database_conn.connection_string), 90, temp_dir
     )
 
     # run a valid query
@@ -95,7 +95,7 @@ def test_valid_connection(client_fixture: fixture) -> None:
     db.session.commit()
 
     sql_instance = Postgres(
-        task, None, str(task.source_database_conn.connection_string), temp_dir
+        task, None, str(task.source_database_conn.connection_string), 90, temp_dir
     )
 
     # run a valid query
@@ -110,7 +110,7 @@ def test_valid_connection(client_fixture: fixture) -> None:
 
     # test a query with no output
     sql_instance = Postgres(
-        task, None, str(task.source_database_conn.connection_string), temp_dir
+        task, None, str(task.source_database_conn.connection_string), 90, temp_dir
     )
     data_file = sql_instance.run("SELECT * FROM pg_database where 1=2;")
     assert len(data_file) == 2

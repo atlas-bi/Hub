@@ -235,6 +235,12 @@ class Config:
     HTTP_VERIFY_SSL = False
 
     """
+        Default SQL Connection Settings
+    """
+    # minutes
+    DEFAULT_SQL_TIMEOUT = 90
+
+    """
         SMB Connection for file storage
 
         All extracts backups will be stored here.

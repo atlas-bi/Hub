@@ -779,6 +779,7 @@ def edit_connection_database(
                 if form.get("connection_string", None)
                 else None
             ),
+            "timeout": form.get("timeout", app.config["DEFAULT_SQL_TIMEOUT"], type=int),
         }
     )
 
@@ -821,6 +822,7 @@ def new_connection_database(connection_id: int) -> Union[Response, str]:
             if form.get("connection_string")
             else None
         ),
+        timeout=form.get("timeout", app.config["DEFAULT_SQL_TIMEOUT"], type=int),
     )
 
     db.session.add(database)

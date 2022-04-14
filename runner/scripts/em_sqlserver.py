@@ -29,11 +29,14 @@ while True:
         MAX_INT = int(MAX_INT / 10)
 
 
-def connect(connection: str) -> Tuple[Any, Any]:
+def connect(connection: str, timeout: int) -> Tuple[Any, Any]:
     """Connect to sql server."""
     try:
-        conn = pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};" + connection)
+        conn = pyodbc.connect(
+            "Driver={ODBC Driver 17 for SQL Server};" + connection, timeout=timeout * 60
+        )
         conn.autocommit = True
+        conn.timeout = timeout * 60
         cur = conn.cursor()
         return conn, cur
     except pyodbc.Error as e:
@@ -44,12 +47,18 @@ class SqlServer:
     """Functions to query against sql server."""
 
     def __init__(
-        self, task: Task, run_id: Optional[str], connection: str, directory: Path
+        self,
+        task: Task,
+        run_id: Optional[str],
+        connection: str,
+        timeout: int,
+        directory: Path,
     ):
         """Initialize class."""
         self.task = task
         self.run_id = run_id
         self.connection = connection
+        self.timeout = timeout
         self.conn, self.cur = self.__connect()
         self.run_id = run_id
         self.dir = directory
@@ -87,7 +96,7 @@ class SqlServer:
             yield from rows
 
     def __connect(self) -> Tuple[Any, Any]:
-        return connect(self.connection.strip())
+        return connect(self.connection.strip(), self.timeout)
 
     def __close(self) -> None:
         self.conn.close()
