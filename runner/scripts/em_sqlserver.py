@@ -67,7 +67,11 @@ class SqlServer:
         db.session.commit()
 
         for iteration in itertools.count():
+            if self.cur.description is None:
+                break
+
             rows = self.cur.fetchmany(size)
+
             if not rows:
                 break
 
