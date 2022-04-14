@@ -64,6 +64,18 @@
         </div>
         <div class="field">
             <label class="label">
+                Timeout
+                <span class="has-text-grey">* (in minutes)</span>
+            </label>
+            <input class="input"
+                   required
+                   type="number"
+                   name="timeout"
+                   placeholder="query timeout"
+                   value="{%- if database -%}{{ database.timeout or 90 }}{%- else -%}90{%- endif -%}"/>
+        </div>
+        <div class="field">
+            <label class="label">
                 Connection String
                 <span class="has-text-grey">*</span>
             </label>

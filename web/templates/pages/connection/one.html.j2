@@ -159,6 +159,9 @@
                         </a>
                     </p>
                 </div>
+                {% if s.timeout %}
+                    <p><strong>Timeout: {{ s.timeout }} (minutes)</strong></p>
+                {% endif %}
                 <pre class="box"><code class="language-bash">{{ s.connection_string|decrypt }}</code></pre>
             {% endfor %}
         </div>

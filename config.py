@@ -52,7 +52,7 @@ class Config:
 
     # authentication
     LOGIN_VIEW = "auth_bp.login"
-    REQUIRED_GROUPS = [b"Analytics"]
+    REQUIRED_GROUPS = ["Analytics"]
     LOGIN_MESSAGE = "Please login to access this page."
     AUTH_METHOD = "DEV"  # LDAP, SAML, or DEV for no pass.
     LOGIN_REDIRECT_URL = "/"
@@ -233,6 +233,12 @@ class Config:
     GIT_VERIFY_SSL = False
 
     HTTP_VERIFY_SSL = False
+
+    """
+        Default SQL Connection Settings
+    """
+    # minutes
+    DEFAULT_SQL_TIMEOUT = 90
 
     """
         SMB Connection for file storage

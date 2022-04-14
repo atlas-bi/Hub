@@ -49,7 +49,7 @@ def test_connection_failure(client_fixture: fixture) -> None:
 
     with pytest.raises(ValueError) as e:
         pg = SqlServer(
-            task, None, str(task.source_database_conn.connection_string), temp_dir
+            task, None, str(task.source_database_conn.connection_string), 90, temp_dir
         )
         assert "Failed to connection to database." in e
         assert "Neither DSN nor SERVER keyword supplied" in e
@@ -83,7 +83,7 @@ def test_connection_failure(client_fixture: fixture) -> None:
 #     temp_dir.mkdir(parents=True, exist_ok=True)
 
 #     sql_instance = SqlServer(
-#         task, None, str(task.source_database_conn.connection_string), temp_dir
+#         task, None, str(task.source_database_conn.connection_string), 90, temp_dir
 #     )
 
 #     # run a valid query
@@ -96,7 +96,7 @@ def test_connection_failure(client_fixture: fixture) -> None:
 #     db.session.commit()
 
 #     sql_instance = SqlServer(
-#         task, None, str(task.source_database_conn.connection_string), temp_dir
+#         task, None, str(task.source_database_conn.connection_string), 90, temp_dir
 #     )
 
 #     # run a valid query
@@ -111,7 +111,7 @@ def test_connection_failure(client_fixture: fixture) -> None:
 
 #     # test a query with no output
 #     sql_instance = SqlServer(
-#         task, None, str(task.source_database_conn.connection_string), temp_dir
+#         task, None, str(task.source_database_conn.connection_string),90,  temp_dir
 #     )
 #     data_file = sql_instance.run("SELECT * FROM sys.databases where 1=2;")
 #     assert len(data_file) == 1

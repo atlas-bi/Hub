@@ -29,10 +29,14 @@ while True:
         MAX_INT = int(MAX_INT / 10)
 
 
-def connect(connection: str) -> Tuple[Any, Any]:
+def connect(connection: str, timeout: int) -> Tuple[Any, Any]:
     """Connect to postgres server."""
     try:
-        conn = psycopg2.connect(connection)
+        conn = psycopg2.connect(
+            connection,
+            connect_timeout=timeout * 60,
+            options=f"-c statement_timeout={timeout * 60}",
+        )
         cur = conn.cursor()
         return conn, cur
 
@@ -44,13 +48,19 @@ class Postgres:
     """Functions to query against sql server."""
 
     def __init__(
-        self, task: Task, run_id: Optional[str], connection: str, directory: Path
+        self,
+        task: Task,
+        run_id: Optional[str],
+        connection: str,
+        timeout: int,
+        directory: Path,
     ):
         """Initialize class."""
         self.task = task
         self.connection = connection
         self.run_id = run_id
         self.dir = directory
+        self.timeout = timeout
         self.conn, self.cur = self.__connect()
         self.row_count = 0
 
@@ -66,7 +76,11 @@ class Postgres:
         db.session.commit()
 
         for iteration in itertools.count():
+            if self.cur.description is None:
+                break
+
             rows = self.cur.fetchmany(size)
+
             if not rows:
                 break
 
@@ -82,7 +96,7 @@ class Postgres:
             yield from rows
 
     def __connect(self) -> Tuple[Any, Any]:
-        return connect(self.connection.strip())
+        return connect(self.connection.strip(), self.timeout)
 
     def __close(self) -> None:
         self.conn.close()

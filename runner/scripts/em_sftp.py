@@ -143,12 +143,12 @@ class Sftp:
             f"Downloading {file_size(self.conn.stat(file_name).st_size or 0)} from {file_name}.",
         )
 
-        sftp_file = self.conn.open(file_name, mode="r")
+        sftp_file = self.conn.open(file_name, mode="rb")
 
         def load_data(file_obj: SFTPFile) -> Generator:
             with file_obj as this_file:
                 while True:
-                    data = this_file.read(1024).decode("utf-8")  # type: ignore[attr-defined]
+                    data = this_file.read(1024).decode("utf-8", "replace")  # type: ignore[attr-defined]
                     if not data:
                         break
                     yield data

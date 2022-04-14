@@ -353,14 +353,16 @@ def database_online(database_id: int) -> str:
             conn, _ = sql_connect(
                 em_decrypt(
                     database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip()
+                ).strip(),
+                database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
             )
             conn.close()
         else:
             conn, _ = pg_connect(
                 em_decrypt(
                     database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip()
+                ).strip(),
+                database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
             )
             conn.close()
 

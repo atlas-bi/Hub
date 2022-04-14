@@ -114,6 +114,9 @@ class Config(BaseConfig):
         if "HTTP_VERIFY_SSL" in master:
             config += f"\n    HTTP_VERIFY_SSL={master['HTTP_VERIFY_SSL']}"
 
+        if "DEFAULT_SQL_TIMEOUT" in master:
+            config += f"\n    DEFAULT_SQL_TIMEOUT={master['DEFAULT_SQL_TIMEOUT']}"
+
         if "SMB_USERNAME" in master:
             config += f"\n    SMB_USERNAME={master['SMB_USERNAME']}"
 

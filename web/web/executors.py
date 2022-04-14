@@ -281,7 +281,7 @@ def run_project(project_list: List[int]) -> str:
     for task in tasks:
         send_task_to_runner(task.id)
         log = TaskLog(
-            task_id=tasks.id,
+            task_id=task.id,
             status_id=7,
             message=(current_user.full_name or "none") + ": Task manually run.",
         )
