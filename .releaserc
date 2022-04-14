@@ -12,7 +12,7 @@
       "prepareCmd" : "echo ${nextRelease.version} > .version; poetry version ${nextRelease.version}"
     }],
     ["@semantic-release/git", {
-      "assets": ["package.json", ".version"]
+      "assets": ["package.json", ".version", "pyproject.toml"]
     }],
     "@semantic-release/github"
   ]
