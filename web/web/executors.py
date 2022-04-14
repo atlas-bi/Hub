@@ -265,8 +265,9 @@ def run_project(project_list: List[int]) -> str:
     tasks = Task.query.filter_by(project_id=project_id, enabled=1).order_by(
         Task.order.asc(), Task.name.asc()  # type: ignore[union-attr]
     )
-
+    print(project.sequence_tasks)
     if project.sequence_tasks == 1:
+        print("running sequence")
         # run first enabled, order by rank, name
         send_task_to_runner(tasks.first().id)
         log = TaskLog(
@@ -281,7 +282,7 @@ def run_project(project_list: List[int]) -> str:
     for task in tasks:
         send_task_to_runner(task.id)
         log = TaskLog(
-            task_id=tasks.id,
+            task_id=task.id,
             status_id=7,
             message=(current_user.full_name or "none") + ": Task manually run.",
         )
