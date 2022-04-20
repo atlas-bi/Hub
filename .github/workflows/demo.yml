@@ -1,4 +1,4 @@
-name: reset demo
+name: demo
 
 on:
   push:
@@ -29,6 +29,14 @@ jobs:
         HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
 
     - name: Reset db
-      run: heroku pg:reset DATABASE --app atlas-automation-hub --confirm atlas-automation-hub
+      run: heroku pg:reset DATABASE --app $HEROKU_APP_NAME --confirm $HEROKU_APP_NAME
       env:
         HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+    - name: Add remote
+      run: heroku git:remote -a HEROKU_APP_NAME
+      env:
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+    - name: Push code
+      run: git push -f heroku main
