@@ -54,7 +54,7 @@ def schedule() -> Response:
 
     for job in atlas_scheduler.get_jobs():
         if (
-            job.id == "job_sync"
+            job.id in ["job_sync", "temp_clean"]
             or not hasattr(job, "next_run_time")
             or job.next_run_time is None
             and job.args
