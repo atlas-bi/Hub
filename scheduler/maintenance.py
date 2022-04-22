@@ -1,5 +1,10 @@
 """Scheduler Maintenance."""
 
+import os
+import shutil
+import time
+from pathlib import Path
+
 from sqlalchemy import update
 
 from scheduler.extensions import atlas_scheduler, db
@@ -36,6 +41,48 @@ def job_sync() -> None:
                 for job in scheduler_jobs:
                     if job.args and str(job.args[0]) == str(task.id):
                         job.remove()
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        print(str(e))  # noqa: T001
+
+
+@atlas_scheduler.task(
+    "interval",
+    id="temp_clean",
+    hours=1,
+    max_instances=1,
+    start_date="2000-01-01 12:19:00",
+)
+def temp_clean() -> None:
+    """Job to clean up dangling temp files."""
+    try:
+        with atlas_scheduler.app.app_context():
+            temp_path = Path(__file__).parents[1].joinpath("runner", "temp")
+            if not temp_path.exists():
+                return
+
+            # glob to get us to run id
+            # temp/project/task/runid
+            for temp_file in temp_path.glob("*/*/*"):
+                # older than 2 hour
+                if os.stat(temp_file.resolve()).st_mtime < time.time() - 7200:
+
+                    try:
+                        if (
+                            Path(temp_file.resolve()).exists()
+                            and Path(temp_file.resolve()).is_dir()
+                        ):
+                            shutil.rmtree(temp_file.resolve())
+                        if (
+                            Path(temp_file.resolve()).exists()
+                            and Path(temp_file.resolve()).is_file()
+                        ):
+                            os.remove(temp_file.resolve())
+
+                    # pylint: disable=broad-except
+                    except BaseException as e:
+                        print(str(e))  # noqa: T001
 
     # pylint: disable=broad-except
     except BaseException as e:
