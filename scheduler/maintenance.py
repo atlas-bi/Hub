@@ -64,21 +64,21 @@ def temp_clean() -> None:
 
             # glob to get us to run id
             # temp/project/task/runid
-            for file in temp_path.glob("*/*/*"):
+            for temp_file in temp_path.glob("*/*/*"):
                 # older than 2 hour
-                if os.stat(file.resolve()).st_mtime < time.time() - 7200:
+                if os.stat(temp_file.resolve()).st_mtime < time.time() - 7200:
 
                     try:
                         if (
-                            Path(file.resolve()).exists()
-                            and Path(file.resolve()).is_dir()
+                            Path(temp_file.resolve()).exists()
+                            and Path(temp_file.resolve()).is_dir()
                         ):
-                            shutil.rmtree(file.resolve())
+                            shutil.rmtree(temp_file.resolve())
                         if (
-                            Path(file.resolve()).exists()
-                            and Path(file.resolve()).is_file()
+                            Path(temp_file.resolve()).exists()
+                            and Path(temp_file.resolve()).is_file()
                         ):
-                            os.remove(file.resolve())
+                            os.remove(temp_file.resolve())
 
                     # pylint: disable=broad-except
                     except BaseException as e:
