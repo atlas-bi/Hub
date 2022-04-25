@@ -3,7 +3,7 @@
 
 from flask import Blueprint, Flask, abort
 from flask import current_app as app
-from flask import flash, make_response, redirect, request, session
+from flask import flash, make_response, redirect, request, session, url_for
 from is_safe_url import is_safe_url
 from saml2 import entity
 from saml2.client import Saml2Client
@@ -62,7 +62,7 @@ def idp_initiated() -> Response:
                 "You must be part of the %s group(s) to use this site."
                 % app.config["REQUIRED_GROUPS"]
             )
-            return redirect(app.config["NOT_AUTHORIZED_URL"])
+            return redirect(url_for(app.config["NOT_AUTHORIZED_URL"]))
 
         logging.warning(identity)
 
