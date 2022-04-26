@@ -76,9 +76,9 @@ def login() -> Union[str, Response]:
 
             # require specific user group
             # fmt: off
-            if "REQUIRED_GROUPS" in app.config and not set(
+            if "REQUIRED_GROUPS" in app.config and not bool(set(
                 app.config["REQUIRED_GROUPS"]
-            ).issubset(
+            ) &
                 set(ldap.get_user_groups(user=user.lower()))  # type: ignore[no-untyped-call]
             ):
                 executor.submit(log_login, request.form["user"], 3)

@@ -9,6 +9,7 @@ from typing import IO, List, Optional
 from runner.model import Task
 from runner.scripts.em_cmd import Cmd
 from runner.scripts.em_messages import RunnerException
+from runner.scripts.em_params import ParamLoader
 
 
 class PyProcesser:
@@ -25,11 +26,13 @@ class PyProcesser:
         directory: Path,
         script: str,
         source_files: List[IO[str]],
+        params: ParamLoader,
     ) -> None:
         """Set up class parameters."""
         self.task = task
         self.run_id = run_id
         self.script = script
+        self.params = params
         self.output = ""
 
         self.env_name = self.run_id + "_env"
@@ -191,9 +194,16 @@ class PyProcesser:
 
     def __run_script(self) -> None:
         try:
+
+            # create environment from params
+            env = (" && ").join(
+                [f'export {key}="{value}"' for key, value in self.params.read().items()]
+            )
+            env = env + " && " if env != "" else ""
+
             # if data files exist, pass them as a param.
             cmd = (
-                f'"{self.env_path}/bin/python" "{self.job_path}/{self.script}" '
+                f'{env}"{self.env_path}/bin/python" "{self.job_path}/{self.script}" '
             ) + " ".join([f'"{x.name}"' for x in self.source_files])
 
             self.output = Cmd(

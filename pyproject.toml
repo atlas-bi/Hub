@@ -61,7 +61,7 @@ license = "GPL-3.0-or-later"
 readme = "readme.md"
 homepage = "https://atlas-hub.atlas.bi"
 repository = "https://github.com/atlas-bi/atlas-automation-hub"
-documentation = "https://www.atlas.bi/docs/automation_hub/"
+documentation = "https://www.atlas.bi/docs/automation-hub/"
 keywords = [
     "Atlas Automation Hub",
     "flask-apscheduler",

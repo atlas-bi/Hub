@@ -245,7 +245,10 @@ class LDAP:
                     group_member_filter = self.app.config[
                         "LDAP_GROUP_MEMBER_FILTER_FIELD"
                     ]
-                    groups = [record[1][group_member_filter][0] for record in records]
+                    groups = [
+                        (record[1][group_member_filter][0]).decode("utf-8")
+                        for record in records
+                    ]
                     return groups
 
                 if self.app.config["LDAP_USER_GROUPS_FIELD"] in records[0][1]:
@@ -253,7 +256,7 @@ class LDAP:
                     result = [
                         re.findall(b"(?:cn=|CN=)(.*?),", group)[0] for group in groups
                     ]
-                    return result
+                    return [x.decode("utf-8") for x in result]
         except ldap.LDAPError as e:
             raise LDAPException(self.error(e.args)) from e
 
