@@ -551,6 +551,7 @@ class Runner:
             directory=self.temp_path,
             source_files=self.source_files,
             script=self.task.processing_command or processing_script_name.name,
+            params=self.param_loader,
         ).run()
 
         # # allow processer to rename file

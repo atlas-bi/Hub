@@ -89,3 +89,7 @@ class ParamLoader:
         file_name = replace_param(file_name, self.task_params)
 
         return file_name
+
+    def read(self) -> dict:
+        """Return a dict of consolidated params."""
+        return {**self.project_params, **self.task_params}
