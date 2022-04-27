@@ -197,7 +197,10 @@ class PyProcesser:
 
             # create environment from params
             env = (" && ").join(
-                [f'export {key}="{value}"' for key, value in self.params.read().items()]
+                [
+                    f'export {re.sub(r"[^a-zA-Z]", "", key)}="{value}"'
+                    for key, value in self.params.read().items()
+                ]
             )
             env = env + " && " if env != "" else ""
 
