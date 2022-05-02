@@ -245,7 +245,7 @@ def enable_task(task_list: List[int]) -> str:
                 sub_enable_task(task.id)
         # pylint: disable=W0703
         except BaseException as e:
-            print(full_stack())  # noqa: T001
+            print(full_stack())  # noqa: T201
             return str(e)
         return "Task added, sequence updated."
 

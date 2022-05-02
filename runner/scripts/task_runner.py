@@ -88,7 +88,7 @@ class Runner:
         self.source_files: List[IO[str]]
         self.output_files: List[str] = []
 
-        print("starting task " + str(task.id))  # noqa: T001
+        print("starting task " + str(task.id))  # noqa: T201
         logging.info(
             "Runner: Starting task: %s, with run: %s",
             str(task.id),

@@ -120,7 +120,7 @@ def add_task(task_id: int) -> str:
 
     # pylint: disable=broad-except
     except BaseException as e:
-        print(str(e))  # noqa: T001
+        print(str(e))  # noqa: T201
         return jsonify({"error": "Scheduler (add job):\n" + str(e)})
 
 

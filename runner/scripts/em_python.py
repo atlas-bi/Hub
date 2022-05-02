@@ -176,7 +176,7 @@ class PyProcesser:
                     task=self.task,
                     run_id=self.run_id,
                     cmd=cmd,
-                    success_msg="Imports succesfully installed: "
+                    success_msg="Imports successfully installed: "
                     + ", ".join([str(x) for x in imports])
                     + " with command: "
                     + "\n"

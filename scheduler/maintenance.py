@@ -44,7 +44,7 @@ def job_sync() -> None:
 
     # pylint: disable=broad-except
     except BaseException as e:
-        print(str(e))  # noqa: T001
+        print(str(e))  # noqa: T201
 
 
 @atlas_scheduler.task(
@@ -82,8 +82,8 @@ def temp_clean() -> None:
 
                     # pylint: disable=broad-except
                     except BaseException as e:
-                        print(str(e))  # noqa: T001
+                        print(str(e))  # noqa: T201
 
     # pylint: disable=broad-except
     except BaseException as e:
-        print(str(e))  # noqa: T001
+        print(str(e))  # noqa: T201
