@@ -3,7 +3,7 @@
   "defSubset": "latin",
   "fontId": "rasa",
   "fontName": "Rasa",
-  "lastModified": "2022-02-03",
+  "lastModified": "2022-04-27",
   "license": "https://fonts.google.com/attribution",
   "source": "https://fonts.google.com/",
   "styles": [
@@ -31,7 +31,7 @@
       "step": "1"
     }
   },
-  "version": "v13",
+  "version": "v14",
   "weights": [
     300,
     400,

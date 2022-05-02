@@ -47,8 +47,8 @@ def scheduler_task_runner(task_id: int) -> None:
             get(atlas_scheduler.app.config["RUNNER_HOST"] + "/" + task_id)
     # pylint: disable=broad-except
     except BaseException as e:
-        print("failed to run job.")  # noqa: T001
-        print(str(e))  # noqa: T001
+        print("failed to run job.")  # noqa: T201
+        print(str(e))  # noqa: T201
         raise e
 
 
