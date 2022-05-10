@@ -184,9 +184,9 @@ ${RESET}
 See documentation at https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver15
 ${BLUE}
     sudo curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-    sudo curl -fsSL https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+    sudo curl -fsSL https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list
     sudo apt-get update
-    sudo ACCEPT_EULA=Y apt-get install msodbcsql17
+    sudo ACCEPT_EULA=Y apt-get install msodbcsql18
 ${RESET}
 EOF
 
