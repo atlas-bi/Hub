@@ -33,7 +33,7 @@ def connect(connection: str, timeout: int) -> Tuple[Any, Any]:
     """Connect to sql server."""
     try:
         conn = pyodbc.connect(
-            "Driver={ODBC Driver 17 for SQL Server};" + connection, timeout=timeout * 60
+            "Driver={ODBC Driver 18 for SQL Server};" + connection, timeout=timeout * 60
         )
         conn.autocommit = True
         conn.timeout = timeout * 60
