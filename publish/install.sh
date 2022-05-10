@@ -133,11 +133,11 @@ fmt_blue "Updating python settings"
 export PYTHONDONTWRITEBYTECODE=1
 
 fmt_blue "Installing SQL Server ODBC"
-dpkg -s msodbcsql17 2>&1 |  grep -q 'is not installed' && fmt_install msodbcsql17 \
+dpkg -s msodbcsql18 2>&1 |  grep -q 'is not installed' && fmt_install msodbcsql18 \
 && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 && curl -fsSL https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
 && sudo apt-get update --q \
-&& sudo ACCEPT_EULA=Y apt-get install msodbcsql17 \
+&& sudo ACCEPT_EULA=Y apt-get install msodbcsql18 \
 && echo "export PATH=\"$PATH:/opt/mssql-tools/bin\"" >> ~/.bash_profile \
 && echo "export PATH=\"$PATH:/opt/mssql-tools/bin\"" >> ~/.bashrc \
 && echo "export PATH=\"$PATH:/opt/mssql-tools/bin\"" >> ~/.zshrc
