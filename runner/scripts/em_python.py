@@ -1,10 +1,11 @@
 """Python script runner."""
 
 
-import re
 from itertools import chain
 from pathlib import Path
 from typing import IO, List, Optional
+
+import regex as re
 
 from runner.model import Task
 from runner.scripts.em_cmd import Cmd
@@ -90,13 +91,13 @@ class PyProcesser:
         r"""Get includes from script.
 
         get import (...)
-        (?<=^import)\s+[^\.][^\s]+?\\s+?$
+        ^\s*?import\K\s+[^\.][^\s]+?\\s+?$
 
         get import (...) as ...
-        (?<=^import)\s+[^\.][^\s]+?(?=\s)
+        ^\s*?import\K\s+[^\.][^\s]+?(?=\s)
 
         get from (...) imoprt (...)
-        (?<=^from)\s+[^\.].+?(?=import)
+        ^\s*?from\K\s+[^\.].+?(?=import)
         """
         try:
             imports = []
@@ -112,13 +113,13 @@ class PyProcesser:
                     for line in my_file:
 
                         imports.extend(
-                            re.findall(r"(?<=^import)\s+[^\.][^\s]+?\s+?$", line)
+                            re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line)
                         )
                         imports.extend(
-                            re.findall(r"(?<=^from)\s+[^\.].+?(?=import)", line)
+                            re.findall(r"^\s*?from\K\s+[^\.].+?(?=import)", line)
                         )
                         imports.extend(
-                            re.findall(r"(?<=^import)\s+[^\.][^\s]+?(?=\s)", line)
+                            re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line)
                         )
 
             package_map = {"dateutil": "python-dateutil", "smb": "pysmb"}

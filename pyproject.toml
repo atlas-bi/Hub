@@ -43,7 +43,7 @@ sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.poetry]
 name = "atlas-hub"
-version = "1.4.0"
+version = "1.4.1-alpha.1"
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
     "Paula Courville",
@@ -126,6 +126,7 @@ pathvalidate = "^2.5.0"
 gevent = "^21.8.0"
 gunicorn = "^20.1.0"
 supervisor = "^4.2.2"
+regex = "^2022.4.24"
 
 [tool.poetry.dependencies.dataclasses]
 version = "*"

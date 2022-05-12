@@ -257,7 +257,7 @@ class Config:
     """
     SMTP_SERVER = "10.0.0.0"
     SMTP_PORT = 25
-    SMTP_SENDER_NAME = "Atlas Automation Hub"
+    SMTP_SENDER_NAME = "⚒️ Atlas Hub"
     SMTP_SENDER_EMAIL = "noreply@example.net"
     SMTP_DEFAULT_RECIEVER = "noreply@example.net"
     SMTP_SUBJECT_PREFIX = "### "
