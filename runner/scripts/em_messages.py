@@ -147,8 +147,10 @@ class RunnerException(Exception):
                         .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
                         .all()
                     ]
-                    for this_id in task_id_list[task_id_list.index(task.id) + 1 :]:
-                        Task.query.filter_by(id=this_id).update({"status_id": 2})
+
+                    if task.id in task_id_list:
+                        for this_id in task_id_list[task_id_list.index(task.id) + 1 :]:
+                            Task.query.filter_by(id=this_id).update({"status_id": 2})
 
 
 @dataclass
