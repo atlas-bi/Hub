@@ -8,13 +8,18 @@ import re
 import sys
 import tempfile
 import time
+import warnings
 from pathlib import Path
 from stat import S_ISDIR
 from typing import IO, Any, Generator, List, Optional, Tuple
 
 import paramiko
+from cryptography.utils import CryptographyDeprecationWarning
 from flask import current_app as app
-from paramiko import SFTPClient, SFTPFile, Transport
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=CryptographyDeprecationWarning)
+    from paramiko import SFTPClient, SFTPFile, Transport
 
 from runner.model import ConnectionSftp, Task
 from runner.scripts.em_file import file_size

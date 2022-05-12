@@ -2,10 +2,16 @@
 import select
 import sys
 import time
+import warnings
 from pathlib import Path
 from typing import Optional
 
-import paramiko
+from cryptography.utils import CryptographyDeprecationWarning
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=CryptographyDeprecationWarning)
+    import paramiko
+
 from flask import current_app as app
 
 from runner.model import ConnectionSsh, Task
