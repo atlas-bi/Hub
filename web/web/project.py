@@ -3,14 +3,17 @@
 import datetime
 from typing import Optional, Union
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from crypto import em_encrypt
+from flask import Blueprint
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import func, text
 from werkzeug import Response
 
 from web import cache, db
 from web.extensions import get_or_create
-from web.model import Project, Task, TaskFile, TaskLog, User
+from web.model import Project, ProjectParam, Task, TaskFile, TaskLog, User
 from web.web import submit_executor
 
 project_bp = Blueprint("project_bp", __name__)
@@ -167,6 +170,26 @@ def edit_project(project_id: int) -> Response:
 
     db.session.commit()
 
+    # update params 1. remove old params
+    ProjectParam.query.filter_by(project_id=project_id).delete()
+    db.session.commit()
+
+    # update params 2. add new params
+    for key, value in dict(
+        zip(form.getlist("param-key"), form.getlist("param-value"))
+    ).items():
+
+        if key:
+            db.session.add(
+                ProjectParam(
+                    project_id=project_id,
+                    key=key,
+                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                )
+            )
+
+    db.session.commit()
+
     # reschedule any jobs.
     submit_executor("schedule_project", project_id)
 
@@ -222,6 +245,21 @@ def new_project() -> Response:
     )
 
     db.session.add(me)
+    db.session.commit()
+
+    # add params
+    for key, value in dict(
+        zip(form.getlist("param-key"), form.getlist("param-value"))
+    ).items():
+        if key:
+            db.session.add(
+                ProjectParam(
+                    task_id=me.id,
+                    key=key,
+                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                )
+            )
+
     db.session.commit()
 
     return redirect(url_for("project_bp.one_project", project_id=me.id))

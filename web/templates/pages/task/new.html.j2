@@ -71,11 +71,37 @@
                 <a href="" target="_blank" rel="noopener">strftime patterns</a>
                 . Task parameters override project parameters.
             </p>
-            <div class="field">
-                <div class="control">
-                    <textarea class="textarea" name="taskParams" rows="1">{{ t.query_params or '' }}</textarea>
-                </div>
-            </div>
+            <section class="block" id="new-parameters">
+                {% if t.params %}
+                    {% for param in t.params %}
+                        <div class="field is-horizontal new-parameter">
+                            <div class="field-body is-align-items-center">
+                                <div class="field">
+                                    <p class="control is-expanded">
+                                        <input name="param-key" class="input" type="text" placeholder="name" value="{{ param.key }}">
+                                    </p>
+                                </div>
+                                <div class="field has-addons">
+                                    <p class="control is-expanded">
+                                        <input name="param-value" class="input" type="password" placeholder="***" value="{{ param.value|decrypt }}">
+                                    </p>
+                                    <div class="control">
+                                        <a class="button toggle-pass "data-target="password">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <p class="control mb-1 ">
+                                    <button type="button" class="delete is-large new-remove-parameter"></button>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </section>
+            <button type="button" class="button new-parameter">New Parameter</button>
         </div>
         {% include "pages/task/new/data_source.html.j2" %}
         {% include "pages/task/new/query_location.html.j2" %}

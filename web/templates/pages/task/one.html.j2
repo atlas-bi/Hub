@@ -20,24 +20,26 @@
 {% endblock crumbs %}
 
 {% block body %}
-    <h1 class="title is-1" task_id="{{ t.id }}">
-        <div class="field is-inline">
-            {% if t.enabled == 1 %}
-                <input id="enable-task"
-                       class="switch is-medium is-rounded is-info"
-                       action="{{ url_for('task_controls_bp.disable_task', task_id=t.id) }}"
-                       type="checkbox"
-                       checked="checked"/>
-            {% else %}
-                <input id="enable-task"
-                       class="switch is-medium is-rounded is-info"
-                       action="{{ url_for('task_controls_bp.enable_task', task_id=t.id) }}"
-                       type="checkbox"/>
-            {% endif %}
-            <label for="enable-task" class="pt-3"></label>
-        </div>
-        {{ t }}
-        <span class="tag is-large is-pulled-right hello_status em-titleStatus
+    <h1 class="title is-1 is-flex is-justify-content-space-between" task_id="{{ t.id }}">
+        <span>
+            <div class="field is-inline mb-0">
+                {% if t.enabled == 1 %}
+                    <input id="enable-task"
+                           class="switch is-medium is-rounded is-info"
+                           action="{{ url_for('task_controls_bp.disable_task', task_id=t.id) }}"
+                           type="checkbox"
+                           checked="checked"/>
+                {% else %}
+                    <input id="enable-task"
+                           class="switch is-medium is-rounded is-info"
+                           action="{{ url_for('task_controls_bp.enable_task', task_id=t.id) }}"
+                           type="checkbox"/>
+                {% endif %}
+                <label for="enable-task" style="height:1.2em"></label>
+            </div>
+            {{ t }}
+        </span>
+        <span class="tag is-large hello_status em-titleStatus
                      {% if t.status.id == 2 %}
                          is-danger
                      {% elif t.status.id == 1 %}

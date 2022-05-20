@@ -2,7 +2,10 @@
 
 from typing import Union
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from crypto import em_encrypt
+from flask import Blueprint
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
@@ -21,6 +24,7 @@ from web.model import (
     Task,
     TaskDestinationFileType,
     TaskLog,
+    TaskParam,
     TaskProcessingType,
     TaskSourceQueryType,
     TaskSourceType,
@@ -179,6 +183,21 @@ def task_new(project_id: int) -> Union[str, Response]:
     )
 
     db.session.add(me)
+    db.session.commit()
+
+    # add params
+    for key, value in dict(
+        zip(form.getlist("param-key"), form.getlist("param-value"))
+    ).items():
+        if key:
+            db.session.add(
+                TaskParam(
+                    task_id=me.id,
+                    key=key,
+                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                )
+            )
+
     db.session.commit()
 
     log = TaskLog(
@@ -481,6 +500,26 @@ def task_edit_post(task_id: int) -> Response:
             enabled=form.get("task-ooff", 0, type=int),
         )
     )
+
+    db.session.commit()
+
+    # update params 1. remove old params
+    TaskParam.query.filter_by(task_id=task_id).delete()
+    db.session.commit()
+
+    # update params 2. add new params
+    for key, value in dict(
+        zip(form.getlist("param-key"), form.getlist("param-value"))
+    ).items():
+
+        if key:
+            db.session.add(
+                TaskParam(
+                    task_id=task_id,
+                    key=key,
+                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                )
+            )
 
     db.session.commit()
 

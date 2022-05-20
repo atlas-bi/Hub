@@ -51,4 +51,54 @@
       taskHello(task_id.getAttribute('task_id'));
     }, 3000);
   }
+
+  document.addEventListener('click', function (element) {
+    // add a parameter input
+    if (element.target.closest('button.new-parameter')) {
+      document.querySelector('#new-parameters').insertAdjacentHTML(
+        'beforeend',
+        `<div class="field is-horizontal new-parameter">
+                    <div class="field-body is-align-items-center">
+                        <div class="field">
+                            <p class="control is-expanded">
+                                <input name="param-key" class="input" type="text" placeholder="name">
+                            </p>
+                        </div>
+                        <div class="field has-addons">
+                            <p class="control is-expanded">
+                                <input name="param-value" class="input" type="text" placeholder="***">
+                            </p>
+                            <div class="control">
+                                <a class="button toggle-pass "data-target="password">
+                                    <span class="icon">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="control mb-1 ">
+                            <button type="button" class="delete is-large new-remove-parameter"></button>
+                        </p>
+                    </div>
+                </div>`,
+      );
+    } else if (element.target.closest('button.new-remove-parameter')) {
+      element.target.closest('.new-parameter').remove();
+    } else if (element.target.closest('button.show-params')) {
+      var prev = document.querySelector('.param-preview');
+      var real = document.querySelector('.param-real');
+
+      if (prev.classList.contains('is-hidden')) {
+        prev.classList.remove('is-hidden');
+      } else {
+        prev.classList.add('is-hidden');
+      }
+
+      if (real.classList.contains('is-hidden')) {
+        real.classList.remove('is-hidden');
+      } else {
+        real.classList.add('is-hidden');
+      }
+    }
+  });
 })();
