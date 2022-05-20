@@ -1,9 +1,12 @@
 """Param functions to load params and also populate params in a string."""
 
 import re
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, Union
 
-from runner.model import Task
+from crypto import em_decrypt
+from flask import current_app as app
+
+from runner.model import ProjectParam, Task, TaskParam
 from runner.scripts.em_date import DateParsing
 
 
@@ -18,22 +21,25 @@ class ParamLoader:
 
     def __load(self) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
         """Get current params."""
-        return self.__parse_params(
-            self.task.project.global_params if self.task.project else ""
-        ), self.__parse_params(self.task.query_params)
+        project_params = {}
+        task_params = {}
 
-    def __parse_params(self, params: Optional[str]) -> dict:
+        if self.task.project and self.task.project.params:
+            project_params = self.__parse_params(self.task.project.params)
+
+        if self.task.params:
+            task_params = self.__parse_params(self.task.params)
+
+        return project_params, task_params
+
+    def __parse_params(self, params: Union[TaskParam, ProjectParam]) -> dict:
         """Parse project and task params."""
         # split into key value pairs
-        if not params:
-            return {}
 
         params_dict: Dict[Any, Any] = {}
 
-        for param in params.splitlines():
-            if re.search(":|=", param.strip()):
-                param_group = re.split(r"\s?:\s?|\s?=\s?", param.strip())
-                params_dict[param_group[0]] = param_group[1]
+        for param in params:
+            params_dict[param.key] = em_decrypt(param.value, app.config["PASS_KEY"])
 
         def insert_date(match: re.Match) -> str:
             """Parse py dates."""

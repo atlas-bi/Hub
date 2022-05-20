@@ -207,6 +207,7 @@ class PyProcesser:
                     for key, value in self.params.read().items()
                 ]
             )
+
             env = env + " && " if env != "" else ""
 
             # if data files exist, pass them as a param.
