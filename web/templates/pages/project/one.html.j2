@@ -158,10 +158,10 @@
     {% if p.params %}
         <div class="box">
             <h2 class="title is-2">Global Parameters</h2>
-            <button class="button show-params mb-0" type="button">Toggle Values</button>
+            <button class="button show-params mb-0" type="button">Toggle Sensitive Values</button>
         <pre class="box param-preview mb-0"><code class="language-ini">
 {%- for param in p.params -%}
-{{ param.key }}=*******
+{{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{param.value|decrypt}}{% endif %}
 {%  endfor -%}
         </code></pre>
          <pre class="box param-real mb-0 is-hidden"><code class="language-ini">

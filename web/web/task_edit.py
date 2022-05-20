@@ -185,15 +185,20 @@ def task_new(project_id: int) -> Union[str, Response]:
     db.session.commit()
 
     # add params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-        if key:
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
             db.session.add(
                 TaskParam(
                     task_id=me.id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 
@@ -506,16 +511,33 @@ def task_edit_post(task_id: int) -> Response:
     db.session.commit()
 
     # update params 2. add new params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-
-        if key:
+    print
+    print(form.getlist("param-key"))
+    print(
+        list(
+            zip(
+                form.getlist("param-key"),
+                form.getlist("param-value"),
+                form.getlist("param-sensitive"),
+            )
+        )
+    )
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        print(param)
+        if param[0]:
+            print("here!")
             db.session.add(
                 TaskParam(
                     task_id=task_id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 

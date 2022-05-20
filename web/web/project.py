@@ -174,16 +174,20 @@ def edit_project(project_id: int) -> Response:
     db.session.commit()
 
     # update params 2. add new params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-
-        if key:
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
             db.session.add(
                 ProjectParam(
                     project_id=project_id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 
@@ -246,15 +250,20 @@ def new_project() -> Response:
     db.session.commit()
 
     # add params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-        if key:
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
             db.session.add(
                 ProjectParam(
-                    task_id=me.id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    project_id=me.id,
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 
