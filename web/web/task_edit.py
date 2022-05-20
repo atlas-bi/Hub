@@ -511,17 +511,6 @@ def task_edit_post(task_id: int) -> Response:
     db.session.commit()
 
     # update params 2. add new params
-    print
-    print(form.getlist("param-key"))
-    print(
-        list(
-            zip(
-                form.getlist("param-key"),
-                form.getlist("param-value"),
-                form.getlist("param-sensitive"),
-            )
-        )
-    )
     for param in list(
         zip(
             form.getlist("param-key"),
@@ -529,9 +518,7 @@ def task_edit_post(task_id: int) -> Response:
             form.getlist("param-sensitive"),
         )
     ):
-        print(param)
         if param[0]:
-            print("here!")
             db.session.add(
                 TaskParam(
                     task_id=task_id,
