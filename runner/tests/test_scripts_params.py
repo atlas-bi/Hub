@@ -28,13 +28,14 @@ def test_date_parsing(client_fixture: fixture) -> None:
 
     task.source_query_type_id = 4
     task.source_query = "declare @stuff nvarchar(max) = 'asdf'"
-    task.query_params = "@stuff=1234"
 
+    db.session.add(TaskParam(task_id=task.id, value="@stuff", key="1234"))
     db.session.commit()
+
     assert ParamLoader(task, None).project_params == {}
     assert ParamLoader(task, None).task_params == {"@stuff": "1234"}
 
-    task.project.global_params = "@stuff=2345"
+    db.session.add(TaskParam(project_id=task.project.id, value="@stuff", key="2345"))
     db.session.commit()
 
     assert ParamLoader(task, None).project_params == {"@stuff": "2345"}
