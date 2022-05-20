@@ -122,7 +122,11 @@ class PyProcesser:
                             re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line)
                         )
 
-            package_map = {"dateutil": "python-dateutil", "smb": "pysmb"}
+            package_map = {
+                "dateutil": "python-dateutil",
+                "smb": "pysmb",
+                "dotenv": "python-dotenv",
+            }
 
             # clean list
             imports = [
