@@ -141,7 +141,6 @@ def edit_project(project_id: int) -> Response:
                 else me.first().owner_id
             ),
             updater_id=current_user.id,
-            global_params=form.get("globalParams", "").strip(),
             sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
             cron=form.get("project_cron", 0, type=int),
             cron_year=form.get("project_cron_year", None, type=int),
@@ -222,7 +221,6 @@ def new_project() -> Response:
         owner_id=current_user.id,
         creator_id=current_user.id,
         updater_id=current_user.id,
-        global_params=form.get("globalParams", "").strip(),
         sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
         cron=form.get("project_cron", 0, type=int),
         cron_year=form.get("project_cron_year", None, type=int),
