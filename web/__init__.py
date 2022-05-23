@@ -72,7 +72,8 @@ def create_app() -> Flask:
 
     # database
     db.init_app(app)
-    migrate.init_app(app, db, directory=app.config["MIGRATIONS"])
+
+    migrate.init_app(app, db, directory=app.config.get("MIGRATIONS", "migrations"))
 
     # web cache
     cache.init_app(app)
