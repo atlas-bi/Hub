@@ -72,6 +72,7 @@
                                 <a class="button toggle-pass "data-target="password">
                                     <span class="icon">
                                         <i class="fas fa-eye-slash"></i>
+                                        <input name="param-sensitive" type="hidden"/>
                                     </span>
                                 </a>
                             </div>

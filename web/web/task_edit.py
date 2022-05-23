@@ -112,7 +112,6 @@ def task_new(project_id: int) -> Union[str, Response]:
         source_ftp_delimiter=form.get("sourceFtpDelimiter", None, type=str),
         source_ssh_id=form.get("task-source-ssh", None, type=int),
         source_query_type_id=form.get("sourceQueryType", None, type=int),
-        query_params=form.get("taskParams", "", type=str).strip(),
         source_git=form.get("sourceGit", None, type=str),
         query_smb_file=form.get("sourceQuerySmbFile", None, type=str),
         query_smb_id=form.get("task-query-smb", None, type=int),
@@ -186,15 +185,20 @@ def task_new(project_id: int) -> Union[str, Response]:
     db.session.commit()
 
     # add params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-        if key:
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
             db.session.add(
                 TaskParam(
                     task_id=me.id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 
@@ -428,7 +432,6 @@ def task_edit_post(task_id: int) -> Response:
             source_ftp_delimiter=form.get("sourceFtpDelimiter", None, type=str),
             source_ssh_id=form.get("task-source-ssh", None, type=int),
             source_query_type_id=form.get("sourceQueryType", None, type=int),
-            query_params=form.get("taskParams", "", type=str).strip(),
             source_git=form.get("sourceGit", None, type=str),
             query_smb_file=form.get("sourceQuerySmbFile", None, type=str),
             query_smb_id=form.get("task-query-smb", None, type=int),
@@ -508,16 +511,20 @@ def task_edit_post(task_id: int) -> Response:
     db.session.commit()
 
     # update params 2. add new params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-
-        if key:
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
             db.session.add(
                 TaskParam(
                     task_id=task_id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 

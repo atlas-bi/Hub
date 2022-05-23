@@ -141,7 +141,6 @@ def edit_project(project_id: int) -> Response:
                 else me.first().owner_id
             ),
             updater_id=current_user.id,
-            global_params=form.get("globalParams", "").strip(),
             sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
             cron=form.get("project_cron", 0, type=int),
             cron_year=form.get("project_cron_year", None, type=int),
@@ -175,16 +174,20 @@ def edit_project(project_id: int) -> Response:
     db.session.commit()
 
     # update params 2. add new params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-
-        if key:
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
             db.session.add(
                 ProjectParam(
                     project_id=project_id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 
@@ -222,7 +225,6 @@ def new_project() -> Response:
         owner_id=current_user.id,
         creator_id=current_user.id,
         updater_id=current_user.id,
-        global_params=form.get("globalParams", "").strip(),
         sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
         cron=form.get("project_cron", 0, type=int),
         cron_year=form.get("project_cron_year", None, type=int),
@@ -248,15 +250,20 @@ def new_project() -> Response:
     db.session.commit()
 
     # add params
-    for key, value in dict(
-        zip(form.getlist("param-key"), form.getlist("param-value"))
-    ).items():
-        if key:
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
             db.session.add(
                 ProjectParam(
-                    task_id=me.id,
-                    key=key,
-                    value=em_encrypt(value, app.config["PASS_KEY"]),
+                    project_id=me.id,
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
                 )
             )
 

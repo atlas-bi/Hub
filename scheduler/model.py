@@ -652,6 +652,7 @@ class ProjectParam(db.Model):
     id: Optional[int] = None
     key: Optional[str] = None
     value: Optional[str] = None
+    sensitive: Optional[int] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     key = db.Column(db.String(500), nullable=True)
@@ -659,6 +660,7 @@ class ProjectParam(db.Model):
     project_id = db.Column(
         db.Integer, db.ForeignKey(Project.id), nullable=True, index=True
     )
+    sensitive = db.Column(db.Integer, nullable=True, index=True)
 
 
 @dataclass
@@ -1078,8 +1080,10 @@ class TaskParam(db.Model):
     id: Optional[int] = None
     key: Optional[str] = None
     value: Optional[str] = None
+    sensitive: Optional[int] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     key = db.Column(db.String(500), nullable=True)
     value = db.Column(db.String(8000), nullable=True)
     task_id = db.Column(db.Integer, db.ForeignKey(Task.id), nullable=True, index=True)
+    sensitive = db.Column(db.Integer, nullable=True, index=True)
