@@ -1,4 +1,5 @@
 packages/atlas-hub_*.*
+packages/assert.sh
 packages/atlas-hub-[0-9]*.[0-9]*.[0-9]*
 config_cust.py
 

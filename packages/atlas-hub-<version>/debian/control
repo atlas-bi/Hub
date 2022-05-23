@@ -34,7 +34,7 @@ Depends: apt-utils,
          gnupg,
          postgresql,
          postgresql-contrib,
-         python3.8-venv,
+         python3-venv,
          redis-server,
          jq
 Description: Atlas Automation Hub
