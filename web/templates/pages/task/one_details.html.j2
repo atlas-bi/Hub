@@ -5,7 +5,7 @@
             <div class="message-body">Note: Task parameters will override project parameters</div>
         </article>
 
-        <button class="button show-params mb-0" type="button">Toggle Values</button>
+        {% if has_secrets %}<button class="button show-params mb-0" type="button">Toggle Sensitive Values</button>{% endif %}
         <pre class="box param-preview mb-0"><code class="language-ini">
 {%- for param in t.params -%}
 {{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{param.value|decrypt}}{% endif %}
