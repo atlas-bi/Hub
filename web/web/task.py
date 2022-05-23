@@ -149,7 +149,7 @@ def one_task(task_id: int) -> Union[str, Response]:
             l_relative=(relative_to_now(task.last_run) if task.last_run else "Never"),
             title=task.name,
             language=("bash" if task.source_type_id == 6 else "sql"),
-            has_secrets=any([p.sensitive == 1 for p in task.params]),
+            has_secrets=any(p.sensitive == 1 for p in task.params),
         )
 
     flash("Task does not exist.")
