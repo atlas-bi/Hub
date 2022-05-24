@@ -132,10 +132,6 @@ regex = "^2022.4.24"
 version = "*"
 python = ">=3.6,<3.7"
 
-[tool.poetry.dependencies.pyScss]
-git = "https://github.com/Kronuz/pyScss.git"
-rev = "6bf001e"
-
 [tool.poetry.dev-dependencies]
 tox = "^3.20.1"
 pre-commit = "^2.9.3"

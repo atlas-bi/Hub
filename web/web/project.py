@@ -98,7 +98,7 @@ def one_project(project_id: int) -> Union[str, Response]:
         return render_template(
             "pages/project/one.html.j2",
             p=me,
-            has_secrets=any([p.sensitive == 1 for p in me.params]),
+            has_secrets=any(p.sensitive == 1 for p in me.params),
             title=me.name,
             task=first_task,
         )

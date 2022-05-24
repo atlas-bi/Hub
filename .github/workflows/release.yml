@@ -122,3 +122,54 @@ jobs:
         branch: master
         directory: ppa
         repository: atlas-bi/ppa
+
+  validate-latest:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: update apt list
+      run: |
+        sudo apt update
+        sudo apt install curl gnupg2
+        curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
+
+    - name: install
+      run: sudo apt install -y atlas-hub=$VERSION
+      env:
+        VERSION: ${{ needs.steps.semantic.outputs.new_release_version }}
+
+    - name: check install is online
+      run: |
+        curl https://raw.githubusercontent.com/orangemug/bash-assert/master/assert.sh > assert.sh
+        source ./assert.sh
+        assert $(curl -s -o /dev/null -w "%{http_code}" localhost/login) -eq 200
+        # we can login?
+        if [[ ! $(curl -X POST localhost/login?user=admin 2> /dev/null | grep -oP href=\"/\") == href=\"/\" ]]; then exit 1; fi
+
+    - name: uninstall
+      run: sudo apt remove atlas-hub
+
+  validate-upgrade:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: update apt list
+      run: |
+        sudo apt update
+        sudo apt install curl gnupg2
+        curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
+
+    - name: install
+      run: sudo apt install -y atlas-hub=$VERSION
+      env:
+        VERSION: ${{ needs.steps.semantic.outputs.last_release_version }}
+
+    - name: upgrade
+      run: sudo apt install -y atlas-hub=$VERSION
+      env:
+        VERSION: ${{ needs.steps.semantic.outputs.new_release_version }}
+
+    - name: uninstall
+      run: sudo apt remove atlas-hub
