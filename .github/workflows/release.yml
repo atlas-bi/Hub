@@ -129,20 +129,20 @@ jobs:
 
     steps:
     - name: update apt list
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         sudo apt update
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
     - name: install
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.release.steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ steps.semantic.outputs.new_release_version }}
 
     - name: check install is online
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         curl https://raw.githubusercontent.com/orangemug/bash-assert/master/assert.sh > assert.sh
         source ./assert.sh
@@ -151,7 +151,7 @@ jobs:
         if [[ ! $(curl -X POST localhost/login?user=admin 2> /dev/null | grep -oP href=\"/\") == href=\"/\" ]]; then exit 1; fi
 
     - name: uninstall
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: sudo apt remove atlas-hub
 
   validate-upgrade:
@@ -160,24 +160,24 @@ jobs:
 
     steps:
     - name: update apt list
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         sudo apt update
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
     - name: install
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.release.steps.semantic.outputs.last_release_version }}
+        VERSION: ${{ steps.semantic.outputs.last_release_version }}
 
     - name: upgrade
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.release.steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ steps.semantic.outputs.new_release_version }}
 
     - name: uninstall
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: sudo apt remove atlas-hub
