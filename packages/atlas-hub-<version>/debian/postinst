@@ -83,7 +83,12 @@ chown -R www-data "$INSTALL_DIR"
 fmt_blue "Installing database migrations"
 export FLASK_ENV=production && export FLASK_DEBUG=0 && export FLASK_APP=web && .venv/bin/flask db upgrade && .venv/bin/flask cli seed
 
+fmt_blue "Adding admin user"
+postgres_default_user
+
 echo ""
 fmt_green "Thanks for installing Atlas Automation Hub!"
+echo ""
+fmt_green "Read the full install guide at https://www.atlas.bi/docs/automation-hub/"
 
 recommendations
