@@ -137,7 +137,7 @@ jobs:
     - name: install
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ needs.release.steps.semantic.outputs.new_release_version }}
 
     - name: check install is online
       run: |
@@ -164,12 +164,12 @@ jobs:
     - name: install
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.steps.semantic.outputs.last_release_version }}
+        VERSION: ${{ needs.release.steps.semantic.outputs.last_release_version }}
 
     - name: upgrade
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ needs.release.steps.semantic.outputs.new_release_version }}
 
     - name: uninstall
       run: sudo apt remove atlas-hub
