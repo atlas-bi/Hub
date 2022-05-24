@@ -151,6 +151,7 @@ jobs:
         if [[ ! $(curl -X POST localhost/login?user=admin 2> /dev/null | grep -oP href=\"/\") == href=\"/\" ]]; then exit 1; fi
 
     - name: uninstall
+      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
       run: sudo apt remove atlas-hub
 
   validate-upgrade:
