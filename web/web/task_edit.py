@@ -2,7 +2,10 @@
 
 from typing import Union
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from crypto import em_encrypt
+from flask import Blueprint
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
@@ -21,6 +24,7 @@ from web.model import (
     Task,
     TaskDestinationFileType,
     TaskLog,
+    TaskParam,
     TaskProcessingType,
     TaskSourceQueryType,
     TaskSourceType,
@@ -108,7 +112,6 @@ def task_new(project_id: int) -> Union[str, Response]:
         source_ftp_delimiter=form.get("sourceFtpDelimiter", None, type=str),
         source_ssh_id=form.get("task-source-ssh", None, type=int),
         source_query_type_id=form.get("sourceQueryType", None, type=int),
-        query_params=form.get("taskParams", "", type=str).strip(),
         source_git=form.get("sourceGit", None, type=str),
         query_smb_file=form.get("sourceQuerySmbFile", None, type=str),
         query_smb_id=form.get("task-query-smb", None, type=int),
@@ -179,6 +182,26 @@ def task_new(project_id: int) -> Union[str, Response]:
     )
 
     db.session.add(me)
+    db.session.commit()
+
+    # add params
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
+            db.session.add(
+                TaskParam(
+                    task_id=me.id,
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
+                )
+            )
+
     db.session.commit()
 
     log = TaskLog(
@@ -409,7 +432,6 @@ def task_edit_post(task_id: int) -> Response:
             source_ftp_delimiter=form.get("sourceFtpDelimiter", None, type=str),
             source_ssh_id=form.get("task-source-ssh", None, type=int),
             source_query_type_id=form.get("sourceQueryType", None, type=int),
-            query_params=form.get("taskParams", "", type=str).strip(),
             source_git=form.get("sourceGit", None, type=str),
             query_smb_file=form.get("sourceQuerySmbFile", None, type=str),
             query_smb_id=form.get("task-query-smb", None, type=int),
@@ -481,6 +503,30 @@ def task_edit_post(task_id: int) -> Response:
             enabled=form.get("task-ooff", 0, type=int),
         )
     )
+
+    db.session.commit()
+
+    # update params 1. remove old params
+    TaskParam.query.filter_by(task_id=task_id).delete()
+    db.session.commit()
+
+    # update params 2. add new params
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
+            db.session.add(
+                TaskParam(
+                    task_id=task_id,
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
+                )
+            )
 
     db.session.commit()
 

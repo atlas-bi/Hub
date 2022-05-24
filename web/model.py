@@ -191,6 +191,15 @@ class Project(db.Model):
         passive_deletes=True,
     )
 
+    # projectparams link
+    params = db.relationship(
+        "ProjectParam",
+        backref="project",
+        lazy=True,
+        cascade="all, delete, delete-orphan",
+        passive_deletes=True,
+    )
+
     created = db.Column(db.DateTime, server_default=func.now())
     creator_id = db.Column(
         db.Integer, db.ForeignKey(User.id), nullable=True, index=True
@@ -636,6 +645,25 @@ class QuoteLevel(db.Model):
 
 
 @dataclass
+class ProjectParam(db.Model):
+    """Task parameters."""
+
+    __tablename__ = "project_param"
+    id: Optional[int] = None
+    key: Optional[str] = None
+    value: Optional[str] = None
+    sensitive: Optional[int] = None
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    key = db.Column(db.String(500), nullable=True)
+    value = db.Column(db.String(8000), nullable=True)
+    project_id = db.Column(
+        db.Integer, db.ForeignKey(Project.id), nullable=True, index=True
+    )
+    sensitive = db.Column(db.Integer, nullable=True, index=True)
+
+
+@dataclass
 class Task(db.Model):
     """Table containing task details."""
 
@@ -964,8 +992,17 @@ class Task(db.Model):
         passive_deletes=True,
     )
 
+    # taskparams link
+    params = db.relationship(
+        "TaskParam",
+        backref="task",
+        lazy=True,
+        cascade="all, delete, delete-orphan",
+        passive_deletes=True,
+    )
+
     # taskfiles link
-    task = db.relationship(
+    files = db.relationship(
         "TaskFile",
         backref="task",
         lazy=True,
@@ -1033,3 +1070,20 @@ class TaskFile(db.Model):
     __table_args__ = (
         db.Index("ix_task_file_id_task_id_job_id", "id", "task_id", "job_id"),
     )
+
+
+@dataclass
+class TaskParam(db.Model):
+    """Task parameters."""
+
+    __tablename__ = "task_param"
+    id: Optional[int] = None
+    key: Optional[str] = None
+    value: Optional[str] = None
+    sensitive: Optional[int] = None
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    key = db.Column(db.String(500), nullable=True)
+    value = db.Column(db.String(8000), nullable=True)
+    task_id = db.Column(db.Integer, db.ForeignKey(Task.id), nullable=True, index=True)
+    sensitive = db.Column(db.Integer, nullable=True, index=True)

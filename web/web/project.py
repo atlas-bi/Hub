@@ -3,14 +3,17 @@
 import datetime
 from typing import Optional, Union
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from crypto import em_encrypt
+from flask import Blueprint
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import func, text
 from werkzeug import Response
 
 from web import cache, db
 from web.extensions import get_or_create
-from web.model import Project, Task, TaskFile, TaskLog, User
+from web.model import Project, ProjectParam, Task, TaskFile, TaskLog, User
 from web.web import submit_executor
 
 project_bp = Blueprint("project_bp", __name__)
@@ -93,7 +96,11 @@ def one_project(project_id: int) -> Union[str, Response]:
         )
 
         return render_template(
-            "pages/project/one.html.j2", p=me, title=me.name, task=first_task
+            "pages/project/one.html.j2",
+            p=me,
+            has_secrets=any(p.sensitive == 1 for p in me.params),
+            title=me.name,
+            task=first_task,
         )
 
     flash("The project does not exist.")
@@ -138,7 +145,6 @@ def edit_project(project_id: int) -> Response:
                 else me.first().owner_id
             ),
             updater_id=current_user.id,
-            global_params=form.get("globalParams", "").strip(),
             sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
             cron=form.get("project_cron", 0, type=int),
             cron_year=form.get("project_cron_year", None, type=int),
@@ -164,6 +170,30 @@ def edit_project(project_id: int) -> Response:
             ooff_date=form_to_date(form.get("project_ooff_date", None, type=str)),
         )
     )
+
+    db.session.commit()
+
+    # update params 1. remove old params
+    ProjectParam.query.filter_by(project_id=project_id).delete()
+    db.session.commit()
+
+    # update params 2. add new params
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
+            db.session.add(
+                ProjectParam(
+                    project_id=project_id,
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
+                )
+            )
 
     db.session.commit()
 
@@ -199,7 +229,6 @@ def new_project() -> Response:
         owner_id=current_user.id,
         creator_id=current_user.id,
         updater_id=current_user.id,
-        global_params=form.get("globalParams", "").strip(),
         sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
         cron=form.get("project_cron", 0, type=int),
         cron_year=form.get("project_cron_year", None, type=int),
@@ -222,6 +251,26 @@ def new_project() -> Response:
     )
 
     db.session.add(me)
+    db.session.commit()
+
+    # add params
+    for param in list(
+        zip(
+            form.getlist("param-key"),
+            form.getlist("param-value"),
+            form.getlist("param-sensitive"),
+        )
+    ):
+        if param[0]:
+            db.session.add(
+                ProjectParam(
+                    project_id=me.id,
+                    key=param[0],
+                    value=em_encrypt(param[1], app.config["PASS_KEY"]),
+                    sensitive=int(param[2] or 0),
+                )
+            )
+
     db.session.commit()
 
     return redirect(url_for("project_bp.one_project", project_id=me.id))

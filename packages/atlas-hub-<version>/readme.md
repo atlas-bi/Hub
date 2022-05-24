@@ -16,21 +16,37 @@ copy files to ppa repo
 
 ## To run in local docker
 ```sh
+# change into the packages directory.
+cd packages
+
+# start up a docker.
 docker run --rm -it -p 8080:80 -v $(PWD):/atlas ubuntu:latest /bin/bash
 
+# install ubuntu build tools
 apt-get update; \
 apt-get install dh-make devscripts -y; \
+
+# change to the "package" folder
 cd /atlas; \
-VERSION=0.0.1-rc.3; \
+
+# set the version
+VERSION=0.0.1-rc.4; \
+
+# uninstall old verions
 apt-get remove atlas-hub -y 2>/dev/null; \
 rm -r "atlas-hub-$VERSION" 2>/dev/null; \
+
+# build new version, and install it
 cp -r "atlas-hub-<version>" "atlas-hub-$VERSION" \
 && cd "atlas-hub-$VERSION" \
 && find . -type f -name "*" -exec sed -i'' -e "s/<version>/$VERSION/g" {} + \
 && debuild --no-tgz-check -us -uc \
 && cd .. \
-&& EXPORT EXTERNAL_URL="$HOSTNAME"; apt-get install ./atlas-hub_*.deb -y
 && apt-get install ./atlas-hub_*.deb -y
+
+# or
+&& EXPORT EXTERNAL_URL="$HOSTNAME"; apt-get install ./atlas-hub_*.deb -y
+
 ```
 
 ## To install a build

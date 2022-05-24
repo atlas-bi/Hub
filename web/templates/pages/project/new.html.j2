@@ -85,11 +85,38 @@
                 <a href="" target="_blank" rel="noopener">strftime patterns</a>
                 . Project parameters are passed to child tasks.
             </p>
-            <div class="field">
-                <div class="control">
-                    <textarea class="textarea" name="globalParams" rows="1">{{ p.global_params or '' }}</textarea>
-                </div>
-            </div>
+            <section class="block" id="new-parameters">
+                {% if p.params %}
+                    {% for param in p.params %}
+                        <div class="field is-horizontal new-parameter">
+                            <div class="field-body is-align-items-center">
+                                <div class="field">
+                                    <p class="control is-expanded">
+                                        <input name="param-key" class="input" type="text" placeholder="name" value="{{ param.key }}">
+                                    </p>
+                                </div>
+                                <div class="field has-addons">
+                                    <p class="control is-expanded">
+                                        <input name="param-value" class="input" {% if param.sensitive == 1 %}type="password"{% else %}type="text"{% endif %} placeholder="***" value="{{ param.value|decrypt }}">
+                                    </p>
+                                    <div class="control">
+                                        <a class="button toggle-pass "data-target="password">
+                                            <span class="icon">
+                                                <i class="fas {% if param.sensitive ==1 -%}fa-eye{%-else-%}fa-eye-slash{%-endif-%}"></i>
+                                                <input name="param-sensitive" type="hidden" {% if param.sensitive ==1 -%}value="1"{% else %} value="0"{%endif%}/>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <p class="control mb-1 ">
+                                    <button type="button" class="delete is-large new-remove-parameter"></button>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </section>
+            <button type="button" class="button new-parameter">New Parameter</button>
         </div>
         <button class="button is-info is-fullwidth mb-5" type="submit">
             {% if p %}

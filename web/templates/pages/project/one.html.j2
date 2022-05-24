@@ -155,10 +155,20 @@
             <div class="message-body">Project has no run schedule!</div>
         </article>
     {% endif %}
-    {% if p.global_params %}
+    {% if p.params %}
         <div class="box">
             <h2 class="title is-2">Global Parameters</h2>
-            <pre class="box"><code class="language-sql">{{ p.global_params }}</code></pre>
+            {% if has_secrets %}<button class="button show-params mb-0" type="button">Toggle Sensitive Values</button>{%  endif %}
+        <pre class="box param-preview mb-0"><code class="language-ini">
+{%- for param in p.params -%}
+{{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{param.value|decrypt}}{% endif %}
+{%  endfor -%}
+        </code></pre>
+         <pre class="box param-real mb-0 is-hidden"><code class="language-ini">
+{%- for param in p.params -%}
+{{ param.key }}={{param.value|decrypt}}
+{%  endfor -%}
+        </code></pre>
         </div>
     {% endif %}
     <div class="box">

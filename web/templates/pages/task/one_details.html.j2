@@ -1,10 +1,21 @@
-{% if t.query_params %}
+{% if t.params %}
     <div class="box">
         <h3 class="title is-3">Task Parameters</h3>
         <article class="message is-info">
             <div class="message-body">Note: Task parameters will override project parameters</div>
         </article>
-        <pre class="box"><code class="language-sql">{{ t.query_params }}</code></pre>
+
+        {% if has_secrets %}<button class="button show-params mb-0" type="button">Toggle Sensitive Values</button>{% endif %}
+        <pre class="box param-preview mb-0"><code class="language-ini">
+{%- for param in t.params -%}
+{{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{param.value|decrypt}}{% endif %}
+{%  endfor -%}
+        </code></pre>
+         <pre class="box param-real mb-0 is-hidden"><code class="language-ini">
+{%- for param in t.params -%}
+{{ param.key }}={{param.value|decrypt}}
+{%  endfor -%}
+        </code></pre>
     </div>
 {% endif %}
 {% include "pages/task/details/data_source.html.j2" %}

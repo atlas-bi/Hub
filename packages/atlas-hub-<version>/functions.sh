@@ -158,6 +158,16 @@ postgres_init(){
     fi
 }
 
+postgres_default_user(){
+
+    # ensure pg is running
+    /etc/init.d/postgresql start 1>/dev/null
+
+    if [ ! "$( su - postgres -c "psql -d atlas_hub -tAc \"SELECT 1 FROM atlas_hub.public.user WHERE account_name='admin'\" " )" = '1' ]; then
+        su - postgres -c "psql -d atlas_hub -c \"INSERT INTO atlas_hub.public.user (account_name, full_name, first_name) VALUES ('admin', 'admin','admin')\""
+    fi
+}
+
 recommendations(){
 
   # recommend ufw

@@ -51,5 +51,6 @@ gulp.task('build', gulp.parallel('font:inter','font:rasa', gulp.series('fontawes
 gulp.task('watch', gulp.series('build', function (cb) {
     gulp.watch('web/static/assets/**/*.scss', gulp.series('sass'));
     gulp.watch('web/fonts/fontawesome/**/*.scss', gulp.series('fontawesome','sass'));
+    gulp.watch('web/**/*.html*', gulp.series('fontawesome', 'sass'));
     cb();
 }));

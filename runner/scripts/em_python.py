@@ -122,7 +122,11 @@ class PyProcesser:
                             re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line)
                         )
 
-            package_map = {"dateutil": "python-dateutil", "smb": "pysmb"}
+            package_map = {
+                "dateutil": "python-dateutil",
+                "smb": "pysmb",
+                "dotenv": "python-dotenv",
+            }
 
             # clean list
             imports = [
@@ -203,6 +207,7 @@ class PyProcesser:
                     for key, value in self.params.read().items()
                 ]
             )
+
             env = env + " && " if env != "" else ""
 
             # if data files exist, pass them as a param.

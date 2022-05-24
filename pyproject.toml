@@ -43,7 +43,7 @@ sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.poetry]
 name = "atlas-hub"
-version = "1.4.1"
+version = "2.0.0-alpha.2"
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
     "Paula Courville",
@@ -131,10 +131,6 @@ regex = "^2022.4.24"
 [tool.poetry.dependencies.dataclasses]
 version = "*"
 python = ">=3.6,<3.7"
-
-[tool.poetry.dependencies.pyScss]
-git = "https://github.com/Kronuz/pyScss.git"
-rev = "6bf001e"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.20.1"
