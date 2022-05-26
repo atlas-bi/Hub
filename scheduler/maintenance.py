@@ -5,6 +5,8 @@ import shutil
 import time
 from pathlib import Path
 
+import psutil
+from flask import current_app as app
 from sqlalchemy import update
 
 from scheduler.extensions import atlas_scheduler, db
@@ -47,10 +49,32 @@ def job_sync() -> None:
         print(str(e))  # noqa: T201
 
 
+def drop_them(temp_path: Path, age: int) -> None:
+    """Cleanup function to remove files older than age."""
+    for temp_file in temp_path.glob("*/*/*"):
+        if os.stat(temp_file.resolve()).st_mtime < time.time() - age:
+
+            try:
+                if (
+                    Path(temp_file.resolve()).exists()
+                    and Path(temp_file.resolve()).is_dir()
+                ):
+                    shutil.rmtree(temp_file.resolve())
+                if (
+                    Path(temp_file.resolve()).exists()
+                    and Path(temp_file.resolve()).is_file()
+                ):
+                    os.remove(temp_file.resolve())
+
+            # pylint: disable=broad-except
+            except BaseException as e:
+                print(str(e))  # noqa: T201
+
+
 @atlas_scheduler.task(
     "interval",
     id="temp_clean",
-    hours=1,
+    seconds=30,
     max_instances=1,
     start_date="2000-01-01 12:19:00",
 )
@@ -64,25 +88,14 @@ def temp_clean() -> None:
 
             # glob to get us to run id
             # temp/project/task/runid
-            for temp_file in temp_path.glob("*/*/*"):
-                # older than 2 hour
-                if os.stat(temp_file.resolve()).st_mtime < time.time() - 7200:
+            drop_them(temp_path, 7200)
 
-                    try:
-                        if (
-                            Path(temp_file.resolve()).exists()
-                            and Path(temp_file.resolve()).is_dir()
-                        ):
-                            shutil.rmtree(temp_file.resolve())
-                        if (
-                            Path(temp_file.resolve()).exists()
-                            and Path(temp_file.resolve()).is_file()
-                        ):
-                            os.remove(temp_file.resolve())
+            # next, if disk space is full, rerun with 30 mins
+            # this is an emergency rescue attempt.
+            my_disk = psutil.disk_usage("/")
 
-                    # pylint: disable=broad-except
-                    except BaseException as e:
-                        print(str(e))  # noqa: T201
+            if my_disk.free < app.config["MIN_DISK_SPACE"]:
+                drop_them(temp_path, 1800)
 
     # pylint: disable=broad-except
     except BaseException as e:
