@@ -94,26 +94,25 @@ jobs:
       run: |
         cd ./ppa/deb
 
-        # Packages & Packages.gz
-        # dpkg-scanpackages --multiversion . > Packages
-
-        # stable packages
+        # build packages
         dpkg-scanpackages --multiversion pool/stable > dists/stable/main/binary-all/Packages
-
-        # unstable packages
         dpkg-scanpackages --multiversion pool/unstable > dists/unstable/main/binary-all/Packages
 
         # zip it up
         gzip -k -f dists/unstable/main/binary-all/Packages
         gzip -k -f dists/stable/main/binary-all/Packages
 
-        # Release, Release.gpg & InRelease
-        apt-ftparchive release . > Release
-        gpg -abs -o - Release > Release.gpg
-        gpg --clearsign -o - Release > InRelease
+        # Release
+        apt-ftparchive release dists/stable > dists/stable/Release
+        apt-ftparchive release dists/unstable > dists/unstable/Release
 
-        # update list
-        # echo "deb https://packages.atlas.bi/deb ./" > atlas.list
+        # Release.gpg
+        gpg -abs -o - dists/stable/Release > dists/stable/Release.gpg
+        gpg -abs -o - dists/unstable/Release > dists/unstable/Release.gpg
+
+        # InRelease
+        gpg --clearsign -o - dists/stable/Release > dists/stable/InRelease
+        gpg --clearsign -o - dists/unstable/Release > dists/unstable/InRelease
 
         cd ..
         ls
