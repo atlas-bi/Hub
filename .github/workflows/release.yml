@@ -80,12 +80,12 @@ jobs:
         path: ppa
 
     - name: Move deb to PPA
-      if: ${{ github.ref_name }} == 'main' && steps.semantic.outputs.new_release_published == 'true'
+      if: github.ref_name == 'main' && steps.semantic.outputs.new_release_published == 'true'
       run: |
         cp ./atlas/packages/*.deb ./ppa/deb/pool/stable
 
     - name: Move alpha deb to PPA
-      if: ${{ github.ref_name }} == 'alpha' && steps.semantic.outputs.new_release_published == 'true'
+      if: github.ref_name == 'alpha' && steps.semantic.outputs.new_release_published == 'true'
       run: |
         cp ./atlas/packages/*.deb ./ppa/deb/pool/unstable
 
