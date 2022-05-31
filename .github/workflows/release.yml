@@ -7,7 +7,10 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-
+    outputs:
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      last_release_version: ${{ steps.semantic.outputs.last_release_version }}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -129,20 +132,20 @@ jobs:
 
     steps:
     - name: update apt list
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: |
         sudo apt update
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
     - name: install
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ needs.release.outputs.new_release_version }}
 
     - name: check install is online
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: |
         curl https://raw.githubusercontent.com/orangemug/bash-assert/master/assert.sh > assert.sh
         source ./assert.sh
@@ -151,7 +154,7 @@ jobs:
         if [[ ! $(curl -X POST localhost/login?user=admin 2> /dev/null | grep -oP href=\"/\") == href=\"/\" ]]; then exit 1; fi
 
     - name: uninstall
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt remove atlas-hub
 
   validate-upgrade:
@@ -160,24 +163,24 @@ jobs:
 
     steps:
     - name: update apt list
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: |
         sudo apt update
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
     - name: install
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ steps.semantic.outputs.last_release_version }}
+        VERSION: ${{ needs.release.outputs.last_release_version }}
 
     - name: upgrade
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ needs.release.outputs.new_release_version }}
 
     - name: uninstall
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt remove atlas-hub
