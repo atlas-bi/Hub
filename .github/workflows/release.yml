@@ -80,12 +80,12 @@ jobs:
         path: ppa
 
     - name: Move deb to PPA
-      if: ${{ github.ref_name }} == 'main' && steps.semantic.outputs.new_release_published == 'true'
+      if: github.ref_name == 'main' && steps.semantic.outputs.new_release_published == 'true'
       run: |
         cp ./atlas/packages/*.deb ./ppa/deb/pool/stable
 
     - name: Move alpha deb to PPA
-      if: ${{ github.ref_name }} == 'alpha' && steps.semantic.outputs.new_release_published == 'true'
+      if: github.ref_name == 'alpha' && steps.semantic.outputs.new_release_published == 'true'
       run: |
         cp ./atlas/packages/*.deb ./ppa/deb/pool/unstable
 
@@ -161,6 +161,10 @@ jobs:
         sudo apt update
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
+
+        # add alpha builds
+        sudo echo "deb [arch=all] https://packages.atlas.bi/deb/ unstable main" >> /etc/apt/sources.list.d/atlas.list
+        sudo apt update
 
     - name: install
       if: needs.release.outputs.new_release_published == 'true'
