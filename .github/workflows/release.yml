@@ -80,9 +80,14 @@ jobs:
         path: ppa
 
     - name: Move deb to PPA
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: ${{ github.ref_name == 'main' }} && steps.semantic.outputs.new_release_published == 'true'
       run: |
-        cp ./atlas/packages/*.deb ./ppa/deb
+        cp ./atlas/packages/*.deb ./ppa/deb/pool/stable
+
+    - name: Move alpha deb to PPA
+      if: ${{ github.ref_name == 'alpha' }} && steps.semantic.outputs.new_release_published == 'true'
+      run: |
+        cp ./atlas/packages/*.deb ./ppa/deb/pool/unstable
 
     - name: Update Lists
       if: steps.semantic.outputs.new_release_published == 'true'
@@ -90,8 +95,17 @@ jobs:
         cd ./ppa/deb
 
         # Packages & Packages.gz
-        dpkg-scanpackages --multiversion . > Packages
-        gzip -k -f Packages
+        # dpkg-scanpackages --multiversion . > Packages
+
+        # stable packages
+        dpkg-scanpackages --multiversion pool/stable > dists/stable/main/binary-all/Packages
+
+        # unstable packages
+        dpkg-scanpackages --multiversion pool/unstable > dists/unstable/main/binary-all/Packages
+
+        # zip it up
+        gzip -k -f dists/unstable/main/binary-all/Packages
+        gzip -k -f dists/stable/main/binary-all/Packages
 
         # Release, Release.gpg & InRelease
         apt-ftparchive release . > Release
@@ -99,7 +113,7 @@ jobs:
         gpg --clearsign -o - Release > InRelease
 
         # update list
-        echo "deb https://packages.atlas.bi/deb ./" > atlas.list
+        # echo "deb https://packages.atlas.bi/deb ./" > atlas.list
 
         cd ..
         ls
@@ -131,6 +145,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Sleep for 30 seconds for apt to update
+      run: sleep 30s
+      shell: bash
+
     - name: update apt list
       if: needs.release.outputs.new_release_published == 'true'
       run: |
@@ -162,6 +180,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Sleep for 30 seconds for apt to update
+      run: sleep 30s
+      shell: bash
+
     - name: update apt list
       if: needs.release.outputs.new_release_published == 'true'
       run: |
