@@ -162,6 +162,10 @@ jobs:
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
+        # add alpha builds
+        sudo echo "deb [arch=all] https://packages.atlas.bi/deb/ unstable main" >> /etc/apt/sources.list.d/atlas.list
+        sudo apt update
+
     - name: install
       if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
