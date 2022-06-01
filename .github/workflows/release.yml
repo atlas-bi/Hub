@@ -128,7 +128,7 @@ jobs:
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
         # add alpha builds
-        echo "deb [arch=all] https://packages.atlas.bi/deb/ unstable main" | sudo tee -a /etc/apt/sources.list.d/atlas.list
+        echo "deb [arch=all] https://packages.atlas.bi/deb/ ./unstable main" | sudo tee -a /etc/apt/sources.list.d/atlas.list
         sudo apt update
 
     - name: install
@@ -167,7 +167,7 @@ jobs:
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
         # add alpha builds
-        echo "deb [arch=all] https://packages.atlas.bi/deb/ unstable main" | sudo tee -a /etc/apt/sources.list.d/atlas.list
+        echo "deb [arch=all] https://packages.atlas.bi/deb/ ./unstable main" | sudo tee -a /etc/apt/sources.list.d/atlas.list
         sudo apt update
 
     - name: install
