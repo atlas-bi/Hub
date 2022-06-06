@@ -203,7 +203,7 @@ EOF
 }
 
 gunicorn_services(){
-  cat <<EOT >> /etc/systemd/system/atlas_hub_web.service
+  cat <<EOT > /etc/systemd/system/atlas_hub_web.service
 [Unit]
 Description=Atlas Automation Hub Web / Gunicorn
 After=network.target
@@ -218,7 +218,7 @@ ExecStart=/usr/lib/atlas-hub/app/.venv/bin/gunicorn --worker-class=gevent --work
 [Install]
 WantedBy=multi-user.target
 EOT
-  cat <<EOT >> /etc/systemd/system/atlas_hub_runner.service
+  cat <<EOT > /etc/systemd/system/atlas_hub_runner.service
 [Unit]
 Description=Atlas Automation Hub Web / Gunicorn
 After=network.target
@@ -233,7 +233,7 @@ ExecStart=/usr/lib/atlas-hub/app/.venv/bin/gunicorn --worker-class=gevent --work
 [Install]
 WantedBy=multi-user.target
 EOT
-  cat <<EOT >> /etc/systemd/system/atlas_hub_scheduler.service
+  cat <<EOT > /etc/systemd/system/atlas_hub_scheduler.service
 [Unit]
 Description=Atlas Automation Hub Web / Gunicorn
 After=network.target
