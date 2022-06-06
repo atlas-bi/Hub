@@ -11,13 +11,13 @@
 
       if (input.type === 'text') {
         icon.classList.add('fa-eye-slash');
-        if(sensitive_input){
-            sensitive_input.value = 0;
+        if (sensitive_input) {
+          sensitive_input.value = 0;
         }
       } else {
         icon.classList.add('fa-eye');
-        if(sensitive_input){
-            sensitive_input.value = 1;
+        if (sensitive_input) {
+          sensitive_input.value = 1;
         }
       }
     } else if (e.target.closest('.copy-input')) {

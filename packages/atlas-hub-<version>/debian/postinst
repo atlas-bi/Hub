@@ -22,7 +22,7 @@ python3 -c "from installers import build_secrets; build_secrets()"
 install_configuration
 
 # download app
-python3 -c "from installers import download; download(\"https://github.com/atlas-bi/atlas-automation-hub/archive/refs/tags/$VERSION.tar.gz\", \"Atlas Hub $VERSION\", \"app.tar.gz\")" 
+python3 -c "from installers import download; download(\"https://github.com/atlas-bi/atlas-automation-hub/archive/refs/tags/v$VERSION.tar.gz\", \"Atlas Hub $VERSION\", \"app.tar.gz\")"
 tar -f "app.tar.gz" -xz  -C .
 rm "app.tar.gz"
 echo atlas-automation-hub-* | xargs -n1 -i mv {} "app"

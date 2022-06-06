@@ -7,7 +7,10 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-
+    outputs:
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      last_release_version: ${{ steps.semantic.outputs.last_release_version }}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -77,29 +80,14 @@ jobs:
         path: ppa
 
     - name: Move deb to PPA
-      if: steps.semantic.outputs.new_release_published == 'true'
+      if: github.ref_name == 'main' && steps.semantic.outputs.new_release_published == 'true'
       run: |
-        cp ./atlas/packages/*.deb ./ppa/deb
+        cp ./atlas/packages/*.deb ./ppa/deb/pool/stable
 
-    - name: Update Lists
-      if: steps.semantic.outputs.new_release_published == 'true'
+    - name: Move alpha deb to PPA
+      if: github.ref_name == 'alpha' && steps.semantic.outputs.new_release_published == 'true'
       run: |
-        cd ./ppa/deb
-
-        # Packages & Packages.gz
-        dpkg-scanpackages --multiversion . > Packages
-        gzip -k -f Packages
-
-        # Release, Release.gpg & InRelease
-        apt-ftparchive release . > Release
-        gpg -abs -o - Release > Release.gpg
-        gpg --clearsign -o - Release > InRelease
-
-        # update list
-        echo "deb https://packages.atlas.bi/deb ./" > atlas.list
-
-        cd ..
-        ls
+        cp ./atlas/packages/*.deb ./ppa/deb/pool/unstable
 
     - name: Commit changes
       if: steps.semantic.outputs.new_release_published == 'true'
@@ -108,7 +96,7 @@ jobs:
         git config --local user.name "$USER"
         git config --local user.email "$EMAIL"
         git add .
-        git commit -m "added release $VERSION"
+        git commit -m "added atlas-hub $VERSION"
       env:
         VERSION: ${{ steps.semantic.outputs.new_release_version }}
         USER: ${{ secrets.GIT_USER }}
@@ -128,21 +116,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Sleep for 5 mins for apt to update
+      run: sleep 300s
+      shell: bash
+
     - name: update apt list
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: |
         sudo apt update
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
+        # add alpha builds
+        echo "deb [arch=all] https://packages.atlas.bi/deb/ ./unstable main" | sudo tee -a /etc/apt/sources.list.d/atlas.list
+        sudo apt update
+
     - name: install
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.release.steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ needs.release.outputs.new_release_version }}
 
     - name: check install is online
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: |
         curl https://raw.githubusercontent.com/orangemug/bash-assert/master/assert.sh > assert.sh
         source ./assert.sh
@@ -151,7 +147,7 @@ jobs:
         if [[ ! $(curl -X POST localhost/login?user=admin 2> /dev/null | grep -oP href=\"/\") == href=\"/\" ]]; then exit 1; fi
 
     - name: uninstall
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt remove atlas-hub
 
   validate-upgrade:
@@ -159,25 +155,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Sleep for 5 mins for apt to update
+      run: sleep 300s
+      shell: bash
+
     - name: update apt list
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: |
         sudo apt update
         sudo apt install curl gnupg2
         curl -s "https://packages.atlas.bi/scripts/deb.sh" | sudo bash -
 
+        # add alpha builds
+        echo "deb [arch=all] https://packages.atlas.bi/deb/ ./unstable main" | sudo tee -a /etc/apt/sources.list.d/atlas.list
+        sudo apt update
+
     - name: install
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.release.steps.semantic.outputs.last_release_version }}
+        VERSION: ${{ needs.release.outputs.last_release_version }}
 
     - name: upgrade
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt install -y atlas-hub=$VERSION
       env:
-        VERSION: ${{ needs.release.steps.semantic.outputs.new_release_version }}
+        VERSION: ${{ needs.release.outputs.new_release_version }}
 
     - name: uninstall
-      if: needs.release.steps.semantic.outputs.new_release_published == 'true'
+      if: needs.release.outputs.new_release_published == 'true'
       run: sudo apt remove atlas-hub
