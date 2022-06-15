@@ -830,7 +830,7 @@ class Task(db.Model):
     source_url = db.Column(db.String(1000), nullable=True)
 
     # source typed code
-    source_code = db.Column(db.String(8000), nullable=True)
+    source_code = db.Column(db.Text, nullable=True)
 
     # cached source query
     source_cache = db.Column(db.Text, nullable=True)
