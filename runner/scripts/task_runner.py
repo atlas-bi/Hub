@@ -550,7 +550,9 @@ class Runner:
             run_id=self.run_id,
             directory=self.temp_path,
             source_files=self.source_files,
-            script=self.task.processing_command or processing_script_name.name,
+            script=self.task.processing_command
+            if self.task.processing_type_id != 6
+            else processing_script_name.name,
             params=self.param_loader,
         ).run()
 
