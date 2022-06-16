@@ -102,92 +102,153 @@ class PyProcesser:
         try:
             imports = []
 
-            # find all scripts in dir, but not in venv
-            paths = list(
-                set(Path(self.job_path).rglob("*.py"))
-                - set(Path(self.env_path).rglob("*.py"))
-            )
+            # use requirements.txt
+            requirements_text = list(Path(self.job_path).rglob("requirements.txt"))
 
-            for this_file in paths:
-                with open(this_file, "r") as my_file:
-                    for line in my_file:
+            # use pyproject.toml
+            pyproject_toml = Path(self.job_path / "pyproject.toml")
 
-                        imports.extend(
-                            re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line)
-                        )
-                        imports.extend(
-                            re.findall(r"^\s*?from\K\s+[^\.].+?(?=import)", line)
-                        )
-                        imports.extend(
-                            re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line)
-                        )
-
-            package_map = {
-                "dateutil": "python-dateutil",
-                "smb": "pysmb",
-                "dotenv": "python-dotenv",
-            }
-
-            # clean list
-            imports = [
-                str(package_map.get(x.strip().split(".")[0], x.strip().split(".")[0]))
-                for x in imports
-                if x.strip() != ""
-            ]
-
-            # remove any relative imports
-            names = [my_file.stem for my_file in paths]
-
-            imports = list(set(imports) - set(names))
-
-            # remove preinstalled packages from imports
-            cmd = f'"{self.env_path}/bin/python" -c "help(\'modules\')"'
-            built_in_packages = Cmd(
-                task=self.task,
-                run_id=self.run_id,
-                cmd=cmd,
-                success_msg="Python packages loaded.",
-                error_msg="Failed to get preloaded packages: " + "\n" + cmd,
-            ).shell()
-
-            built_in_packages = built_in_packages.split(
-                "Please wait a moment while I gather a list of all available modules..."
-            )[1].split("Enter any module name to get more help.")[0]
-
-            cleaned_built_in_packages = [
-                this_out.strip()
-                for this_out in list(
-                    chain.from_iterable(
-                        [g.split(" ") for g in built_in_packages.split("\n") if g != ""]
-                    )
-                )
-                if this_out.strip() != ""
-            ]
-
-            # remove default python packages from list
-            imports = [
-                x.strip()
-                for x in imports
-                if x not in cleaned_built_in_packages and x.strip()
-            ]
-
-            # try to install
-            if len(imports) > 0:
+            if len(requirements_text) > 0:
                 cmd = (
-                    f'"{self.env_path}/bin/pip" install --disable-pip-version-check --quiet '
-                    + " ".join([str(x) for x in imports])
+                    f'"{self.env_path}/bin/pip" install --disable-pip-version-check --quiet -r '
+                    + " -r ".join([f'"{str(x.resolve())}"' for x in requirements_text])
                 )
                 Cmd(
                     task=self.task,
                     run_id=self.run_id,
                     cmd=cmd,
-                    success_msg="Imports successfully installed: "
-                    + ", ".join([str(x) for x in imports])
+                    success_msg="Imports successfully installed from requirements.txt: "
                     + " with command: "
                     + "\n"
                     + cmd,
                     error_msg="Failed to install imports with command: " + "\n" + cmd,
                 ).shell()
+
+            elif pyproject_toml.is_file():
+                # isntall and setup poetry
+                cmd = (
+                    f'cd "{self.job_path}" && ls && venv/bin/pip install --disable-pip-version-check --quiet poetry && '
+                    + "venv/bin/poetry env use venv/bin/python && "
+                    + "venv/bin/poetry config --local virtualenvs.in-project true && "
+                    + "venv/bin/poetry config --local virtualenvs.create false && "
+                    + "venv/bin/poetry lock --no-update"
+                )
+
+                Cmd(
+                    task=self.task,
+                    run_id=self.run_id,
+                    cmd=cmd,
+                    success_msg="Poetry successfully installed.",
+                    error_msg="Failed to install poetry.",
+                ).shell()
+
+                # install deps with poetry
+                cmd = f'cd "{self.job_path}" && venv/bin/poetry install'
+                Cmd(
+                    task=self.task,
+                    run_id=self.run_id,
+                    cmd=cmd,
+                    success_msg="Imports successfully installed",
+                    error_msg="Failed to install imports.",
+                ).shell()
+
+            else:
+                # find all scripts in dir, but not in venv
+                paths = list(
+                    set(Path(self.job_path).rglob("*.py"))
+                    - set(Path(self.env_path).rglob("*.py"))
+                )
+
+                for this_file in paths:
+                    with open(this_file, "r") as my_file:
+                        for line in my_file:
+
+                            imports.extend(
+                                re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line)
+                            )
+                            imports.extend(
+                                re.findall(r"^\s*?from\K\s+[^\.].+?(?=import)", line)
+                            )
+                            imports.extend(
+                                re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line)
+                            )
+
+                package_map = {
+                    "dateutil": "python-dateutil",
+                    "smb": "pysmb",
+                    "dotenv": "python-dotenv",
+                }
+
+                # clean list
+                imports = [
+                    str(
+                        package_map.get(
+                            x.strip().split(".")[0], x.strip().split(".")[0]
+                        )
+                    )
+                    for x in imports
+                    if x.strip() != ""
+                ]
+
+                # remove any relative imports
+                names = [my_file.stem for my_file in paths]
+
+                imports = list(set(imports) - set(names))
+
+                # remove preinstalled packages from imports
+                cmd = f'"{self.env_path}/bin/python" -c "help(\'modules\')"'
+                built_in_packages = Cmd(
+                    task=self.task,
+                    run_id=self.run_id,
+                    cmd=cmd,
+                    success_msg="Python packages loaded.",
+                    error_msg="Failed to get preloaded packages: " + "\n" + cmd,
+                ).shell()
+
+                built_in_packages = built_in_packages.split(
+                    "Please wait a moment while I gather a list of all available modules..."
+                )[1].split("Enter any module name to get more help.")[0]
+
+                cleaned_built_in_packages = [
+                    this_out.strip()
+                    for this_out in list(
+                        chain.from_iterable(
+                            [
+                                g.split(" ")
+                                for g in built_in_packages.split("\n")
+                                if g != ""
+                            ]
+                        )
+                    )
+                    if this_out.strip() != ""
+                ]
+
+                # remove default python packages from list
+                imports = [
+                    x.strip()
+                    for x in imports
+                    if x not in cleaned_built_in_packages and x.strip()
+                ]
+
+                # try to install
+                if len(imports) > 0:
+                    cmd = (
+                        f'"{self.env_path}/bin/pip" install --disable-pip-version-check --quiet '
+                        + " ".join([str(x) for x in imports])
+                    )
+                    Cmd(
+                        task=self.task,
+                        run_id=self.run_id,
+                        cmd=cmd,
+                        success_msg="Imports successfully installed: "
+                        + ", ".join([str(x) for x in imports])
+                        + " with command: "
+                        + "\n"
+                        + cmd,
+                        error_msg="Failed to install imports with command: "
+                        + "\n"
+                        + cmd,
+                    ).shell()
 
         except BaseException as e:
             raise RunnerException(

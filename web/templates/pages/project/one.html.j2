@@ -16,7 +16,8 @@
 
 {% block body %}
     <h1 class="title is-1">{{ p }}</h1>
-    <h2 class="subtitle">{{ p.description }}</h2>
+    <h2 class="subtitle mb-2">{{ p.description }}</h2>
+    <small class="has-text-grey is-italic mb-4 is-block">Last edited {{ (p.updated or p.created)|datetime_format_easy }}</small>
     <div class="field has-addons">
         <p class="control">
             <a class="button"

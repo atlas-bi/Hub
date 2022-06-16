@@ -30,7 +30,7 @@ compress = Compress()
 db = SQLAlchemy(query_class=CachingQuery)
 executor = Executor()
 htmlmin = HTMLMIN(remove_empty_space=True)
-migrate = Migrate()
+migrate = Migrate(compare_type=True)
 redis_client = FlaskRedis()
 sess = Session()
 
