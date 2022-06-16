@@ -29,7 +29,6 @@ class SAML:
         """Init class."""
         self.app = flask_app
 
-    # pylint: disable=R0201
     def saml_client_for(self) -> Saml2Client:
         """Build SAML client."""
         sp_config = Saml2Config()
