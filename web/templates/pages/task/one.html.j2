@@ -20,7 +20,7 @@
 {% endblock crumbs %}
 
 {% block body %}
-    <h1 class="title is-1 is-flex is-justify-content-space-between" task_id="{{ t.id }}">
+    <h1 class="title is-1 is-flex is-justify-content-space-between mb-0" task_id="{{ t.id }}">
         <span>
             <div class="field is-inline mb-0">
                 {% if t.enabled == 1 %}
@@ -50,6 +50,7 @@
             {{ t.status.name }}
         </span>
     </h1>
+    <small class="has-text-grey is-italic mb-4 is-block">Last edited {{ (t.updated or t.created)|datetime_format_easy }}</small>
     {% if r == 'None' and t.enabled == 1 %}
         <div class="em-error" style="margin-bottom: 10px;">Error! Task must be rescheduled in order to run!</div>
     {% endif %}
