@@ -170,6 +170,8 @@ class SourceCode:
 
     def web_url(self, url: str) -> str:
         """Get contents of a webpage."""
+        if ".git" in str(url):
+            return ""
         try:
             page = requests.get(
                 str(url), verify=app.config["HTTP_VERIFY_SSL"]

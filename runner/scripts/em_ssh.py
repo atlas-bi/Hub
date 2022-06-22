@@ -79,11 +79,9 @@ class Ssh:
     def run(self) -> None:
         """Run an SSH Command.
 
-        First, this will make a connection then run the command
         Some code from https://stackoverflow.com/a/32758464 - thanks!
         :returns: Output from command.
         """
-        self.__connect()
         timeout = 600
         try:
             RunnerLog(
