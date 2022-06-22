@@ -448,11 +448,18 @@ class Runner:
                 and self.task.processing_command != ""
             ):
                 try:
+
+                    split_url = re.split("#|@", self.task.processing_git)
+                    branch = None
+                    base_url = split_url[0]
+                    if len(split_url) > 0:
+                        branch = "#".join(split_url[1:])
+
                     url = (
                         re.sub(
                             r"(https?://)(.+?)",
                             r"\1<username>:<password>@\2",
-                            self.task.processing_git,
+                            base_url,
                             flags=re.IGNORECASE,
                         )
                         .replace(
@@ -465,6 +472,7 @@ class Runner:
 
                     cmd = (
                         "$(which git) clone -q --depth 1 "
+                        + (f" -b {branch} " if branch else "")
                         + '--recurse-submodules --shallow-submodules %s "%s"'
                         % (url, str(self.temp_path))
                     )
@@ -491,10 +499,17 @@ class Runner:
             if self.task.processing_command is not None:
                 try:
 
+                    split_url = re.split("#|@", self.task.processing_url)
+                    branch = None
+                    url = split_url[0]
+                    if len(split_url) > 0:
+                        branch = "#".join(split_url[1:])
+
                     cmd = (
                         "$(which git) clone -q --depth 1 "
+                        + (f" -b {branch} " if branch else "")
                         + '--recurse-submodules --shallow-submodules %s "%s"'
-                        % (self.task.processing_url, str(self.temp_path))
+                        % (url, str(self.temp_path))
                     )
 
                     Cmd(
@@ -550,7 +565,9 @@ class Runner:
             run_id=self.run_id,
             directory=self.temp_path,
             source_files=self.source_files,
-            script=self.task.processing_command or processing_script_name.name,
+            script=self.task.processing_command
+            if self.task.processing_type_id != 6
+            else processing_script_name.name,
             params=self.param_loader,
         ).run()
 

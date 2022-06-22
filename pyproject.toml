@@ -43,7 +43,7 @@ sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.poetry]
 name = "atlas-hub"
-version = "2.1.0"
+version = "2.2.0-alpha.1"
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
     "Paula Courville",
@@ -98,7 +98,7 @@ psycopg2-binary = "^2.9.1"
 cryptography = "^37.0.0"
 psutil = "^5.8.0"
 Flask-Compress = "^1.10.1"
-SQLAlchemy = "1.4.36"
+SQLAlchemy = "1.4.37"
 Flask-Migrate = "^3.1.0"
 python3-saml = "^1.12.0"
 bs4 = "^0.0.1"
@@ -154,7 +154,7 @@ max-module-lines = 1000
 ignore = "smb_fix.py,tests"
 
 [tool.pylint.messages_control]
-disable = "W0707, R0201, R1705, W0703, C0330, C0326, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911, E1120, E1123, W1514, W1406, C0209, R1714, C0301, W0120"
+disable = "W0707, R1705, W0703, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911, E1120, E1123, W1514, W1406, C0209, R1714, C0301, W0120"
 
 [tool.pytest]
 

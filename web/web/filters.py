@@ -145,6 +145,18 @@ def datetime_format(my_date: str) -> str:
     return my_date
 
 
+@filters_bp.app_template_filter("datetime_format_easy")
+def datetime_format_easy(my_date: str) -> str:
+    """Format date string."""
+    if isinstance(my_date, datetime.datetime):
+        return datetime.datetime.strftime(
+            my_date,
+            "%a, %b %-d, %Y %H:%M",
+        )
+
+    return my_date
+
+
 @filters_bp.app_template_filter("decrypt")
 def decrypt(my_string: str) -> str:
     """Decrypt a string."""
