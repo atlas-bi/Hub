@@ -1,50 +1,62 @@
 {
-  "extends": [
-    "config:base", 
-    "group:allNonMajor",
-    ":separateMultipleMajorReleases",
-    ":ignoreUnstable",
-    ":enableVulnerabilityAlertsWithLabel(security)",
-    ":rebaseStalePrs", 
-    ":npm",
-    "npm:unpublishSafe"
-  ],
-  "ignoreDeps": ["@fortawesome/fontawesome-free"],
   "assignees": [
     "christopherpickering"
   ],
   "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",
+  "extends": [
+    "config:base",
+    "group:allNonMajor",
+    ":separateMultipleMajorReleases",
+    ":ignoreUnstable",
+    ":enableVulnerabilityAlertsWithLabel(security)",
+    ":rebaseStalePrs",
+    ":npm",
+    "npm:unpublishSafe"
+  ],
+  "ignoreDeps": [
+    "@fortawesome/fontawesome-free"
+  ],
   "labels": [
-    "maintenance", 
+    "maintenance",
     "renovate"
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["pin","digest"],
-      "automerge": true
+      "automerge": true,
+      "matchUpdateTypes": [
+        "pin",
+        "digest"
+      ]
     },
     {
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true
-    },
-    {
-      "extends": "packages:linters",
-      "groupName": "linters",
-      "automerge": true
-    },
-    {
-      "extends": "packages:test",
-      "groupName": "test packages",
-      "automerge": true
-    },
-    {
+      "automerge": true,
       "matchDepTypes": [
         "devDependencies"
-      ],
-      "automerge": true
+      ]
+    },
+    {
+      "automerge": true,
+      "extends": "packages:linters",
+      "groupName": "linters"
+    },
+    {
+      "automerge": true,
+      "extends": "packages:test",
+      "groupName": "test packages"
+    },
+    {
+      "automerge": true,
+      "matchDepTypes": [
+        "devDependencies"
+      ]
     }
   ],
-  "schedule": ["before 8am on Monday"],
+  "pre-commit": {
+    "enabled": true
+  },
+  "schedule": [
+    "before 8am on Monday"
+  ],
   "timezone": "America/Chicago"
 }
