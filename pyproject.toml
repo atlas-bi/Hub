@@ -43,7 +43,7 @@ sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.poetry]
 name = "atlas-hub"
-version = "2.2.1-alpha.1"
+version = "2.2.1"
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
     "Paula Courville",
@@ -114,7 +114,7 @@ Flask-Session = "^0.4.0"
 Flask-APScheduler = "^1.12.2"
 xmlsec = "^1.3.11"
 Flask-Assets = "^2.0"
-Flask-Caching = "^1.10.1"
+Flask-Caching = "^2.0.0"
 Flask-HTMLmin = "^2.1.0"
 redis = "^4.0.0"
 Flask-Script = "^2.0.6"
