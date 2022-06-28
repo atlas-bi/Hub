@@ -127,7 +127,7 @@ class PyProcesser:
             elif pyproject_toml.is_file():
                 # isntall and setup poetry
                 cmd = (
-                    f'cd "{self.job_path}" && ls && venv/bin/pip install --disable-pip-version-check --quiet poetry && '
+                    f'cd "{self.job_path}" && venv/bin/pip install --disable-pip-version-check --quiet poetry && '
                     + "venv/bin/poetry env use venv/bin/python && "
                     + "venv/bin/poetry config --local virtualenvs.in-project true && "
                     + "venv/bin/poetry config --local virtualenvs.create false && "
