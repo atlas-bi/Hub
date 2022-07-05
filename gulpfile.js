@@ -22,8 +22,8 @@ gulp.task('font:rasa', function() {
 gulp.task('fontawesome', function(done) {
     del.sync('web/static/fonts/fontawesome/webfonts', {force:true});
     fontawesomeSubset.fontawesomeSubset({
-      regular:['play-circle', 'question-circle'],
-      solid: ['exclamation-triangle', 'angle-down', 'pause-circle', 'sign-in-alt', 'users','eye', 'eye-slash', 'external-link-alt', 'calendar', 'stop-circle','question-circle', 'circle-notch','times-circle', 'check-circle', 'angle-right', 'file-download', 'info-circle', 'search', 'edit', 'trash', 'backspace', 'sort', 'terminal', 'list', 'ban', 'toggle-on', 'toggle-off', 'plus', 'sync-alt', 'download', 'copy', 'check']
+      regular:['circle-play', 'circle-question'],
+      solid: ['triangle-exclamation', 'angle-down', 'circle-pause', 'right-to-bracket', 'users','eye', 'eye-slash', 'arrow-up-right-from-square', 'calendar', 'circle-stop','circle-question', 'circle-notch','circle-xmark', 'circle-check', 'angle-right', 'file-arrow-down', 'circle-info', 'magnifying-glass', 'pen-to-square', 'trash', 'delete-left', 'sort', 'terminal', 'list', 'ban', 'toggle-on', 'toggle-off', 'plus', 'rotate', 'download', 'copy', 'check']
           }, 'web/static/fonts/fontawesome/webfonts')
 
     done();
