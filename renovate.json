@@ -14,9 +14,6 @@
     ":npm",
     "npm:unpublishSafe"
   ],
-  "ignoreDeps": [
-    "@fortawesome/fontawesome-free"
-  ],
   "labels": [
     "maintenance",
     "renovate"

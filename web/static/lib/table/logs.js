@@ -222,11 +222,11 @@
           // update icon with error icon
           var old_icon = existing_log
             .closest('.log-group')
-            .querySelector('.has-text-grey-light.fa-check-circle');
+            .querySelector('.has-text-grey-light.fa-circle-check');
           if (old_icon) {
             old_icon.classList.remove('has-text-grey-light');
-            old_icon.classList.remove('fa-check-circle');
-            old_icon.classList.add('has-text-danger', 'fa-times-circle');
+            old_icon.classList.remove('fa-circle-check');
+            old_icon.classList.add('has-text-danger', 'fa-circle-xmark');
           }
         }
       } else {
@@ -360,10 +360,10 @@
 
       if (group[x]['class'] == 'error') {
         status_icon.classList.add('has-text-danger');
-        status_icon.classList.add('fa-times-circle');
+        status_icon.classList.add('fa-circle-xmark');
       } else {
         status_icon.classList.add('has-text-grey-light');
-        status_icon.classList.add('fa-check-circle');
+        status_icon.classList.add('fa-circle-check');
       }
 
       status_icon_level.appendChild(status_icon_wrapper);
