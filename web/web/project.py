@@ -13,7 +13,7 @@ from werkzeug import Response
 
 from web import cache, db
 from web.extensions import get_or_create
-from web.model import Project, ProjectParam, Task, TaskFile, TaskLog, User
+from web.model import Project, ProjectParam, Task, TaskFile, TaskLog, TaskParam, User
 from web.web import submit_executor
 
 project_bp = Blueprint("project_bp", __name__)
@@ -306,9 +306,22 @@ def delete_project(project_id: int) -> Response:
     db.session.query(TaskFile).filter(TaskFile.task_id.in_(tasks)).delete(  # type: ignore[attr-defined,union-attr]
         synchronize_session=False
     )
+    db.session.commit()
+
+    # delete task params
+    db.session.query(TaskParam).filter(TaskParam.task_id.in_(tasks)).delete(  # type: ignore[attr-defined,union-attr]
+        synchronize_session=False
+    )
+    db.session.commit()
 
     # delete tasks
     db.session.query(Task).filter(Task.project_id == project_id).delete(
+        synchronize_session=False
+    )
+    db.session.commit()
+
+    # delete params
+    ProjectParam.query.filter_by(project_id=project_id).delete(
         synchronize_session=False
     )
     db.session.commit()
@@ -328,6 +341,87 @@ def disable_all_project_tasks(project_id: int) -> Response:
     submit_executor("disable_project", project_id)
 
     return redirect(url_for("project_bp.one_project", project_id=project_id))
+
+
+@project_bp.route("/project/<project_id>/duplicate")
+@login_required
+def duplicate_project(project_id: int) -> Response:
+    """Duplicate a project."""
+    my_project = Project.query.filter_by(id=project_id).first()
+    # pylint: disable=R1702
+    if my_project:
+        my_project_copy = Project()
+
+        # pylint: disable=protected-access
+        for key in my_project_copy.__table__.columns.keys():
+            if key not in ["id", "owner_id"]:
+                setattr(my_project_copy, key, getattr(my_project, key))
+
+        my_project_copy.creator_id = current_user.id
+        my_project_copy.owner_id = current_user.id
+        my_project_copy.updater_id = current_user.id
+        my_project_copy.name = str(my_project.name or "") + " - Duplicated"
+
+        db.session.add(my_project_copy)
+        db.session.commit()
+
+        # copy parameters
+        for my_param in ProjectParam.query.filter_by(project_id=project_id).all():
+            if my_param:
+                new_param = ProjectParam()
+                for key in my_param.__table__.columns.keys():
+                    if key not in ["id", "project_id"]:
+                        setattr(new_param, key, getattr(my_param, key))
+
+                new_param.project_id = my_project_copy.id
+                db.session.add(new_param)
+                db.session.commit()
+
+        # copy the tasks
+        for my_task in Task.query.filter_by(project_id=project_id).all():
+
+            if my_task:
+                new_task = Task()
+
+                # pylint: disable=protected-access
+                for key in my_task.__table__.columns.keys():
+                    if key not in [
+                        "id",
+                        "last_run",
+                        "last_run_job_id",
+                        "status_id",
+                        "project_id",
+                    ]:
+                        setattr(new_task, key, getattr(my_task, key))
+
+                new_task.enabled = 0
+                new_task.creator_id = current_user.id
+                new_task.updater_id = current_user.id
+                new_task.status_id = None
+                new_task.project_id = my_project_copy.id
+                new_task.name = str(my_task.name or "")
+
+                db.session.add(new_task)
+                db.session.commit()
+
+                # copy parameters
+                for my_param in TaskParam.query.filter_by(task_id=my_task.id).all():
+                    if my_param:
+                        new_param = TaskParam()
+                        for key in my_param.__table__.columns.keys():
+                            if key not in ["id", "task_id"]:
+                                setattr(new_param, key, getattr(my_param, key))
+
+                        new_param.task_id = new_task.id
+                        db.session.add(new_param)
+                        db.session.commit()
+
+        return redirect(
+            url_for("project_bp.one_project", project_id=my_project_copy.id)
+        )
+
+    flash("Project does not exist.")
+    return redirect(url_for("project_bp.all_projects"))
 
 
 @project_bp.route("/project/<project_id>/enable")

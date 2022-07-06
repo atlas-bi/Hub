@@ -104,7 +104,7 @@
         '<div class="em-tableTools">' +
         '<div class="field is-grouped">' +
         '<div class="field has-addons">' +
-        '<p class="control"><button class="button em-tableReload" title="refresh"><span class="icon"><i class="fas fa-sync-alt"></i></span><span>Refresh</span></button></p>' +
+        '<p class="control"><button class="button em-tableReload" title="refresh"><span class="icon"><i class="fas fa-rotate"></i></span><span>Refresh</span></button></p>' +
         '<p class="control"><button class="button em-tableCopy" title="copy table"><span class="icon"><i class="fas fa-copy"></i></span><span>Copy</span></button></p>' +
         '<p class="control"><button class="button em-tableSave" title="download table"><span class="icon"><i class="fas fa-download"></i></span><span>Download</span></button></p>' +
         '</div>' +
