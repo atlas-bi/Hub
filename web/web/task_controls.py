@@ -9,7 +9,7 @@ from RelativeToNow import relative_to_now
 from werkzeug.wrappers import Response
 
 from web import db, redis_client
-from web.model import Task, TaskFile, TaskLog
+from web.model import Task, TaskFile, TaskLog, TaskParam
 from web.web import submit_executor
 
 task_controls_bp = Blueprint("task_controls_bp", __name__)
@@ -108,6 +108,18 @@ def duplicate_task(task_id: int) -> Response:
         db.session.add(new_task)
         db.session.commit()
 
+        # copy parameters
+        for my_param in TaskParam.query.filter_by(task_id=task_id).all():
+            if my_param:
+                new_param = TaskParam()
+                for key in my_param.__table__.columns.keys():
+                    if key not in ["id", "task_id"]:
+                        setattr(new_param, key, getattr(my_param, key))
+
+                new_param.task_id = new_task.id
+                db.session.add(new_param)
+                db.session.commit()
+
         return redirect(url_for("task_bp.one_task", task_id=new_task.id))
 
     flash("Task does not exist.")
@@ -177,6 +189,8 @@ def delete_task(task_id: int) -> Response:
         TaskLog.query.filter_by(task_id=task_id).delete()
         db.session.commit()
         TaskFile.query.filter_by(task_id=task_id).delete()
+        db.session.commit()
+        TaskParam.query.filter_by(task_id=task_id).delete()
         db.session.commit()
         Task.query.filter_by(id=task_id).delete()
         db.session.commit()
