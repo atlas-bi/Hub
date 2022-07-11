@@ -107,13 +107,13 @@ def project_list(my_type: str = "all") -> Response:
         if proj["Running Tasks"] > 0:
             status_icon = '<span class="ml-0 mr-3 icon has-text-warning"><i class="fas fa-circle-notch"></i></span>'
         elif proj["Errored Tasks"] > 0:
-            status_icon = '<span class="ml-0 mr-3 icon has-text-danger"><i class="fas fa-times-circle"></i></span>'
+            status_icon = '<span class="ml-0 mr-3 icon has-text-danger"><i class="fas fa-circle-xmark"></i></span>'
         elif proj["Enabled Tasks"] > 0 and not proj["Errored Tasks"]:
-            status_icon = '<span class="ml-0 mr-3 icon has-text-success"><i class="fas fa-check-circle"></i></span>'
+            status_icon = '<span class="ml-0 mr-3 icon has-text-success"><i class="fas fa-circle-check"></i></span>'
         elif proj["Enabled Tasks"] == 0:
-            status_icon = '<span class="ml-0 mr-3 icon has-text-grey"><i class="fas fa-stop-circle"></i></span>'
+            status_icon = '<span class="ml-0 mr-3 icon has-text-grey"><i class="fas fa-circle-stop"></i></span>'
         else:
-            status_icon = '<span class="ml-0 mr-3 icon has-text-grey"><i class="fas fa-question-circle"></i></span>'
+            status_icon = '<span class="ml-0 mr-3 icon has-text-grey"><i class="fas fa-circle-question"></i></span>'
         me.append(
             {
                 "Name": f'{status_icon}<a  href="/project/{str(proj["Project Id"])}">{proj["Name"]}</a>',
@@ -590,15 +590,15 @@ def dash_tasks(task_type: str) -> Response:
         task = dict(zip(cols.keys(), task))
 
         if task["Enabled"] != 1:
-            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-stop-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-circle-stop"></i></span>'
         elif task["Status"] == "Completed":
-            status_icon = '<span class="ml-5 mr-3 icon has-text-success"><i class="fas fa-check-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-success"><i class="fas fa-circle-check"></i></span>'
         elif task["Status"] == "Running":
             status_icon = '<span class="ml-5 mr-3 icon has-text-warning"><i class="fas fa-circle-notch"></i></span>'
         elif task["Status"] == "Errored":
-            status_icon = '<span class="ml-5 mr-3 icon has-text-danger"><i class="fas fa-times-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-danger"><i class="fas fa-circle-xmark"></i></span>'
         else:
-            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-question-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-circle-question"></i></span>'
 
         if task["Enabled"] == 1:
             enabled = f'<div class="field mb-0"><input id="task-{task["Task Id"]}" name="task-{task["Task Id"]}" type="checkbox" class="switch is-rounded is-info" action="/task/{task["Task Id"]}/disable" checked /><label for="task-{task["Task Id"]}"></label></div>'
@@ -720,15 +720,15 @@ def task_list(my_type: str) -> Response:
         task = dict(zip(cols.keys(), task))
 
         if task["Enabled"] != 1:
-            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-stop-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-circle-stop"></i></span>'
         elif task["Status"] == "Completed":
-            status_icon = '<span class="ml-5 mr-3 icon has-text-success"><i class="fas fa-check-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-success"><i class="fas fa-circle-check"></i></span>'
         elif task["Status"] == "Running":
             status_icon = '<span class="ml-5 mr-3 icon has-text-warning"><i class="fas fa-circle-notch"></i></span>'
         elif task["Status"] == "Errored":
-            status_icon = '<span class="ml-5 mr-3 icon has-text-danger"><i class="fas fa-times-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-danger"><i class="fas fa-circle-xmark"></i></span>'
         else:
-            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-question-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-circle-question"></i></span>'
 
         if task["Enabled"] == 1:
             enabled = f'<div class="field mb-0"><input id="task-{task["Task Id"]}" name="task-{task["Task Id"]}" type="checkbox" class="switch is-rounded is-info" action="/task/{task["Task Id"]}/disable" checked /><label for="task-{task["Task Id"]}"></label></div>'
@@ -810,15 +810,15 @@ def project_all_tasks(project_id: int) -> Response:
         task = dict(zip(cols.keys(), task))
 
         if task["Enabled"] != 1:
-            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-stop-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-circle-stop"></i></span>'
         elif task["Status"] == "Completed":
-            status_icon = '<span class="ml-5 mr-3 icon has-text-success"><i class="fas fa-check-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-success"><i class="fas fa-circle-check"></i></span>'
         elif task["Status"] == "Running":
             status_icon = '<span class="ml-5 mr-3 icon has-text-warning"><i class="fas fa-circle-notch"></i></span>'
         elif task["Status"] == "Errored":
-            status_icon = '<span class="ml-5 mr-3 icon has-text-danger"><i class="fas fa-times-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-danger"><i class="fas fa-circle-xmark"></i></span>'
         else:
-            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-question-circle"></i></span>'
+            status_icon = '<span class="ml-5 mr-3 icon has-text-grey"><i class="fas fa-circle-question"></i></span>'
 
         if task["Enabled"] == 1:
             enabled = f'<div class="field mb-0"><input id="task-{task["Task Id"]}" name="task-{task["Task Id"]}" type="checkbox" class="switch is-rounded is-info" action="/task/{task["Task Id"]}/disable" checked /><label for="task-{task["Task Id"]}"></label></div>'
