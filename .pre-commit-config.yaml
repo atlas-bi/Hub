@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.1.0
+  rev: v4.3.0
   hooks:
   - id: pretty-format-json
     args: [--autofix]
@@ -17,13 +17,13 @@ repos:
     exclude: migrations* | docs*
     additional_dependencies: [toml]
 - repo: https://github.com/ambv/black
-  rev: 22.1.0
+  rev: 22.6.0
   hooks:
   - id: black
     language_version: python3.9
     exclude: migrations* | docs*
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.2.0
+  rev: v2.4.0
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
