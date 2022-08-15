@@ -21,7 +21,7 @@
   },
   "description": "A task scheduling tool.",
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.1.1",
+    "@fortawesome/fontawesome-free": "6.1.2",
     "@semantic-release/changelog": "6.0.1",
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/exec": "6.0.3",
@@ -56,5 +56,5 @@
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\"",
     "watch": "gulp watch"
   },
-  "version": "2.3.0"
+  "version": "2.3.1"
 }
