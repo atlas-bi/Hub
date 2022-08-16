@@ -324,15 +324,7 @@ class TestConfig(DevConfig):
     # pylint: disable=too-few-public-methods
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "postgresql+psycopg2://{user}:{pw}@{url}:{port}/{db}".format(
-            user=POSTGRES_USER,
-            pw=PGPASSWORD,
-            url=POSTGRES_HOST,
-            port=POSTGRES_PORT,
-            db=POSTGRES_DB,
-        )
-        if POSTGRES_HOST
-        else "sqlite:///../test.sqlite",
+        "sqlite:///../test.sqlite",
     ).replace("postgres://", "postgresql://")
 
     SQLALCHEMY_ENGINE_OPTIONS: dict = {}
