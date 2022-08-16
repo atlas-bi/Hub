@@ -315,14 +315,8 @@ class TestConfig(DevConfig):
     # 2 try to build from pieces
     # 3 use sqlite
 
-    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", None)
-    POSTGRES_PORT = os.environ.get("POSTGRES_PORT", 5432)
-    PGPASSWORD = os.environ.get("PGPASSWORD", "postgres")
-    POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres")
-    POSTGRES_DB = os.environ.get("POSTGRES_USER", "postgres")
-
     # pylint: disable=too-few-public-methods
-    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI = os.environ.get(
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
         "sqlite:///../test.sqlite",
     ).replace("postgres://", "postgresql://")

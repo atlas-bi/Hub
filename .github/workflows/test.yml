@@ -57,7 +57,7 @@ jobs:
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
-        DABASE_URL: postgresql+psycopg2://postgres:12345@localhost/postgres
+        DATABASE_URL: postgresql+psycopg2://postgres:12345@localhost/postgres
         PGPASSWORD: 12345
         REDIS_HOST: localhost
         REDIS_PORT: 6379
