@@ -106,7 +106,6 @@ flask-redis = "^0.4.0"
 Flask-SQLAlchemy = "^2.5.1"
 jsmin = "^3.0.0"
 python-dateutil = "^2.8.2"
-Flask-Executor = "^0.10.0"
 Flask = "^2.0.1"
 pyodbc = "^4.0.31"
 requests = "^2.26.0"
@@ -127,6 +126,7 @@ gevent = "^21.8.0"
 gunicorn = "^20.1.0"
 supervisor = "^4.2.2"
 regex = "^2022.4.24"
+flask-executor = {git = "https://github.com/dchevell/flask-executor.git", rev = "fix-appcontext"}
 
 [tool.poetry.dependencies.dataclasses]
 version = "*"
