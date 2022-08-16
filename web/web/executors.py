@@ -403,6 +403,9 @@ def sub_disable_task(task_id: int) -> None:
     """Shared function for disabling a task."""
     requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id))
 
+    # also clear retry counter
+    redis_client.delete(f"runner_{task_id}_attempt")
+
     task = Task.query.filter_by(id=task_id).first()
     task.enabled = 0
     task.next_run = None

@@ -93,7 +93,7 @@ def schedule() -> Response:
         active_schedule.append(
             {
                 "case": hour,
-                "count": (sum(1 for x in groups.get(hour)) if groups.get(hour) else 0),  # type: ignore[union-attr]
+                "count": (sum(1 for x in groups.get(hour)) if groups.get(hour) else 0),  # type: ignore[union-attr,misc]
             }
         )
 

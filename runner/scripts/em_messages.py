@@ -121,9 +121,10 @@ class RunnerException(Exception):
             if (redis_client.zincrby(f"runner_{task.id}_attempt", 0, "inc") or 1) <= (
                 task.max_retries or 0
             ):
-                run_number = (
+                run_number = int(
                     redis_client.zincrby(f"runner_{task.id}_attempt", 0, "inc") or 1
                 )
+
                 # schedule a rerun in 5 minutes.
                 RunnerLog(
                     task,
@@ -135,6 +136,7 @@ class RunnerException(Exception):
                 requests.get(
                     "%s/run/%s/delay/5" % (app.config["SCHEDULER_HOST"], task.id)
                 )
+
             else:
                 redis_client.delete(f"runner_{task.id}_attempt")
 
