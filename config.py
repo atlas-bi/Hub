@@ -310,8 +310,31 @@ class TestConfig(DevConfig):
     FLASK_DEBUG=0
     """
 
+    # test db:
+    # 1 try to get DATABASE_URL
+    # 2 try to build from pieces
+    # 3 use sqlite
+
+    POSTGRES_HOST = os.environ.get("POSTGRES_HOST", None)
+    POSTGRES_PORT = os.environ.get("POSTGRES_PORT", 5432)
+    PGPASSWORD = os.environ.get("PGPASSWORD", "postgres")
+    POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres")
+    POSTGRES_DB = os.environ.get("POSTGRES_USER", "postgres")
+
     # pylint: disable=too-few-public-methods
-    SQLALCHEMY_DATABASE_URI = "sqlite:///../test.sqlite"
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://{user}:{pw}@{url}:{port}/{db}".format(
+            user=POSTGRES_USER,
+            pw=PGPASSWORD,
+            url=POSTGRES_HOST,
+            port=POSTGRES_PORT,
+            db=POSTGRES_DB,
+        )
+        if POSTGRES_HOST
+        else "sqlite:///../test.sqlite",
+    ).replace("postgres://", "postgresql://")
+
     SQLALCHEMY_ENGINE_OPTIONS: dict = {}
     MIGRATIONS = "migrations_test"
 
