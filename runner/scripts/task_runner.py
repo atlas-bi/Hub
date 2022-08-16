@@ -148,6 +148,7 @@ class Runner:
         RunnerLog(self.task, self.run_id, 8, "Completed task!")
 
         # remove any retry tracking
+        print(f"clearing redis for runner_{task_id}_attempt")
         redis_client.delete(f"runner_{task_id}_attempt")
         task.status_id = 4
         task.est_duration = (datetime.datetime.now() - task.last_run).total_seconds()
@@ -559,17 +560,22 @@ class Runner:
                 self.task, self.run_id, 8, f"Processing script failure:\n{e}"
             )
 
-        # run processing script
-        output = PyProcesser(
-            task=self.task,
-            run_id=self.run_id,
-            directory=self.temp_path,
-            source_files=self.source_files,
-            script=self.task.processing_command or processing_script_name.name
-            if self.task.processing_type_id != 6  # source code
-            else processing_script_name.name,
-            params=self.param_loader,
-        ).run()
+        try:
+            # run processing script
+            output = PyProcesser(
+                task=self.task,
+                run_id=self.run_id,
+                directory=self.temp_path,
+                source_files=self.source_files,
+                script=self.task.processing_command or processing_script_name.name
+                if self.task.processing_type_id != 6  # source code
+                else processing_script_name.name,
+                params=self.param_loader,
+            ).run()
+        except BaseException as e:
+            raise RunnerException(
+                self.task, self.run_id, 8, f"Processing script failure:\n{e}"
+            )
 
         # # allow processer to rename file
         if output:
