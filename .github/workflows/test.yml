@@ -60,6 +60,7 @@ jobs:
         PGPASSWORD: 12345
         REDIS_HOST: localhost
         REDIS_PORT: 6379
+        DATABASE_URL: postgresql+psycopg2://postgres:12345@localhost/postgres
     - name: upload cov
       uses: codecov/codecov-action@v3
       with:

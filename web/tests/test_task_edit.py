@@ -23,7 +23,10 @@ def test_new_task_get(client_fixture: fixture) -> None:
         url_for("task_edit_bp.task_new_get", project_id=99), follow_redirects=True
     )
     assert page.status_code == 200
-    assert request.path == url_for("project_bp.new_project_form")
+    assert page.request.path in [
+        url_for("project_bp.new_project_form"),
+        url_for("project_bp.all_projects"),
+    ]
     assert "Project does not exist" in page.get_data(as_text=True)
 
     # try with valid project
@@ -51,10 +54,10 @@ def test_new_task(client_fixture: fixture) -> None:
         headers=headers,
     )
     # get id
-    t_id = int(request.path.split("/")[-1])
+    t_id = int(page.request.path.split("/")[-1])
 
     # check redirect
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
+    assert page.request.path == url_for("task_bp.one_task", task_id=t_id)
 
     # try an enabled task
     data = {"name": "test task", "task-ooff": "1"}
@@ -66,10 +69,10 @@ def test_new_task(client_fixture: fixture) -> None:
         headers=headers,
     )
     # get id
-    t_id = int(request.path.split("/")[-1])
+    t_id = int(page.request.path.split("/")[-1])
 
     # check redirect
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
+    assert page.request.path == url_for("task_bp.one_task", task_id=t_id)
 
 
 def test_edit_task_get(client_fixture: fixture) -> None:
@@ -78,7 +81,7 @@ def test_edit_task_get(client_fixture: fixture) -> None:
         url_for("task_edit_bp.task_edit_get", task_id=99), follow_redirects=True
     )
     assert page.status_code == 200
-    assert request.path == url_for("task_bp.all_tasks")
+    assert page.request.path == url_for("task_bp.all_tasks")
     assert "Task does not exist" in page.get_data(as_text=True)
 
     # try with valid project
@@ -106,10 +109,10 @@ def test_edit_task(client_fixture: fixture) -> None:
         headers=headers,
     )
     # get id
-    t_id = int(request.path.split("/")[-1])
+    t_id = int(page.request.path.split("/")[-1])
 
     # check redirect
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
+    assert page.request.path == url_for("task_bp.one_task", task_id=t_id)
 
     # try an enabled task
     data = {"name": "test task", "task-ooff": "1"}
@@ -121,10 +124,10 @@ def test_edit_task(client_fixture: fixture) -> None:
         headers=headers,
     )
     # get id
-    t_id = int(request.path.split("/")[-1])
+    t_id = int(page.request.path.split("/")[-1])
 
     # check redirect
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
+    assert page.request.path == url_for("task_bp.one_task", task_id=t_id)
 
 
 # def test_new_task(client_fixture: fixture) -> None:

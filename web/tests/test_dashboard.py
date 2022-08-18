@@ -130,14 +130,6 @@ def test_schedule(client_fixture: fixture) -> None:
     assert response.get_data(as_text=True) == ""
 
 
-def test_schedule_with_scheduler(
-    client_fixture: fixture, client_fixture_with_scheduler: fixture
-) -> None:
-    response = client_fixture.get("/schedule")
-    assert response.status_code == 200
-    assert "em-timelineScale" in response.get_data(as_text=True)
-
-
 def test_errored_schedule_now(client_fixture: fixture) -> None:
     response = client_fixture.get("/dash/errored/schedule", follow_redirects=True)
     assert response.status_code == 200
@@ -155,15 +147,6 @@ def test_orphaned_delete(client_fixture: fixture) -> None:
     assert "Failed to delete orphans. Scheduler offline." in response.get_data(
         as_text=True
     )
-
-
-def test_orphaned_delete_with_scheduler(
-    client_fixture: fixture, client_fixture_with_scheduler: fixture
-) -> None:
-    response = client_fixture.get("/dash/orphans/delete", follow_redirects=True)
-    assert response.status_code == 200
-
-    assert "Scheduler: orphans deleted!" in response.get_data(as_text=True)
 
 
 def test_errored_run(client_fixture: fixture) -> None:

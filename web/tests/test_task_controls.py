@@ -12,6 +12,7 @@ run with::
 
 """
 import json
+import time
 
 from flask import request, url_for
 from pytest import fixture
@@ -27,7 +28,10 @@ def test_run_task(client_fixture: fixture) -> None:
     )
     assert page.status_code == 200
     assert "Task does not exist." in page.get_data(as_text=True)
-    assert request.path == url_for("project_bp.new_project_form")
+    assert page.request.path in [
+        url_for("project_bp.new_project_form"),
+        url_for("task_bp.all_tasks"),
+    ]
 
     _, t_id = create_demo_task(2025)
 
@@ -35,20 +39,8 @@ def test_run_task(client_fixture: fixture) -> None:
         url_for("task_controls_bp.run_task", task_id=t_id), follow_redirects=True
     )
     assert page.status_code == 200
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
+    assert page.request.path == url_for("task_bp.one_task", task_id=t_id)
     assert "Failed to run task." in page.get_data(as_text=True)
-
-
-# def test_run_task_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
-
-#     _, t_id = create_demo_task(2025)
-
-#     page = client_fixture_with_scheduler.get(
-#         url_for("task_controls_bp.run_task", task_id=t_id), follow_redirects=True
-#     )
-#     assert page.status_code == 200
-#     assert request.path == url_for("task_bp.one_task", task_id=t_id)
-#     assert "Task run started." in page.get_data(as_text=True)
 
 
 def test_scheduler_task(client_fixture: fixture) -> None:
@@ -59,7 +51,10 @@ def test_scheduler_task(client_fixture: fixture) -> None:
     )
     assert page.status_code == 200
     assert "Task does not exist." in page.get_data(as_text=True)
-    assert request.path == url_for("task_bp.all_tasks")
+    assert page.request.path in [
+        url_for("task_bp.all_tasks"),
+        url_for("project_bp.new_project"),
+    ]
 
     _, t_id = create_demo_task(2025)
 
@@ -67,23 +62,13 @@ def test_scheduler_task(client_fixture: fixture) -> None:
         url_for("task_controls_bp.schedule_task", task_id=t_id), follow_redirects=True
     )
     assert page.status_code == 200
-    assert request.path == url_for("task_bp.one_task", task_id=t_id)
+    assert page.request.path == url_for("task_bp.one_task", task_id=t_id)
     assert "Scheduling task." in page.get_data(as_text=True)
     # failure message will be in executor.
+    time.sleep(1)
     executor = client_fixture.get(url_for("executors_bp.executor_status"))
+
     assert b"Failed to schedule" in executor.data
-
-
-# def test_scheduler_task_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
-
-#     _, t_id = create_demo_task(2025)
-
-#     page = client_fixture_with_scheduler.get(
-#         url_for("task_controls_bp.schedule_task", task_id=t_id), follow_redirects=True
-#     )
-#     assert page.status_code == 200
-#     assert request.path == url_for("task_bp.one_task", task_id=t_id)
-#     assert "Scheduling task." in page.get_data(as_text=True)
 
 
 def test_enable_task(client_fixture: fixture) -> None:
@@ -143,7 +128,7 @@ def test_delete_task(client_fixture: fixture) -> None:
         url_for("task_controls_bp.delete_task", task_id=99), follow_redirects=True
     )
     assert page.status_code == 200
-    assert request.path == url_for("task_bp.all_tasks")
+    assert page.request.path == url_for("task_bp.all_tasks")
     assert "Task does not exist." in page.get_data(as_text=True)
 
     _, t_id = create_demo_task()
@@ -158,18 +143,6 @@ def test_delete_task(client_fixture: fixture) -> None:
     assert b"Failed to disable task." in executor.data
 
 
-def test_delete_task_with_scheduler(client_fixture_with_scheduler: fixture) -> None:
-
-    p_id, t_id = create_demo_task()
-    page = client_fixture_with_scheduler.get(
-        url_for("task_controls_bp.delete_task", task_id=t_id), follow_redirects=True
-    )
-    assert page.status_code == 200
-
-    assert "Deleting task." in page.get_data(as_text=True)
-    assert request.path == url_for("project_bp.one_project", project_id=p_id)
-
-
 def test_end_retry(client_fixture: fixture) -> None:
 
     # test invalid task
@@ -177,7 +150,11 @@ def test_end_retry(client_fixture: fixture) -> None:
         url_for("task_controls_bp.task_endretry", task_id=99), follow_redirects=True
     )
     assert page.status_code == 200
-    assert request.path == url_for("task_bp.all_tasks")
+    # no tasks exist so going to project.. depends on order of tests
+    assert page.request.path in [
+        url_for("project_bp.new_project"),
+        url_for("task_bp.all_tasks"),
+    ]
     assert "Task does not exist." in page.get_data(as_text=True)
 
     _, t_id = create_demo_task()
@@ -187,8 +164,10 @@ def test_end_retry(client_fixture: fixture) -> None:
     assert page.status_code == 200
 
     # this will show in executor messages
+
+    time.sleep(1)
     executor = client_fixture.get(url_for("executors_bp.executor_status"))
-    assert b"Failed to disable" in executor.data
+    assert "Failed to disable" in executor.get_data(as_text=True)
 
 
 def test_reset(client_fixture: fixture) -> None:
@@ -198,7 +177,7 @@ def test_reset(client_fixture: fixture) -> None:
         url_for("task_controls_bp.reset_task", task_id=99), follow_redirects=True
     )
     assert page.status_code == 200
-    assert request.path == url_for("task_bp.all_tasks")
+    assert page.request.path == url_for("task_bp.all_tasks")
     assert "Task does not exist." in page.get_data(as_text=True)
 
     _, t_id = create_demo_task()

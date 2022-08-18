@@ -26,7 +26,10 @@ def test_tasks_home(client_fixture: fixture) -> None:
     page = client_fixture.get("/task", follow_redirects=True)
     assert page.status_code == 200
     # no projects exists so go to new project
-    assert request.path == url_for("project_bp.new_project")
+    assert page.request.path in [
+        url_for("project_bp.new_project"),
+        url_for("task_bp.all_tasks"),
+    ]
 
     # add a task
     create_demo_task()
@@ -36,6 +39,8 @@ def test_tasks_home(client_fixture: fixture) -> None:
 
 def test_my_tasks(client_fixture: fixture) -> None:
     # remove everyting
+    db.session.query(TaskLog).delete(synchronize_session=False)
+    db.session.commit()
     db.session.query(Task).delete(synchronize_session=False)
     db.session.commit()
     db.session.query(Project).delete(synchronize_session=False)
@@ -44,7 +49,7 @@ def test_my_tasks(client_fixture: fixture) -> None:
     page = client_fixture.get("/task/mine", follow_redirects=True)
     assert page.status_code == 200
     # no projects exists so go to new project
-    assert request.path == url_for("project_bp.new_project")
+    assert page.request.path == url_for("project_bp.new_project")
 
     # add a task
     create_demo_task()
@@ -62,7 +67,7 @@ def test_tasks_user(client_fixture: fixture) -> None:
     page = client_fixture.get("/task/user/1", follow_redirects=True)
     assert page.status_code == 200
     # no projects exists so go to new project
-    assert request.path == url_for("project_bp.new_project")
+    assert page.request.path == url_for("project_bp.new_project")
 
     # add a task
     create_demo_task()
@@ -80,7 +85,7 @@ def test_one_task(client_fixture: fixture) -> None:
     page = client_fixture.get("/task/99", follow_redirects=True)
     assert page.status_code == 200
     # no projects exists so go to new project
-    assert request.path == url_for("task_bp.all_tasks")
+    assert page.request.path == url_for("task_bp.all_tasks")
     assert "Task does not exist." in page.get_data(as_text=True)
 
     # check valid task
@@ -90,65 +95,6 @@ def test_one_task(client_fixture: fixture) -> None:
         url_for("task_bp.one_task", task_id=t_id), follow_redirects=False
     )
     assert page.status_code == 200
-
-
-def test_get_source_code(client_fixture_with_runner: fixture) -> None:
-    # check invalid task
-    page = client_fixture_with_runner.get("/task/99/source_code")
-    assert page.status_code == 200
-
-    # there should be a log
-    assert (
-        TaskLog.query.filter_by(status_id=7, error=1, task_id=99)
-        .filter(TaskLog.message.like("%Failed to get source code%"))  # type: ignore[union-attr]
-        .first()
-        is not None
-    )
-
-    # check valid task
-    _, t_id = create_demo_task()
-
-    # change source type to code
-    Task.query.filter_by(id=t_id).update(
-        {"source_type_id": 4, "source_code": "something cool"}
-    )
-    db.session.commit()
-    page = client_fixture_with_runner.get(
-        url_for("task_bp.task_get_source_code", task_id=t_id), follow_redirects=False
-    )
-
-    assert page.status_code == 200
-    assert "something cool" in page.get_data(as_text=True)
-
-
-def test_get_processing_code(client_fixture_with_runner: fixture) -> None:
-    # check invalid task
-    page = client_fixture_with_runner.get("/task/99/processing_code")
-    assert page.status_code == 200
-
-    # there should be a log
-    assert (
-        TaskLog.query.filter_by(status_id=7, error=1, task_id=99)
-        .filter(TaskLog.message.like("%Failed to get processing code%"))  # type: ignore[union-attr]
-        .first()
-        is not None
-    )
-
-    # check valid task
-    _, t_id = create_demo_task()
-
-    # change source type to code
-    Task.query.filter_by(id=t_id).update(
-        {"processing_type_id": 6, "processing_code": "something cool"}
-    )
-    db.session.commit()
-    page = client_fixture_with_runner.get(
-        url_for("task_bp.task_get_processing_code", task_id=t_id),
-        follow_redirects=False,
-    )
-
-    assert page.status_code == 200
-    assert "something cool" in page.get_data(as_text=True)
 
 
 def test_sftp_dest(client_fixture: fixture) -> None:
