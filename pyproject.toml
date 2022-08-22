@@ -43,7 +43,7 @@ sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.poetry]
 name = "atlas-hub"
-version = "2.3.0"
+version = "2.3.1-alpha.1"
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
     "Paula Courville",
@@ -85,7 +85,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0"
+python = ">=3.7.2,<4.0"
 python-ldap = "^3.3.1"
 is-safe-url = "^1.0"
 Flask-Login = "^0.6.0"
@@ -98,7 +98,7 @@ psycopg2-binary = "^2.9.1"
 cryptography = "^37.0.0"
 psutil = "^5.8.0"
 Flask-Compress = "^1.10.1"
-SQLAlchemy = "1.4.37"
+SQLAlchemy = "1.4.40"
 Flask-Migrate = "^3.1.0"
 python3-saml = "^1.12.0"
 bs4 = "^0.0.1"
@@ -106,11 +106,9 @@ flask-redis = "^0.4.0"
 Flask-SQLAlchemy = "^2.5.1"
 jsmin = "^3.0.0"
 python-dateutil = "^2.8.2"
-Flask-Executor = "^0.10.0"
 Flask = "^2.0.1"
 pyodbc = "^4.0.31"
 requests = "^2.26.0"
-Flask-Session = "^0.4.0"
 Flask-APScheduler = "^1.12.2"
 xmlsec = "^1.3.11"
 Flask-Assets = "^2.0"
@@ -127,6 +125,8 @@ gevent = "^21.8.0"
 gunicorn = "^20.1.0"
 supervisor = "^4.2.2"
 regex = "^2022.4.24"
+flask-session2 = "^1.2.0"
+Flask-Executor = "^1.0.0"
 
 [tool.poetry.dependencies.dataclasses]
 version = "*"
@@ -139,6 +139,32 @@ toml = "^0.10.2"
 pytest-cov = "^3.0.0"
 pytest = "^7.1.1"
 Flask-DebugToolbar = "^0.13.1"
+coverage = "^6.4.4"
+radon = "^5.1.0"
+black = "^22.6.0"
+isort = "^5.10.1"
+reformat = "^1.0.3"
+flake8 = "^5.0.4"
+pylint = "^2.14.5"
+mypy = "^0.971"
+types-Jinja2 = "^2.11.9"
+sqlalchemy2-stubs = "^0.0.2-alpha.25"
+types-python-dateutil = "^2.8.19"
+types-paramiko = "^2.11.3"
+types-requests = "^2.28.8"
+types-redis = "^4.3.14"
+types-Flask = "^1.1.6"
+flake8-variables-names = "^0.0.5"
+flake8-docstrings = "^1.6.0"
+flake8-comprehensions = "^3.10.0"
+flake8-print = "^5.0.0"
+flake8-typing-imports = "^1.13.0"
+flake8-builtins = "^1.5.3"
+pep8-naming = "^0.13.1"
+flake8-pytest-style = "^1.6.0"
+flake8-simplify = "^0.19.3"
+Pygments = "^2.13.0"
+SQLAlchemy-Utils = "^0.38.3"
 
 [tool.pylint]
 
@@ -154,7 +180,7 @@ max-module-lines = 1000
 ignore = "smb_fix.py,tests"
 
 [tool.pylint.messages_control]
-disable = "W0707, R1705, W0703, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911, E1120, E1123, W1514, W1406, C0209, R1714, C0301, W0120"
+disable = "W0707, R1705, W0703, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911, E1120, E1123, W1514, W1406, C0209, R1714, C0301, W0120, E1101,I1101"
 
 [tool.pytest]
 

@@ -59,20 +59,21 @@ def job_missed(event: JobEvent) -> None:
                 datetime.datetime.now(datetime.timezone.utc) - event.scheduled_run_time
             )
 
-            log = TaskLog(
-                task_id=task_id,
-                status_id=6,
-                error=1,
-                message="Job missed. Scheduled for: "
-                + datetime.datetime.strftime(
-                    event.scheduled_run_time,
-                    "%a, %b %-d, %Y %H:%M:%S",
+            if Task.query.filter_by(id=task_id).first():
+                log = TaskLog(
+                    task_id=task_id,
+                    status_id=6,
+                    error=1,
+                    message="Job missed. Scheduled for: "
+                    + datetime.datetime.strftime(
+                        event.scheduled_run_time,
+                        "%a, %b %-d, %Y %H:%M:%S",
+                    )
+                    + ". Missed by : "
+                    + str(ex_time),
                 )
-                + ". Missed by : "
-                + str(ex_time),
-            )
-            db.session.add(log)
-            db.session.commit()
+                db.session.add(log)
+                db.session.commit()
 
 
 def job_error(event: JobEvent) -> None:

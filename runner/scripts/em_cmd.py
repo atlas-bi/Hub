@@ -7,7 +7,7 @@ import subprocess
 from typing import Optional
 
 from runner.model import Task
-from runner.scripts.em_messages import RunnerException, RunnerLog
+from runner.scripts.em_messages import RunnerLog
 
 
 class Cmd:
@@ -42,7 +42,7 @@ class Cmd:
             out = out_bytes.decode("utf-8")
 
             if "Error" in out:
-                raise RunnerException(
+                RunnerLog(
                     self.task,
                     self.run_id,
                     17,
@@ -54,7 +54,10 @@ class Cmd:
                         out,
                         flags=re.IGNORECASE | re.MULTILINE,
                     ),
+                    1,
                 )
+
+                raise ValueError("Error")
 
             RunnerLog(
                 self.task,
@@ -67,7 +70,7 @@ class Cmd:
 
         except subprocess.CalledProcessError as e:
             out = e.output.decode("utf-8")
-            raise RunnerException(
+            RunnerLog(
                 self.task,
                 self.run_id,
                 17,
@@ -80,10 +83,13 @@ class Cmd:
                     str(e),
                     flags=re.IGNORECASE | re.MULTILINE,
                 ),
+                1,
             )
 
+            raise
+
         except BaseException as e:
-            raise RunnerException(
+            RunnerLog(
                 self.task,
                 self.run_id,
                 17,
@@ -96,7 +102,9 @@ class Cmd:
                     str(e),
                     flags=re.IGNORECASE | re.MULTILINE,
                 ),
+                1,
             )
+            raise
 
     def run(self) -> str:
         """Run input command as a subprocess command."""
@@ -104,12 +112,15 @@ class Cmd:
             out = os.popen(self.cmd + " 2>&1").read()
 
             if "Error" in out:
-                raise RunnerException(
+                RunnerLog(
                     self.task,
                     self.run_id,
                     17,
                     self.error_msg + ("\n" if out != "" else "") + out,
+                    1,
                 )
+
+                raise ValueError("Error")
 
             RunnerLog(self.task, self.run_id, 17, self.success_msg)
 
@@ -117,9 +128,11 @@ class Cmd:
 
         # pylint: disable=broad-except
         except BaseException as e:
-            raise RunnerException(
+            RunnerLog(
                 self.task,
                 self.run_id,
                 17,
                 self.error_msg + ("\n" if out != "" else "") + "\n" + str(e),
+                1,
             )
+            raise

@@ -293,9 +293,9 @@ class Smb:
             else:
                 dest_path = str(
                     Path(
-                        Path(sanitize_filename(self.task.project.name))
-                        / sanitize_filename(self.task.name)
-                        / sanitize_filename(self.task.last_run_job_id)
+                        Path(sanitize_filename(self.task.project.name or ""))
+                        / sanitize_filename(self.task.name or "")
+                        / sanitize_filename(self.task.last_run_job_id or "")
                         / file_name
                     )
                 )

@@ -1,14 +1,17 @@
-var gulp = require('gulp');
-var autoprefexer = require('gulp-autoprefixer');
-var sass = require('gulp-sass')(require('sass'));
-var replace = require('gulp-replace');
-var fontawesomeSubset = require('fontawesome-subset');
-var del = require('del');
-const purgecss = require('gulp-purgecss')
-var cssnano = require('gulp-cssnano');
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
+import gulp from 'gulp';
+import autoprefexer from 'gulp-autoprefixer';
+import dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+const sass = gulpSass(dartSass);
+
+import replace from 'gulp-replace';
+import fontawesomeSubset from 'fontawesome-subset';
+import {deleteSync} from 'del';
+import purgecss from 'gulp-purgecss';
+import cssnano from 'gulp-cssnano';
+import concat from 'gulp-concat';
+import rename from 'gulp-rename';
+import uglify from 'gulp-uglify';
 
 gulp.task('font:inter', function() {
   return gulp.src('node_modules/@fontsource/inter/**/*').pipe(replace(/\.\/files\//g, '/static/fonts/inter/files/')).pipe(gulp.dest('web/static/fonts/inter'))
@@ -20,7 +23,7 @@ gulp.task('font:rasa', function() {
 
 
 gulp.task('fontawesome', function(done) {
-    del.sync('web/static/fonts/fontawesome/webfonts', {force:true});
+    deleteSync('web/static/fonts/fontawesome/webfonts', {force:true});
     fontawesomeSubset.fontawesomeSubset({
       regular:['circle-play', 'circle-question'],
       solid: ['triangle-exclamation', 'angle-down', 'circle-pause', 'right-to-bracket', 'users','eye', 'eye-slash', 'arrow-up-right-from-square', 'calendar', 'circle-stop','circle-question', 'circle-notch','circle-xmark', 'circle-check', 'angle-right', 'file-arrow-down', 'circle-info', 'magnifying-glass', 'pen-to-square', 'trash', 'delete-left', 'sort', 'terminal', 'list', 'ban', 'toggle-on', 'toggle-off', 'plus', 'rotate', 'download', 'copy', 'check']

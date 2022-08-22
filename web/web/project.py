@@ -12,9 +12,11 @@ from sqlalchemy import func, text
 from werkzeug import Response
 
 from web import cache, db
-from web.extensions import get_or_create
 from web.model import Project, ProjectParam, Task, TaskFile, TaskLog, TaskParam, User
 from web.web import submit_executor
+
+from . import get_or_create
+from .executors import disable_project
 
 project_bp = Blueprint("project_bp", __name__)
 
@@ -294,7 +296,8 @@ def delete_project(project_id: int) -> Response:
         )
     ]
 
-    submit_executor("disable_project", project_id)
+    # must wait for this to complete before deleting
+    disable_project([project_id])
 
     # delete logs
     db.session.query(TaskLog).filter(TaskLog.task_id.in_(tasks)).delete(  # type: ignore[attr-defined, union-attr]

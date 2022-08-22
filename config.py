@@ -310,8 +310,18 @@ class TestConfig(DevConfig):
     FLASK_DEBUG=0
     """
 
+    # test db:
+    # 1 try to get DATABASE_URL
+    # 2 try to build from pieces
+    # 3 use sqlite
+
     # pylint: disable=too-few-public-methods
-    SQLALCHEMY_DATABASE_URI = "sqlite:///../test.sqlite"
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+psycopg2://postgres@localhost/atlas_hub_scrap_test"
+        # "sqlite:///../test.sqlite",
+    ).replace("postgres://", "postgresql://")
+
     SQLALCHEMY_ENGINE_OPTIONS: dict = {}
     MIGRATIONS = "migrations_test"
 

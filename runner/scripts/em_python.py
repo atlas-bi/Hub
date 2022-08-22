@@ -9,7 +9,7 @@ import regex as re
 
 from runner.model import Task
 from runner.scripts.em_cmd import Cmd
-from runner.scripts.em_messages import RunnerException
+from runner.scripts.em_messages import RunnerLog
 from runner.scripts.em_params import ParamLoader
 
 
@@ -80,12 +80,15 @@ class PyProcesser:
 
         # pylint: disable=broad-except
         except BaseException as e:
-            raise RunnerException(
+            RunnerLog(
                 self.task,
                 self.run_id,
                 14,
                 f"Failed to build environment.\n{self.base_path}\n{e}",
+                1,
             )
+
+            raise
 
     def __pip_install(self) -> None:
         r"""Get includes from script.
@@ -96,7 +99,7 @@ class PyProcesser:
         get import (...) as ...
         ^\s*?import\K\s+[^\.][^\s]+?(?=\s)
 
-        get from (...) imoprt (...)
+        get from (...) import (...)
         ^\s*?from\K\s+[^\.].+?(?=import)
         """
         try:
@@ -251,12 +254,14 @@ class PyProcesser:
                     ).shell()
 
         except BaseException as e:
-            raise RunnerException(
+            RunnerLog(
                 self.task,
                 self.run_id,
                 14,
                 f"Failed to install packages.\n{self.base_path}\n{e}",
+                1,
             )
+            raise
 
     def __run_script(self) -> None:
         try:
@@ -285,9 +290,11 @@ class PyProcesser:
             ).shell()
 
         except BaseException as e:
-            raise RunnerException(
+            RunnerLog(
                 self.task,
                 self.run_id,
                 14,
                 f"Failed to build run script.\n{self.base_path}\n{e}",
+                1,
             )
+            raise

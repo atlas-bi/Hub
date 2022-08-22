@@ -93,7 +93,7 @@ def schedule() -> Response:
         active_schedule.append(
             {
                 "case": hour,
-                "count": (sum(1 for x in groups.get(hour)) if groups.get(hour) else 0),  # type: ignore[union-attr]
+                "count": (sum(1 for x in groups.get(hour)) if groups.get(hour) else 0),  # type: ignore[union-attr,misc]
             }
         )
 
@@ -106,9 +106,12 @@ def add_task(task_id: int) -> str:
 
     First check for any existing schedules, remove them, then add a new schedule.
     """
-    task = Task.query.filter_by(id=task_id).first()
+    try:
+        assert Task.query.filter_by(id=task_id).first()
 
-    if not task:
+    # pylint: disable=broad-except
+    except BaseException as e:
+        print(str(e))  # noqa: T201
         return jsonify({"error": "Invalid job."})
     try:
         scheduler_delete_task(task_id)
@@ -127,6 +130,14 @@ def add_task(task_id: int) -> str:
 @web_bp.route("/api/delete/<task_id>")
 def delete_task(task_id: int) -> Response:
     """Delete tasks schedule."""
+    try:
+        assert Task.query.filter_by(id=task_id).first()
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        print(str(e))  # noqa: T201
+        return jsonify({"error": "Invalid job."})
+
     if scheduler_delete_task(task_id):
         return jsonify({"message": "Scheduler: task job deleted!"})
     return jsonify({"message": "Scheduler: failed to delete job!"})
