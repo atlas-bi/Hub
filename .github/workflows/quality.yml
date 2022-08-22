@@ -21,6 +21,7 @@ jobs:
 
     - name: Install Deps
       run: |
+        sudo apt update
         sudo apt install libxmlsec1 libxmlsec1-dev
         python -m pip install --no-cache-dir tox poetry tox-poetry
 
