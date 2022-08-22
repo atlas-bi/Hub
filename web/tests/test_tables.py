@@ -28,7 +28,7 @@ def test_table_project_mine(client_fixture: fixture) -> None:
     assert len(json.loads(page.get_data(as_text=True)))
 
     # create a project
-    _, t_id = create_demo_task()
+    _, t_id = create_demo_task(db.session)
     page = client_fixture.get("/table/project/1")
     assert page.status_code == 200
     # check json is usable

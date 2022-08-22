@@ -10,7 +10,6 @@ scripts after running :obj:`web.create_app`
 
 """
 import logging
-from typing import Any
 
 from flask_assets import Environment
 from flask_caching import Cache
@@ -23,7 +22,6 @@ from flask_redis import FlaskRedis
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy_caching import CachingQuery
-from sqlalchemy.orm import Session as SqlSession
 
 cache = Cache()
 compress = Compress()
@@ -39,18 +37,3 @@ web_assets = Environment()
 login_manager = LoginManager()
 
 logging.basicConfig(level=logging.WARNING)
-
-
-def get_or_create(session: SqlSession, model: Any, **kwargs: Any) -> Any:
-    """Create model if not existing."""
-    instance = model.query.filter_by(**kwargs).first()
-
-    if instance:
-        return instance
-
-    instance = model(**kwargs)
-
-    session.add(instance)
-    session.commit()
-
-    return instance

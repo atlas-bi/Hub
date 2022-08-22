@@ -2,10 +2,12 @@
 import os
 
 import pytest
+from sqlalchemy_utils import create_database, database_exists, drop_database
 
 from runner import create_app as runner_create_app
 from runner.model import Project, Task
-from web.seed import get_or_create
+
+from . import get_or_create, seed
 
 os.environ["FLASK_ENV"] = "test"
 os.environ["FLASK_APP"] = "runner"
@@ -15,6 +17,8 @@ from datetime import datetime
 from typing import Any, Generator, Tuple
 
 from dateutil.tz import tzlocal
+
+from runner import model
 
 
 @pytest.fixture(scope="module")
@@ -26,15 +30,18 @@ def client_fixture() -> Generator:
 
         from runner.extensions import db
         from runner.model import User
-        from web.seed import get_or_create, seed
 
-        db.drop_all()
-        db.session.commit()
+        if database_exists(db.engine.url):
+            drop_database(db.engine.url)
+
+        create_database(db.engine.url)
+
+        assert database_exists(db.engine.url)
 
         db.create_all()
         db.session.commit()
 
-        seed(db.session)
+        seed(db.session, model)
 
         get_or_create(
             db.session,

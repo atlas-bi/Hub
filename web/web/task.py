@@ -168,20 +168,21 @@ def task_get_source_code(task_id: int) -> str:
         )["code"]
     # pylint: disable=broad-except
     except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            error=1,
-            task_id=task_id,
-            message=(
-                (current_user.full_name or "none")
-                + ": Failed to get source code. ("
-                + str(task_id)
-                + ")\n"
-                + str(e)
-            ),
-        )
-        db.session.add(log)
-        db.session.commit()
+        if Task.query.filter_by(id=task_id).first():
+            log = TaskLog(
+                status_id=7,
+                error=1,
+                task_id=task_id,
+                message=(
+                    (current_user.full_name or "none")
+                    + ": Failed to get source code. ("
+                    + str(task_id)
+                    + ")\n"
+                    + str(e)
+                ),
+            )
+            db.session.add(log)
+            db.session.commit()
         code = "error."
 
     task = Task.query.filter_by(id=task_id).first()
@@ -213,20 +214,21 @@ def task_get_processing_code(task_id: int) -> str:
         )["code"]
     # pylint: disable=broad-except
     except BaseException as e:
-        log = TaskLog(
-            status_id=7,
-            error=1,
-            task_id=task_id,
-            message=(
-                (current_user.full_name or "none")
-                + ": Failed to get processing code. ("
-                + str(task_id)
-                + ")\n"
-                + str(e)
-            ),
-        )
-        db.session.add(log)
-        db.session.commit()
+        if Task.query.filter_by(id=task_id).first():
+            log = TaskLog(
+                status_id=7,
+                error=1,
+                task_id=task_id,
+                message=(
+                    (current_user.full_name or "none")
+                    + ": Failed to get processing code. ("
+                    + str(task_id)
+                    + ")\n"
+                    + str(e)
+                ),
+            )
+            db.session.add(log)
+            db.session.commit()
         code = "error."
 
     return render_template(

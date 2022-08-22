@@ -401,15 +401,19 @@ def enable_project(project_list: List[int]) -> str:
 
 def sub_disable_task(task_id: int) -> None:
     """Shared function for disabling a task."""
-    requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id))
+    try:
+        requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id))
 
-    # also clear retry counter
-    redis_client.delete(f"runner_{task_id}_attempt")
+        # also clear retry counter
+        redis_client.delete(f"runner_{task_id}_attempt")
 
-    task = Task.query.filter_by(id=task_id).first()
-    task.enabled = 0
-    task.next_run = None
-    db.session.commit()
+        task = Task.query.filter_by(id=task_id).first()
+        task.enabled = 0
+        task.next_run = None
+        db.session.commit()
+    except BaseException as e:
+        db.session.rollback()
+        raise e
 
 
 def disable_task(task_list: List[int]) -> str:
@@ -417,13 +421,8 @@ def disable_task(task_list: List[int]) -> str:
     task_id: int = task_list[0]
     try:
         sub_disable_task(task_id)
-        requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id))
 
         task = Task.query.filter_by(id=task_id).first()
-        task.enabled = 0
-        task.next_run = None
-        db.session.commit()
-
         log = TaskLog(
             task_id=task_id,
             status_id=7,
@@ -444,6 +443,7 @@ def disable_task(task_list: List[int]) -> str:
 
     # pylint: disable=broad-except
     except BaseException as e:
+        db.session.rollback()
         log = TaskLog(
             status_id=7,
             error=1,

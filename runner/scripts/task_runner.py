@@ -148,7 +148,6 @@ class Runner:
         RunnerLog(self.task, self.run_id, 8, "Completed task!")
 
         # remove any retry tracking
-        print(f"clearing redis for runner_{task_id}_attempt")
         redis_client.delete(f"runner_{task_id}_attempt")
         task.status_id = 4
         task.est_duration = (datetime.datetime.now() - task.last_run).total_seconds()
