@@ -32,7 +32,7 @@ def test_tasks_home(client_fixture: fixture) -> None:
     ]
 
     # add a task
-    create_demo_task()
+    create_demo_task(db.session)
     page = client_fixture.get("/task", follow_redirects=False)
     assert page.status_code == 200
 
@@ -52,7 +52,7 @@ def test_my_tasks(client_fixture: fixture) -> None:
     assert page.request.path == url_for("project_bp.new_project")
 
     # add a task
-    create_demo_task()
+    create_demo_task(db.session)
     page = client_fixture.get("/task/mine", follow_redirects=False)
     assert page.status_code == 200
 
@@ -70,7 +70,7 @@ def test_tasks_user(client_fixture: fixture) -> None:
     assert page.request.path == url_for("project_bp.new_project")
 
     # add a task
-    create_demo_task()
+    create_demo_task(db.session)
     page = client_fixture.get("/task/user/1", follow_redirects=False)
     assert page.status_code == 200
 
@@ -85,11 +85,11 @@ def test_one_task(client_fixture: fixture) -> None:
     page = client_fixture.get("/task/99", follow_redirects=True)
     assert page.status_code == 200
     # no projects exists so go to new project
-    assert page.request.path == url_for("task_bp.all_tasks")
+    assert page.request.path == url_for("project_bp.new_project")
     assert "Task does not exist." in page.get_data(as_text=True)
 
     # check valid task
-    _, t_id = create_demo_task()
+    _, t_id = create_demo_task(db.session)
 
     page = client_fixture.get(
         url_for("task_bp.one_task", task_id=t_id), follow_redirects=False
@@ -97,76 +97,48 @@ def test_one_task(client_fixture: fixture) -> None:
     assert page.status_code == 200
 
 
-def test_sftp_dest(client_fixture: fixture) -> None:
+def test_urls(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/sftp-dest")
     assert response.status_code == 200
 
-
-def test_gpg_file(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/gpg-file")
     assert response.status_code == 200
 
-
-def test_sftp_source(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/sftp-source")
     assert response.status_code == 200
 
-
-def test_ssh_source(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/ssh-source")
     assert response.status_code == 200
 
-
-def test_sftp_query(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/sftp-query")
     assert response.status_code == 200
 
-
-def test_sftp_processing(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/sftp-processing")
     assert response.status_code == 200
 
-
-def test_ftp_dest(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/ftp-dest")
     assert response.status_code == 200
 
-
-def test_ftp_source(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/ftp-source")
     assert response.status_code == 200
 
-
-def test_ftp_processing(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/ftp-processing")
     assert response.status_code == 200
 
-
-def test_ftp_query(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/ftp-query")
     assert response.status_code == 200
 
-
-def test_smb_source(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/smb-source")
     assert response.status_code == 200
 
-
-def test_smb_dest(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/smb-dest")
     assert response.status_code == 200
 
-
-def test_smb_query(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/smb-query")
     assert response.status_code == 200
 
-
-def test_smb_processing(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/smb-processing")
     assert response.status_code == 200
 
-
-def test_database_source(client_fixture: fixture) -> None:
     response = client_fixture.get("/task/database-source")
     assert response.status_code == 200

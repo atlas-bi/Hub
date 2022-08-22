@@ -1,9 +1,12 @@
 """EM Web Custom CLI."""
+import sys
+from pathlib import Path
 
 from flask import Blueprint
 from flask import current_app as app
 from flask.cli import with_appcontext
 
+from web import model
 from web.extensions import db
 
 cli_bp = Blueprint("cli", __name__)
@@ -51,9 +54,10 @@ def create_db() -> None:
 @with_appcontext
 def db_seed() -> None:
     """Add command to seed the database."""
-    from .seed import seed
+    sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
+    from database import seed
 
-    seed(db.session)
+    seed(db.session, model)
 
 
 @cli_bp.cli.command("seed_demo")

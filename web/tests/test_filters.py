@@ -13,17 +13,15 @@ run with::
 """
 import datetime
 
-from pytest import fixture
 
-
-def test_year(client_fixture: fixture) -> None:
+def test_year() -> None:
     from web.web.filters import year
 
     assert year(None) == datetime.date.today().year
     assert year("asdf") == datetime.date.today().year
 
 
-def test_clean_address(client_fixture: fixture) -> None:
+def test_clean_address() -> None:
     from web.web.filters import clean_address
 
     assert clean_address(None) == ""
@@ -32,7 +30,7 @@ def test_clean_address(client_fixture: fixture) -> None:
     assert clean_address("/asdf/") == "/asdf"
 
 
-def test_duration(client_fixture: fixture) -> None:
+def test_duration() -> None:
     from web.web.filters import duration
 
     assert duration(30) == "0:00:30"
@@ -43,13 +41,13 @@ def test_duration(client_fixture: fixture) -> None:
     assert duration(3661) == "1:01:01"
 
 
-def test_date_hash(client_fixture: fixture) -> None:
+def test_date_hash() -> None:
     from web.web.filters import date_hash
 
     assert date_hash("none") is not None
 
 
-def test_to_time(client_fixture: fixture) -> None:
+def test_to_time() -> None:
     from web.web.filters import to_time
 
     assert to_time(None) == "*"
@@ -59,7 +57,7 @@ def test_to_time(client_fixture: fixture) -> None:
     assert to_time("10") == "10"
 
 
-def test_num_st(client_fixture: fixture) -> None:
+def test_num_st() -> None:
     from web.web.filters import num_st
 
     assert num_st(0) == "0th"
@@ -79,7 +77,7 @@ def test_num_st(client_fixture: fixture) -> None:
     assert num_st("None") == "None"
 
 
-def test_cron_month(client_fixture: fixture) -> None:
+def test_cron_month() -> None:
     from web.web.filters import cron_month
 
     assert cron_month("1") == "January"
@@ -97,7 +95,7 @@ def test_cron_month(client_fixture: fixture) -> None:
     assert cron_month("13") == ""
 
 
-def test_intv_name(client_fixture: fixture) -> None:
+def test_intv_name() -> None:
     from web.web.filters import intv_name
 
     assert intv_name((0, "w")) == "0 weeks"
@@ -119,7 +117,7 @@ def test_intv_name(client_fixture: fixture) -> None:
     assert intv_name((1, 10)) == ""
 
 
-def test_datetime_format(client_fixture: fixture) -> None:
+def test_datetime_format() -> None:
     from web.web.filters import datetime_format
 
     test_date = datetime.datetime.now()
@@ -130,14 +128,14 @@ def test_datetime_format(client_fixture: fixture) -> None:
     assert datetime_format("nothing") == "nothing"
 
 
-def test_hide_smb_pass(client_fixture: fixture) -> None:
+def test_hide_smb_pass() -> None:
     from web.web.filters import hide_smb_pass
 
     assert hide_smb_pass(":asdf@") == ":password@"
     assert hide_smb_pass("blah") == "blah"
 
 
-def test_clean_path(client_fixture: fixture) -> None:
+def test_clean_path() -> None:
     from web.web.filters import clean_path
 
     assert clean_path("") == ""
@@ -146,7 +144,7 @@ def test_clean_path(client_fixture: fixture) -> None:
     assert clean_path("test/stuff/") == "test/stuff/"
 
 
-def test_database_pass(client_fixture: fixture) -> None:
+def test_database_pass() -> None:
     from web.web.filters import database_pass
 
     assert database_pass("PWD=asdf") is not None
@@ -155,7 +153,7 @@ def test_database_pass(client_fixture: fixture) -> None:
     assert database_pass("mr_coolsecretasdf") is not None
 
 
-def test_filename(client_fixture: fixture) -> None:
+def test_filename() -> None:
     from web.web.filters import filename
 
     assert filename("", "") == ""

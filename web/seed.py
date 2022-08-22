@@ -16,102 +16,15 @@ Database must be seeded on first run of atlas hub.
 """
 # pylint: disable=C0301
 
-from sqlalchemy.orm import Session
+import sys
+from pathlib import Path
 
-from web.model import (
-    Connection,
-    ConnectionDatabase,
-    ConnectionDatabaseType,
-    ConnectionFtp,
-    LoginType,
-    Project,
-    QuoteLevel,
-    Task,
-    TaskDestinationFileType,
-    TaskProcessingType,
-    TaskSourceQueryType,
-    TaskSourceType,
-    TaskStatus,
-    User,
-)
+from web.model import Connection, ConnectionDatabase, ConnectionFtp, Project, Task, User
 
-from .extensions import db, get_or_create
+sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
+from database import get_or_create  # isort:skip
 
-
-def seed(session: Session) -> None:
-    """Insert seed records to database."""
-    # pylint: disable=too-many-branches
-    # pylint: disable=too-many-statements
-    # login types
-
-    get_or_create(session, LoginType, name="login")
-    get_or_create(session, LoginType, name="logout")
-    get_or_create(session, LoginType, name="bad login")
-
-    # quote level
-    get_or_create(session, QuoteLevel, name="Quote None")
-    get_or_create(session, QuoteLevel, name="Quote All")
-    get_or_create(session, QuoteLevel, name="Quote Minimal (default)")
-    get_or_create(session, QuoteLevel, name="Quote Non-numeric")
-
-    # task source type
-    get_or_create(session, TaskSourceType, name="Database")
-    get_or_create(session, TaskSourceType, name="Network File (SMB Connection)")
-    get_or_create(session, TaskSourceType, name="File (SFTP Connection)")
-    get_or_create(session, TaskSourceType, name="File (FTP Connection)")
-    get_or_create(session, TaskSourceType, name="Python Script")
-    get_or_create(session, TaskSourceType, name="SSH Command")
-
-    # task processing type
-    get_or_create(session, TaskProcessingType, name="Network File (SMB Connection)")
-    get_or_create(session, TaskProcessingType, name="File (SFTP Connection)")
-    get_or_create(session, TaskProcessingType, name="File (FTP Connection)")
-    get_or_create(session, TaskProcessingType, name="Git URL")
-    get_or_create(session, TaskProcessingType, name="Other URL (no auth)")
-    get_or_create(session, TaskProcessingType, name="Source Code")
-
-    # task source query type
-    get_or_create(session, TaskSourceQueryType, name="Git URL")
-    get_or_create(session, TaskSourceQueryType, name="File Path (SMB Connection)")
-    get_or_create(session, TaskSourceQueryType, name="Other URL (no auth)")
-    get_or_create(session, TaskSourceQueryType, name="Source Code")
-    get_or_create(session, TaskSourceQueryType, name="File Path (SFTP Connection)")
-    get_or_create(session, TaskSourceQueryType, name="File Path (FTP Connection)")
-
-    # database type
-    get_or_create(session, ConnectionDatabaseType, name="Postgres")
-    get_or_create(session, ConnectionDatabaseType, name="SQL Sever")
-
-    # file types
-    get_or_create(session, TaskDestinationFileType, name="CSV (.csv)", ext="csv")
-    get_or_create(session, TaskDestinationFileType, name="Text (.txt)", ext="txt")
-    get_or_create(session, TaskDestinationFileType, name="Excel (.csv)", ext="csv")
-    get_or_create(
-        session, TaskDestinationFileType, name="Other (specify in filename)", ext=""
-    )
-
-    # task status
-    get_or_create(session, TaskStatus, name="Running")
-    get_or_create(session, TaskStatus, name="Errored")
-    get_or_create(session, TaskStatus, name="Stopped")
-    get_or_create(session, TaskStatus, name="Completed")
-    get_or_create(session, TaskStatus, name="Starting")
-    get_or_create(session, TaskStatus, name="Scheduler")
-    get_or_create(session, TaskStatus, name="User")
-    get_or_create(session, TaskStatus, name="Runner")
-    get_or_create(session, TaskStatus, name="SFTP")
-    get_or_create(session, TaskStatus, name="SMB")
-    get_or_create(session, TaskStatus, name="File")
-    get_or_create(session, TaskStatus, name="Email")
-    get_or_create(session, TaskStatus, name="FTP")
-    get_or_create(session, TaskStatus, name="Py Processer")
-    get_or_create(session, TaskStatus, name="Git/Web Code")
-    get_or_create(session, TaskStatus, name="Date Parser")
-    get_or_create(session, TaskStatus, name="Cmd Runner")
-    get_or_create(session, TaskStatus, name="System")
-    get_or_create(session, TaskStatus, name="SSH")
-    get_or_create(session, TaskStatus, name="SQL Server")
-    get_or_create(session, TaskStatus, name="Postgres")
+from .extensions import db
 
 
 def seed_demo() -> None:

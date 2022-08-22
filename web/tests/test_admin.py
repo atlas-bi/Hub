@@ -51,7 +51,7 @@ def test_reload_jobs(client_fixture: fixture) -> None:
     assert "Failed to remove jobs from scheduler. Scheduler offline." in page
 
     # add an enabled task and try again
-    p_id, t_id = create_demo_task(2021)
+    p_id, t_id = create_demo_task(db.session, 2021)
     Task.query.get(t_id).enabled = 1
     db.session.commit()
 

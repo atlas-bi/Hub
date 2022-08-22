@@ -10,7 +10,6 @@ from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
 from web import cache, db
-from web.extensions import get_or_create
 from web.model import (
     Connection,
     ConnectionDatabase,
@@ -30,6 +29,8 @@ from web.model import (
     TaskSourceType,
 )
 from web.web import submit_executor
+
+from . import get_or_create
 
 task_edit_bp = Blueprint("task_edit_bp", __name__)
 

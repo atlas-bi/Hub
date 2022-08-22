@@ -31,7 +31,7 @@ from .conftest import create_demo_task
 
 def test_search(client_fixture: fixture) -> None:
     # add a task and project
-    create_demo_task(2025)
+    create_demo_task(db.session, 2025)
 
     # add a connection
     conn = Connection(
@@ -114,7 +114,7 @@ def test_search(client_fixture: fixture) -> None:
 
 def test_home_with_project(client_fixture: fixture) -> None:
     # add a task and project
-    create_demo_task(2025)
+    create_demo_task(db.session, 2025)
 
     response = client_fixture.get("/", follow_redirects=True)
     assert response.status_code == 200

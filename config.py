@@ -318,7 +318,8 @@ class TestConfig(DevConfig):
     # pylint: disable=too-few-public-methods
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "sqlite:///../test.sqlite",
+        "postgresql+psycopg2://postgres@localhost/atlas_hub_scrap_test"
+        # "sqlite:///../test.sqlite",
     ).replace("postgres://", "postgresql://")
 
     SQLALCHEMY_ENGINE_OPTIONS: dict = {}

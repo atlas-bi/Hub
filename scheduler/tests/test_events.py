@@ -16,17 +16,17 @@ from datetime import datetime, timedelta
 from pytest import fixture
 
 print("importing scheduler")
-from scheduler.extensions import atlas_scheduler
+from scheduler.extensions import atlas_scheduler, db
 from scheduler.model import TaskLog
 
 from .conftest import bad_demo_task, create_demo_task, demo_task
 
 
 # assert 1==2
-def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
+def test_job_missed(api_fixture: fixture, caplog: fixture) -> None:
     # grace time is 30 seconds, so attempt to run 40 seconds ago
     # get a task ID.. task isnt' used
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # create an interval task (only interval and cron can capture
     # a missed job and add to logs. one-off jobs disappear after run.)
@@ -34,7 +34,7 @@ def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
-        name="test job 2",
+        name="test_job_missed",
         args=[str(t_id)],
         run_date=datetime.now() - timedelta(minutes=1),
         replace_existing=True,
@@ -57,7 +57,7 @@ def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
         func=demo_task,
         trigger="date",
         id="asdf",
-        name="test job 2",
+        name="test_job_missed 2",
         args=[str(t_id)],
         run_date=datetime.now() - timedelta(minutes=1),
         replace_existing=True,
@@ -72,7 +72,7 @@ def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
         func=demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
-        name="test job 2",
+        name="test_job_missed 3",
         args=[str(t_id)],
         run_date=datetime.now() - timedelta(minutes=1),
         replace_existing=True,
@@ -84,16 +84,16 @@ def test_job_missed(event_fixture: fixture, caplog: fixture) -> None:
     # assert "Job missed. Scheduled for:" in log.message
 
 
-def test_job_error(event_fixture: fixture, caplog: fixture) -> None:
+def test_job_error(api_fixture: fixture, caplog: fixture) -> None:
     # get a dummy task id
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # add a task that will fail
     atlas_scheduler.add_job(
         func=bad_demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
-        name="test job 2",
+        name="test_job_error",
         replace_existing=True,
     )
 
@@ -117,7 +117,7 @@ def test_job_error(event_fixture: fixture, caplog: fixture) -> None:
         func=bad_demo_task,
         trigger="date",
         id=f"{p_id}-{t_id}-ooff",
-        name="test job 2",
+        name="test_job_error 2",
         replace_existing=True,
     )
     time.sleep(1)
@@ -134,16 +134,17 @@ def test_job_error(event_fixture: fixture, caplog: fixture) -> None:
         func=bad_demo_task,
         trigger="date",
         id="ooff",
-        name="test job 2",
+        name="test_job_error 3",
         replace_existing=True,
     )
 
     time.sleep(1)
 
 
-def test_job_executed(event_fixture: fixture, caplog: fixture) -> None:
+def test_job_executed(api_fixture: fixture, caplog: fixture) -> None:
+    caplog.clear()
     # get a dummy task id
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # add a task that will run
     atlas_scheduler.add_job(
@@ -214,9 +215,9 @@ def test_job_executed(event_fixture: fixture, caplog: fixture) -> None:
         assert record.levelname not in ["CRITICAL", "ERROR"]
 
 
-def test_job_added(event_fixture: fixture, caplog: fixture) -> None:
+def test_job_added(api_fixture: fixture, caplog: fixture) -> None:
     # get a dummy task id
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # add a task that will run
     atlas_scheduler.add_job(
@@ -263,9 +264,9 @@ def test_job_added(event_fixture: fixture, caplog: fixture) -> None:
     assert 'Added job "test job 2"' in caplog.text
 
 
-def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
+def test_job_removed(api_fixture: fixture, caplog: fixture) -> None:
     # get a dummy task id
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # add a task that will run
     atlas_scheduler.add_job(
@@ -331,9 +332,9 @@ def test_job_removed(event_fixture: fixture, caplog: fixture) -> None:
     assert log is None
 
 
-# def test_job_submitted(event_fixture: fixture, caplog: fixture) -> None:
+# def test_job_submitted(api_fixture: fixture, caplog: fixture) -> None:
 #    # get a dummy task id
-#    p_id,t_id = create_demo_task()
+#    p_id,t_id = create_demo_task(db.session)
 
 #    # add a task that will run
 #    atlas_scheduler.add_job(func=demo_task,

@@ -36,7 +36,7 @@ def test_projects_home(client_fixture: fixture) -> None:
     ]
 
     # if we have a project, we should go to the project list page
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
     page = client_fixture.get(
         url_for("project_bp.all_projects"), follow_redirects=False
     )
@@ -74,7 +74,7 @@ def test_projects_user(client_fixture: fixture) -> None:
     assert page.request.path in [url_for("project_bp.new_project"), "/project/user/1"]
 
     # if we have a project, we should go to the project list page
-    create_demo_task()
+    create_demo_task(db.session)
     page = client_fixture.get("/project/user", follow_redirects=False)
     assert page.status_code == 200
     assert page.request.path == url_for("project_bp.user_projects")
@@ -103,12 +103,12 @@ def test_one_project(client_fixture: fixture) -> None:
     )
     # no projects exist so go to new project page
     assert page.status_code == 200
-    assert page.request.path == url_for("project_bp.all_projects")
+    assert page.request.path == url_for("project_bp.new_project")
 
     assert "The project does not exist" in page.get_data(as_text=True)
 
     # try with valid project and task
-    p_id, _ = create_demo_task()
+    p_id, _ = create_demo_task(db.session)
     page = client_fixture.get(url_for("project_bp.one_project", project_id=p_id))
 
     assert page.request.path == url_for("project_bp.one_project", project_id=p_id)
@@ -123,11 +123,11 @@ def test_edit_project_form(client_fixture: fixture) -> None:
     )
     assert page.status_code == 200
     # should be directed to new project if none exist
-    assert page.request.path == url_for("project_bp.all_projects")
+    assert page.request.path == url_for("project_bp.new_project")
     assert "The project does not exist" in page.get_data(as_text=True)
 
     # try with valid project and task
-    p_id, _ = create_demo_task()
+    p_id, _ = create_demo_task(db.session)
     page = client_fixture.get(url_for("project_bp.edit_project_form", project_id=p_id))
     assert page.request.path == url_for("project_bp.edit_project_form", project_id=p_id)
     assert "Editing" in page.get_data(as_text=True)
@@ -188,7 +188,7 @@ def test_create_cron_project(client_fixture: fixture) -> None:
 def test_edit_project(client_fixture: fixture) -> None:
     mimetype = "application/x-www-form-urlencoded"
     headers = {"Content-Type": mimetype, "Accept": mimetype}
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # enable task to test reschedule
     Task.query.filter_by(id=t_id).update({"enabled": 1})
@@ -240,7 +240,7 @@ def test_edit_project(client_fixture: fixture) -> None:
 
 
 def test_delete_project(client_fixture: fixture) -> None:
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # delete project
     page = client_fixture.get(
@@ -248,7 +248,7 @@ def test_delete_project(client_fixture: fixture) -> None:
     )
 
     # should redirect
-    assert page.request.path == url_for("project_bp.all_projects")
+    assert page.request.path == url_for("project_bp.new_project")
 
     # should be no files, logs, tasks
     assert TaskLog.query.filter_by(task_id=t_id).first() is None
@@ -258,7 +258,7 @@ def test_delete_project(client_fixture: fixture) -> None:
 
 
 def test_enable_disable_project(client_fixture: fixture) -> None:
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     page = client_fixture.get(
         url_for("project_bp.enable_all_project_tasks", project_id=p_id),
@@ -295,7 +295,7 @@ def test_enable_disable_project(client_fixture: fixture) -> None:
 
 
 def test_run_all(client_fixture: fixture) -> None:
-    p_id, t_id = create_demo_task()
+    p_id, t_id = create_demo_task(db.session)
 
     # manual enable
     Task.query.filter_by(id=t_id).update({"enabled": 1})
