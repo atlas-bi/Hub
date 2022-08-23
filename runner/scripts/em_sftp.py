@@ -39,7 +39,8 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
         while True:
             try:
                 transport = paramiko.Transport(
-                    f"{connection.address}:{(connection.port or 22)}"
+                    f"{connection.address}:{(connection.port or 22)}",
+                    disabled_algorithms={"pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]},
                 )
 
                 # build ssh key file
@@ -55,7 +56,9 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
                             key_file.name,
                             password=em_decrypt(
                                 connection.password, app.config["PASS_KEY"]
-                            ),
+                            )
+                            if connection.password
+                            else None,
                         )
 
                 transport.connect(

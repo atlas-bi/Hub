@@ -6,7 +6,7 @@ run with::
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest tests/test_connections.py::test_new_database \
+   poetry run pytest tests/test_connections.py::test_new_sftp \
        --cov --cov-branch  --cov-report=term-missing --disable-warnings
 
 """
@@ -224,7 +224,7 @@ def test_new_sftp(client_fixture: fixture) -> None:
         "path": "nowhere/around/here",
         "username": "albany",
         "password": "new york",
-        "key": "cool key",
+        "ssh_key": "cool key",
     }
 
     response = client_fixture.post(
@@ -240,7 +240,7 @@ def test_new_sftp(client_fixture: fixture) -> None:
     assert data["path"] in response.get_data(as_text=True)
     assert data["username"] in response.get_data(as_text=True)
     assert data["password"] in response.get_data(as_text=True)
-    assert data["key"] in response.get_data(as_text=True)
+    assert data["ssh_key"] in response.get_data(as_text=True)
 
     # edit
     soup = BeautifulSoup(response.data, features="lxml")
@@ -257,7 +257,7 @@ def test_new_sftp(client_fixture: fixture) -> None:
         "path": "nowhere/around/here/ edited",
         "username": "albany edited",
         "password": "new york edited",
-        "key": "cool key edited",
+        "ssh_key": "cool key edited",
     }
 
     response = client_fixture.post(
@@ -273,7 +273,7 @@ def test_new_sftp(client_fixture: fixture) -> None:
     assert data["path"] in response.get_data(as_text=True)
     assert data["username"] in response.get_data(as_text=True)
     assert data["password"] in response.get_data(as_text=True)
-    assert data["key"] in response.get_data(as_text=True)
+    assert data["ssh_key"] in response.get_data(as_text=True)
 
     # delete
     soup = BeautifulSoup(response.data, features="lxml")
