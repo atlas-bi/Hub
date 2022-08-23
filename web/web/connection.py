@@ -205,9 +205,9 @@ def edit_connection_sftp(connection_id: int, sftp_id: int) -> Union[Response, st
             "username": form.get("username", "", type=str).strip(),
             "key": (
                 em_encrypt(
-                    form.get("key", "", type=str).strip(), app.config["PASS_KEY"]
+                    form.get("ssh_key", "", type=str).strip(), app.config["PASS_KEY"]
                 )
-                if form.get("key", type=str)
+                if form.get("ssh_key", type=str)
                 else None
             ),
             "password": (
@@ -256,8 +256,10 @@ def new_connection_sftp(connection_id: int) -> Union[str, Response]:
         path=form.get("path", "", type=str).strip(),
         username=form.get("username", "", type=str).strip(),
         key=(
-            em_encrypt(form.get("key", "", type=str).strip(), app.config["PASS_KEY"])
-            if form.get("key", type=str)
+            em_encrypt(
+                form.get("ssh_key", "", type=str).strip(), app.config["PASS_KEY"]
+            )
+            if form.get("ssh_key", type=str)
             else None
         ),
         password=(
