@@ -50,6 +50,15 @@ def create_db() -> None:
         db.session.commit()
 
 
+@cli_bp.cli.command("reset_db")
+@with_appcontext
+def reset_db() -> None:
+    """Add command to clear the database."""
+    db.drop_all()
+
+    db.engine.execute("drop table alembic_version")
+
+
 @cli_bp.cli.command("seed")
 @with_appcontext
 def db_seed() -> None:
