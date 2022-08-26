@@ -50,7 +50,7 @@ def create_app() -> Flask:
 
         from whitenoise import WhiteNoise
 
-        app.wsgi_app = WhiteNoise(app.wsgi_app, root="web/static/", prefix="static/")
+        app.wsgi_app = WhiteNoise(app.wsgi_app, root="web/static/", prefix="static/")  # type: ignore[assignment]
 
     elif app.config["ENV"] == "test":
         try:

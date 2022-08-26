@@ -44,7 +44,7 @@ def scheduler_task_runner(task_id: int) -> None:
             task.status_id = 2
             db.session.commit()
 
-            get(atlas_scheduler.app.config["RUNNER_HOST"] + "/" + task_id)
+            get(atlas_scheduler.app.config["RUNNER_HOST"] + "/" + task_id, timeout=60)
     # pylint: disable=broad-except
     except BaseException as e:
         print("failed to run job.")  # noqa: T201

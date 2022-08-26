@@ -134,7 +134,8 @@ class RunnerException(Exception):
                 )
 
                 requests.get(
-                    "%s/run/%s/delay/5" % (app.config["SCHEDULER_HOST"], task.id)
+                    "%s/run/%s/delay/5" % (app.config["SCHEDULER_HOST"], task.id),
+                    timeout=60,
                 )
 
             else:

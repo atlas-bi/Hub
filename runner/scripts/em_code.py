@@ -83,7 +83,10 @@ class SourceCode:
                     "Connection": "close",
                 }
                 page = requests.get(
-                    api_url, verify=app.config["GIT_VERIFY_SSL"], headers=headers
+                    api_url,
+                    verify=app.config["GIT_VERIFY_SSL"],
+                    headers=headers,
+                    timeout=60,
                 )  # noqa: S501
 
                 if page.status_code != 200:
@@ -174,7 +177,7 @@ class SourceCode:
             return ""
         try:
             page = requests.get(
-                str(url), verify=app.config["HTTP_VERIFY_SSL"]
+                str(url), verify=app.config["HTTP_VERIFY_SSL"], timeout=60
             )  # noqa: S501
             self.query = page.text
             self.db_type = (

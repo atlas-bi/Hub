@@ -187,7 +187,10 @@ class Runner:
                         f"Run triggered by previous sequence job: {task.id}.",
                     )
 
-                    requests.get(app.config["RUNNER_HOST"] + "/" + str(next_task_id[0]))
+                    requests.get(
+                        app.config["RUNNER_HOST"] + "/" + str(next_task_id[0]),
+                        timeout=60,
+                    )
 
                 else:
                     RunnerLog(self.task, self.run_id, 8, "Sequence completed!")

@@ -163,7 +163,7 @@ def task_get_source_code(task_id: int) -> str:
     try:
         code = json.loads(
             requests.get(
-                app.config["RUNNER_HOST"] + "/" + task_id + "/source_code"
+                app.config["RUNNER_HOST"] + "/" + task_id + "/source_code", timeout=60
             ).text
         )["code"]
     # pylint: disable=broad-except
@@ -209,7 +209,8 @@ def task_get_processing_code(task_id: int) -> str:
     try:
         code = json.loads(
             requests.get(
-                app.config["RUNNER_HOST"] + "/" + task_id + "/processing_code"
+                app.config["RUNNER_HOST"] + "/" + task_id + "/processing_code",
+                timeout=60,
             ).text
         )["code"]
     # pylint: disable=broad-except
