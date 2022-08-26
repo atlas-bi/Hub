@@ -1,5 +1,5 @@
 # needs a DATABASE_URL and REDIS_URL to be set
-FROM python:3.10
+FROM nikolaik/python-nodejs:python3.10-nodejs18
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -30,6 +30,11 @@ WORKDIR /app
 
 COPY . .
 
+RUN npm install
+
+ARG DATABASE_URL \
+    REDIS_URL
+
 RUN python -m pip install --disable-pip-version-check poetry \
     && poetry config virtualenvs.create false \
     && poetry install \
@@ -37,7 +42,7 @@ RUN python -m pip install --disable-pip-version-check poetry \
 
 RUN cp web/model.py scheduler/ && cp web/model.py runner/
 
-ENV FLASK_ENV=development \
+ENV FLASK_ENV=demo \
     FLASK_DEBUG=False \
     FLASK_APP=web
 

@@ -56,7 +56,7 @@ def reset_db() -> None:
     """Add command to clear the database."""
     db.drop_all()
 
-    db.engine.execute("drop table alembic_version")
+    db.engine.execute("drop table if exists alembic_version")
 
 
 @cli_bp.cli.command("seed")

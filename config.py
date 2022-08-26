@@ -276,7 +276,7 @@ class Config:
 
 
 class DevConfig(Config):
-    """Configuration overides for development.
+    """Configuration overrides for development.
 
     To Use:
     FLASK_ENV=development
@@ -308,6 +308,12 @@ class DevConfig(Config):
     ASSETS_DEBUG = True
 
     SQLALCHEMY_RECORD_QUERIES = True
+
+
+class DemoConfig(Config):
+    DEBUG = False
+    DEMO = True
+    AUTH_METHOD = "DEV"
 
 
 class TestConfig(DevConfig):
