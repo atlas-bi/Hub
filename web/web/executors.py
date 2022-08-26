@@ -86,7 +86,7 @@ def executor_finished(name: str, future: Future) -> None:
 def send_task_to_scheduler(task_id: int) -> None:
     """Silently send task or raise an error."""
     try:
-        requests.get(app.config["SCHEDULER_HOST"] + "/add/" + str(task_id))
+        requests.get(app.config["SCHEDULER_HOST"] + "/add/" + str(task_id), timeout=60)
         log = TaskLog(
             task_id=task_id,
             status_id=7,
@@ -133,7 +133,9 @@ def send_task_to_runner(task_id: int) -> None:
                 .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
                 .first()
             ).id == int(task_id):
-                requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task.id))
+                requests.get(
+                    app.config["SCHEDULER_HOST"] + "/run/" + str(task.id), timeout=60
+                )
 
                 log = TaskLog(
                     task_id=task_id,
@@ -158,7 +160,9 @@ def send_task_to_runner(task_id: int) -> None:
                 )
         else:
 
-            requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task.id))
+            requests.get(
+                app.config["SCHEDULER_HOST"] + "/run/" + str(task.id), timeout=60
+            )
 
     except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
 
@@ -206,7 +210,9 @@ def sub_enable_task(task_id: int) -> None:
             send_task_to_scheduler(task_id)
         else:
             # make sure it is not in the scheduler.
-            requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id))
+            requests.get(
+                app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60
+            )
     else:
         send_task_to_scheduler(task_id)
 
@@ -402,7 +408,9 @@ def enable_project(project_list: List[int]) -> str:
 def sub_disable_task(task_id: int) -> None:
     """Shared function for disabling a task."""
     try:
-        requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id))
+        requests.get(
+            app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60
+        )
 
         # also clear retry counter
         redis_client.delete(f"runner_{task_id}_attempt")
@@ -488,7 +496,7 @@ def disabled_scheduled_tasks(*args: Any) -> str:
     # Basically dump the scheduler and set all tasks to disabled.
 
     try:
-        requests.get(app.config["SCHEDULER_HOST"] + "/delete")
+        requests.get(app.config["SCHEDULER_HOST"] + "/delete", timeout=60)
 
         tasks = Task.query.filter_by(enabled=1).all()
 
@@ -529,7 +537,7 @@ def refresh_cache(task_list: List[int]) -> str:
     task_id: int = task_list[0]
     try:
         return requests.get(
-            f"{app.config['RUNNER_HOST']}/task/{task_id}/refresh_cache"
+            f"{app.config['RUNNER_HOST']}/task/{task_id}/refresh_cache", timeout=60
         ).text
 
     except BaseException:

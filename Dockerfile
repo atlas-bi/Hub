@@ -1,14 +1,12 @@
-FROM python:3.10
+# needs a DATABASE_URL and REDIS_URL to be set
+FROM nikolaik/python-nodejs:python3.10-nodejs18
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
-	PYTHONUNBUFFERED=1 \
-    REMOTE=https://github.com/atlas-bi/atlas-automation-hub.git
+    PYTHONUNBUFFERED=1
 
 RUN apt-get update -qq \
-     && apt-get install -y -qq --no-install-recommends apt-utils curl pkg-config postgresql postgresql-contrib > /dev/null
-
-RUN su - postgres -c "/etc/init.d/postgresql start && psql --command \"CREATE USER webapp WITH SUPERUSER PASSWORD 'nothing';\"  && createdb -O webapp atlas_hub_test"
+     && apt-get install -y -qq --no-install-recommends apt-utils pkg-config postgresql-contrib > /dev/null
 
 RUN apt-get install -y -qq \
     build-essential \
@@ -26,24 +24,29 @@ RUN apt-get install -y -qq \
     libsqlite3-0 \
     libsasl2-dev \
     libxml2-dev \
-    libxmlsec1-dev \
-    libxmlsec1-dev \
-    redis-server
+    libxmlsec1-dev
 
 WORKDIR /app
 
-RUN git -c http.sslVerify=false clone --depth 1 "$REMOTE" . \
-    && python -m pip install --disable-pip-version-check poetry \
+COPY . .
+
+RUN npm install
+
+ARG DATABASE_URL \
+    REDIS_URL
+
+RUN python -m pip install --disable-pip-version-check poetry \
     && poetry config virtualenvs.create false \
     && poetry install \
     && poetry env info
 
 RUN cp web/model.py scheduler/ && cp web/model.py runner/
 
-ENV FLASK_ENV=development \
-    FLASK_DEBUG=True \
+ENV FLASK_ENV=demo \
+    FLASK_DEBUG=False \
     FLASK_APP=web
 
-RUN /etc/init.d/postgresql start && flask db init && flask db migrate && flask db upgrade && flask cli seed && flask cli seed_demo
+RUN flask cli reset_db && flask db upgrade && flask cli seed && flask cli seed_demo
 
-CMD (redis-server &) && (/etc/init.d/postgresql start &) && (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT
+EXPOSE $PORT
+CMD (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

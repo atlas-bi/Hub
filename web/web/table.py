@@ -475,7 +475,7 @@ def table_jobs_orphans() -> Response:
 
     try:
         for job in json.loads(
-            requests.get(app.config["SCHEDULER_HOST"] + "/details").text
+            requests.get(app.config["SCHEDULER_HOST"] + "/details", timeout=60).text
         ):
             if int(job["id"]) not in active_tasks:
                 table.append(
@@ -555,7 +555,9 @@ def dash_tasks(task_type: str) -> Response:
     elif task_type == "scheduled":
         try:
             ids = json.loads(
-                requests.get(app.config["SCHEDULER_HOST"] + "/scheduled").text
+                requests.get(
+                    app.config["SCHEDULER_HOST"] + "/scheduled", timeout=60
+                ).text
             )
             tasks = tasks.filter(and_(Task.id.in_(ids), Task.enabled == 1))  # type: ignore[attr-defined, union-attr]
         except (
