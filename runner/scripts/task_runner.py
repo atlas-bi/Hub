@@ -134,7 +134,16 @@ class Runner:
 
         # any data post-processing
         if self.task.processing_type_id is not None:
-            self.__process()
+            if app.config.get("PYTHON_TASKS_ENABLED"):
+                self.__process()
+            else:
+                RunnerLog(
+                    task,
+                    self.run_id,
+                    8,
+                    "Python jobs have been disabled by your administrator.",
+                    1,
+                )
 
         # store output
         self.__store_files()
