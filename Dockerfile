@@ -35,7 +35,7 @@ RUN npm install
 ARG DATABASE_URL \
     REDIS_URL
 
-RUN python -m pip install --disable-pip-version-check poetry \
+RUN python -m pip install --disable-pip-version-check poetry==1.1.15 \
     && poetry config virtualenvs.create false \
     && poetry install \
     && poetry env info
