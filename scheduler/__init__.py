@@ -67,6 +67,16 @@ def create_app() -> Flask:
 
             app.config.from_object(DevConfig())
 
+    elif app.config["ENV"] == "demo":
+        try:
+            from config_cust import DemoConfig as DemoConfigCust
+
+            app.config.from_object(DemoConfigCust())
+        except ImportError:
+            from config import DemoConfig
+
+            app.config.from_object(DemoConfig())
+
     elif app.config["ENV"] == "test":
         try:
             from config_cust import (

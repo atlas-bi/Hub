@@ -24,7 +24,7 @@ def filename_preview(task_id: int) -> str:
     """Generate a task filename preview."""
     try:
         return requests.get(
-            f"{app.config['RUNNER_HOST']}/task/{task_id}/filename_preview"
+            f"{app.config['RUNNER_HOST']}/task/{task_id}/filename_preview", timeout=60
         ).text
     except BaseException as e:
         return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
@@ -37,7 +37,8 @@ def one_task_file_send_sftp(task_id: int, file_id: int) -> Response:
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         output = requests.get(
-            f"{app.config['RUNNER_HOST']}/send_sftp/{my_file.job_id}/{file_id}"
+            f"{app.config['RUNNER_HOST']}/send_sftp/{my_file.job_id}/{file_id}",
+            timeout=60,
         ).json()
         if output.get("error"):
             raise ValueError(output.get("error"))
@@ -68,7 +69,8 @@ def one_task_file_send_ftp(task_id: int, file_id: int) -> Response:
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         output = requests.get(
-            f"{app.config['RUNNER_HOST']}/send_ftp/{task_id}/{my_file.job_id}/{file_id}"
+            f"{app.config['RUNNER_HOST']}/send_ftp/{task_id}/{my_file.job_id}/{file_id}",
+            timeout=60,
         ).json()
         if output.get("error"):
             raise ValueError(output.get("error"))
@@ -99,7 +101,8 @@ def one_task_file_send_smb(task_id: int, file_id: int) -> Response:
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         output = requests.get(
-            f"{app.config['RUNNER_HOST']}/send_smb/{my_file.job_id}/{file_id}"
+            f"{app.config['RUNNER_HOST']}/send_smb/{my_file.job_id}/{file_id}",
+            timeout=60,
         ).json()
         if output.get("error"):
             raise ValueError(output.get("error"))
@@ -130,7 +133,8 @@ def one_task_file_send_email(task_id: int, file_id: int) -> Response:
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         output = requests.get(
-            f"{app.config['RUNNER_HOST']}/send_email/{task_id}/{my_file.job_id}/{file_id}"
+            f"{app.config['RUNNER_HOST']}/send_email/{task_id}/{my_file.job_id}/{file_id}",
+            timeout=60,
         ).json()
         if output.get("error"):
             raise ValueError(output.get("error"))
@@ -169,7 +173,9 @@ def one_task_file_download(file_id: int) -> Response:
         )
 
         source_file = json.loads(
-            requests.get("%s/file/%s" % (app.config["RUNNER_HOST"], file_id)).text
+            requests.get(
+                "%s/file/%s" % (app.config["RUNNER_HOST"], file_id), timeout=60
+            ).text,
         ).get("message")
 
         def stream_and_remove_file() -> Generator:

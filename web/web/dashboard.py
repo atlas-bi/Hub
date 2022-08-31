@@ -195,7 +195,7 @@ def active_schedule() -> str:
     """Graph showing current run schedule for next 12 hrs."""
     try:
         schedule = json.loads(
-            requests.get(app.config["SCHEDULER_HOST"] + "/schedule").text
+            requests.get(app.config["SCHEDULER_HOST"] + "/schedule", timeout=60).text
         )
 
         max_index = max(map(lambda x: x.get("count"), schedule))
@@ -227,7 +227,9 @@ def dash_orphans_delete() -> Response:
     """Button to delete any jobs without a linked tasks."""
     try:
         output = json.loads(
-            requests.get(app.config["SCHEDULER_HOST"] + "/delete-orphans").text
+            requests.get(
+                app.config["SCHEDULER_HOST"] + "/delete-orphans", timeout=60
+            ).text,
         )
         msg = output["message"]
         add_user_log(msg, 0)

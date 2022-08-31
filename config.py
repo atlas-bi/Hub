@@ -31,8 +31,11 @@ class Config:
 
     # redis sessions
 
-    redis_host = os.environ.get("REDIS_HOST", "localhost")
-    redis_port = int(os.environ.get("REDIS_PORT", 6379))
+    redis_host = os.environ.get("REDISHOST", "localhost")
+    redis_port = int(os.environ.get("REDISPORT", 6379))
+    redis_password = os.environ.get("REDISPASSWORD")
+    redis_user = os.environ.get("REDISUSER")
+
     SESSION_TYPE = "redis"
     SESSION_REDIS = redis.Redis(host=redis_host, port=redis_port)
 
@@ -40,11 +43,14 @@ class Config:
         url = urlparse(os.environ["REDIS_URL"])
         redis_host = url.hostname or "localhost"
         redis_port = url.port or 6379
+        redis_password = url.password
+        redis_user = url.username
+
         SESSION_REDIS = redis.Redis(
             host=redis_host,
             port=redis_port,
-            username=url.username,
-            password=url.password,
+            username=redis_user,
+            password=redis_password,
         )
 
     # for flask-redis
@@ -192,6 +198,8 @@ class Config:
             run_times_key="atlas_hub_running",
             host=redis_host,
             port=redis_port,
+            username=redis_user,
+            password=redis_password,
         )
     }
 
@@ -266,9 +274,11 @@ class Config:
     EXECUTOR_MAX_WORKERS = 12
     EXECUTOR_PROPAGATE_EXCEPTIONS = True
 
+    PYTHON_TASKS_ENABLED = True
+
 
 class DevConfig(Config):
-    """Configuration overides for development.
+    """Configuration overrides for development.
 
     To Use:
     FLASK_ENV=development
@@ -279,7 +289,7 @@ class DevConfig(Config):
     # authentication override
     AUTH_METHOD = "DEV"
 
-    DEBUG = True
+    DEBUG = False
     DEMO = True
 
     SESSION_COOKIE_SECURE = False
@@ -295,9 +305,18 @@ class DevConfig(Config):
     ).replace("postgres://", "postgresql://")
 
     # migrations override
-    MIGRATIONS = "migrations_dev"
+    # MIGRATIONS = "migrations_dev"
 
     ASSETS_DEBUG = True
+
+    SQLALCHEMY_RECORD_QUERIES = True
+
+
+class DemoConfig(Config):
+    DEBUG = False
+    DEMO = True
+    AUTH_METHOD = "DEV"
+    PYTHON_TASKS_ENABLED = False
 
 
 class TestConfig(DevConfig):

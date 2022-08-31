@@ -23,7 +23,9 @@ def run_task(task_id: int) -> Response:
     redis_client.delete("runner_" + str(task_id) + "_attempt")
     if task:
         try:
-            requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task_id))
+            requests.get(
+                app.config["SCHEDULER_HOST"] + "/run/" + str(task_id), timeout=60
+            )
             log = TaskLog(  # type: ignore[call-arg]
                 task_id=task.id,
                 status_id=7,

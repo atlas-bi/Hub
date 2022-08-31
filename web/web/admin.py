@@ -66,7 +66,9 @@ def admin() -> str:
 def reschedule_tasks() -> Response:
     """Emtpy scheduler and re-add all enabled jobs."""
     try:
-        output = json.loads(requests.get(app.config["SCHEDULER_HOST"] + "/delete").text)
+        output = json.loads(
+            requests.get(app.config["SCHEDULER_HOST"] + "/delete", timeout=60).text
+        )
 
         msg = output["message"]
         add_user_log(msg, 0)
@@ -101,7 +103,9 @@ def reset_tasks() -> Response:
 def pause_scheduler() -> Response:
     """Stop all jobs from future runs."""
     try:
-        output = json.loads(requests.get(app.config["SCHEDULER_HOST"] + "/pause").text)
+        output = json.loads(
+            requests.get(app.config["SCHEDULER_HOST"] + "/pause", timeout=60).text
+        )
 
         if output.get("error"):
             msg = output["error"]
@@ -125,7 +129,9 @@ def pause_scheduler() -> Response:
 def resume_scheduler() -> Response:
     """Resume all paused jobs."""
     try:
-        output = json.loads(requests.get(app.config["SCHEDULER_HOST"] + "/resume").text)
+        output = json.loads(
+            requests.get(app.config["SCHEDULER_HOST"] + "/resume", timeout=60).text
+        )
 
         if output.get("error"):
             msg = output["error"]
@@ -149,7 +155,9 @@ def resume_scheduler() -> Response:
 def kill_scheduler() -> Response:
     """Kill the scheduler."""
     try:
-        output = json.loads(requests.get(app.config["SCHEDULER_HOST"] + "/kill").text)
+        output = json.loads(
+            requests.get(app.config["SCHEDULER_HOST"] + "/kill", timeout=60).text
+        )
 
         msg = output["message"]
         add_user_log(msg, 0)
