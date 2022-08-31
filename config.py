@@ -274,6 +274,8 @@ class Config:
     EXECUTOR_MAX_WORKERS = 12
     EXECUTOR_PROPAGATE_EXCEPTIONS = True
 
+    PYTHON_TASKS_ENABLED = True
+
 
 class DevConfig(Config):
     """Configuration overrides for development.
@@ -314,6 +316,7 @@ class DemoConfig(Config):
     DEBUG = False
     DEMO = True
     AUTH_METHOD = "DEV"
+    PYTHON_TASKS_ENABLED = False
 
 
 class TestConfig(DevConfig):
