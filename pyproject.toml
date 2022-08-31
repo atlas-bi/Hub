@@ -43,7 +43,7 @@ sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.poetry]
 name = "atlas-hub"
-version = "2.3.0-alpha.1"
+version = "2.3.2"
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
     "Paula Courville",
@@ -90,7 +90,7 @@ python-ldap = "^3.3.1"
 is-safe-url = "^1.0"
 Flask-Login = "^0.6.0"
 pysaml2 = "^7.0.1"
-python-gnupg = "^0.4.7"
+python-gnupg = "^0.5.0"
 relative-to-now = "^1.0.0"
 paramiko = "^2.7.2"
 virtualenv = "^20.7.2"

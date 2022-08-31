@@ -1,7 +1,4 @@
 {
-  "assignees": [
-    "christopherpickering"
-  ],
   "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",
   "extends": [
@@ -18,6 +15,7 @@
     "maintenance",
     "renovate"
   ],
+  "baseBranches": ["dev"],
   "packageRules": [
     {
       "automerge": true,
