@@ -131,10 +131,10 @@ class PyProcesser:
                 # install and setup poetry
                 cmd = (
                     f'cd "{self.job_path}" &&'
-                    + f"virtualenv poetry_env && "
-                    + f"poetry_env/bin/pip install --disable-pip-version-check --quiet poetry && "
-                    + f"poetry_env/bin/poetry config --local virtualenvs.create false && "
-                    + f"poetry_env/bin/poetry lock --no-update"
+                    + "virtualenv poetry_env && "
+                    + "poetry_env/bin/pip install --disable-pip-version-check --quiet poetry && "
+                    + "poetry_env/bin/poetry config --local virtualenvs.create false && "
+                    + "poetry_env/bin/poetry lock --no-update"
                 )
 
                 Cmd(
@@ -149,8 +149,8 @@ class PyProcesser:
                 cmd = (
                     f'cd "{self.job_path}" && '
                     + f'source "{self.env_name}/bin/activate" && '
-                    + f"poetry_env/bin/poetry install && "
-                    + f"deactivate"
+                    + "poetry_env/bin/poetry install && "
+                    + "deactivate"
                 )
                 Cmd(
                     task=self.task,
