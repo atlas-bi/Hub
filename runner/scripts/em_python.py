@@ -39,11 +39,11 @@ class PyProcesser:
         self.env_name = self.run_id + "_env"
         self.job_path = directory
         self.source_files = source_files
-        self.base_path = str(self.job_path / "venv")
+        # self.base_path = str(self.job_path / "venv")
 
-        Path(self.base_path).mkdir(parents=True, exist_ok=True)
+        self.env_path = str(self.job_path / self.env_name)
 
-        self.env_path = self.base_path  # + self.env_name
+        Path(self.env_path).mkdir(parents=True, exist_ok=True)
 
     def run(self) -> Optional[List[Path]]:
         """Run processing script.
@@ -84,7 +84,7 @@ class PyProcesser:
                 self.task,
                 self.run_id,
                 14,
-                f"Failed to build environment.\n{self.base_path}\n{e}",
+                f"Failed to build environment.\n{self.env_path}\n{e}",
                 1,
             )
 
@@ -128,13 +128,13 @@ class PyProcesser:
                 ).shell()
 
             elif pyproject_toml.is_file():
-                # isntall and setup poetry
+                # install and setup poetry
                 cmd = (
-                    f'cd "{self.job_path}" && venv/bin/pip install --disable-pip-version-check --quiet poetry==1.1.15 && '
-                    + "venv/bin/poetry env use venv/bin/python && "
-                    + "venv/bin/poetry config --local virtualenvs.in-project true && "
-                    + "venv/bin/poetry config --local virtualenvs.create false && "
-                    + "venv/bin/poetry lock --no-update"
+                    f'cd "{self.job_path}" &&'
+                    + f"virtualenv poetry_env && "
+                    + f"poetry_env/bin/pip install --disable-pip-version-check --quiet poetry && "
+                    + f"poetry_env/bin/poetry config --local virtualenvs.create false && "
+                    + f"poetry_env/bin/poetry lock --no-update"
                 )
 
                 Cmd(
@@ -146,7 +146,12 @@ class PyProcesser:
                 ).shell()
 
                 # install deps with poetry
-                cmd = f'cd "{self.job_path}" && venv/bin/poetry install'
+                cmd = (
+                    f'cd "{self.job_path}" && '
+                    + f'source "{self.env_name}/bin/activate" && '
+                    + f"poetry_env/bin/poetry install && "
+                    + f"deactivate"
+                )
                 Cmd(
                     task=self.task,
                     run_id=self.run_id,
@@ -258,7 +263,7 @@ class PyProcesser:
                 self.task,
                 self.run_id,
                 14,
-                f"Failed to install packages.\n{self.base_path}\n{e}",
+                f"Failed to install packages.\n{self.env_path}\n{e}",
                 1,
             )
             raise
@@ -294,7 +299,7 @@ class PyProcesser:
                 self.task,
                 self.run_id,
                 14,
-                f"Failed to build run script.\n{self.base_path}\n{e}",
+                f"Failed to build run script.\n{self.env_path}\n{e}",
                 1,
             )
             raise
