@@ -39,6 +39,7 @@ format_attribute_template_tags = true
 [tool.isort]
 profile = "black"
 quiet = true
+skip_gitignore = true
 sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.poetry]
