@@ -89,27 +89,37 @@ class RunnerException(Exception):
                 )
                 raise
 
-            Smtp(
-                task=task,
-                run_id=run_id,
-                recipients=task.email_error_recipients,
-                subject="Error in Project: %s / Task: %s / Run: %s %s"
-                % (
-                    task.project.name,
-                    task.name,
-                    run_id,
-                    date,
-                ),
-                message=template.render(
+            try:
+                Smtp(
                     task=task,
-                    success=0,
-                    date=date,
-                    logs=logs,
-                ),
-                short_message=task.email_error_message
-                or f"Atlas Hub task {task} failed.",
-                attachments=[],
-            )
+                    run_id=run_id,
+                    recipients=task.email_error_recipients,
+                    subject="Error in Project: %s / Task: %s / Run: %s %s"
+                    % (
+                        task.project.name,
+                        task.name,
+                        run_id,
+                        date,
+                    ),
+                    message=template.render(
+                        task=task,
+                        success=0,
+                        date=date,
+                        logs=logs,
+                    ),
+                    short_message=task.email_error_message
+                    or f"Atlas Hub task {task} failed.",
+                    attachments=[],
+                )
+            except BaseException as e:
+                RunnerLog(
+                    task,
+                    run_id,
+                    8,
+                    f"Failed to get send error email.\n{e}\n{full_stack()}",
+                    1,
+                )
+                raise
 
         # if the error is coming from a run, we may need to trigger a retry.
         if run_id:
