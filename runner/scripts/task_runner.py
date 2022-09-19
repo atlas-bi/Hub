@@ -789,29 +789,35 @@ class Runner:
                     )
                     return
 
-            Smtp(
-                task=self.task,
-                run_id=self.run_id,
-                recipients=self.task.email_completion_recipients,
-                subject="Project: %s / Task: %s / Run: %s %s"
-                % (
-                    self.task.project.name,
-                    self.task.name,
-                    self.run_id,
-                    date,
-                ),
-                message=template.render(
+            try:
+                Smtp(
                     task=self.task,
-                    success=1,
-                    date=date,
-                    logs=logs,
-                    output=output,
-                    host=app.config["WEB_HOST"],
-                ),
-                short_message=self.task.email_completion_message
-                or f"Atlas Hub job {self.task} completed successfully.",
-                attachments=attachments,
-            )
+                    run_id=self.run_id,
+                    recipients=self.task.email_completion_recipients,
+                    subject="Project: %s / Task: %s / Run: %s %s"
+                    % (
+                        self.task.project.name,
+                        self.task.name,
+                        self.run_id,
+                        date,
+                    ),
+                    message=template.render(
+                        task=self.task,
+                        success=1,
+                        date=date,
+                        logs=logs,
+                        output=output,
+                        host=app.config["WEB_HOST"],
+                    ),
+                    short_message=self.task.email_completion_message
+                    or f"Atlas Hub job {self.task} completed successfully.",
+                    attachments=attachments,
+                )
+
+            except BaseException as e:
+                raise RunnerException(
+                    self.task, self.run_id, 8, f"Failed to get send success email.\n{e}"
+                )
 
     def __clean_up(self) -> None:
         # remove file

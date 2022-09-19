@@ -239,8 +239,8 @@ class File:
             # encrypt file
             with open(self.file_path, "rb") as my_file:
                 encrypt_status = gpg.encrypt_file(
-                    file=my_file,
-                    recipients=keychain.fingerprints,
+                    my_file,  # the file
+                    keychain.fingerprints,  # the recipients
                     output=self.file_path + ".gpg",
                 )
 
