@@ -148,7 +148,7 @@ class PyProcesser:
                 # install deps with poetry
                 cmd = (
                     f'cd "{self.job_path}" && '
-                    + f'source "{self.env_name}/bin/activate" && '
+                    + f'. "{self.env_name}/bin/activate" && '
                     + "poetry_env/bin/poetry install && "
                     + "deactivate"
                 )
