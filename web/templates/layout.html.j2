@@ -77,7 +77,7 @@
 
 <body>
     {% if config['DEMO'] and not config["TEST"] %}
-        {% include 'demo.html.j2' %}
+        {% include "demo.html.j2" %}
 
     {% endif %}
     {% block body_auth %}
