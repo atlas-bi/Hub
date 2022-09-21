@@ -6,7 +6,7 @@ run with::
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 
-   poetry run pytest web/tests/test_admin.py::test_resume_with_scheduler \
+   poetry run pytest web/tests/test_admin.py::test_online \
        --cov --cov-append --cov-branch  --cov-report=term-missing --disable-warnings
 
 
