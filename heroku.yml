@@ -5,7 +5,7 @@ build:
 release:
   image: web
   command:
-    - ./release_tasks.sh
+  - ./release_tasks.sh
 
 setup:
   addons:
