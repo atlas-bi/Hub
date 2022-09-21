@@ -76,7 +76,7 @@
 {% endblock css %}
 
 <body>
-    {% if config['DEMO'] %}
+    {% if config['DEMO'] and not config["TEST"] %}
         {% include 'demo.html.j2' %}
 
     {% endif %}
