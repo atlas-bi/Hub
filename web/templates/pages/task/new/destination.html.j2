@@ -24,7 +24,7 @@
             <small>
                 If file type is "other" then include file extension in name.
                 <br />
-                <span class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include '/sections/py_dates.html.j2' %}
+                <span class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
                      ">
                     Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
@@ -92,9 +92,7 @@
     </div>
     <article class="p-0 message box is-info task-destinationZip"
              {% if not t or (t and t.destination_create_zip != 1) %} style="display:none;" {% endif %}>
-        <p class="message-header">
-            Zip Details
-        </p>
+        <p class="message-header">Zip Details</p>
         <div class="message-body has-background-white has-text-dark">
             <label class="label">Zip Archive Name</label>
             <div class="conrol">
@@ -118,9 +116,7 @@
     </div>
     <article class="p-0 message box is-info task-destinationGpg"
              {% if not t or (t and t.file_gpg != 1) %} style="display:none;" {% endif %}>
-        <p class="message-header">
-            File Encryption
-        </p>
+        <p class="message-header">File Encryption</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
                 <label class="label">Organization</label>
@@ -160,9 +156,7 @@
     </div>
     <article class="p-0 message box is-info task-destinationSftp"
              {% if not t or (t and t.destination_sftp != 1) %} style="display:none;" {% endif %}>
-        <p class="message-header">
-            SFTP Location
-        </p>
+        <p class="message-header">SFTP Location</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
                 <label class="label">Organization</label>
@@ -225,9 +219,7 @@
     </div>
     <article class="p-0 message box is-info task-destinationSmb"
              {% if not t or (t and t.destination_smb != 1) %} style="display:none;" {% endif %}>
-        <p class="message-header">
-            SMB (Network Folder) Location
-        </p>
+        <p class="message-header">SMB (Network Folder) Location</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
                 <label class="label">Organization</label>
@@ -292,7 +284,9 @@
         </p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
-                <label class="label">Organization</label>
+                <label class="label">
+                    Organization
+                </label>
                 <div class="select is-fullwidth">
                     <select class="input" name="ftp_destination" data-ftp="task-ftp-connection">
                         <option {% if not t or not t.destination_ftp_conn or not t.destination_ftp_conn.connection.id %}selected="selected"{% endif %}
@@ -319,7 +313,9 @@
                        id="task_ftp_dont_send_empty"
                        type="checkbox"
                        {% if t and t.destination_ftp_dont_send_empty_file == 1 %}checked="checked"{% endif %}/>
-                <label for="task_ftp_dont_send_empty">Don't upload if file is empty?</label>
+                <label for="task_ftp_dont_send_empty">
+                    Don't upload if file is empty?
+                </label>
                 <input type="hidden"
                        name="task_ftp_dont_send_empty"
                        value="{%- if t and t.destination_ftp_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
@@ -329,7 +325,9 @@
                        id="task_overwrite_ftp_if_exists"
                        type="checkbox"
                        {% if not t or t.destination_ftp_overwrite == 1 %}checked="checked"{% endif %}/>
-                <label for="task_overwrite_ftp_if_exists">Overwrite if exists?</label>
+                <label for="task_overwrite_ftp_if_exists">
+                    Overwrite if exists?
+                </label>
                 <input type="hidden"
                        name="task_overwrite_ftp"
                        value="{%- if not t or t.destination_ftp_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
@@ -343,7 +341,9 @@
                type="checkbox"
                data-target="task-destinationEmail"
                {% if t and t.email_completion == 1 %}checked="checked"{% endif %}/>
-        <label for="send_completion_email_check">Send Success Email?</label>
+        <label for="send_completion_email_check">
+            Send Success Email?
+        </label>
         <input type="hidden"
                name="task_send_completion_email"
                value="{%- if t and t.email_completion == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>

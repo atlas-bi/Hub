@@ -84,6 +84,7 @@ def test_enable_task(client_fixture: fixture) -> None:
     )
     assert page.status_code == 200
     assert "enabling task" in page.get_data(as_text=True)
+    time.sleep(1)  # wait for completion
 
 
 def test_disable_task(client_fixture: fixture) -> None:
@@ -94,6 +95,7 @@ def test_disable_task(client_fixture: fixture) -> None:
     )
     assert page.status_code == 200
     assert "disabling task" in page.get_data(as_text=True)
+    time.sleep(1)  # wait for completion
 
 
 def test_duplicate_invalid_task(client_fixture: fixture) -> None:

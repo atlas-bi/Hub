@@ -346,6 +346,7 @@ class TestConfig(DevConfig):
 
     DEMO = True
     TEST = True
+    ASSETS_DEBUG = False
     AUTH_METHOD = "DEV"
     DEBUG = False
     from apscheduler.executors.pool import ThreadPoolExecutor

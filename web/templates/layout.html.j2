@@ -76,8 +76,8 @@
 {% endblock css %}
 
 <body>
-    {% if config['DEMO'] %}
-        {% include 'demo.html.j2' %}
+    {% if config['DEMO'] and not config["TEST"] %}
+        {% include "demo.html.j2" %}
 
     {% endif %}
     {% block body_auth %}
