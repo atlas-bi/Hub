@@ -100,7 +100,7 @@
                 <div class="loader"></div>
             </div>
             <pre class="box"><code class="language-bash">{{ t.query_sftp_conn.username }}@{{ t.query_sftp_conn.address }}:{{ t.query_sftp_conn.port or '22' }}&nbsp;{{ t.query_sftp_conn.path|clean_path }}{{ t.query_sftp_file }}</code></pre>
-        {% elif t.source_query_type_id == 6  and t.query_ftp_conn %}
+        {% elif t.source_query_type_id == 6 and t.query_ftp_conn %}
             <!-- source FTP -->
             <h3 class="title is-3">FTP Connection</h3>
             <div class="content">

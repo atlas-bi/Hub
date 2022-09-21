@@ -92,18 +92,32 @@
                             <div class="field-body is-align-items-center">
                                 <div class="field">
                                     <p class="control is-expanded">
-                                        <input name="param-key" class="input" type="text" placeholder="name" value="{{ param.key }}">
+                                        <input name="param-key"
+                                               class="input"
+                                               type="text"
+                                               placeholder="name"
+                                               value="{{ param.key }}"/>
                                     </p>
                                 </div>
                                 <div class="field has-addons">
                                     <p class="control is-expanded">
-                                        <input name="param-value" class="input" {% if param.sensitive == 1 %}type="password"{% else %}type="text"{% endif %} placeholder="***" value="{{ param.value|decrypt }}">
+                                        <input name="param-value"
+                                               class="input"
+                                               {% if param.sensitive == 1 %}
+                                                   type="password"
+                                               {% else %}
+                                                   type="text"
+                                               {% endif %}
+                                               placeholder="***"
+                                               value="{{ param.value|decrypt }}"/>
                                     </p>
                                     <div class="control">
                                         <a class="button toggle-pass "data-target="password">
                                             <span class="icon">
-                                                <i class="fas {% if param.sensitive ==1 -%}fa-eye{%-else-%}fa-eye-slash{%-endif-%}"></i>
-                                                <input name="param-sensitive" type="hidden" {% if param.sensitive ==1 -%}value="1"{% else %} value="0"{%endif%}/>
+                                                <i class="fas {% if param.sensitive ==1 -%}fa-eye{%- else -%}fa-eye-slash{%- endif -%}"></i>
+                                                <input name="param-sensitive"
+                                                       type="hidden"
+                                                       {% if param.sensitive ==1 -%}value="1"{% else %} value="0"{% endif %}/>
                                             </span>
                                         </a>
                                     </div>
