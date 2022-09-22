@@ -342,7 +342,6 @@ class TestConfig(DevConfig):
     ).replace("postgres://", "postgresql://")
 
     SQLALCHEMY_ENGINE_OPTIONS: dict = {}
-    MIGRATIONS = "migrations_test"
 
     DEMO = True
     TEST = True
