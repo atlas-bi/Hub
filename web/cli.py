@@ -61,7 +61,6 @@ def reset_db() -> None:
     create_database(db.engine.url)
 
 
-
 @cli_bp.cli.command("seed")
 @with_appcontext
 def db_seed() -> None:
