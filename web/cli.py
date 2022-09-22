@@ -5,6 +5,7 @@ from pathlib import Path
 from flask import Blueprint
 from flask import current_app as app
 from flask.cli import with_appcontext
+from sqlalchemy_utils import create_database, database_exists, drop_database
 
 from web import model
 from web.extensions import db
@@ -54,9 +55,11 @@ def create_db() -> None:
 @with_appcontext
 def reset_db() -> None:
     """Add command to clear the database."""
-    db.drop_all()
+    if database_exists(db.engine.url):
+        drop_database(db.engine.url)
 
-    db.engine.execute("drop table if exists alembic_version")
+    create_database(db.engine.url)
+
 
 
 @cli_bp.cli.command("seed")
