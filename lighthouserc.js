@@ -20,7 +20,8 @@ module.exports = {
         "uses-text-compression": "warn",
         "crawlable-anchors": "warn",
         "label": "warn",
-        "link-name": "warn"
+        "link-name": "warn",
+        "heading-order": "warn"
       },
     },
     collect: {
