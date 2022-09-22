@@ -43,7 +43,10 @@ jobs:
         poetry install
     - name: setup db
       run: |
-        flask cli reset_db && flask db upgrade && flask cli seed && flask cli seed_demo
+        poetry run flask cli reset_db
+        poetry run flask db upgrade
+        poetry run flask cli seed
+        poetry run flask cli seed_demo
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
