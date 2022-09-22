@@ -54,7 +54,7 @@ jobs:
         REDIS_HOST: localhost
         REDIS_PORT: 6379
         FLASK_ENV: test
-        FLASK_DEBUG: False
+        FLASK_DEBUG: false
         FLASK_APP: web
         FLASK_RUN_PORT: 4998
     - name: run Lighthouse CI
