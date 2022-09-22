@@ -64,6 +64,5 @@ jobs:
         PGPASSWORD: 12345
         REDIS_HOST: localhost
         REDIS_PORT: 6379
-      env:
         LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         LHCI_TOKEN: ${{ secrets.LHCI_TOKEN }}
