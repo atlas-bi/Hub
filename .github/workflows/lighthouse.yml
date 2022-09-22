@@ -40,7 +40,7 @@ jobs:
         sudo sed -i 's/azure\.//' /etc/apt/sources.list
         sudo apt-get update
         sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
-        poetry install --no-dev
+        poetry install
     - name: setup db
       run: |
         poetry run flask cli reset_db
