@@ -4,6 +4,27 @@ jobs:
   lhci:
     name: Lighthouse
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+        - 6379:6379
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: 12345
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+        - 5432:5432
     steps:
     - uses: actions/checkout@v2
       with:
@@ -20,10 +41,29 @@ jobs:
         sudo apt-get update
         sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
         poetry install
+    - name: setup db
+      run: |
+        flask cli reset_db && flask db upgrade && flask cli seed && flask cli seed_demo
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+        PGPASSWORD: 12345
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        FLASK_ENV: test
+        FLASK_DEBUG: False
+        FLASK_APP: web
+        FLASK_RUN_PORT: 4998
     - name: run Lighthouse CI
       run: |
         npm install -g @lhci/cli@0.9.x
         lhci autorun
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+        PGPASSWORD: 12345
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
       env:
         LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         LHCI_TOKEN: ${{ secrets.LHCI_TOKEN }}
