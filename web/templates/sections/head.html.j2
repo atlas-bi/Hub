@@ -18,13 +18,13 @@
             </a>
         </div>
         <div class="navbar-start is-flex is-flex-grow-1 is-align-items-center px-3 pt-5">
-            {% include 'sections/search.html.j2' %}
+            {% include "sections/search.html.j2" %}
 
         </div>
         <div class="navbar-menu is-flex-grow-0" id="atlas-main-nav">
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                    <a class="navbar-link">Projects</a>
+                    <div class="navbar-link">Projects</div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider"/>
                         <a class="navbar-item" href="{{ url_for('project_bp.user_projects') }}">My Projects</a>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                    <a class="navbar-link">Tasks</a>
+                    <div class="navbar-link">Tasks</div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider"/>
                         <a class="navbar-item" href="{{ url_for('task_bp.my_tasks') }}">My Tasks</a>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable is-boxed">
-                    <a class="navbar-link">Connections</a>
+                    <div class="navbar-link">Connections</div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider"/>
                         <a class="navbar-item"

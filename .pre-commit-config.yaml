@@ -28,7 +28,6 @@ repos:
   - id: check-toml
   - id: check-yaml
   - id: end-of-file-fixer
-    exclude: migrations* | docs*
 - repo: https://github.com/timothycrosley/isort
   rev: 5.10.1
   hooks:
@@ -40,7 +39,6 @@ repos:
   hooks:
   - id: black
     language_version: python3.9
-    exclude: migrations* | docs*
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
   rev: v2.4.0
   hooks:
@@ -50,3 +48,7 @@ repos:
     args: [--autofix]
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
+- repo: https://github.com/Riverside-Healthcare/djLint
+  rev: v1.17.1
+  hooks:
+  - id: djlint-jinja

@@ -342,10 +342,10 @@ class TestConfig(DevConfig):
     ).replace("postgres://", "postgresql://")
 
     SQLALCHEMY_ENGINE_OPTIONS: dict = {}
-    MIGRATIONS = "migrations_test"
 
     DEMO = True
     TEST = True
+    ASSETS_DEBUG = False
     AUTH_METHOD = "DEV"
     DEBUG = False
     from apscheduler.executors.pool import ThreadPoolExecutor

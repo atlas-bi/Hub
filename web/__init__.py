@@ -74,8 +74,8 @@ def create_app() -> Flask:
 
             app.config.from_object(Config())
 
-    compress.init_app(app)
     web_assets.init_app(app)
+    compress.init_app(app)
 
     # auth
     login_manager.init_app(app)
@@ -164,6 +164,10 @@ def create_app() -> Flask:
                 trace=full_stack(),
                 title="That was an error",
             )
+
+        @app.route("/robots.txt")
+        def robots() -> str:
+            return "User-agent: * Disallow: /"
 
         return app
 
