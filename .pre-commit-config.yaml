@@ -14,7 +14,7 @@ exclude: >
 
 repos:
 - repo: https://github.com/compilerla/conventional-pre-commit
-  rev: v2.0.0
+  rev: v2.1.1
   hooks:
   - id: conventional-pre-commit
     stages: [commit-msg]
@@ -28,13 +28,13 @@ repos:
   - id: check-toml
   - id: check-yaml
   - id: end-of-file-fixer
-- repo: https://github.com/timothycrosley/isort
+- repo: https://github.com/PyCQA/isort
   rev: 5.10.1
   hooks:
   - id: isort
     exclude: migrations* | docs*
     additional_dependencies: [toml]
-- repo: https://github.com/ambv/black
+- repo: https://github.com/psf/black
   rev: 22.8.0
   hooks:
   - id: black
@@ -49,6 +49,6 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.17.1
+  rev: v1.18.0
   hooks:
   - id: djlint-jinja
