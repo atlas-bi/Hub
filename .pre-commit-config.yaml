@@ -14,7 +14,7 @@ exclude: >
 
 repos:
 - repo: https://github.com/compilerla/conventional-pre-commit
-  rev: v2.0.0
+  rev: v2.1.1
   hooks:
   - id: conventional-pre-commit
     stages: [commit-msg]
@@ -49,6 +49,6 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.17.1
+  rev: v1.17.2
   hooks:
   - id: djlint-jinja
