@@ -51,7 +51,7 @@ py39-web:
   extends: .web
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py39
   coverage: /^TOTAL.*\s+(\d+\%)$/
@@ -64,7 +64,7 @@ py38-web:
   extends: .web
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py38
 
@@ -72,7 +72,7 @@ py37-web:
   extends: .web
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py37
 
@@ -80,7 +80,7 @@ py39-runner:
   extends: .runner
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py39
   coverage: /^TOTAL.*\s+(\d+\%)$/
@@ -93,7 +93,7 @@ py38-runner:
   extends: .runner
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py38
 
@@ -101,7 +101,7 @@ py37-runner:
   extends: .runner
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py37
 
@@ -109,7 +109,7 @@ py39-scheduler:
   extends: .scheduler
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py39
   coverage: /^TOTAL.*\s+(\d+\%)$/
@@ -122,7 +122,7 @@ py38-scheduler:
   extends: .scheduler
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py38
 
@@ -130,6 +130,6 @@ py37-scheduler:
   extends: .scheduler
   stage: test
   needs: []
-  image: python:3.10
+  image: python:3.11
   variables:
     PYVR: py37
