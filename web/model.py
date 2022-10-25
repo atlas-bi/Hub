@@ -362,7 +362,6 @@ class ConnectionSftp(db.Model):
     username: Optional[str] = None
     key: Optional[str] = None
     password: Optional[str] = None
-    task: Optional[str] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     connection_id = db.Column(
@@ -482,7 +481,6 @@ class ConnectionFtp(db.Model):
     path: Optional[str] = None
     username: Optional[str] = None
     password: Optional[str] = None
-    task: Optional[str] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     connection_id = db.Column(

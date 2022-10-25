@@ -6,3 +6,4 @@ node_modules/*
 web/static/lib/*
 web/static/fonts/*
 web/static/css/*
+.lighthouserc/*
