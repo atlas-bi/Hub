@@ -1,6 +1,6 @@
 lint:
   stage: static
-  image: python:3.10
+  image: python:3.11
   interruptible: true
   except:
   - public
