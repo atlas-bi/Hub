@@ -766,7 +766,7 @@ def task_list(my_type: str) -> Response:
 def project_all_tasks(project_id: int) -> Response:
     """Build json dataset for ajax tables of tasks for a project."""
     page = request.args.get("p", default=1, type=int)
-
+    page_size = 150
     page -= 1
 
     cols = {
@@ -804,11 +804,11 @@ def project_all_tasks(project_id: int) -> Response:
 
     me.append({"total": str(tasks.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
-    me.append({"page_size": str(10)})
+    me.append({"page_size": str(page_size)})
     me.append({"sort": sort})  # page
     me.append({"empty_msg": "No tasks."})
 
-    for task in tasks.limit(10).offset(page * 10).all():
+    for task in tasks.limit(page_size).offset(page * page_size).all():
         task = dict(zip(cols.keys(), task))
 
         if task["Enabled"] != 1:
