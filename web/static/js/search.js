@@ -20,8 +20,8 @@
     var q = new XMLHttpRequest();
 
     searchResultsContainer = document.getElementById('search-results');
-    if (!searchResultsContainer){
-        return !1;
+    if (!searchResultsContainer) {
+      return !1;
     }
 
     // if data exists in localstorage, then enable search immediately.

@@ -636,6 +636,27 @@ class Runner:
                     f"Storing file {file_counter} of {len(self.source_files)}...",
                 )
             # store
+            # save historical copy
+            smb_path = Smb(
+                task=self.task,
+                run_id=self.run_id,
+                connection=None,  # "default",
+                directory=self.temp_path,
+            ).save(overwrite=1, file_name=file_name)
+
+            # log file details
+            db.session.add(
+                TaskFile(
+                    name=file_name,
+                    path=smb_path,
+                    task_id=self.task.id,
+                    job_id=self.run_id,
+                    file_hash=file_hash,
+                    size=file_size(str(os.path.getsize(file_path))),
+                )
+            )
+            db.session.commit()
+
             # send to sftp
             if self.task.destination_sftp == 1 and self.task.destination_sftp_conn:
                 if (
@@ -704,27 +725,6 @@ class Runner:
                         overwrite=self.task.destination_smb_overwrite,
                         file_name=file_name,
                     )
-
-            # save historical copy
-            smb_path = Smb(
-                task=self.task,
-                run_id=self.run_id,
-                connection=None,  # "default",
-                directory=self.temp_path,
-            ).save(overwrite=1, file_name=file_name)
-
-            # log file details
-            db.session.add(
-                TaskFile(
-                    name=file_name,
-                    path=smb_path,
-                    task_id=self.task.id,
-                    job_id=self.run_id,
-                    file_hash=file_hash,
-                    size=file_size(str(os.path.getsize(file_path))),
-                )
-            )
-            db.session.commit()
 
     def __send_email(self) -> None:
 
