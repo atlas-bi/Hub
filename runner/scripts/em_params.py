@@ -28,7 +28,7 @@ class ParamLoader:
             project_params = self.__parse_params(self.task.project.params)
 
         if self.task.params:
-            task_params = self.__parse_params(self.task.params)
+            task_params = self.__parse_params(self.task.params)  # type: ignore
 
         return project_params, task_params
 

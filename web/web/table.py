@@ -879,15 +879,15 @@ def task_log(task_id: int) -> Response:
     me.append({"empty_msg": "No log messages."})
 
     if request.args.get("gte"):
-        logs = logs.filter(TaskLog.id >= request.args["gte"]).all()
+        logs = logs.filter(TaskLog.id >= request.args["gte"])
 
     elif request.args.get("lt"):
-        logs = logs.filter(TaskLog.id < request.args["lt"]).limit(40).all()
+        logs = logs.filter(TaskLog.id < request.args["lt"]).limit(40)
 
     else:
-        logs = logs.limit(40).offset(0).all()
+        logs = logs.limit(40).offset(0)
 
-    for log in logs:
+    for log in logs.all():
 
         log = dict(zip(cols.keys(), log))
 
