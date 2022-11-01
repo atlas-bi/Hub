@@ -1,7 +1,7 @@
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.2,<4.0"
-content-hash = "c38e0c1ae3410b7458f36b7af68903fefe701510a1704cefa849394ba9b9bb62"
+content-hash = "0390ac3055a945cd41b6004a8a200ba1abd57d4084ff6bb57c79e698b844edc0"
 
 [metadata.files]
 alembic = [
@@ -3086,7 +3086,7 @@ sqlcipher = ["sqlcipher3-binary"]
 name = "sqlalchemy-utils"
 version = "0.38.3"
 description = "Various utility functions for SQLAlchemy."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "~=3.6"
 
