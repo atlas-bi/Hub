@@ -130,6 +130,8 @@ flask-session2 = "^1.2.0"
 Flask-Executor = "^1.0.0"
 tomlkit = "^0.11.4"
 setuptools = "^65.3.0"
+flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
+whitenoise = "^6.2.0"
 
 [tool.poetry.dependencies.dataclasses]
 version = "*"
@@ -168,7 +170,6 @@ flake8-pytest-style = "^1.6.0"
 flake8-simplify = "^0.19.3"
 Pygments = "^2.13.0"
 SQLAlchemy-Utils = "^0.38.3"
-whitenoise = "^6.2.0"
 
 [tool.pylint]
 
