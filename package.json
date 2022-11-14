@@ -56,5 +56,5 @@
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\"",
     "watch": "gulp watch"
   },
-  "version": "2.4.8"
+  "version": "2.6.0-alpha.1"
 }
