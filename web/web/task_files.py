@@ -3,7 +3,8 @@
 import json
 import os
 import zipfile
-from typing import Generator
+from dataclasses import dataclass
+from typing import Generator, Optional
 
 import requests
 from flask import Blueprint
@@ -12,10 +13,34 @@ from flask import jsonify, redirect, send_file, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
-from runner.scripts.em_messages import RunnerLog
+from runner.model import Task, TaskLog
+from web import db
 from web.model import TaskFile
 
 task_files_bp = Blueprint("task_files_bp", __name__)
+
+
+@dataclass
+class RunnerLog:
+    """Save log messages."""
+
+    task: Task
+    run_id: Optional[str]
+    source_id: int
+    message: str
+    error: Optional[int] = 0
+
+    def __post_init__(self) -> None:
+        """Save message."""
+        log = TaskLog(
+            task_id=self.task.id,
+            job_id=self.run_id,
+            error=self.error,
+            status_id=self.source_id,
+            message=f"{self.message}",
+        )
+        db.session.add(log)
+        db.session.commit()
 
 
 @task_files_bp.route("/task/<task_id>/filename_preview")
