@@ -10,7 +10,9 @@ default_install_hook_types:
 exclude: >
   (?x)(
       migrations/|
-      migrations_dev/
+      migrations_dev/|
+      package-lock.jons|
+      poetry.lock
   )
 
 repos:
