@@ -10,7 +10,9 @@ default_install_hook_types:
 exclude: >
   (?x)(
       migrations/|
-      migrations_dev/
+      migrations_dev/|
+      package-lock.jons|
+      poetry.lock
   )
 
 repos:
@@ -20,7 +22,7 @@ repos:
   - id: conventional-pre-commit
     stages: [commit-msg]
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.3.0
+  rev: v4.4.0
   hooks:
   - id: pretty-format-json
     args: [--autofix]
@@ -41,7 +43,7 @@ repos:
   - id: black
     language_version: python3.9
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.4.0
+  rev: v2.5.0
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
