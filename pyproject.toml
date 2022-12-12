@@ -86,7 +86,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7.2,<4.0"
+python = ">=3.8.1,<4.0"
 python-ldap = "^3.3.1"
 is-safe-url = "^1.0"
 Flask-Login = "^0.6.0"
