@@ -58,7 +58,7 @@ jobs:
         docker run -p 23:22 -d emberstack/sftp --name sftp
         docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e FTP_USER_NAME=demo -e FTP_USER_PASS=demo -e FTP_USER_HOME=/home/demo -e "PUBLICHOST=localhost" -e "ADDED_FLAGS=-d -d" stilliard/pure-ftpd
     - name: test
-      run: tox
+      run: poetry run tox
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
