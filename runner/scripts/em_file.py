@@ -98,6 +98,12 @@ class File:
 
         return quote_levels[task_level]
 
+    def __quotechar(self) -> str:
+        if self.__quote_level() == 3:  # quote none
+            return ""
+
+        return '"'
+
     def save(self) -> Tuple[str, str, str]:
         """Create and save the file.
 
@@ -169,6 +175,7 @@ class File:
                             .encode("utf-8")
                             .decode("unicode_escape"),
                             quoting=self.__quote_level(),
+                            quotechar=self.__quotechar(),
                         )
                         if self.task.destination_file_delimiter is not None
                         and len(self.task.destination_file_delimiter) > 0
@@ -179,6 +186,7 @@ class File:
                         else csv.writer(
                             myfile,
                             quoting=self.__quote_level(),
+                            quotechar=self.__quotechar(),
                         )
                     )
                     for row in reader:
@@ -205,6 +213,7 @@ class File:
                         myfile,
                         dialect="excel",
                         quoting=self.__quote_level(),
+                        quotechar=self.__quotechar(),
                     )
                     for row in reader:
                         new_row = [
