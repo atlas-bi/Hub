@@ -32,7 +32,7 @@ repos:
   - id: check-yaml
   - id: end-of-file-fixer
 - repo: https://github.com/PyCQA/isort
-  rev: v5.11.3
+  rev: 5.11.4
   hooks:
   - id: isort
     exclude: migrations* | docs*
@@ -52,6 +52,6 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.19.9
+  rev: v1.19.10
   hooks:
   - id: djlint-jinja
