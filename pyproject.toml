@@ -132,7 +132,7 @@ tomlkit = "^0.11.4"
 setuptools = "^65.3.0"
 flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
 whitenoise = "^6.2.0"
-SQLAlchemy-Utils = "^0.38.3"
+SQLAlchemy-Utils = "^0.39.0"
 
 [tool.poetry.dependencies.dataclasses]
 version = "*"
