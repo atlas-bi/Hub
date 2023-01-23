@@ -70,9 +70,8 @@ def create_app() -> Flask:
 
     elif app.config["ENV"] == "test":
         try:
-            from config_cust import (
-                TestConfig as TestConfigCust,  # type: ignore[attr-defined]
-            )
+            from config_cust import \
+                TestConfig as TestConfigCust  # type: ignore[attr-defined]
 
             app.config.from_object(TestConfigCust())
         except ImportError:

@@ -11,15 +11,8 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
 
 from runner import executor
-from runner.model import (
-    ConnectionDatabase,
-    ConnectionFtp,
-    ConnectionSftp,
-    ConnectionSmb,
-    ConnectionSsh,
-    Task,
-    TaskFile,
-)
+from runner.model import (ConnectionDatabase, ConnectionFtp, ConnectionSftp,
+                          ConnectionSmb, ConnectionSsh, Task, TaskFile)
 from runner.scripts.em_code import SourceCode
 from runner.scripts.em_date import DateParsing
 from runner.scripts.em_ftp import Ftp

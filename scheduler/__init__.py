@@ -79,9 +79,8 @@ def create_app() -> Flask:
 
     elif app.config["ENV"] == "test":
         try:
-            from config_cust import (
-                TestConfig as TestConfigCust,  # type: ignore[attr-defined]
-            )
+            from config_cust import \
+                TestConfig as TestConfigCust  # type: ignore[attr-defined]
 
             app.config.from_object(TestConfigCust())
         except ImportError:
@@ -118,24 +117,13 @@ def create_app() -> Flask:
             atlas_scheduler.start()
 
         # pylint: disable=C0415
-        from apscheduler.events import (
-            EVENT_JOB_ADDED,
-            EVENT_JOB_ERROR,
-            EVENT_JOB_EXECUTED,
-            EVENT_JOB_MISSED,
-            EVENT_JOB_REMOVED,
-            EVENT_JOB_SUBMITTED,
-        )
+        from apscheduler.events import (EVENT_JOB_ADDED, EVENT_JOB_ERROR,
+                                        EVENT_JOB_EXECUTED, EVENT_JOB_MISSED,
+                                        EVENT_JOB_REMOVED, EVENT_JOB_SUBMITTED)
 
         from scheduler import web
-        from scheduler.events import (
-            job_added,
-            job_error,
-            job_executed,
-            job_missed,
-            job_removed,
-            job_submitted,
-        )
+        from scheduler.events import (job_added, job_error, job_executed, job_missed,
+                                      job_removed, job_submitted)
 
         app.register_blueprint(web.web_bp)
 

@@ -12,19 +12,9 @@ from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
 from web import db
-from web.model import (
-    Connection,
-    ConnectionDatabase,
-    ConnectionFtp,
-    ConnectionGpg,
-    ConnectionSftp,
-    ConnectionSmb,
-    ConnectionSsh,
-    Project,
-    Task,
-    TaskLog,
-    User,
-)
+from web.model import (Connection, ConnectionDatabase, ConnectionFtp, ConnectionGpg,
+                       ConnectionSftp, ConnectionSmb, ConnectionSsh, Project, Task,
+                       TaskLog, User)
 from web.web import submit_executor
 
 dashboard_bp = Blueprint("dashboard_bp", __name__)

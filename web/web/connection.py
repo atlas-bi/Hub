@@ -13,17 +13,9 @@ from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
 from web import db
-from web.model import (
-    Connection,
-    ConnectionDatabase,
-    ConnectionDatabaseType,
-    ConnectionFtp,
-    ConnectionGpg,
-    ConnectionSftp,
-    ConnectionSmb,
-    ConnectionSsh,
-    TaskLog,
-)
+from web.model import (Connection, ConnectionDatabase, ConnectionDatabaseType,
+                       ConnectionFtp, ConnectionGpg, ConnectionSftp, ConnectionSmb,
+                       ConnectionSsh, TaskLog)
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
