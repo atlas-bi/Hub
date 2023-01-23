@@ -1,11 +1,10 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
 
 [tool]
 
 [tool.black]
-max_line_length = 99
 exclude = '''
     /(
         \.git
@@ -29,147 +28,148 @@ exclude = '''
       | node_modules
     )/
     '''
+max_line_length = 99
 
 [tool.djlint]
 blank_line_after_tag = "load,extends,include,endblock"
-profile = "jinja"
-ignore = "H011,H021,H023,H031"
 format_attribute_template_tags = true
+ignore = "H011,H021,H023,H031"
+profile = "jinja"
 
 [tool.isort]
 profile = "black"
 quiet = true
-skip_gitignore = true
 sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+skip_gitignore = true
 
 [tool.poetry]
-name = "atlas-hub"
-version = "2.7.0-alpha.1"
-description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
-    "Paula Courville",
-    "Darrel Drake",
-    "Dee Anna Hillebrand",
-    "Scott Manley",
-    "Madeline Matz",
-    "Christopher Pickering <cpickering@rhc.net>",
-    "Dan Ryan",
-    "Richard Schissler",
-    "Eric Shultz"
-]
-maintainers = ["Christopher Pickering <cpickering@rhc.net>"]
-license = "GPL-3.0-or-later"
-readme = "readme.md"
-homepage = "https://atlas-hub.atlas.bi"
-repository = "https://github.com/atlas-bi/atlas-automation-hub"
-documentation = "https://www.atlas.bi/docs/automation-hub/"
-keywords = [
-    "Atlas Automation Hub",
-    "flask-apscheduler",
-    "flask",
-    "apscheduler",
-    "scheduling"
+  "Paula Courville",
+  "Darrel Drake",
+  "Dee Anna Hillebrand",
+  "Scott Manley",
+  "Madeline Matz",
+  "Christopher Pickering <cpickering@rhc.net>",
+  "Dan Ryan",
+  "Richard Schissler",
+  "Eric Shultz"
 ]
 classifiers = [
-    "Programming Language :: Python :: 3 :: Only",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-    "Operating System :: OS Independent",
-    "Development Status :: 5 - Production/Stable",
-    "Framework :: Flask",
-    "Intended Audience :: Healthcare Industry",
-    "Natural Language :: English",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Operating System :: OS Independent",
+  "Development Status :: 5 - Production/Stable",
+  "Framework :: Flask",
+  "Intended Audience :: Healthcare Industry",
+  "Natural Language :: English"
 ]
+description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
+documentation = "https://www.atlas.bi/docs/automation-hub/"
+homepage = "https://atlas-hub.atlas.bi"
+keywords = [
+  "Atlas Automation Hub",
+  "flask-apscheduler",
+  "flask",
+  "apscheduler",
+  "scheduling"
+]
+license = "GPL-3.0-or-later"
+maintainers = ["Christopher Pickering <cpickering@rhc.net>"]
+name = "atlas-hub"
 packages = [
-    { include = "web" },
-    { include = "scheduler" },
-    { include = "runner" }
+  {include = "web"},
+  {include = "scheduler"},
+  {include = "runner"}
 ]
+readme = "readme.md"
+repository = "https://github.com/atlas-bi/atlas-automation-hub"
+version = "2.7.0-alpha.1"
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
-python-ldap = "^3.3.1"
-is-safe-url = "^1.0"
-Flask-Login = "^0.6.0"
-pysaml2 = "^7.0.1"
-python-gnupg = "^0.5.0"
-relative-to-now = "^1.0.0"
-paramiko = "^2.7.2"
-virtualenv = "^20.7.2"
-psycopg2-binary = "^2.9.1"
-cryptography = "^38.0.3"
-psutil = "^5.8.0"
-Flask-Compress = "1.13"
-SQLAlchemy = "1.4.45"
-Flask-Migrate = "^4.0.0"
-python3-saml = "^1.12.0"
-bs4 = "^0.0.1"
-flask-redis = "^0.4.0"
-Flask-SQLAlchemy = "^3.0.0"
-jsmin = "^3.0.0"
-python-dateutil = "^2.8.2"
 Flask = "^2.0.1"
-pyodbc = "^4.0.31"
-requests = "^2.26.0"
 Flask-APScheduler = "^1.12.2"
-xmlsec = "^1.3.11"
 Flask-Assets = "^2.0"
 Flask-Caching = "^2.0.0"
+Flask-Compress = "1.13"
+Flask-Executor = "^1.0.0"
 Flask-HTMLmin = "^2.1.0"
-redis = "^4.0.0"
+Flask-Login = "^0.6.0"
+Flask-Migrate = "^4.0.0"
+Flask-SQLAlchemy = "^3.0.0"
+Flask-SQLAlchemy-Caching = "^1.0.4"
 Flask-Script = "^2.0.6"
 Jinja2 = "^3.0.1"
-Flask-SQLAlchemy-Caching = "^1.0.4"
-pysmb = "^1.2.7"
-rcssmin = "^1.0.6"
-pathvalidate = "^2.5.0"
+SQLAlchemy = "1.4.46"
+SQLAlchemy-Utils = "^0.39.0"
+bs4 = "^0.0.1"
+cryptography = "^39.0.0"
+flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
+flask-redis = "^0.4.0"
+flask-session2 = "^1.2.0"
 gevent = "^22.0.0"
 gunicorn = "^20.1.0"
-supervisor = "^4.2.2"
+is-safe-url = "^1.0"
+jsmin = "^3.0.0"
+paramiko = "^3.0.0"
+pathvalidate = "^2.5.0"
+psutil = "^5.8.0"
+psycopg2-binary = "^2.9.1"
+pyodbc = "^4.0.31"
+pysaml2 = "^7.0.1"
+pysmb = "^1.2.7"
+python = ">=3.8.1,<4.0"
+python-dateutil = "^2.8.2"
+python-gnupg = "^0.5.0"
+python-ldap = "^3.3.1"
+python3-saml = "^1.12.0"
+rcssmin = "^1.0.6"
+redis = "^4.0.0"
 regex = "^2022.4.24"
-flask-session2 = "^1.2.0"
-Flask-Executor = "^1.0.0"
+relative-to-now = "^1.0.0"
+requests = "^2.26.0"
+setuptools = "^66.0.0"
+supervisor = "^4.2.2"
 tomlkit = "^0.11.4"
-setuptools = "^65.3.0"
-flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
+virtualenv = "^20.7.2"
 whitenoise = "^6.2.0"
-SQLAlchemy-Utils = "^0.38.3"
+xmlsec = "^1.3.11"
 
 [tool.poetry.dependencies.dataclasses]
-version = "*"
 python = ">=3.6,<3.7"
+version = "*"
 
 [tool.poetry.group.dev.dependencies]
-tox = "^4.0.8"
-pre-commit = "^2.20.0"
-toml = "^0.10.2"
-pytest-cov = "^4.0.0"
-pytest = "^7.2.0"
-flask-debugtoolbar = "^0.13.1"
-coverage = "^7.0.0"
-radon = "^5.1.0"
 black = "^22.12.0"
-isort = "^5.10.1"
-reformat = "^1.0.3"
+coverage = "^7.0.0"
 flake8 = "^6.0.0"
-pylint = "^2.15.8"
-mypy = "^0.991"
-types-jinja2 = "^2.11.9"
-sqlalchemy2-stubs = "^0.0.2a29"
-types-python-dateutil = "^2.8.19.4"
-types-paramiko = "^2.12.0.1"
-types-requests = "^2.28.11.5"
-types-redis = "^4.3.21.6"
-types-flask = "^1.1.6"
-flake8-variables-names = "^0.0.5"
-flake8-docstrings = "^1.6.0"
-flake8-comprehensions = "^3.10.1"
-flake8-print = "^5.0.0"
-flake8-typing-imports = "^1.14.0"
 flake8-builtins = "^2.0.1"
-pep8-naming = "^0.13.2"
+flake8-comprehensions = "^3.10.1"
+flake8-docstrings = "^1.6.0"
+flake8-print = "^5.0.0"
 flake8-pytest-style = "^1.6.0"
 flake8-simplify = "^0.19.3"
+flake8-typing-imports = "^1.14.0"
+flake8-variables-names = "^0.0.5"
+flask-debugtoolbar = "^0.13.1"
+isort = "^5.10.1"
+mypy = "^0.991"
+pep8-naming = "^0.13.2"
+pre-commit = "^2.20.0"
 pygments = "^2.13.0"
+pylint = "^2.15.8"
+pytest = "^7.2.0"
+pytest-cov = "^4.0.0"
+radon = "^5.1.0"
+reformat = "^1.0.3"
+sqlalchemy2-stubs = "^0.0.2a29"
+toml = "^0.10.2"
+tox = "^4.0.8"
+types-flask = "^1.1.6"
+types-jinja2 = "^2.11.9"
+types-paramiko = "^2.12.0.1"
+types-python-dateutil = "^2.8.19.4"
+types-redis = "^4.3.21.6"
+types-requests = "^2.28.11.5"
 
 [tool.pylint]
 
@@ -191,9 +191,9 @@ disable = "W0707, R1705, W0703, E0401, C0413, C0411, R0902, C0415, C0302, R0912,
 
 [tool.pytest.ini_options]
 addopts = "-rsx --tb=short"
-testpaths = "tests"
 filterwarnings = "always"
+testpaths = "tests"
 
 [tool.setuptools_scm]
-version_scheme = "post-release"
 local_scheme = "dirty-tag"
+version_scheme = "post-release"
