@@ -43,6 +43,9 @@ sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 skip_gitignore = true
 
 [tool.poetry]
+name = "atlas-hub"
+version = "2.7.0"
+description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
 authors = [
   "Paula Courville",
   "Darrel Drake",
