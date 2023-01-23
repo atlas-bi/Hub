@@ -3,8 +3,18 @@
 import sys
 from pathlib import Path
 
-from web.extensions import (cache, compress, db, executor, htmlmin, login_manager,
-                            migrate, redis_client, sess, web_assets)
+from web.extensions import (
+    cache,
+    compress,
+    db,
+    executor,
+    htmlmin,
+    login_manager,
+    migrate,
+    redis_client,
+    sess,
+    web_assets,
+)
 
 from flask import Flask, render_template  # isort:skip
 
@@ -44,8 +54,9 @@ def create_app() -> Flask:
 
     elif app.config["ENV"] == "test":
         try:
-            from config_cust import \
-                TestConfig as TestConfigCust  # type: ignore[attr-defined]
+            from config_cust import (
+                TestConfig as TestConfigCust,  # type: ignore[attr-defined]
+            )
 
             app.config.from_object(TestConfigCust())
         except ImportError:
@@ -95,9 +106,21 @@ def create_app() -> Flask:
         # pylint: disable=W0611
         from web import cli
         from web.web import assets  # noqa: F401
-        from web.web import (admin, auth, connection, dashboard, executors, filters,
-                             project, saml_auth, table, task, task_controls, task_edit,
-                             task_files)
+        from web.web import (
+            admin,
+            auth,
+            connection,
+            dashboard,
+            executors,
+            filters,
+            project,
+            saml_auth,
+            table,
+            task,
+            task_controls,
+            task_edit,
+            task_files,
+        )
 
         app.register_blueprint(saml_auth.login_bp)
         app.register_blueprint(admin.admin_bp)

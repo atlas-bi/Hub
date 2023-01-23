@@ -25,9 +25,21 @@ from sqlalchemy import and_, text
 from werkzeug import Response
 
 from web import db
-from web.model import (ConnectionDatabase, ConnectionFtp, ConnectionSftp, ConnectionSmb,
-                       ConnectionSsh, Login, LoginType, Project, Task, TaskFile,
-                       TaskLog, TaskStatus, User)
+from web.model import (
+    ConnectionDatabase,
+    ConnectionFtp,
+    ConnectionSftp,
+    ConnectionSmb,
+    ConnectionSsh,
+    Login,
+    LoginType,
+    Project,
+    Task,
+    TaskFile,
+    TaskLog,
+    TaskStatus,
+    User,
+)
 
 table_bp = Blueprint("table_bp", __name__)
 

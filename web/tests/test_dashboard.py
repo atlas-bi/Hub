@@ -16,8 +16,15 @@ run with::
 from pytest import fixture
 
 from web.extensions import db
-from web.model import (Connection, ConnectionDatabase, ConnectionFtp, ConnectionGpg,
-                       ConnectionSftp, ConnectionSmb, ConnectionSsh)
+from web.model import (
+    Connection,
+    ConnectionDatabase,
+    ConnectionFtp,
+    ConnectionGpg,
+    ConnectionSftp,
+    ConnectionSmb,
+    ConnectionSsh,
+)
 
 from .conftest import create_demo_task
 

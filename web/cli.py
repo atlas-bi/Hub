@@ -20,13 +20,29 @@ def create_db() -> None:
     if app.config["ENV"] in ["test", "development"]:
 
         # pylint: disable=W0611
-        from web.model import (Connection, ConnectionDatabase,  # noqa: F401
-                               ConnectionDatabaseType, ConnectionFtp, ConnectionGpg,
-                               ConnectionSftp, ConnectionSmb, ConnectionSsh, Login,
-                               LoginType, Project, QuoteLevel, Task,
-                               TaskDestinationFileType, TaskFile, TaskLog,
-                               TaskProcessingType, TaskSourceQueryType, TaskSourceType,
-                               TaskStatus, User)
+        from web.model import (  # noqa: F401
+            Connection,
+            ConnectionDatabase,
+            ConnectionDatabaseType,
+            ConnectionFtp,
+            ConnectionGpg,
+            ConnectionSftp,
+            ConnectionSmb,
+            ConnectionSsh,
+            Login,
+            LoginType,
+            Project,
+            QuoteLevel,
+            Task,
+            TaskDestinationFileType,
+            TaskFile,
+            TaskLog,
+            TaskProcessingType,
+            TaskSourceQueryType,
+            TaskSourceType,
+            TaskStatus,
+            User,
+        )
 
         db.drop_all()
         db.session.commit()

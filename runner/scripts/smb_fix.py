@@ -12,8 +12,19 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from io import BytesIO
-from urllib.parse import (quote, splitattr, splithost, splitpasswd, splitport, splittag,
-                          splittype, splituser, splitvalue, unquote, unwrap)
+from urllib.parse import (
+    quote,
+    splitattr,
+    splithost,
+    splitpasswd,
+    splitport,
+    splittag,
+    splittype,
+    splituser,
+    splitvalue,
+    unquote,
+    unwrap,
+)
 from urllib.request import ftpwrapper
 from urllib.response import addinfourl
 

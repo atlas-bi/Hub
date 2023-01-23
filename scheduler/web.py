@@ -10,8 +10,11 @@ from flask import Blueprint, jsonify
 from werkzeug import Response
 
 from scheduler.extensions import atlas_scheduler
-from scheduler.functions import (scheduler_add_task, scheduler_delete_task,
-                                 scheduler_task_runner)
+from scheduler.functions import (
+    scheduler_add_task,
+    scheduler_delete_task,
+    scheduler_task_runner,
+)
 from scheduler.model import Task
 
 web_bp = Blueprint("web_bp", __name__)

@@ -10,10 +10,24 @@ from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
 from web import cache, db
-from web.model import (Connection, ConnectionDatabase, ConnectionFtp, ConnectionGpg,
-                       ConnectionSftp, ConnectionSmb, ConnectionSsh, Project,
-                       QuoteLevel, Task, TaskDestinationFileType, TaskLog, TaskParam,
-                       TaskProcessingType, TaskSourceQueryType, TaskSourceType)
+from web.model import (
+    Connection,
+    ConnectionDatabase,
+    ConnectionFtp,
+    ConnectionGpg,
+    ConnectionSftp,
+    ConnectionSmb,
+    ConnectionSsh,
+    Project,
+    QuoteLevel,
+    Task,
+    TaskDestinationFileType,
+    TaskLog,
+    TaskParam,
+    TaskProcessingType,
+    TaskSourceQueryType,
+    TaskSourceType,
+)
 from web.web import submit_executor
 
 from . import get_or_create

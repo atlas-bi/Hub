@@ -13,9 +13,19 @@ from sqlalchemy import func
 from werkzeug.wrappers import Response
 
 from web import db
-from web.model import (Connection, ConnectionDatabase, ConnectionFtp, ConnectionGpg,
-                       ConnectionSftp, ConnectionSmb, ConnectionSsh, Project, Task,
-                       TaskLog, User)
+from web.model import (
+    Connection,
+    ConnectionDatabase,
+    ConnectionFtp,
+    ConnectionGpg,
+    ConnectionSftp,
+    ConnectionSmb,
+    ConnectionSsh,
+    Project,
+    Task,
+    TaskLog,
+    User,
+)
 from web.web import submit_executor
 
 task_bp = Blueprint("task_bp", __name__)
