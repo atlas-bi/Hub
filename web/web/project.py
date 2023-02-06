@@ -65,7 +65,6 @@ def user_projects(user_id: int) -> Union[Response, str]:
         .filter(Project.owner_id == user_id)
         .first()
     ):
-
         return render_template(
             "pages/project/all.html.j2",
             title=my_user.full_name + "'s Projects",
@@ -382,7 +381,6 @@ def duplicate_project(project_id: int) -> Response:
 
         # copy the tasks
         for my_task in Task.query.filter_by(project_id=project_id).all():
-
             if my_task:
                 new_task = Task()
 

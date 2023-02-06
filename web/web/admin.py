@@ -27,7 +27,6 @@ admin_bp = Blueprint("admin_bp", __name__)
 def version() -> str:
     """Check installed version."""
     if platform.system() == "Linux":
-
         installed_version = None
         upgrade_version = None
 

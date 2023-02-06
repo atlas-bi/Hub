@@ -150,7 +150,6 @@ class Config(BaseConfig):
             config += f"\n    AUTH_METHOD={master['AUTH_METHOD']}"
 
     if configuration.has_section("LDAP"):
-
         if "REQUIRED_GROUPS" in configuration["LDAP"]:
             config += (
                 f"\n    REQUIRED_GROUPS={configuration['LDAP']['REQUIRED_GROUPS']}"
@@ -425,7 +424,6 @@ def download(url: str, name: str, outfile: str) -> None:
         unit_scale=True,
         unit_divisor=1024,
     ) as pbar:
-
         with open(outfile, "wb") as out_file:
             for chunk in in_file.iter_content(chunk_size=1024):
                 pbar.update(len(chunk))

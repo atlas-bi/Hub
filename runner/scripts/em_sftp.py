@@ -115,11 +115,9 @@ class Sftp:
         self.transport, self.conn = self.__connect()
 
     def __connect(self) -> Tuple[Transport, SFTPClient]:
-
         try:
             return connect(self.connection)
         except ValueError as e:
-
             raise RunnerException(self.task, self.run_id, 9, str(e))
 
     def _walk(
@@ -129,7 +127,6 @@ class Sftp:
         nondirs = []
 
         for entry in self.conn.listdir_attr(directory):
-
             if S_ISDIR(entry.st_mode or 0):
                 dirs.append(entry.filename)
             else:
@@ -200,7 +197,6 @@ class Sftp:
         return data_file
 
     def __clean_path(self, path: str) -> str:
-
         path = re.sub(r"/$", "", path, re.MULTILINE)
         path = re.sub(r"^/", "", path, re.MULTILINE)
 
@@ -214,7 +210,6 @@ class Sftp:
         Returns a path or raises an exception.
         """
         try:
-
             self.conn.chdir(self.__clean_path(self.connection.path or "/"))
 
             if "*" in file_name:
@@ -226,7 +221,6 @@ class Sftp:
                 file_list = []
                 for _, _, walk_file_list in self._walk(base_dir):
                     for this_file in walk_file_list:
-
                         if fnmatch.fnmatch(this_file, file_name):
                             file_list.append(this_file)
 

@@ -170,7 +170,6 @@ class PyProcesser:
                 for this_file in paths:
                     with open(this_file, "r") as my_file:
                         for line in my_file:
-
                             imports.extend(
                                 re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line)
                             )
@@ -270,7 +269,6 @@ class PyProcesser:
 
     def __run_script(self) -> None:
         try:
-
             # create environment from params
             env = (" && ").join(
                 [

@@ -187,7 +187,6 @@ def send_smb(run_id: int, file_id: int) -> dict:
 
     # pylint: disable=broad-except
     except BaseException as e:
-
         return jsonify({"error": str(e)})
 
 

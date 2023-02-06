@@ -64,7 +64,6 @@ def schedule() -> Response:
         job_date = job.next_run_time
 
         while job_date and job_date < tomorrow:
-
             if now.replace(minute=0, second=0, microsecond=0) == job_date.replace(
                 minute=0, second=0, microsecond=0
             ):

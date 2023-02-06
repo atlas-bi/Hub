@@ -36,7 +36,6 @@ class LDAP:
         """Init class."""
         self.app = app
         if app is not None:
-
             app.config.setdefault("LDAP_HOST", "localhost")
             app.config.setdefault("LDAP_PORT", 389)
             app.config.setdefault("LDAP_SCHEMA", "ldap")
