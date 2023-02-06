@@ -85,7 +85,6 @@ def project_list(my_type: str = "all") -> Response:
     )
 
     if my_type.isdigit():
-
         projects = projects.filter(User.id == int(my_type))
 
     elif my_type != "all":
@@ -888,7 +887,6 @@ def task_log(task_id: int) -> Response:
         logs = logs.limit(40).offset(0)
 
     for log in logs.all():
-
         log = dict(zip(cols.keys(), log))
 
         me.append(

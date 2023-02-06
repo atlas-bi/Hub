@@ -133,7 +133,6 @@ def test_edit_task(client_fixture: fixture) -> None:
 
 
 def test_new_task(client_fixture: fixture) -> None:
-
     p_id, _ = create_demo_task(db.session)
 
     mimetype = "application/x-www-form-urlencoded"

@@ -167,7 +167,6 @@ def home() -> Union[Response, str]:
         .filter(Project.owner_id == current_user.id)
         .first()
     ):
-
         return render_template(
             "pages/project/all.html.j2",
             title=current_user.full_name + "'s Projects",

@@ -18,7 +18,6 @@ cli_bp = Blueprint("cli", __name__)
 def create_db() -> None:
     """Add command to create the test database."""
     if app.config["ENV"] in ["test", "development"]:
-
         # pylint: disable=W0611
         from web.model import (  # noqa: F401
             Connection,

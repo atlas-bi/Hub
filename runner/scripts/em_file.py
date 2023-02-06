@@ -124,7 +124,6 @@ class File:
             self.task.destination_file_name != ""
             and self.task.destination_file_name is not None
         ):
-
             # insert params
             self.file_name = self.params.insert_file_params(
                 self.task.destination_file_name.strip()
@@ -295,7 +294,6 @@ class File:
 
         # create zip
         if self.task.destination_create_zip == 1:
-
             self.zip_name = DateParsing(
                 self.task, self.run_id, str(self.task.destination_zip_name)
             ).string_to_date()
