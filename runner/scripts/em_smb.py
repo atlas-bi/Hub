@@ -41,7 +41,6 @@ def connect(
     """
 
     def build_connect() -> SMBConnection:
-
         conn = SMBConnection(
             username,
             em_decrypt(password, app.config["PASS_KEY"]),
@@ -68,7 +67,6 @@ def connect(
         timeout = time.time() + 60 * 3  # 3 mins from now
 
         while True:
-
             try:
                 connected = conn.connect(server_ip, 139)
 
@@ -82,7 +80,6 @@ def connect(
                 SMBTimeout,
                 NotConnectedError,
             ) as e:
-
                 # pylint: disable=no-else-continue
                 if time.time() <= timeout:
                     time.sleep(30)  # wait 30 sec before retrying
@@ -170,7 +167,6 @@ class Smb:
         for entry in self.conn.listPath(
             self.share_name, directory, search=65591, timeout=30, pattern="*"
         ):
-
             if entry.isDirectory and entry.filename not in ["/", ".", ".."]:
                 dirs.append(entry.filename)
             elif entry.isDirectory is False:
@@ -184,7 +180,6 @@ class Smb:
             yield from self._walk(new_path)
 
     def __load_file(self, file_name: str) -> IO[str]:
-
         director = urllib.request.build_opener(SMBHandler)
 
         password = em_decrypt(self.password, app.config["PASS_KEY"])

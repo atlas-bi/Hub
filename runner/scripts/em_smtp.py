@@ -59,7 +59,6 @@ class Smtp:
     def __send_ssms(self) -> None:
         try:
             for phone in self.ssmsto:
-
                 msg = email.message.Message()
                 msg["From"] = app.config["SMTP_SENDER_EMAIL"]
                 msg["To"] = phone
@@ -99,7 +98,6 @@ class Smtp:
 
     def __send_mail(self) -> None:
         try:
-
             self.msg = MIMEMultipart()
             self.msg["From"] = email.utils.formataddr(  # type: ignore[attr-defined]
                 (

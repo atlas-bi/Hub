@@ -79,7 +79,6 @@ def test_not_authorized(client_fixture: fixture) -> None:
 
 
 def test_next(client_fixture: fixture) -> None:
-
     username = "mr-cool"
     password = ""
 

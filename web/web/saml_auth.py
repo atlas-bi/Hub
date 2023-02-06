@@ -54,7 +54,6 @@ def idp_initiated() -> Response:
             set(app.config["REQUIRED_GROUPS"])
             & set(identity.get(app.config["SAML_ATTR_MAP"]["groups"]))
         ):
-
             session.pop("_flashes", None)
 
             # user is not authorized.

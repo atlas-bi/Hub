@@ -102,7 +102,6 @@ def create_app() -> Flask:
     htmlmin.init_app(app)
 
     with app.app_context():
-
         # pylint: disable=W0611
         from web import cli
         from web.web import assets  # noqa: F401

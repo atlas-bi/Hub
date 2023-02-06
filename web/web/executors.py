@@ -124,7 +124,6 @@ def send_task_to_runner(task_id: int) -> None:
 
     # task only runs if not sequence, or first in sequence.
     try:
-
         if task.project and task.project.sequence_tasks == 1:
             # only add job if its first in sequence
             if (
@@ -159,13 +158,11 @@ def send_task_to_runner(task_id: int) -> None:
                     "Task was not scheduled. It is not the first sequence task."
                 )
         else:
-
             requests.get(
                 app.config["SCHEDULER_HOST"] + "/run/" + str(task.id), timeout=60
             )
 
     except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
-
         logging.error({"empty_msg": "Error - Scheduler offline."})
         log = TaskLog(
             task_id=task_id,
@@ -307,7 +304,6 @@ def disable_project(project_list: List[int]) -> str:
 
     try:
         for task in tasks:
-
             sub_disable_task(task.id)
 
             log = TaskLog(

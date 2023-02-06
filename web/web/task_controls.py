@@ -227,7 +227,6 @@ def task_endretry(task_id: int) -> Response:
     """
     task = Task.query.filter_by(id=task_id).first()
     if task:
-
         if task.enabled == 1:
             submit_executor("enable_task", task_id)
         else:
