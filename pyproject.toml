@@ -102,7 +102,7 @@ Jinja2 = "^3.0.1"
 SQLAlchemy = "1.4.46"
 SQLAlchemy-Utils = "^0.39.0"
 bs4 = "^0.0.1"
-cryptography = "^39.0.0"
+cryptography = "^39.0.1"
 flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
 flask-redis = "^0.4.0"
 flask-session2 = "^1.2.0"
