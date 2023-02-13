@@ -155,10 +155,9 @@ class File:
 
         # if ignore delimiter is checked, then use binary to copy contents
         if self.task.destination_ignore_delimiter == 1:
-            with open(self.data_file.name, "rb") as data_file:
-                with open(self.file_path, mode="wb") as myfile:
-                    for line in data_file:
-                        myfile.write(line)
+            with open(self.data_file.name, "rb") as data_file, open(self.file_path, mode="wb") as myfile:
+                for line in data_file:
+                    myfile.write(line)
 
         # otherwise use unicode.
         else:
