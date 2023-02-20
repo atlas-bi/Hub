@@ -43,7 +43,7 @@ repos:
   - id: black
     language_version: python3.9
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.6.0
+  rev: v2.7.0
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
