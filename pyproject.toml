@@ -100,7 +100,7 @@ Flask-SQLAlchemy-Caching = "^1.0.4"
 Flask-Script = "^2.0.6"
 Jinja2 = "^3.0.1"
 SQLAlchemy = "1.4.46"
-SQLAlchemy-Utils = "^0.39.0"
+SQLAlchemy-Utils = "^0.40.0"
 bs4 = "^0.0.1"
 cryptography = "^39.0.1"
 flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
