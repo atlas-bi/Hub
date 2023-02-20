@@ -178,7 +178,6 @@ class Runner:
                     task_id_list.index(task.id) + 1 : task_id_list.index(task.id) + 2
                 ]
                 if next_task_id:
-
                     # trigger next task
                     RunnerLog(
                         self.task,
@@ -210,9 +209,7 @@ class Runner:
 
     # pylint: disable=R1710
     def __get_source(self) -> None:
-
         if self.task.source_type_id == 1:  # sql
-
             external_db = self.task.source_database_conn
             try:
                 RunnerLog(self.task, self.run_id, 8, "Loading query...")
@@ -333,7 +330,6 @@ class Runner:
             ).run()
 
     def __get_query(self) -> str:
-
         if self.task.source_query_type_id == 3:  # url
             query = self.source_loader.web_url(self.task.source_url)
 
@@ -368,7 +364,6 @@ class Runner:
         return query
 
     def __process(self) -> None:
-
         RunnerLog(self.task, self.run_id, 8, "Starting processing script...")
         # get processing script
 
@@ -453,14 +448,12 @@ class Runner:
             ).read_text("utf8")
 
         elif self.task.processing_type_id == 4 and self.task.processing_git is not None:
-
             # if a dir is specified then download all files
             if (
                 self.task.processing_command is not None
                 and self.task.processing_command != ""
             ):
                 try:
-
                     split_url = re.split("#|@", self.task.processing_git)
                     branch = None
                     base_url = split_url[0]
@@ -510,7 +503,6 @@ class Runner:
         elif self.task.processing_type_id == 5 and self.task.processing_url is not None:
             if self.task.processing_command is not None:
                 try:
-
                     split_url = re.split("#|@", self.task.processing_url)
                     branch = None
                     url = split_url[0]
@@ -605,7 +597,6 @@ class Runner:
         )
 
         for file_counter, this_file in enumerate(self.source_files, 1):
-
             this_file_size = (
                 self.query_output_size
                 if self.query_output_size is not None
@@ -727,7 +718,6 @@ class Runner:
                     )
 
     def __send_email(self) -> None:
-
         logs = (
             TaskLog.query.filter_by(task_id=self.task.id, job_id=self.run_id)
             .order_by(TaskLog.status_date.desc())  # type: ignore[union-attr]
@@ -763,7 +753,6 @@ class Runner:
 
             if self.task.email_completion_file == 1 and len(self.output_files) > 0:
                 for output_file in self.output_files:
-
                     if self.task.email_completion_file_embed == 1:
                         with open(output_file, newline="") as csvfile:
                             output.extend(list(csv.reader(csvfile)))

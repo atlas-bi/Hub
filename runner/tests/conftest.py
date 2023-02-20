@@ -25,7 +25,6 @@ from runner import model
 def client_fixture() -> Generator:
     app = runner_create_app()
     with app.test_client() as client, app.app_context():
-
         assert app.config["ENV"] == "test"
 
         from runner.extensions import db

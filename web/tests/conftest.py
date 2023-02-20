@@ -20,10 +20,8 @@ os.environ["FLASK_DEBUG"] = "False"
 
 @pytest.fixture(scope="function")
 def client_fixture() -> Generator:
-
     app = web_create_app()
     with app.test_client() as client, app.app_context():
-
         assert app.config["ENV"] == "test"
 
         from web.extensions import db
@@ -81,7 +79,6 @@ def check_url(client, url: str, flash: bool = False) -> str:  # type: ignore[no-
 
 
 def create_demo_task(session, year: int = 2025, sequence: int = 0) -> Tuple[int, int]:
-
     # create a project
     project = get_or_create(
         session,

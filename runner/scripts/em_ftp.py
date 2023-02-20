@@ -80,7 +80,6 @@ class Ftp:
         self.conn = self.__connect()
 
     def __connect(self) -> FTP:
-
         try:
             return connect(self.connection)
         except ValueError as e:
@@ -118,7 +117,6 @@ class Ftp:
         with tempfile.NamedTemporaryFile(
             mode="w", delete=False, dir=self.dir
         ) as data_file:
-
             if (
                 self.task.source_sftp_ignore_delimiter != 1
                 and self.task.source_sftp_delimiter
@@ -146,7 +144,6 @@ class Ftp:
         return data_file
 
     def __clean_path(self, path: str) -> str:
-
         path = re.sub(r"/$", "", path, re.MULTILINE)
         path = re.sub(r"^/", "", path, re.MULTILINE)
 
@@ -171,7 +168,6 @@ class Ftp:
                 file_list = []
                 for _, _, walk_file_list in self._walk(base_dir):
                     for this_file in walk_file_list:
-
                         if fnmatch.fnmatch(this_file, file_name):
                             file_list.append(this_file)
 
