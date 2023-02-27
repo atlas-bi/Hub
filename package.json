@@ -17,7 +17,7 @@
     "gulp-autoprefixer": "8.0.0",
     "gulp-replace": "1.1.4",
     "gulp-sass": "5.1.0",
-    "sass": "1.58.2"
+    "sass": "1.58.3"
   },
   "description": "A task scheduling tool.",
   "devDependencies": {
@@ -56,5 +56,5 @@
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\"",
     "watch": "gulp watch"
   },
-  "version": "2.7.4"
+  "version": "2.7.5"
 }
