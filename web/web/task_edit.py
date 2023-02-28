@@ -398,6 +398,7 @@ def task_edit_post(task_id: int) -> Response:
 
     me = Task.query.filter_by(id=task.id)
 
+    # pylint: disable=R1735
     me.update(
         dict(  # noqa: C408
             name=form.get("name", "undefined").strip(),

@@ -90,6 +90,7 @@ class SourceCode:
                 )  # noqa: S501
 
                 if page.status_code != 200:
+                    # pylint: disable=W0719
                     raise Exception("Failed to get code: " + page.text)
 
                 if url.lower().endswith(".sql"):
