@@ -270,14 +270,12 @@ class PyProcesser:
     def __run_script(self) -> None:
         try:
             # create environment from params
-            env = (" && ").join(
+            env = ("").join(
                 [
-                    f'export {re.sub(r"[^a-zA-Z]", "", key)}="{value}"'
+                    f'{re.sub(r"[^a-zA-Z_]", "", key)}="{value}" '
                     for key, value in self.params.read().items()
                 ]
             )
-
-            env = env + " && " if env != "" else ""
 
             # if data files exist, pass them as a param.
             cmd = (
