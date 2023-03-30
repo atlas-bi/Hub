@@ -52,7 +52,8 @@ jobs:
         sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
         poetry install -vvv
         poetry add --group dev codecov
-      env: PYTHONWARNINGS=ignore
+      env:
+        PYTHONWARNINGS: ignore
     - name: start test services
       run: |
         docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=@Passw0rd>" -p 1433:1433 --name sql1 -h sql1  -d mcr.microsoft.com/mssql/server:2017-latest
