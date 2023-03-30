@@ -23,7 +23,6 @@ from .conftest import create_demo_task
 
 
 def test_run_invalid_task(client_fixture: fixture) -> None:
-
     # test invalid task
     page = client_fixture.get(
         url_for("task_controls_bp.run_task", task_id=99), follow_redirects=True
@@ -48,7 +47,6 @@ def test_run_valid_task(client_fixture: fixture) -> None:
 
 
 def test_scheduler_invalid_task(client_fixture: fixture) -> None:
-
     # test invalid task
     page = client_fixture.get(
         url_for("task_controls_bp.schedule_task", task_id=99), follow_redirects=True
@@ -88,7 +86,6 @@ def test_enable_task(client_fixture: fixture) -> None:
 
 
 def test_disable_task(client_fixture: fixture) -> None:
-
     _, t_id = create_demo_task(db.session)
     page = client_fixture.get(
         url_for("task_controls_bp.disable_task", task_id=t_id), follow_redirects=True
@@ -99,7 +96,6 @@ def test_disable_task(client_fixture: fixture) -> None:
 
 
 def test_duplicate_invalid_task(client_fixture: fixture) -> None:
-
     # test invalid task
     page = client_fixture.get(
         url_for("task_controls_bp.duplicate_task", task_id=99), follow_redirects=True
@@ -119,7 +115,6 @@ def test_duplicate_valid_task(client_fixture: fixture) -> None:
 
 
 def test_invalid_task_status(client_fixture: fixture) -> None:
-
     # test invalid task
     page = client_fixture.get(url_for("task_controls_bp.task_status", task_id=99))
     assert page.status_code == 200
@@ -134,7 +129,6 @@ def test_valid_task_status(client_fixture: fixture) -> None:
 
 
 def test_delete_invalid_task(client_fixture: fixture) -> None:
-
     # test invalid task
     page = client_fixture.get(
         url_for("task_controls_bp.delete_task", task_id=99), follow_redirects=True
@@ -145,7 +139,6 @@ def test_delete_invalid_task(client_fixture: fixture) -> None:
 
 
 def test_delete_valid_task(client_fixture: fixture) -> None:
-
     _, t_id = create_demo_task(db.session)
     page = client_fixture.get(
         url_for("task_controls_bp.delete_task", task_id=t_id), follow_redirects=True
@@ -159,7 +152,6 @@ def test_delete_valid_task(client_fixture: fixture) -> None:
 
 
 def test_end_retry_invalid_task(client_fixture: fixture) -> None:
-
     # test invalid task
     page = client_fixture.get(
         url_for("task_controls_bp.task_endretry", task_id=99), follow_redirects=True
@@ -187,7 +179,6 @@ def test_end_retry_valid_task(client_fixture: fixture) -> None:
 
 
 def test_reset_invalid_task(client_fixture: fixture) -> None:
-
     # test invalid task
     page = client_fixture.get(
         url_for("task_controls_bp.reset_task", task_id=99), follow_redirects=True

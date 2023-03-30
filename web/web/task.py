@@ -9,7 +9,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from RelativeToNow import relative_to_now
-from sqlalchemy import func
+from sqlalchemy.sql import functions as func
 from werkzeug.wrappers import Response
 
 from web import db

@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.sql import func
+from sqlalchemy.sql import functions as func
 
 from .extensions import db
 

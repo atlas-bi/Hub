@@ -24,7 +24,6 @@ def job_sync() -> None:
     """Job to sync run times between model and scheduler."""
     try:
         with atlas_scheduler.app.app_context():
-
             # remove next run date and duration from disabled jobs
             db.session.execute(
                 update(Task)
@@ -53,7 +52,6 @@ def drop_them(temp_path: Path, age: int) -> None:
     """Cleanup function to remove files older than age."""
     for temp_file in temp_path.glob("*/*/*"):
         if os.stat(temp_file.resolve()).st_mtime < time.time() - age:
-
             try:
                 if (
                     Path(temp_file.resolve()).exists()

@@ -51,7 +51,6 @@ def job_missed(event: JobEvent) -> None:
     job_id follows the pattern proj_id-task-id-stuff
     """
     with atlas_scheduler.app.app_context():
-
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
 
@@ -145,13 +144,11 @@ def job_added(event: JobEvent) -> None:
 
         # job and task just exist still
         if re.match(r"^\d+-\d+-.+?$", event.job_id) and job:
-
             _, task_id = event.job_id.split("-")[:2]
 
             task = Task.query.filter_by(id=task_id).first()
 
             if task:
-
                 if task.next_run and task.next_run.replace(
                     tzinfo=tzlocal()
                 ) < datetime.datetime.now().replace(tzinfo=tzlocal()):
@@ -207,7 +204,6 @@ def job_removed(event: JobEvent) -> None:
 def job_submitted(event: JobSubmissionEvent) -> None:
     """Event is triggered when an already added job is run."""
     with atlas_scheduler.app.app_context():
-
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
 

@@ -43,7 +43,6 @@ def login() -> Union[str, Response]:
 
     # if demo, login as first user
     if app.config.get("DEMO"):
-
         session.pop("_flashes", None)
 
         user = User.query.first()
