@@ -77,7 +77,7 @@ def search() -> dict:
         ConnectionSftp.name,
         ConnectionSftp.address,
     )
-    for row in sftp_connections:
+    for row in sftp_connections.all():
         connection_sftp[
             url_for("connection_bp.one_connection", connection_id=row[0])
             + f"?s={row[1]}"
@@ -89,7 +89,7 @@ def search() -> dict:
         ConnectionFtp.name,
         ConnectionFtp.address,
     )
-    for row in ftp_connections:
+    for row in ftp_connections.all():
         connection_ftp[
             url_for("connection_bp.one_connection", connection_id=row[0])
             + f"?s={row[1]}"
@@ -98,7 +98,7 @@ def search() -> dict:
     database_connections = db.session.query(
         ConnectionDatabase.connection_id, ConnectionDatabase.id, ConnectionDatabase.name
     )
-    for row in database_connections:
+    for row in database_connections.all():
         connection_database[
             url_for("connection_bp.one_connection", connection_id=row[0])
             + f"?s={row[1]}"
@@ -112,7 +112,7 @@ def search() -> dict:
         ConnectionSmb.server_ip,
         ConnectionSmb.share_name,
     )
-    for row in smb_connections:
+    for row in smb_connections.all():
         connection_smb[
             url_for("connection_bp.one_connection", connection_id=row[0])
             + f"?s={row[1]}"
@@ -124,7 +124,7 @@ def search() -> dict:
         ConnectionSsh.name,
         ConnectionSsh.address,
     )
-    for row in ssh_connections:
+    for row in ssh_connections.all():
         connection_ssh[
             url_for("connection_bp.one_connection", connection_id=row[0])
             + f"?s={row[1]}"
@@ -133,7 +133,7 @@ def search() -> dict:
     gpg_connections = db.session.query(
         ConnectionGpg.connection_id, ConnectionGpg.id, ConnectionGpg.name
     )
-    for row in gpg_connections:
+    for row in gpg_connections.all():
         connection_gpg[
             url_for("connection_bp.one_connection", connection_id=row[0])
             + f"?s={row[1]}"
@@ -167,7 +167,6 @@ def home() -> Union[Response, str]:
         .filter(Project.owner_id == current_user.id)
         .first()
     ):
-
         return render_template(
             "pages/project/all.html.j2",
             title=current_user.full_name + "'s Projects",

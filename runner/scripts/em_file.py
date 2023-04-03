@@ -124,7 +124,6 @@ class File:
             self.task.destination_file_name != ""
             and self.task.destination_file_name is not None
         ):
-
             # insert params
             self.file_name = self.params.insert_file_params(
                 self.task.destination_file_name.strip()
@@ -154,77 +153,89 @@ class File:
             os.rename(self.data_file.name, new_data_file_name)
             self.data_file.name = new_data_file_name  # type: ignore[misc]
 
-        with open(self.data_file.name, "r", newline="") as data_file:
-            reader = csv.reader(data_file)
+        # if ignore delimiter is checked, then use binary to copy contents
+        if self.task.destination_ignore_delimiter == 1:
+            with open(self.data_file.name, "rb") as data_file_binary, open(
+                self.file_path, mode="wb"
+            ) as myfile_binary:
+                for line_binary in data_file_binary:
+                    myfile_binary.write(line_binary)
 
-            with open(self.file_path, mode="w") as myfile:
-                # if csv (1) or text (2) and had delimiter
+        # otherwise use unicode.
+        else:
+            with open(self.data_file.name, "r", newline="") as data_file:
+                reader = csv.reader(data_file)
 
-                if (
-                    self.task.destination_file_type_id == 1
-                    or self.task.destination_file_type_id == 2
-                    or self.task.destination_file_type_id == 4
-                ) and (
-                    self.task.destination_ignore_delimiter is None
-                    or self.task.destination_ignore_delimiter != 1
-                ):
-                    wrtr = (
-                        csv.writer(
+                with open(self.file_path, mode="w") as myfile:
+                    # if csv (1) or text (2) and had delimiter
+
+                    if (
+                        self.task.destination_file_type_id == 1
+                        or self.task.destination_file_type_id == 2
+                        or self.task.destination_file_type_id == 4
+                    ) and (
+                        self.task.destination_ignore_delimiter is None
+                        or self.task.destination_ignore_delimiter != 1
+                    ):
+                        wrtr = (
+                            csv.writer(
+                                myfile,
+                                delimiter=str(self.task.destination_file_delimiter)
+                                .encode("utf-8")
+                                .decode("unicode_escape"),
+                                quoting=self.__quote_level(),
+                                quotechar=self.__quotechar(),
+                            )
+                            if self.task.destination_file_delimiter is not None
+                            and len(self.task.destination_file_delimiter) > 0
+                            and (
+                                self.task.destination_file_type_id == 2
+                                or self.task.destination_file_type_id == 4
+                            )  # txt or other
+                            else csv.writer(
+                                myfile,
+                                quoting=self.__quote_level(),
+                                quotechar=self.__quotechar(),
+                            )
+                        )
+                        for row in reader:
+                            new_row = [
+                                (x.strip('"').strip("'") if isinstance(x, str) else x)
+                                for x in row
+                            ]
+
+                            if (
+                                self.task.destination_file_type_id == 1
+                                or self.task.destination_file_type_id == 2
+                                or self.task.destination_file_type_id == 4
+                            ) and (
+                                self.task.destination_file_line_terminator is not None
+                                and self.task.destination_file_line_terminator != ""
+                            ):
+                                new_row.append(
+                                    self.task.destination_file_line_terminator
+                                )
+
+                            wrtr.writerow(new_row)
+
+                    # if xlxs (3)
+                    elif self.task.destination_file_type_id == 3:
+                        wrtr = csv.writer(
                             myfile,
-                            delimiter=str(self.task.destination_file_delimiter)
-                            .encode("utf-8")
-                            .decode("unicode_escape"),
+                            dialect="excel",
                             quoting=self.__quote_level(),
                             quotechar=self.__quotechar(),
                         )
-                        if self.task.destination_file_delimiter is not None
-                        and len(self.task.destination_file_delimiter) > 0
-                        and (
-                            self.task.destination_file_type_id == 2
-                            or self.task.destination_file_type_id == 4
-                        )  # txt or other
-                        else csv.writer(
-                            myfile,
-                            quoting=self.__quote_level(),
-                            quotechar=self.__quotechar(),
-                        )
-                    )
-                    for row in reader:
-                        new_row = [
-                            (x.strip('"').strip("'") if isinstance(x, str) else x)
-                            for x in row
-                        ]
+                        for row in reader:
+                            new_row = [
+                                (x.strip('"').strip("'") if isinstance(x, str) else x)
+                                for x in row
+                            ]
+                            wrtr.writerow(new_row)
 
-                        if (
-                            self.task.destination_file_type_id == 1
-                            or self.task.destination_file_type_id == 2
-                            or self.task.destination_file_type_id == 4
-                        ) and (
-                            self.task.destination_file_line_terminator is not None
-                            and self.task.destination_file_line_terminator != ""
-                        ):
-                            new_row.append(self.task.destination_file_line_terminator)
-
-                        wrtr.writerow(new_row)
-
-                # if xlxs (3)
-                elif self.task.destination_file_type_id == 3:
-                    wrtr = csv.writer(
-                        myfile,
-                        dialect="excel",
-                        quoting=self.__quote_level(),
-                        quotechar=self.__quotechar(),
-                    )
-                    for row in reader:
-                        new_row = [
-                            (x.strip('"').strip("'") if isinstance(x, str) else x)
-                            for x in row
-                        ]
-                        wrtr.writerow(new_row)
-
-                else:
-                    for line in data_file:
-                        myfile.write(line)
+                    else:
+                        for line in data_file:
+                            myfile.write(line)
 
         RunnerLog(
             self.task,
@@ -295,7 +306,6 @@ class File:
 
         # create zip
         if self.task.destination_create_zip == 1:
-
             self.zip_name = DateParsing(
                 self.task, self.run_id, str(self.task.destination_zip_name)
             ).string_to_date()

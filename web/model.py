@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.sql import func
+from sqlalchemy.sql import functions
 
 from .extensions import db
 
@@ -59,7 +59,7 @@ class Login(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     type_id = db.Column(db.Integer, db.ForeignKey(LoginType.id), nullable=True)
     username = db.Column(db.String(120), nullable=True)
-    login_date = db.Column(db.DateTime, server_default=func.now())
+    login_date = db.Column(db.DateTime, server_default=functions.now())
 
 
 @dataclass
@@ -200,11 +200,11 @@ class Project(db.Model):
         passive_deletes=True,
     )
 
-    created = db.Column(db.DateTime, server_default=func.now())
+    created = db.Column(db.DateTime, server_default=functions.now())
     creator_id = db.Column(
         db.Integer, db.ForeignKey(User.id), nullable=True, index=True
     )
-    updated = db.Column(db.DateTime, onupdate=func.now())
+    updated = db.Column(db.DateTime, onupdate=functions.now())
     updater_id = db.Column(
         db.Integer, db.ForeignKey(User.id), nullable=True, index=True
     )
@@ -651,6 +651,7 @@ class ProjectParam(db.Model):
     key: Optional[str] = None
     value: Optional[str] = None
     sensitive: Optional[int] = None
+    project_id: Optional[int] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     key = db.Column(db.String(500), nullable=True)
@@ -797,11 +798,11 @@ class Task(db.Model):
     last_run = db.Column(db.DateTime, nullable=True)
     last_run_job_id = db.Column(db.String(30), nullable=True, index=True)
     next_run = db.Column(db.DateTime, nullable=True, index=True)
-    created = db.Column(db.DateTime, server_default=func.now(), index=True)
+    created = db.Column(db.DateTime, server_default=functions.now(), index=True)
     creator_id = db.Column(
         db.Integer, db.ForeignKey(User.id), nullable=True, index=True
     )
-    updated = db.Column(db.DateTime, onupdate=func.now(), index=True)
+    updated = db.Column(db.DateTime, onupdate=functions.now(), index=True)
     updater_id = db.Column(
         db.Integer, db.ForeignKey(User.id), nullable=True, index=True
     )
@@ -1079,6 +1080,7 @@ class TaskParam(db.Model):
     key: Optional[str] = None
     value: Optional[str] = None
     sensitive: Optional[int] = None
+    task_id: Optional[int] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     key = db.Column(db.String(500), nullable=True)

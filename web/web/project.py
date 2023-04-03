@@ -8,7 +8,8 @@ from flask import Blueprint
 from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from sqlalchemy import func, text
+from sqlalchemy import text
+from sqlalchemy.sql import functions as func
 from werkzeug import Response
 
 from web import cache, db
@@ -65,7 +66,6 @@ def user_projects(user_id: int) -> Union[Response, str]:
         .filter(Project.owner_id == user_id)
         .first()
     ):
-
         return render_template(
             "pages/project/all.html.j2",
             title=my_user.full_name + "'s Projects",
@@ -137,6 +137,7 @@ def edit_project(project_id: int) -> Response:
 
     form = request.form
 
+    # pylint: disable=R1735
     me.update(
         dict(  # noqa: C408
             name=form.get("project_name", "undefined", type=str).strip(),
@@ -382,7 +383,6 @@ def duplicate_project(project_id: int) -> Response:
 
         # copy the tasks
         for my_task in Task.query.filter_by(project_id=project_id).all():
-
             if my_task:
                 new_task = Task()
 

@@ -4,6 +4,7 @@ packages/assert.sh
 packages/atlas-hub-[0-9]*.[0-9]*.[0-9]*
 config_cust.py
 
+.ruff_cache
 package-lock.json
 *.sqlite
 static/css/
