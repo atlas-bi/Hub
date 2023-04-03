@@ -2532,14 +2532,14 @@ files = [
 
 [[package]]
 name = "redis"
-version = "4.4.0"
+version = "4.4.4"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "redis-4.4.0-py3-none-any.whl", hash = "sha256:cae3ee5d1f57d8caf534cd8764edf3163c77e073bdd74b6f54a87ffafdc5e7d9"},
-    {file = "redis-4.4.0.tar.gz", hash = "sha256:7b8c87d19c45d3f1271b124858d2a5c13160c4e74d4835e28273400fa34d5228"},
+    {file = "redis-4.4.4-py3-none-any.whl", hash = "sha256:da92a39fec86438d3f1e2a1db33c312985806954fe860120b582a8430e231d8f"},
+    {file = "redis-4.4.4.tar.gz", hash = "sha256:68226f7ede928db8302f29ab088a157f41061fa946b7ae865452b6d7838bbffb"},
 ]
 
 [package.dependencies]
@@ -3432,4 +3432,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "e9dcea45cb690cd1e7005ee66504a5bf2852c3bcf6ff0360cb57af065e2dbbc2"
+content-hash = "a6e7764da87887018c10e1a8c2bce133fd517a47908e5486db6045cbd05d3eb8"
