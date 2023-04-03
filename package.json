@@ -37,7 +37,7 @@
     "gulp-rename": "2.0.0",
     "gulp-uglify": "3.0.2",
     "prettier": "2.8.7",
-    "semantic-release": "20.1.0"
+    "semantic-release": "21.0.0"
   },
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -56,5 +56,5 @@
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\"",
     "watch": "gulp watch"
   },
-  "version": "2.7.9"
+  "version": "2.7.10"
 }
