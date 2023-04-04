@@ -48,6 +48,7 @@
     "url": "github:atlas-bi/atlas-automation-hub"
   },
   "scripts": {
+    "build": "gulp build",
     "commit": "git add . && pre-commit run ; git add . && cz --no-verify",
     "format": "prettier --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\" --write",
     "install": "gulp build",

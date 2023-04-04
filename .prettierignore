@@ -3,7 +3,10 @@ node_modules/*
 .mypy_cache
 .pytest_cache
 .tox
-web/static/lib/*
+
+/web/static/lib/*
+!/web/static/lib/table/
+!/web/static/lib/scroll/
 web/static/fonts/*
 web/static/css/*
 .lighthouserc/*
