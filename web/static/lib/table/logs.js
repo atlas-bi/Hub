@@ -47,6 +47,45 @@
       }
     };
   }
+  var scroll_ajax = null;
+  function loader(container, url) {
+    // if within x of top and no "at-start" class, then get more logs.
+    if (
+      container.querySelector('.ss-content') &&
+      container.querySelector('.ss-content').scrollTop < 500 &&
+      !container.classList.contains('at-start') &&
+      !container.querySelector('div.loader')
+    ) {
+      var loader = undefined;
+      if (container.querySelector('.ss-content').scrollTop == 0) {
+        loader = document.createElement('div');
+        loader.classList.add('loader', 'm-5');
+        loader.setAttribute('style', 'position:absolute;top:-30px;left:-13px;');
+        container.insertBefore(loader, container.firstChild);
+      }
+
+      // get logs
+
+      if (scroll_ajax) {
+        scroll_ajax.abort();
+      }
+      scroll_ajax = new XMLHttpRequest();
+
+      scroll_ajax.open('get', url + '?lt=' + log_id_min, true);
+      scroll_ajax.send();
+
+      scroll_ajax.onload = function () {
+        try {
+          appendLogs(JSON.parse(this.responseText), container, url);
+          if (loader !== undefined && loader.parentElement) {
+            loader.parentElement.removeChild(loader);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+    }
+  }
 
   function loadLogs(arr, el, url) {
     var box = document.createElement('div');
@@ -64,56 +103,18 @@
     container.setAttribute('ss-container', 'ss-container');
     container.setAttribute('style', 'height:100%');
 
-    var scroll_ajax = null;
     container.addEventListener(
       'scroll',
-      debounce(function () {
-        // if within x of top and no "at-start" class, then get more logs.
-        if (
-          container.querySelector('.ss-content').scrollTop < 500 &&
-          !container.classList.contains('at-start')
-        ) {
-          // add loader
-          var loader = container.querySelector('div.loader');
-
-          if (!loader) {
-            loader = document.createElement('div');
-            loader.classList.add('loader', 'm-5');
-            loader.setAttribute(
-              'style',
-              'position:absolute;top:-30px;left:-13px;',
-            );
-            container.insertBefore(loader, container.firstChild);
-          }
-
-          // get logs
-
-          if (scroll_ajax) {
-            scroll_ajax.abort();
-          }
-          scroll_ajax = new XMLHttpRequest();
-
-          scroll_ajax.open('get', url + '?lt=' + log_id_min, true);
-          scroll_ajax.send();
-
-          scroll_ajax.onload = function () {
-            try {
-              appendLogs(JSON.parse(this.responseText), container);
-              if (loader !== undefined && loader.parentElement) {
-                loader.parentElement.removeChild(loader);
-              }
-            } catch (e) {
-              console.log(e);
-            }
-          };
-        }
+      debounce(() => {
+        loader(container, url);
       }, 10),
     );
+
     box.appendChild(container);
     el.innerHTML = '';
     el.appendChild(box);
 
-    appendLogs(arr, container);
+    appendLogs(arr, container, url);
 
     // trigger scroll
     document.dispatchEvent(
@@ -148,7 +149,7 @@
 
             q.onload = function () {
               try {
-                appendLogs(JSON.parse(this.responseText), container);
+                appendLogs(JSON.parse(this.responseText), container, url);
               } catch (e) {
                 console.log(e);
               }
@@ -160,7 +161,7 @@
     })(container, url);
   }
 
-  function appendLogs(arr, container) {
+  function appendLogs(arr, container, url) {
     var empty_msg = 'No data to show.',
       current_date = new Date().toLocaleString().replace(',', '');
     //.replace(/:\d\d\s/, " ");
@@ -326,14 +327,7 @@
         }
       });
 
-      if (group[x]['location'] == 'before') {
-        updated.parentElement.insertBefore(
-          nav,
-          updated.parentElement.firstChild,
-        );
-      } else {
-        updated.parentElement.insertBefore(nav, updated);
-      }
+      // left
       left = document.createElement('div');
       left.classList.add(
         'level-left',
@@ -430,6 +424,24 @@
       }
 
       left.appendChild(message);
+
+      if (group[x]['location'] == 'before') {
+        updated.parentElement.insertBefore(
+          nav,
+          updated.parentElement.firstChild,
+        );
+
+        // preserve scroll position
+        if (container.querySelector('.ss-content')) {
+          var height = nav.clientHeight;
+          container.querySelector('.ss-content').scrollTop += height;
+        } else {
+          console.log('no scroller yet');
+        }
+      } else {
+        updated.parentElement.insertBefore(nav, updated);
+      }
+
       // scroll to bottom if has attribute ss-bottom
       if (container.hasAttribute('ss-bottom')) {
         scroller = container.querySelector('.ss-content');
@@ -439,5 +451,6 @@
         });
       }
     }
+    loader(container, url);
   }
 })((window.rhcTable = window.rhcTable || {}));
