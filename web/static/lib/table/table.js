@@ -365,7 +365,9 @@
       })(reload, el);
     }
 
-    var autoReload = el.querySelector('input.switch') ? el.querySelector('input.switch').parentElement : null;
+    var autoReload = el.querySelector('input.switch')
+      ? el.querySelector('input.switch').parentElement
+      : null;
     var reloadTimer;
     if (autoReload) {
       /* auto reload */
