@@ -304,7 +304,7 @@ class PyProcesser:
             elif self.task.source_type_id == 3:  # sftp file
                 connection = em_sftp.connection_json(self.task.source_sftp_conn)
             elif self.task.source_type_id == 4:  # ftp file
-                connection = em_sftp.connection_json(self.task.source_ftp_conn)
+                connection = em_ftp.connection_json(self.task.source_ftp_conn)
             elif self.task.source_type_id == 6:  # ssh command
                 connection = em_ssh.connection_json(self.task.source_ssh_conn)
 
