@@ -17,6 +17,7 @@
     "gulp-autoprefixer": "8.0.0",
     "gulp-replace": "1.1.4",
     "gulp-sass": "5.1.0",
+    "npm-run-all": "^4.1.5",
     "sass": "1.58.3"
   },
   "description": "A task scheduling tool.",
@@ -29,6 +30,7 @@
     "@semantic-release/github": "8.0.7",
     "@semantic-release/npm": "10.0.2",
     "@semantic-release/release-notes-generator": "10.0.3",
+    "browser-sync": "^2.29.1",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.37.0",
     "gulp-concat": "2.6.1",
@@ -48,14 +50,27 @@
     "url": "github:atlas-bi/atlas-automation-hub"
   },
   "scripts": {
-    "build": "gulp build",
+    "build": "run-p gulp:build model:*",
     "commit": "git add . && pre-commit run ; git add . && cz --no-verify",
-    "format": "prettier --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\" --write",
+    "dev:browser": "browser-sync start --proxy http://127.0.0.1:4999/ --files=\"web/**\"",
+    "dev:runner": "FLASK_ENV=development FLASK_DEBUG=1 FLASK_APP=runner poetry run flask run --port=5002",
+    "dev:scheduler": "FLASK_ENV=development FLASK_DEBUG=1 FLASK_APP=scheduler poetry run flask run --port=5001",
+    "dev:web": "FLASK_ENV=development FLASK_DEBUG=1 FLASK_APP=web FLASK_RUN_PORT=4999 poetry run flask run",
+    "format": "run-s format:*",
+    "format:dynamic": "poetry run tox -e reformat",
+    "format:static": "prettier --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\" --write",
+    "gulp:build": "gulp build",
+    "gulp:watch": "gulp watch",
     "install": "gulp build",
-    "test": "npm run test:eslint; npm run test:prettier",
+    "model:runner": "cp web/model.py runner/",
+    "model:scheduler": "cp web/model.py scheduler/",
+    "prod:web": "FLASK_ENV=production FLASK_DEBUG=0 FLASK_APP=web poetry run flask run",
+    "publish": "cd publish && fab publish && cd ..",
+    "start": "npm-run-all build --parallel gulp:watch dev:*",
+    "test": "run-s test:*",
     "test:eslint": "eslint \"./web/**/*.js\" --color",
-    "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\"",
-    "watch": "gulp watch"
+    "test:lint": "poetry run tox -e lint",
+    "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\""
   },
   "version": "2.7.10"
 }

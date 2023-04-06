@@ -273,51 +273,67 @@ class Runner:
             )
 
         elif self.task.source_type_id == 2:  # smb file
-            file_name = self.param_loader.insert_file_params(self.task.source_smb_file)
-            file_name = DateParsing(
-                task=self.task,
-                run_id=self.run_id,
-                date_string=file_name,
-            ).string_to_date()
+            if self.task.source_smb_file:
+                RunnerLog(self.task, self.run_id, 10, "Loading data from server...")
+                file_name = self.param_loader.insert_file_params(
+                    self.task.source_smb_file
+                )
+                file_name = DateParsing(
+                    task=self.task,
+                    run_id=self.run_id,
+                    date_string=file_name,
+                ).string_to_date()
 
-            self.source_files = Smb(
-                task=self.task,
-                run_id=self.run_id,
-                connection=self.task.source_smb_conn,
-                directory=self.temp_path,
-            ).read(file_name=file_name)
+                self.source_files = Smb(
+                    task=self.task,
+                    run_id=self.run_id,
+                    connection=self.task.source_smb_conn,
+                    directory=self.temp_path,
+                ).read(file_name=file_name)
+            else:
+                RunnerLog(self.task, self.run_id, 10, "No file specified...")
 
         elif self.task.source_type_id == 3:  # sftp file
-            RunnerLog(self.task, self.run_id, 9, "Loading data from server...")
-            file_name = self.param_loader.insert_file_params(self.task.source_sftp_file)
-            file_name = DateParsing(
-                task=self.task,
-                run_id=self.run_id,
-                date_string=file_name,
-            ).string_to_date()
+            if self.task.source_sftp_file:
+                RunnerLog(self.task, self.run_id, 9, "Loading data from server...")
+                file_name = self.param_loader.insert_file_params(
+                    self.task.source_sftp_file
+                )
+                file_name = DateParsing(
+                    task=self.task,
+                    run_id=self.run_id,
+                    date_string=file_name,
+                ).string_to_date()
 
-            self.source_files = Sftp(
-                task=self.task,
-                run_id=self.run_id,
-                connection=self.task.source_sftp_conn,
-                directory=self.temp_path,
-            ).read(file_name=file_name)
+                self.source_files = Sftp(
+                    task=self.task,
+                    run_id=self.run_id,
+                    connection=self.task.source_sftp_conn,
+                    directory=self.temp_path,
+                ).read(file_name=file_name)
+            else:
+                RunnerLog(self.task, self.run_id, 9, "No file specified...")
 
         elif self.task.source_type_id == 4:  # ftp file
-            RunnerLog(self.task, self.run_id, 13, "Loading data from server...")
-            file_name = self.param_loader.insert_file_params(self.task.source_ftp_file)
-            file_name = DateParsing(
-                task=self.task,
-                run_id=self.run_id,
-                date_string=file_name,
-            ).string_to_date()
+            if self.task.source_ftp_file:
+                RunnerLog(self.task, self.run_id, 13, "Loading data from server...")
+                file_name = self.param_loader.insert_file_params(
+                    self.task.source_ftp_file
+                )
+                file_name = DateParsing(
+                    task=self.task,
+                    run_id=self.run_id,
+                    date_string=file_name,
+                ).string_to_date()
 
-            self.source_files = Ftp(
-                task=self.task,
-                run_id=self.run_id,
-                connection=self.task.source_ftp_conn,
-                directory=self.temp_path,
-            ).read(file_name=file_name)
+                self.source_files = Ftp(
+                    task=self.task,
+                    run_id=self.run_id,
+                    connection=self.task.source_ftp_conn,
+                    directory=self.temp_path,
+                ).read(file_name=file_name)
+            else:
+                RunnerLog(self.task, self.run_id, 13, "No file specified...")
 
         elif self.task.source_type_id == 6:  # ssh command
             query = self.__get_query()

@@ -4,7 +4,7 @@ import sys
 import time
 import warnings
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional
 
 from cryptography.utils import CryptographyDeprecationWarning
 
@@ -20,6 +20,16 @@ from runner.scripts.em_messages import RunnerException, RunnerLog
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 
 from crypto import em_decrypt
+
+
+def connection_json(connection: ConnectionSsh) -> Dict:
+    """Convert connection string to json."""
+    return {
+        "address": connection.address,
+        "port": connection.port or 22,
+        "password": em_decrypt(connection.password, app.config["PASS_KEY"]),
+        "username": str(connection.username),
+    }
 
 
 def connect(connection: ConnectionSsh) -> paramiko.SSHClient:
