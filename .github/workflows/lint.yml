@@ -38,4 +38,4 @@ jobs:
         poetry install
 
     - name: 🔍 Lint
-      run: npm run lint
+      run: npm run test
