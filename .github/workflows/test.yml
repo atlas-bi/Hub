@@ -6,7 +6,7 @@ jobs:
     name: 🐍 Python ${{ matrix.python-version }} on 🖥️ ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.python-version }}-${{ matrix.os }}
       cancel-in-progress: true
 
     strategy:
