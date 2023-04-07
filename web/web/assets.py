@@ -35,13 +35,6 @@ js = Bundle(
 web_assets.register("codemirror", js)
 
 js = Bundle(
-    "./lib/codemirror/codemirror.js",
-    "./lib/codemirror/gfm.js",
-    "./lib/codemirror/overlay.js",
-    "./lib/codemirror/sql.js",
-    "./lib/codemirror/python.js",
-    "./lib/codemirror/matchbrackets.js",
-    "./lib/codemirror/simplescrollbars.js",
     "./lib/flatpickr/flatpickr.js",
     "./js/base.js",
     "./js/ajax.js",
