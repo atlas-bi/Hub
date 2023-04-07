@@ -3,14 +3,10 @@
         <h2 class="title is-2">Processing Script</h2>
         <div class="select is-fullwidth">
             <select class="input" name="processingType" required="required">
-                <option value="none">
-                    None
-                </option>
+                <option value="none">None</option>
                 {% for s in processing_type %}
                     <option value="{{ s.id }}"
-                            {% if s.id == t.processing_type_id %}selected="selected"{% endif %}>
-                        {{ s.name }}
-                    </option>
+                            {% if s.id == t.processing_type_id %}selected="selected"{% endif %}>{{ s.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -25,14 +21,10 @@
                         name="smb_processing"
                         data-smb="task-smb-processing-connection">
                     <option {% if not t or not t.processing_smb_conn or not t.processing_smb_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                            value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_smb_conn and t.processing_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.processing_smb_conn and t.processing_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -68,14 +60,10 @@
                         name="sftp_processing"
                         data-sftp="task-sftp-processing-connection">
                     <option {% if not t or not t.processing_sftp_conn or not t.processing_sftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                              value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_sftp_conn and t.processing_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.processing_sftp_conn and t.processing_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -111,14 +99,10 @@
                         name="ftp_processing"
                         data-ftp="task-ftp-processing-connection">
                     <option {% if not t or not t.processing_ftp_conn or not t.processing_ftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                            value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_ftp_conn and t.processing_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.processing_ftp_conn and t.processing_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>

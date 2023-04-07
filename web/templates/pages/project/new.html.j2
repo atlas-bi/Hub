@@ -114,10 +114,16 @@
                                     <div class="control">
                                         <a class="button toggle-pass "data-target="password">
                                             <span class="icon">
-                                                <i class="fas {% if param.sensitive ==1 -%}fa-eye{%- else -%}fa-eye-slash{%- endif -%}"></i>
+                                                <i class="fas
+                                                          {% if param.sensitive ==1 -%}
+                                                              fa-eye{%- else -%}fa-eye-slash{%- endif -%}"></i>
                                                 <input name="param-sensitive"
                                                        type="hidden"
-                                                       {% if param.sensitive ==1 -%}value="1"{% else %} value="0"{% endif %}/>
+                                                       {% if param.sensitive ==1 -%}
+                                                           value="1"
+                                                       {% else %}
+                                                           value="0"
+                                                       {% endif %}/>
                                             </span>
                                         </a>
                                     </div>

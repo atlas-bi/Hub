@@ -105,10 +105,19 @@
     {% endblock js %}
 
 </body>
+{% assets "scroll" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% assets "codemirror" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% assets "js_search" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
 {% assets "js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% assets "js_tables" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
 </html>

@@ -19,24 +19,26 @@
 <div style="padding:25px">
     <!-- heading -->
     <div style="margin-bottom:25px;">
-        <h2 style="font-family: Georgia,serif;font-size: 35px;margin:0;font-weight:lighter">Atlas / Hub</h2>
+        <h2 style="font-family: Georgia,serif;
+                   font-size: 35px;
+                   margin:0;
+                   font-weight:lighter">Atlas / Hub</h2>
         <div style="color: #6c7378;font-size: 15px;">&#169; 2020 Riverside Healthcare</div>
     </div>
     <!-- task title -->
     <h3>
         Project:
-        <a style="color: #6c7378;text-decoration: none"
-           href="{{ host }}/project/{{ task.projectId }}">
-            {{ task.project.name }}
-        </a>
+        <a style="color: #6c7378;
+                  text-decoration: none"
+           href="{{ host }}/project/{{ task.projectId }}">{{ task.project.name }}</a>
         / Task:
-        <a style="color: #6c7378;text-decoration: none"
+        <a style="color: #6c7378;
+                  text-decoration: none"
            href="{{ host }}/task/{{ task.id }}">{{ task.name }}</a>
         / Run:
-        <a style="color: #6c7378;text-decoration: none"
-           href="{{ host }}/task/{{ task.id }}/log/{{ task.lastRunJobId }}">
-            {{ task.last_run_job_id }}
-        </a>
+        <a style="color: #6c7378;
+                  text-decoration: none"
+           href="{{ host }}/task/{{ task.id }}/log/{{ task.lastRunJobId }}">{{ task.last_run_job_id }}</a>
     </h3>
     <!-- message body -->
     {% if success == 1 %}
@@ -64,14 +66,14 @@
                       width: 100%;
                       border-top: none;
                       position: relative;
-                      max-width: 100%;">
+                      max-width: 100%">
             {% if task.source_query_include_header %}
                 <thead>
                     <tr style="background: #078992;
                                border: none;
                                color: #fff;
                                border-top-right-radius: 3px;
-                               border-top-left-radius: 3px;">
+                               border-top-left-radius: 3px">
                         {% for item in output[0] %}
                             {% if loop.index0 == 0 %}
                                 <th style="border-top-left-radius: 3px;">{{ item }}</th>
@@ -93,7 +95,7 @@
                                 {% if loop.index0 > 0 %}
                                     <td style="padding: 10px 10px;
                                                border-top: 1px solid #d9d9d9;
-                                               border-left: 1px solid #d9d9d9;">{{ cell }}</td>
+                                               border-left: 1px solid #d9d9d9">{{ cell }}</td>
                                 {% else %}
                                     <td style="padding: 10px 10px;border-top: 1px solid #d9d9d9;">{{ cell }}</td>
                                 {% endif %}
@@ -116,13 +118,13 @@
                       border-top: none;
                       position: relative;
                       white-space: pre-wrap;
-                      max-width: 100%;">
+                      max-width: 100%">
             <thead>
                 <tr style="background: #078992;
                            border: none;
                            color: #fff;
                            border-top-right-radius: 3px;
-                           border-top-left-radius: 3px;">
+                           border-top-left-radius: 3px">
                     <th style="border-top-left-radius: 3px;">Status</th>
                     <th>Status Date</th>
                     <th style="border-top-right-radius: 3px;">Status Message</th>
@@ -134,12 +136,10 @@
                         <td style="padding: 10px 10px; border-top: 1px solid #d9d9d9;">{{ log.status_date|datetime_format }}</td>
                         <td style="padding: 10px 10px;
                                    border-top: 1px solid #d9d9d9;
-                                   border-left: 1px solid #d9d9d9;">
-                            {{ log.status.name }}
-                        </td>
+                                   border-left: 1px solid #d9d9d9">{{ log.status.name }}</td>
                         <td style="padding: 10px 10px;
                                    border-top: 1px solid #d9d9d9;
-                                   border-left: 1px solid #d9d9d9;">{{ log.message|e }}</td>
+                                   border-left: 1px solid #d9d9d9">{{ log.message|e }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

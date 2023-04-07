@@ -3,14 +3,10 @@
     <div class="field">
         <div class="select is-fullwidth">
             <select class="input" name="sourceType" required="required">
-                <option selected="selected">
-                    Choose one
-                </option>
+                <option selected="selected">Choose one</option>
                 {% for s in source_type %}
                     <option value="{{ s.id }}"
-                            {% if s.id == t.source_type_id %}selected="selected"{% endif %}>
-                        {{ s.name }}
-                    </option>
+                            {% if s.id == t.source_type_id %}selected="selected"{% endif %}>{{ s.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -24,14 +20,10 @@
                         name="database_source"
                         data-database="task-database-source-connection">
                     <option {% if not t or not t.source_database_conn or not t.source_database_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                              value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_database_conn and t.source_database_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_database_conn and t.source_database_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -53,14 +45,10 @@
             <div class="select is-fullwidth">
                 <select class="input" name="smb_source" data-smb="task-smb-source-connection">
                     <option {% if not t or not t.source_smb_conn or not t.source_smb_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                    value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_smb_conn and t.source_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_smb_conn and t.source_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -115,14 +103,10 @@
                         name="sftp_source"
                         data-sftp="task-sftp-source-connection">
                     <option {% if not t or not t.source_sftp_conn or not t.source_sftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                      value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_sftp_conn and t.source_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_sftp_conn and t.source_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -175,14 +159,10 @@
             <div class="select is-fullwidth">
                 <select class="input" name="ftp_source" data-ftp="task-ftp-source-connection">
                     <option {% if not t or not t.source_ftp_conn or not t.source_ftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                    value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_ftp_conn and t.source_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_ftp_conn and t.source_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -218,7 +198,9 @@
                    value="{%- if not t or t.source_ftp_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
         </div>
         <div class="field">
-            <label class="label">Delimiter (blank defaults to comma)</label>
+            <label class="label">
+                Delimiter (blank defaults to comma)
+            </label>
             <input class="input"
                    name="sourceFtpDelimiter"
                    autocomplete="off"
@@ -231,11 +213,13 @@
     <section class="task-sourceSsh field"
              {% if not t or t.source_type_id != 6 %}style="display:none;"{% endif %}>
         <div class="field">
-            <label class="label">Organization</label>
+            <label class="label">
+                Organization
+            </label>
             <div class="select is-fullwidth">
                 <select class="input" name="ssh_source" data-ssh="task-ssh-source-connection">
                     <option {% if not t or not t.source_ssh_conn or not t.source_ssh_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                    value="none">
+                            value="none">
                         Choose one
                     </option>
                     {% for s in conn %}

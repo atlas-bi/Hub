@@ -7,14 +7,10 @@
         <label class="label">Connection</label>
         <div class="select is-fullwidth">
             <select class="input" name="task-destination-ftp">
-                <option disabled="disabled" {% if not t %}selected="selected"{% endif %}>
-                    Choose one
-                </option>
+                <option disabled="disabled" {% if not t %}selected="selected"{% endif %}>Choose one</option>
                 {% for s in ftp_dest %}
                     <option value="{{ s.id }}"
-                            {% if t and t.destination_ftp_id == s.id %}selected="selected"{% endif %}>
-                        {{ s.name }}
-                    </option>
+                            {% if t and t.destination_ftp_id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                 {% endfor %}
             </select>
         </div>

@@ -13,9 +13,7 @@
     <input type="hidden" name="project_intv" value="{{ p.intv or 0 }}"/>
 </div>
 <div class="project-intv"
-     {% if not p or p and p.intv !=1 %}
-         style="display:none;"
-     {% endif %}>
+     {% if not p or p and p.intv !=1 %}style="display:none;"{% endif %}>
     <div class="field">
         <label class="label">Run every (number)</label>
         <input class="input"
@@ -27,21 +25,11 @@
     <div class="field">
         <label class="label">Interval</label>
         <select class="input" name="project_intv_intv">
-            <option value="w" {% if p.intv_type == 'w' %}selected="selected"{% endif %}>
-                week(s)
-            </option>
-            <option value="d" {% if p.intv_type == 'd' %}selected="selected"{% endif %}>
-                day(s)
-            </option>
-            <option value="h" {% if p.intv_type == 'h' %}selected="selected"{% endif %}>
-                hour(s)
-            </option>
-            <option value="m" {% if p.intv_type == 'm' %}selected="selected"{% endif %}>
-                minute(s)
-            </option>
-            <option value="s" {% if p.intv_type == 's' %}selected="selected"{% endif %}>
-                second(s)
-            </option>
+            <option value="w" {% if p.intv_type == 'w' %}selected="selected"{% endif %}>week(s)</option>
+            <option value="d" {% if p.intv_type == 'd' %}selected="selected"{% endif %}>day(s)</option>
+            <option value="h" {% if p.intv_type == 'h' %}selected="selected"{% endif %}>hour(s)</option>
+            <option value="m" {% if p.intv_type == 'm' %}selected="selected"{% endif %}>minute(s)</option>
+            <option value="s" {% if p.intv_type == 's' %}selected="selected"{% endif %}>second(s)</option>
         </select>
     </div>
     <label class="label">Start running on</label>

@@ -9,9 +9,7 @@
     <input type="hidden" name="project_ooff" value="{{ p.ooff or 0 }}"/>
 </div>
 <div class="project-ooff"
-     {% if not p or p and p.ooff !=1 %}
-         style="display:none;"
-     {% endif %}>
+     {% if not p or p and p.ooff !=1 %}style="display:none;"{% endif %}>
     <label class="label">When? Leave blank to run immediately.</label>
     <div class="field is-grouped">
         <div class="control is-expanded">

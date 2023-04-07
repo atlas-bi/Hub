@@ -9,9 +9,7 @@
     <input type="hidden" name="project_cron" value="{{ p.cron or 0 }}"/>
 </div>
 <div class="project-cron"
-     {% if not p or p and p.cron !=1 %}
-         style="display:none;"
-     {% endif %}>
+     {% if not p or p and p.cron !=1 %}style="display:none;"{% endif %}>
     <article class="message is-info">
         <div class="message-header">
             <p>Info</p>
@@ -114,7 +112,7 @@
                        value="{{ p.cron_end_date or '' }}"/>
             </div>
             <div class="control">
-                <a class=" button em-eraseInput"
+                <a class="button em-eraseInput"
                    data-target="project_cron_edate"
                    data-toggle="erasor">
                     <span class="icon is-small">

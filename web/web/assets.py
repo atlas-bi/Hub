@@ -5,8 +5,13 @@ CSS assets are compiles from scss to css with gulp. Webassets combines the outpu
 
 
 from flask_assets import Bundle
+from webassets.filter import register_filter
+from webassets_rollup import Rollup
 
 from web import web_assets
+
+register_filter(Rollup)
+
 
 # font
 css = Bundle(
@@ -16,6 +21,18 @@ css = Bundle(
 )
 web_assets.register("css", css)
 
+js = Bundle(
+    "./lib/codemirror/codemirror.js",
+    "./lib/codemirror/gfm.js",
+    "./lib/codemirror/overlay.js",
+    "./lib/codemirror/sql.js",
+    "./lib/codemirror/python.js",
+    "./lib/codemirror/matchbrackets.js",
+    "./lib/codemirror/simplescrollbars.js",
+    filters=("uglifyjs"),
+    output="js/codemirror.min.js",
+)
+web_assets.register("codemirror", js)
 
 js = Bundle(
     "./lib/codemirror/codemirror.js",
@@ -31,9 +48,6 @@ js = Bundle(
     "./lib/prism/prism.js",
     "./lib/prism/prism_line_numbers.js",
     "./js/task.js",
-    "./lib/table/table.js",
-    "./lib/table/logs.js",
-    "./lib/scroll/scroll.js",
     "./js/password.js",
     "./js/project.js",
     "./js/tabs.js",
@@ -41,14 +55,30 @@ js = Bundle(
     "./js/flashes.js",
     "./js/functions.js",
     "./js/connection.js",
-    filters="jsmin",
+    filters=("rollup", "uglifyjs"),
     output="js/base.min.js",
 )
 web_assets.register("js", js)
 
 js = Bundle(
+    "./lib/scroll/scroll.js",
+    filters=("uglifyjs",),
+    output="js/scroll.min.js",
+)
+web_assets.register("scroll", js)
+
+
+js = Bundle(
+    "./lib/table/table.js",
+    "./lib/table/logs.js",
+    filters=("uglifyjs"),
+    output="js/tables.min.js",
+)
+web_assets.register("js_tables", js)
+
+js = Bundle(
     "./js/search.js",
-    filters="jsmin",
-    output="js/demo.min.js",
+    filters=("rollup", "uglifyjs"),
+    output="js/search.min.js",
 )
 web_assets.register("js_search", js)

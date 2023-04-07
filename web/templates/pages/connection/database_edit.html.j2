@@ -50,14 +50,10 @@
             </label>
             <div class="select is-fullwidth">
                 <select class="input" name="database_type" required="required">
-                    <option selected="selected">
-                        Choose one
-                    </option>
+                    <option selected="selected">Choose one</option>
                     {% for t in database_types %}
                         <option value="{{ t.id }}"
-                                {% if database and t.id == database.type_id %}selected="selected"{% endif %}>
-                            {{ t.name }}
-                        </option>
+                                {% if database and t.id == database.type_id %}selected="selected"{% endif %}>{{ t.name }}</option>
                     {% endfor %}
                 </select>
             </div>
