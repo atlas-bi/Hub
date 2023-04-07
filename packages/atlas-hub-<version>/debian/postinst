@@ -45,6 +45,9 @@ cd "$INSTALL_DIR"
 "$HOME/.local/bin/poetry" config --local virtualenvs.create true
 "$HOME/.local/bin/poetry" install --no-dev
 
+fmt_blue "Installing packages"
+npm install --loglevel silent --no-fund --no-audit
+
 # stop services if running
 fmt_blue "Stopping services"
 stop_services

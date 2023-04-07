@@ -44,6 +44,16 @@ jobs:
     - name: 🧹 Cleanup apt list
       uses: christopherpickering/no-azure-action@v1.1.0
 
+    - name: ⎔ Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: 📥 Download deps
+      uses: bahmutov/npm-install@v1
+      with:
+        useLockFile: false
+
     - name: 🐍 Setup python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
