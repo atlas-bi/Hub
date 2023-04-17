@@ -41,7 +41,7 @@
                    type="text"
                    name="name"
                    placeholder="friendly name"
-                   value="{%- if database -%}{{ database.name }}{%- endif -%}"/>
+                   value="{%- if database -%}{{ database.name }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -68,7 +68,7 @@
                    type="number"
                    name="timeout"
                    placeholder="query timeout"
-                   value="{%- if database -%}{{ database.timeout or 90 }}{%- else -%}90{%- endif -%}"/>
+                   value="{%- if database -%}{{ database.timeout or 90 }}{%- else -%}90{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">

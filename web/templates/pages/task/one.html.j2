@@ -29,12 +29,12 @@
                            class="switch is-medium is-rounded is-info"
                            action="{{ url_for('task_controls_bp.disable_task', task_id=t.id) }}"
                            type="checkbox"
-                           checked="checked"/>
+                           checked="checked" />
                 {% else %}
                     <input id="enable-task"
                            class="switch is-medium is-rounded is-info"
                            action="{{ url_for('task_controls_bp.enable_task', task_id=t.id) }}"
-                           type="checkbox"/>
+                           type="checkbox" />
                 {% endif %}
                 <label for="enable-task" style="height:1.2em"></label>
             </div>

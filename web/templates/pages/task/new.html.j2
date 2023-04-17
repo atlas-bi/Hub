@@ -42,7 +42,7 @@
                            name="name"
                            autocomplete="off"
                            required="required"
-                           value="{{ t.name }}"/>
+                           value="{{ t.name }}" />
                 </div>
             </div>
             <div class="field">
@@ -51,7 +51,7 @@
                     <input class="input"
                            type="number"
                            name="task-retry"
-                           value="{%- if t and t.max_retries is not none -%} {{ t.max_retries }} {%- else -%} 1 {%- endif -%}"/>
+                           value="{%- if t and t.max_retries is not none -%} {{ t.max_retries }} {%- else -%} 1 {%- endif -%}" />
                 </div>
             </div>
             <div class="field">
@@ -60,7 +60,7 @@
                     <input class="input"
                            type="number"
                            name="task-rank"
-                           value="{%- if t and t.order is not none -%}{{ t.order }}{%- endif -%}"/>
+                           value="{%- if t and t.order is not none -%}{{ t.order }}{%- endif -%}" />
                 </div>
             </div>
         </div>
@@ -82,7 +82,7 @@
                                                class="input"
                                                type="text"
                                                placeholder="name"
-                                               value="{{ param.key }}"/>
+                                               value="{{ param.key }}" />
                                     </p>
                                 </div>
                                 <div class="field has-addons">
@@ -95,7 +95,7 @@
                                                    type="text"
                                                {% endif %}
                                                placeholder="***"
-                                               value="{{ param.value|decrypt }}"/>
+                                               value="{{ param.value|decrypt }}" />
                                     </p>
                                     <div class="control">
                                         <a class="button toggle-pass "data-target="password">
@@ -109,7 +109,7 @@
                                                            value="1"
                                                        {% else %}
                                                            value="0"
-                                                       {% endif %}/>
+                                                       {% endif %} />
                                             </span>
                                         </a>
                                     </div>
