@@ -41,7 +41,7 @@
                    type="text"
                    name="name"
                    placeholder="friendly name"
-                   value="{%- if smb -%}{{ smb.name }}{%- endif -%}"/>
+                   value="{%- if smb -%}{{ smb.name }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -53,7 +53,7 @@
                    type="text"
                    name="server_name"
                    placeholder="server_name"
-                   value="{%- if smb -%}{{ smb.server_name }}{%- endif -%}"/>
+                   value="{%- if smb -%}{{ smb.server_name }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -65,7 +65,7 @@
                    type="text"
                    name="server_ip"
                    placeholder="10.0.0.1"
-                   value="{%- if smb -%}{{ smb.server_ip }}{%- endif -%}"/>
+                   value="{%- if smb -%}{{ smb.server_ip }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -77,7 +77,7 @@
                    type="text"
                    name="share_name"
                    placeholder="my_share"
-                   value="{%- if smb -%}{{ smb.share_name or '' }}{%- endif -%}"/>
+                   value="{%- if smb -%}{{ smb.share_name or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -89,7 +89,7 @@
                    type="text"
                    name="path"
                    placeholder="/path/to/somewhere"
-                   value="{%- if smb -%}{{ smb.path or '' }}{%- endif -%}"/>
+                   value="{%- if smb -%}{{ smb.path or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -101,7 +101,7 @@
                    type="text"
                    name="username"
                    placeholder="username"
-                   value="{%- if smb -%}{{ smb.username or '' }}{%- endif -%}"/>
+                   value="{%- if smb -%}{{ smb.username or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -115,7 +115,7 @@
                            type="password"
                            name="password"
                            placeholder="password"
-                           value="{%- if smb -%}{{ smb.password|decrypt or '' }}{%- endif -%}"/>
+                           value="{%- if smb -%}{{ smb.password|decrypt or '' }}{%- endif -%}" />
                 </p>
                 <div class="control">
                     <a class="button toggle-pass "data-target="password">

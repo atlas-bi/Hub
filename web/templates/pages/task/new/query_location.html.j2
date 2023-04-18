@@ -1,7 +1,5 @@
 <div class="task-query-location box {{ t.source_type_id }}"
-     {% if not t or not t.source_type_id or t.source_type_id not in [1,6] %}
-         style="display:none;"
-     {% endif %}>
+     {% if not t or not t.source_type_id or t.source_type_id not in [1,6] %}style="display:none;"{% endif %}>
     <!--
                 GIT (requires password in settings)
                 File
@@ -12,14 +10,10 @@
         <div class="select is-fullwidth">
             <select class="input" name="sourceQueryType">
                 <option disabled="disabled"
-                        {% if not t or t.source_query_type_id == None %}selected="selected"{% endif %}>
-                    Choose one
-                </option>
+                        {% if not t or t.source_query_type_id == None %}selected="selected"{% endif %}>Choose one</option>
                 {% for s in source_query_type %}
                     <option value="{{ s.id }}"
-                            {% if s.id == t.source_query_type_id %}selected="selected"{% endif %}>
-                        {{ s.name }}
-                    </option>
+                            {% if s.id == t.source_query_type_id %}selected="selected"{% endif %}>{{ s.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -35,7 +29,7 @@
                 <input class="input"
                        name="sourceGit"
                        autocomplete="off"
-                       value="{{ t.source_git or '' }}"/>
+                       value="{{ t.source_git or '' }}" />
             </div>
         </div>
     </section>
@@ -51,14 +45,10 @@
                         name="smb_query"
                         data-smb="task-query-smb-source-connection">
                     <option {% if not t or not t.query_smb_conn or not t.query_smb_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                  value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.query_smb_conn and t.query_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.query_smb_conn and t.query_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -73,7 +63,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -81,7 +72,7 @@
             <input class="input"
                    name="sourceQuerySmbFile"
                    autocomplete="off"
-                   value="{{ t.query_smb_file or '' }}"/>
+                   value="{{ t.query_smb_file or '' }}" />
         </div>
     </section>
     <!--
@@ -96,14 +87,10 @@
                         name="ftp_query"
                         data-ftp="task-query-ftp-source-connection">
                     <option {% if not t or not t.query_ftp_conn or not t.query_ftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                  value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.query_ftp_conn and t.query_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.query_ftp_conn and t.query_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -118,7 +105,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -126,7 +114,7 @@
             <input class="input"
                    name="sourceQueryFtpFile"
                    autocomplete="off"
-                   value="{{ t.query_ftp_file or '' }}"/>
+                   value="{{ t.query_ftp_file or '' }}" />
         </div>
     </section>
     <!--
@@ -141,14 +129,10 @@
                         name="sftp_query"
                         data-sftp="task-query-sftp-source-connection">
                     <option {% if not t or not t.query_sftp_conn or not t.query_sftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                    value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.query_sftp_conn and t.query_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.query_sftp_conn and t.query_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -163,7 +147,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -171,7 +156,7 @@
             <input class="input"
                    name="sourceQuerySftpFile"
                    autocomplete="off"
-                   value="{{ t.query_sftp_file or '' }}"/>
+                   value="{{ t.query_sftp_file or '' }}" />
         </div>
     </section>
     <!--
@@ -185,42 +170,54 @@
                 <input class="input"
                        name="sourceURL"
                        autocomplete="off"
-                       value="{{ t.source_url or '' }}"/>
+                       value="{{ t.source_url or '' }}" />
             </div>
         </div>
     </section>
     <div class="field task-query-headers"
-         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
+         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %}
+             style="display:none;"
+         {% endif %}>
         <input class="is-checkradio is-info"
                id="task_include_query_headers"
                type="checkbox"
-               {% if not t or (t and t.source_query_include_header == 1) %} checked="checked" {% endif %}/>
+               {% if not t or (t and t.source_query_include_header == 1) %}
+                   checked="checked"
+               {% endif %} />
         <label for="task_include_query_headers">Include Query Headers?</label>
         <input type="hidden"
                name="task_include_query_headers"
-               value="{%- if not t or (t and t.source_query_include_header == 1) -%} 1 {%- else -%} 0 {%- endif -%}"/>
+               value="{%- if not t or (t and t.source_query_include_header == 1) -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <div class="field"
-         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
+         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %}
+             style="display:none;"
+         {% endif %}>
         <input class="is-checkradio is-info"
                id="task_enable_source_cache"
                type="checkbox"
-               {% if not t or (t and t.enable_source_cache == 1) %} checked="checked" {% endif %}/>
+               {% if not t or (t and t.enable_source_cache == 1) %}
+                   checked="checked"
+               {% endif %} />
         <label for="task_enable_source_cache">Enable Query Cache?</label>
         <input type="hidden"
                name="task_enable_source_cache"
-               value="{%- if not t or (t and t.enable_source_cache == 1) -%} 1 {%- else -%} 0 {%- endif -%}"/>
+               value="{%- if not t or (t and t.enable_source_cache == 1) -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <div class="field"
-         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %} style="display:none;" {% endif %}>
+         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %}
+             style="display:none;"
+         {% endif %}>
         <input class="is-checkradio is-info"
                id="task_require_sql_output"
                type="checkbox"
-               {% if not t or (t and t.source_require_sql_output == 1) %} checked="checked" {% endif %}/>
+               {% if not t or (t and t.source_require_sql_output == 1) %}
+                   checked="checked"
+               {% endif %} />
         <label for="task_require_sql_output">Require query output?</label>
         <input type="hidden"
                name="task_require_sql_output"
-               value="{%- if not t or (t and t.source_require_sql_output == 1) -%} 1 {%- else -%} 0 {%- endif -%}"/>
+               value="{%- if not t or (t and t.source_require_sql_output == 1) -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <!--
                 raw code

@@ -4,14 +4,12 @@
            id="project_ooff_check"
            type="checkbox"
            data-target="project-ooff"
-           {% if p.ooff == 1 %}checked="checked"{% endif %}/>
+           {% if p.ooff == 1 %}checked="checked"{% endif %} />
     <label for="project_ooff_check">Use a one time schedule</label>
-    <input type="hidden" name="project_ooff" value="{{ p.ooff or 0 }}"/>
+    <input type="hidden" name="project_ooff" value="{{ p.ooff or 0 }}" />
 </div>
 <div class="project-ooff"
-     {% if not p or p and p.ooff !=1 %}
-         style="display:none;"
-     {% endif %}>
+     {% if not p or p and p.ooff !=1 %}style="display:none;"{% endif %}>
     <label class="label">When? Leave blank to run immediately.</label>
     <div class="field is-grouped">
         <div class="control is-expanded">
@@ -19,7 +17,7 @@
                    name="project_ooff_date"
                    id="project_ooff_date"
                    placeholder="select date"
-                   value="{{ p.ooff_date or '' }}"/>
+                   value="{{ p.ooff_date or '' }}" />
         </div>
         <div class="control">
             <a class="button em-eraseInput"

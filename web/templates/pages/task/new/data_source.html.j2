@@ -3,14 +3,10 @@
     <div class="field">
         <div class="select is-fullwidth">
             <select class="input" name="sourceType" required="required">
-                <option selected="selected">
-                    Choose one
-                </option>
+                <option selected="selected">Choose one</option>
                 {% for s in source_type %}
                     <option value="{{ s.id }}"
-                            {% if s.id == t.source_type_id %}selected="selected"{% endif %}>
-                        {{ s.name }}
-                    </option>
+                            {% if s.id == t.source_type_id %}selected="selected"{% endif %}>{{ s.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -24,14 +20,10 @@
                         name="database_source"
                         data-database="task-database-source-connection">
                     <option {% if not t or not t.source_database_conn or not t.source_database_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                              value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_database_conn and t.source_database_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_database_conn and t.source_database_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -53,14 +45,10 @@
             <div class="select is-fullwidth">
                 <select class="input" name="smb_source" data-smb="task-smb-source-connection">
                     <option {% if not t or not t.source_smb_conn or not t.source_smb_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                    value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_smb_conn and t.source_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_smb_conn and t.source_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -75,7 +63,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -83,24 +72,24 @@
             <input class="input"
                    name="sourceSmbFile"
                    autocomplete="off"
-                   value="{{ t.source_smb_file or '' }}"/>
+                   value="{{ t.source_smb_file or '' }}" />
         </div>
         <div class="field">
             <input class="is-checkradio is-info"
                    id="task_smb_ignore_delimiter"
                    type="checkbox"
-                   {% if not t or t.source_smb_ignore_delimiter == 1 %}checked="checked"{% endif %}/>
+                   {% if not t or t.source_smb_ignore_delimiter == 1 %}checked="checked"{% endif %} />
             <label for="task_smb_ignore_delimiter">Ignore Delimiter?</label>
             <input type="hidden"
                    name="task_smb_ignore_delimiter"
-                   value="{%- if not t or t.source_smb_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
+                   value="{%- if not t or t.source_smb_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">Delimiter (blank defaults to comma)</label>
             <input class="input"
                    name="sourceSmbDelimiter"
                    autocomplete="off"
-                   value="{{ t.source_smb_delimiter or '' }}"/>
+                   value="{{ t.source_smb_delimiter or '' }}" />
         </div>
     </section>
     <!--
@@ -115,14 +104,10 @@
                         name="sftp_source"
                         data-sftp="task-sftp-source-connection">
                     <option {% if not t or not t.source_sftp_conn or not t.source_sftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                      value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_sftp_conn and t.source_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_sftp_conn and t.source_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -137,7 +122,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -145,24 +131,24 @@
             <input class="input"
                    name="sourceSftpFile"
                    autocomplete="off"
-                   value="{{ t.source_sftp_file or '' }}"/>
+                   value="{{ t.source_sftp_file or '' }}" />
         </div>
         <div class="field">
             <input class="is-checkradio is-info"
                    id="task_sftp_ignore_delimiter"
                    type="checkbox"
-                   {% if not t or t.source_sftp_ignore_delimiter == 1 %}checked="checked"{% endif %}/>
+                   {% if not t or t.source_sftp_ignore_delimiter == 1 %}checked="checked"{% endif %} />
             <label for="task_sftp_ignore_delimiter">Ignore Delimiter?</label>
             <input type="hidden"
                    name="task_sftp_ignore_delimiter"
-                   value="{%- if not t or t.source_sftp_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
+                   value="{%- if not t or t.source_sftp_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">Delimiter (blank defaults to comma)</label>
             <input class="input"
                    name="sourceSftpDelimiter"
                    autocomplete="off"
-                   value="{{ t.source_sftp_delimiter or '' }}"/>
+                   value="{{ t.source_sftp_delimiter or '' }}" />
         </div>
     </section>
     <!--
@@ -175,14 +161,10 @@
             <div class="select is-fullwidth">
                 <select class="input" name="ftp_source" data-ftp="task-ftp-source-connection">
                     <option {% if not t or not t.source_ftp_conn or not t.source_ftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                    value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.source_ftp_conn and t.source_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.source_ftp_conn and t.source_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -197,7 +179,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.csv)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -205,24 +188,26 @@
             <input class="input"
                    name="sourceFtpFile"
                    autocomplete="off"
-                   value="{{ t.source_ftp_file or '' }}"/>
+                   value="{{ t.source_ftp_file or '' }}" />
         </div>
         <div class="field">
             <input class="is-checkradio is-info"
                    id="task_ftp_ignore_delimiter"
                    type="checkbox"
-                   {% if not t or t.source_ftp_ignore_delimiter == 1 %}checked="checked"{% endif %}/>
+                   {% if not t or t.source_ftp_ignore_delimiter == 1 %}checked="checked"{% endif %} />
             <label for="task_ftp_ignore_delimiter">Ignore Delimiter?</label>
             <input type="hidden"
                    name="task_ftp_ignore_delimiter"
-                   value="{%- if not t or t.source_ftp_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}"/>
+                   value="{%- if not t or t.source_ftp_ignore_delimiter == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
         </div>
         <div class="field">
-            <label class="label">Delimiter (blank defaults to comma)</label>
+            <label class="label">
+                Delimiter (blank defaults to comma)
+            </label>
             <input class="input"
                    name="sourceFtpDelimiter"
                    autocomplete="off"
-                   value="{{ t.source_ftp_delimiter or '' }}"/>
+                   value="{{ t.source_ftp_delimiter or '' }}" />
         </div>
     </section>
     <!--
@@ -231,11 +216,13 @@
     <section class="task-sourceSsh field"
              {% if not t or t.source_type_id != 6 %}style="display:none;"{% endif %}>
         <div class="field">
-            <label class="label">Organization</label>
+            <label class="label">
+                Organization
+            </label>
             <div class="select is-fullwidth">
                 <select class="input" name="ssh_source" data-ssh="task-ssh-source-connection">
                     <option {% if not t or not t.source_ssh_conn or not t.source_ssh_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                    value="none">
+                            value="none">
                         Choose one
                     </option>
                     {% for s in conn %}

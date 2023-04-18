@@ -11,7 +11,7 @@ import tempfile
 import time
 from ftplib import FTP  # noqa: S402
 from pathlib import Path
-from typing import IO, Any, Generator, List, Optional, Tuple
+from typing import IO, Any, Dict, Generator, List, Optional, Tuple
 
 from flask import current_app as app
 
@@ -20,6 +20,16 @@ from runner.scripts.em_messages import RunnerException, RunnerLog
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
+
+
+def connection_json(connection: ConnectionFtp) -> Dict:
+    """Convert the connection string to json."""
+    return {
+        "address": connection.address,
+        "port": connection.port or 22,
+        "password": em_decrypt(connection.password, app.config["PASS_KEY"]),
+        "username": str(connection.username),
+    }
 
 
 def connect(connection: ConnectionFtp) -> FTP:

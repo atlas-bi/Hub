@@ -7,7 +7,7 @@
                 <ul>
                     <li>
                         File Name:
-                        <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext)}}</span>
+                        <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext) }}</span>
                         <div class="em-ajaxContent is-inline ml-3"
                              data-src="{{ url_for('task_files_bp.filename_preview',task_id=t.id) }}">
                             <div class="loader"></div>

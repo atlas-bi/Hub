@@ -1,0 +1,18 @@
+name: ✔️ Codespell
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+    - name: 💾 Checkout
+      uses: actions/checkout@v3
+    - name: ✔️ Codespell
+      uses: codespell-project/actions-codespell@master
+      with:
+        skip: package-lock.json, *.lock

@@ -8,40 +8,28 @@
            id="project_intv_check"
            type="checkbox"
            data-target="project-intv"
-           {% if p.intv == 1 %}checked="checked"{% endif %}/>
+           {% if p.intv == 1 %}checked="checked"{% endif %} />
     <label for="project_intv_check">Use an interval schedule</label>
-    <input type="hidden" name="project_intv" value="{{ p.intv or 0 }}"/>
+    <input type="hidden" name="project_intv" value="{{ p.intv or 0 }}" />
 </div>
 <div class="project-intv"
-     {% if not p or p and p.intv !=1 %}
-         style="display:none;"
-     {% endif %}>
+     {% if not p or p and p.intv !=1 %}style="display:none;"{% endif %}>
     <div class="field">
         <label class="label">Run every (number)</label>
         <input class="input"
                type="number"
                name="project_intv_value"
                id="project_intv_value"
-               value="{{ p.intv_value }}"/>
+               value="{{ p.intv_value }}" />
     </div>
     <div class="field">
         <label class="label">Interval</label>
         <select class="input" name="project_intv_intv">
-            <option value="w" {% if p.intv_type == 'w' %}selected="selected"{% endif %}>
-                week(s)
-            </option>
-            <option value="d" {% if p.intv_type == 'd' %}selected="selected"{% endif %}>
-                day(s)
-            </option>
-            <option value="h" {% if p.intv_type == 'h' %}selected="selected"{% endif %}>
-                hour(s)
-            </option>
-            <option value="m" {% if p.intv_type == 'm' %}selected="selected"{% endif %}>
-                minute(s)
-            </option>
-            <option value="s" {% if p.intv_type == 's' %}selected="selected"{% endif %}>
-                second(s)
-            </option>
+            <option value="w" {% if p.intv_type == 'w' %}selected="selected"{% endif %}>week(s)</option>
+            <option value="d" {% if p.intv_type == 'd' %}selected="selected"{% endif %}>day(s)</option>
+            <option value="h" {% if p.intv_type == 'h' %}selected="selected"{% endif %}>hour(s)</option>
+            <option value="m" {% if p.intv_type == 'm' %}selected="selected"{% endif %}>minute(s)</option>
+            <option value="s" {% if p.intv_type == 's' %}selected="selected"{% endif %}>second(s)</option>
         </select>
     </div>
     <label class="label">Start running on</label>
@@ -51,7 +39,7 @@
                    name="project_intv_sdate"
                    id="project_intv_sdate"
                    placeholder="select date"
-                   value="{{ p.intv_start_date or '' }}"/>
+                   value="{{ p.intv_start_date or '' }}" />
         </div>
         <div class="control">
             <a class="button em-eraseInput"
@@ -70,7 +58,7 @@
                    name="project_intv_edate"
                    id="project_intv_edate"
                    placeholder="select date"
-                   value="{{ p.intv_end_date or '' }}"/>
+                   value="{{ p.intv_end_date or '' }}" />
         </div>
         <div class="control">
             <a class="button em-eraseInput"

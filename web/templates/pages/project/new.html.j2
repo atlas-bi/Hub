@@ -36,7 +36,7 @@
                            name="project_name"
                            autocomplete="off"
                            required="required"
-                           value="{{ p.name }}"/>
+                           value="{{ p.name }}" />
                 </div>
             </div>
             <div class="field">
@@ -50,20 +50,20 @@
                     <input class="is-checkradio is-info"
                            id="project_take_ownership"
                            type="checkbox"
-                           checked="checked"/>
+                           checked="checked" />
                     <label for="project_take_ownership">Take Ownership of Project</label>
-                    <input type="hidden" name="project_ownership" value="1"/>
+                    <input type="hidden" name="project_ownership" value="1" />
                 </div>
             {% endif %}
             <div class="field">
                 <input class="is-checkradio is-info"
                        type="checkbox"
                        id="run_tasks_in_sequence"
-                       {% if p.sequence_tasks == 1 %}checked="checked"{% endif %}/>
+                       {% if p.sequence_tasks == 1 %}checked="checked"{% endif %} />
                 <label for="run_tasks_in_sequence">Run Tasks in Sequence</label>
                 <input type="hidden"
                        name="run_tasks_in_sequence"
-                       value="{{ p.sequence_tasks or 0 }}"/>
+                       value="{{ p.sequence_tasks or 0 }}" />
             </div>
         </div>
         <div class="box">
@@ -96,7 +96,7 @@
                                                class="input"
                                                type="text"
                                                placeholder="name"
-                                               value="{{ param.key }}"/>
+                                               value="{{ param.key }}" />
                                     </p>
                                 </div>
                                 <div class="field has-addons">
@@ -109,15 +109,21 @@
                                                    type="text"
                                                {% endif %}
                                                placeholder="***"
-                                               value="{{ param.value|decrypt }}"/>
+                                               value="{{ param.value|decrypt }}" />
                                     </p>
                                     <div class="control">
                                         <a class="button toggle-pass "data-target="password">
                                             <span class="icon">
-                                                <i class="fas {% if param.sensitive ==1 -%}fa-eye{%- else -%}fa-eye-slash{%- endif -%}"></i>
+                                                <i class="fas
+                                                          {% if param.sensitive ==1 -%}
+                                                              fa-eye{%- else -%}fa-eye-slash{%- endif -%}"></i>
                                                 <input name="param-sensitive"
                                                        type="hidden"
-                                                       {% if param.sensitive ==1 -%}value="1"{% else %} value="0"{% endif %}/>
+                                                       {% if param.sensitive ==1 -%}
+                                                           value="1"
+                                                       {% else %}
+                                                           value="0"
+                                                       {% endif %} />
                                             </span>
                                         </a>
                                     </div>

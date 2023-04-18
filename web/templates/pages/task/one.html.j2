@@ -29,12 +29,12 @@
                            class="switch is-medium is-rounded is-info"
                            action="{{ url_for('task_controls_bp.disable_task', task_id=t.id) }}"
                            type="checkbox"
-                           checked="checked"/>
+                           checked="checked" />
                 {% else %}
                     <input id="enable-task"
                            class="switch is-medium is-rounded is-info"
                            action="{{ url_for('task_controls_bp.enable_task', task_id=t.id) }}"
-                           type="checkbox"/>
+                           type="checkbox" />
                 {% endif %}
                 <label for="enable-task" style="height:1.2em"></label>
             </div>
@@ -47,9 +47,8 @@
                          is-warning
                      {% elif t.status.id == 4 %}
                          is-primary
-                     {% endif %} em-border">
-            {{ t.status.name }}
-        </span>
+                     {% endif %}
+                     em-border">{{ t.status.name }}</span>
     </h1>
     <small class="has-text-grey is-italic mb-4 is-block">Last edited {{ (t.updated or t.created)|datetime_format_easy }}</small>
     {% if r == 'None' and t.enabled == 1 %}
@@ -59,7 +58,7 @@
         <p class="control">
             <a class="button"
                title="Edit task"
-               href="{{ url_for('task_edit_bp.task_edit_get', task_id=t.id)}}">
+               href="{{ url_for('task_edit_bp.task_edit_get', task_id=t.id) }}">
                 <span class="icon">
                     <i class="fas fa-pen-to-square"></i>
                 </span>
@@ -69,7 +68,7 @@
         <p class="control">
             <a class="button"
                title="Delete task"
-               href="{{ url_for('task_controls_bp.delete_task', task_id=t.id)}}"
+               href="{{ url_for('task_controls_bp.delete_task', task_id=t.id) }}"
                onclick="return confirm('Are you sure?')">
                 <span class="icon">
                     <i class="fas fa-trash"></i>
@@ -80,7 +79,7 @@
         <p class="control">
             <a class="button"
                title="Run Task"
-               href="{{ url_for('task_controls_bp.run_task', task_id=t.id)}}">
+               href="{{ url_for('task_controls_bp.run_task', task_id=t.id) }}">
                 <span class="icon">
                     <i class="far fa-circle-play"></i>
                 </span>
@@ -90,7 +89,7 @@
         <p class="control">
             <a class="button"
                title="Reschedule Task"
-               href="{{ url_for('task_controls_bp.schedule_task', task_id=t.id)}}">
+               href="{{ url_for('task_controls_bp.schedule_task', task_id=t.id) }}">
                 <span class="icon">
                     <i class="far fa-rotate"></i>
                 </span>
@@ -100,7 +99,7 @@
         <p class="control">
             <a class="button"
                title="Duplicate task"
-               href="{{ url_for('task_controls_bp.duplicate_task', task_id=t.id)}}">
+               href="{{ url_for('task_controls_bp.duplicate_task', task_id=t.id) }}">
                 <span class="icon">
                     <i class="far fa-copy"></i>
                 </span>
@@ -110,7 +109,7 @@
         <p class="control">
             <a class="button"
                title="Duplicate task"
-               href="{{ url_for('task_controls_bp.reset_task', task_id=t.id)}}">
+               href="{{ url_for('task_controls_bp.reset_task', task_id=t.id) }}">
                 <span class="icon">
                     <i class="fas fa-check"></i>
                 </span>
@@ -120,7 +119,7 @@
         <p class="control">
             <a class="button"
                title="End retry"
-               href="{{ url_for('task_controls_bp.task_endretry', task_id=t.id)}}">
+               href="{{ url_for('task_controls_bp.task_endretry', task_id=t.id) }}">
                 <span class="icon">
                     <i class="far fa-ban"></i>
                 </span>

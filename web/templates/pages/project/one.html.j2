@@ -22,7 +22,7 @@
         <p class="control">
             <a class="button"
                title="Edit Project"
-               href="{{ url_for('project_bp.edit_project_form', project_id=p.id)}}">
+               href="{{ url_for('project_bp.edit_project_form', project_id=p.id) }}">
                 <span class="icon">
                     <i class="fas fa-pen-to-square"></i>
                 </span>
@@ -32,7 +32,7 @@
         <p class="control">
             <a class="button"
                title="Delete Project"
-               href="{{ url_for('project_bp.delete_project', project_id=p.id)}}"
+               href="{{ url_for('project_bp.delete_project', project_id=p.id) }}"
                onclick="return confirm('Are you sure you want to delete this project? All tasks and logs will also be removed.')">
                 <span class="icon">
                     <i class="fas fa-trash"></i>
@@ -43,7 +43,7 @@
         <p class="control">
             <a class="button"
                title="Duplicate Project"
-               href="{{ url_for('project_bp.duplicate_project', project_id=p.id)}}">
+               href="{{ url_for('project_bp.duplicate_project', project_id=p.id) }}">
                 <span class="icon">
                     <i class="far fa-copy"></i>
                 </span>
@@ -198,7 +198,7 @@
             <p class="control">
                 <a class="button"
                    title="New Task"
-                   href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id)}}">
+                   href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id) }}">
                     <span class="icon">
                         <i class="fas fa-plus"></i>
                     </span>
@@ -210,7 +210,7 @@
             <p class="control">
                 <a class="button"
                    title="Disable Project"
-                   href="{{ url_for('project_bp.disable_all_project_tasks', project_id=p.id)}}">
+                   href="{{ url_for('project_bp.disable_all_project_tasks', project_id=p.id) }}">
                     <span class="icon">
                         <i class="fas fa-toggle-off"></i>
                     </span>
@@ -222,7 +222,7 @@
             <p class="control">
                 <a class="button"
                    title="Enable Project"
-                   href="{{ url_for('project_bp.enable_all_project_tasks', project_id=p.id)}}">
+                   href="{{ url_for('project_bp.enable_all_project_tasks', project_id=p.id) }}">
                     <span class="icon">
                         <i class="fas fa-toggle-on"></i>
                     </span>
@@ -234,7 +234,7 @@
             <p class="control">
                 <a class="button"
                    title="Run Project"
-                   href="{{ url_for('project_bp.run_all_project_tasks', project_id=p.id)}}">
+                   href="{{ url_for('project_bp.run_all_project_tasks', project_id=p.id) }}">
                     <span class="icon">
                         <i class="far fa-circle-play"></i>
                     </span>

@@ -1,4 +1,4 @@
-name: Sync Updates
+name: ⏫ Sync Updates
 on:
   push:
     branches:
@@ -10,15 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'dev'
     steps:
-    - uses: actions/checkout@v3
+    - name: 💾 Checkout
+      uses: actions/checkout@v3
       with:
         ref: alpha
-    - name: Reset promotion branch
+
+    - name: 🛑 Reset promotion branch
       run: |
         git fetch origin ${{github.ref_name}}:${{github.ref_name}}
         git reset --hard ${{github.ref_name}}
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4.2.4
+
+    - name: 🆕 Create Pull Request
+      uses: peter-evans/create-pull-request@v5.0.0
       with:
         labels: automated pr
         branch: ${{github.ref_name}}
@@ -28,15 +31,18 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'alpha'
     steps:
-    - uses: actions/checkout@v3
+    - name: 💾 Checkout
+      uses: actions/checkout@v3
       with:
         ref: main
-    - name: Reset promotion branch
+
+    - name: 🛑 Reset promotion branch
       run: |
         git fetch origin ${{github.ref_name}}:${{github.ref_name}}
         git reset --hard ${{github.ref_name}}
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4.2.4
+
+    - name: 🆕 Create Pull Request
+      uses: peter-evans/create-pull-request@v5.0.0
       with:
         labels: automated pr
         branch: ${{github.ref_name}}

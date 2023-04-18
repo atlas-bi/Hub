@@ -18,7 +18,7 @@
         <p class="control">
             <a class="button"
                title="Edit Connection"
-               href="{{ url_for('connection_bp.edit_connection', connection_id=connection.id)}}">
+               href="{{ url_for('connection_bp.edit_connection', connection_id=connection.id) }}">
                 <span class="icon">
                     <i class="fas fa-pen-to-square"></i>
                 </span>
@@ -28,7 +28,7 @@
         <p class="control">
             <a class="button"
                title="Delete Connection"
-               href="{{ url_for('connection_bp.delete_connection', connection_id=connection.id)}}"
+               href="{{ url_for('connection_bp.delete_connection', connection_id=connection.id) }}"
                onclick="return confirm('Are you sure you want to delete this connection?')">
                 <span class="icon">
                     <i class="fas fa-trash"></i>
@@ -39,7 +39,7 @@
         <p class="control">
             <a class="button"
                title="New Database"
-               href="{{ url_for('connection_bp.new_connection_database', connection_id=connection.id)}}">
+               href="{{ url_for('connection_bp.new_connection_database', connection_id=connection.id) }}">
                 <span class="icon">
                     <i class="fas fa-plus"></i>
                 </span>
@@ -49,7 +49,7 @@
         <p class="control">
             <a class="button"
                title="New SFTP"
-               href="{{ url_for('connection_bp.new_connection_sftp', connection_id=connection.id)}}">
+               href="{{ url_for('connection_bp.new_connection_sftp', connection_id=connection.id) }}">
                 <span class="icon">
                     <i class="fas fa-plus"></i>
                 </span>
@@ -59,7 +59,7 @@
         <p class="control">
             <a class="button"
                title="New FTP"
-               href="{{ url_for('connection_bp.new_connection_ftp', connection_id=connection.id)}}">
+               href="{{ url_for('connection_bp.new_connection_ftp', connection_id=connection.id) }}">
                 <span class="icon">
                     <i class="fas fa-plus"></i>
                 </span>
@@ -69,7 +69,7 @@
         <p class="control">
             <a class="button"
                title="New SMB"
-               href="{{ url_for('connection_bp.new_connection_smb', connection_id=connection.id)}}">
+               href="{{ url_for('connection_bp.new_connection_smb', connection_id=connection.id) }}">
                 <span class="icon">
                     <i class="fas fa-plus"></i>
                 </span>
@@ -79,7 +79,7 @@
         <p class="control">
             <a class="button"
                title="New SSH"
-               href="{{ url_for('connection_bp.new_connection_ssh', connection_id=connection.id)}}">
+               href="{{ url_for('connection_bp.new_connection_ssh', connection_id=connection.id) }}">
                 <span class="icon">
                     <i class="fas fa-plus"></i>
                 </span>
@@ -89,7 +89,7 @@
         <p class="control">
             <a class="button"
                title="New GPG"
-               href="{{ url_for('connection_bp.new_connection_gpg', connection_id=connection.id)}}">
+               href="{{ url_for('connection_bp.new_connection_gpg', connection_id=connection.id) }}">
                 <span class="icon">
                     <i class="fas fa-plus"></i>
                 </span>
@@ -140,7 +140,7 @@
                     <p class="control">
                         <a class="button"
                            title="Edit Database Connection"
-                           href="{{ url_for('connection_bp.edit_connection_database', connection_id=connection.id, database_id=s.id)}}">
+                           href="{{ url_for('connection_bp.edit_connection_database', connection_id=connection.id, database_id=s.id) }}">
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
@@ -150,7 +150,7 @@
                     <p class="control">
                         <a class="button"
                            title="Delete Database Connection"
-                           href="{{ url_for('connection_bp.delete_connection_database', connection_id=connection.id, database_id=s.id)}}"
+                           href="{{ url_for('connection_bp.delete_connection_database', connection_id=connection.id, database_id=s.id) }}"
                            onclick="return confirm('Are you sure you want to delete this database connection?')">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
@@ -187,7 +187,7 @@
                     <p class="control">
                         <a class="button"
                            title="Edit SFTP Connection"
-                           href="{{ url_for('connection_bp.edit_connection_sftp', connection_id=connection.id, sftp_id=s.id)}}">
+                           href="{{ url_for('connection_bp.edit_connection_sftp', connection_id=connection.id, sftp_id=s.id) }}">
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
@@ -197,7 +197,7 @@
                     <p class="control">
                         <a class="button"
                            title="Delete SFTP Connection"
-                           href="{{ url_for('connection_bp.delete_connection_sftp', connection_id=connection.id, sftp_id=s.id)}}"
+                           href="{{ url_for('connection_bp.delete_connection_sftp', connection_id=connection.id, sftp_id=s.id) }}"
                            onclick="return confirm('Are you sure you want to delete this SFTP connection?')">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
@@ -233,7 +233,7 @@
                                        readonly="true"
                                        value="{{ s.password|decrypt }}"
                                        style="width:{{ s.password|decrypt|length * 7 }}px;
-                                              cursor: text;"/>
+                                              cursor: text" />
                             </span>
                             <a class="copy-input ml-3"
                                title="copy password"
@@ -280,7 +280,7 @@
                     <p class="control">
                         <a class="button"
                            title="Edit FTP Connection"
-                           href="{{ url_for('connection_bp.edit_connection_ftp', connection_id=connection.id, ftp_id=s.id)}}">
+                           href="{{ url_for('connection_bp.edit_connection_ftp', connection_id=connection.id, ftp_id=s.id) }}">
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
@@ -292,7 +292,7 @@
                     <p class="control">
                         <a class="button"
                            title="Delete FTP Connection"
-                           href="{{ url_for('connection_bp.delete_connection_ftp', connection_id=connection.id, ftp_id=s.id)}}"
+                           href="{{ url_for('connection_bp.delete_connection_ftp', connection_id=connection.id, ftp_id=s.id) }}"
                            onclick="return confirm('Are you sure you want to delete this FTP connection?')">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
@@ -332,7 +332,7 @@
                                        readonly="true"
                                        value="{{ s.password|decrypt }}"
                                        style="width:{{ s.password|decrypt|length * 7 }}px;
-                                              cursor: text;"/>
+                                              cursor: text" />
                             </span>
                             <a class="copy-input ml-3"
                                title="copy password"
@@ -375,7 +375,7 @@
                     <p class="control">
                         <a class="button"
                            title="Edit SMB Connection"
-                           href="{{ url_for('connection_bp.edit_connection_smb', connection_id=connection.id, smb_id=s.id)}}">
+                           href="{{ url_for('connection_bp.edit_connection_smb', connection_id=connection.id, smb_id=s.id) }}">
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
@@ -387,7 +387,7 @@
                     <p class="control">
                         <a class="button"
                            title="Delete SMB Connection"
-                           href="{{ url_for('connection_bp.delete_connection_smb', connection_id=connection.id, smb_id=s.id)}}"
+                           href="{{ url_for('connection_bp.delete_connection_smb', connection_id=connection.id, smb_id=s.id) }}"
                            onclick="return confirm('Are you sure you want to delete this SMB connection?')">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
@@ -437,7 +437,7 @@
                                        readonly="true"
                                        value="{{ s.password|decrypt }}"
                                        style="width:{{ s.password|decrypt|length * 7 }}px;
-                                              cursor: text;"/>
+                                              cursor: text" />
                             </span>
                             <a class="copy-input ml-3"
                                title="copy password"
@@ -480,7 +480,7 @@
                     <p class="control">
                         <a class="button"
                            title="Edit SSH Connection"
-                           href="{{ url_for('connection_bp.edit_connection_ssh', connection_id=connection.id, ssh_id=s.id)}}">
+                           href="{{ url_for('connection_bp.edit_connection_ssh', connection_id=connection.id, ssh_id=s.id) }}">
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
@@ -492,7 +492,7 @@
                     <p class="control">
                         <a class="button"
                            title="Delete SSH Connection"
-                           href="{{ url_for('connection_bp.delete_connection_ssh', connection_id=connection.id, ssh_id=s.id)}}"
+                           href="{{ url_for('connection_bp.delete_connection_ssh', connection_id=connection.id, ssh_id=s.id) }}"
                            onclick="return confirm('Are you sure you want to delete this SSH connection?')">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
@@ -532,7 +532,7 @@
                                        readonly="true"
                                        value="{{ s.password|decrypt }}"
                                        style="width:{{ s.password|decrypt|length * 7 }}px;
-                                              cursor: text;"/>
+                                              cursor: text" />
                             </span>
                             <a class="copy-input ml-3"
                                title="copy password"
@@ -568,7 +568,7 @@
                     <p class="control">
                         <a class="button"
                            title="Edit GPG Connection"
-                           href="{{ url_for('connection_bp.edit_connection_gpg', connection_id=connection.id, gpg_id=s.id)}}">
+                           href="{{ url_for('connection_bp.edit_connection_gpg', connection_id=connection.id, gpg_id=s.id) }}">
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
@@ -580,7 +580,7 @@
                     <p class="control">
                         <a class="button"
                            title="Delete GPG Connection"
-                           href="{{ url_for('connection_bp.delete_connection_gpg', connection_id=connection.id, gpg_id=s.id)}}"
+                           href="{{ url_for('connection_bp.delete_connection_gpg', connection_id=connection.id, gpg_id=s.id) }}"
                            onclick="return confirm('Are you sure you want to delete this GPG connection?')">
                             <span class="icon">
                                 <i class="fas fa-trash"></i>

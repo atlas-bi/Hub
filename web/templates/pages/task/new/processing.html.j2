@@ -3,14 +3,10 @@
         <h2 class="title is-2">Processing Script</h2>
         <div class="select is-fullwidth">
             <select class="input" name="processingType" required="required">
-                <option value="none">
-                    None
-                </option>
+                <option value="none">None</option>
                 {% for s in processing_type %}
                     <option value="{{ s.id }}"
-                            {% if s.id == t.processing_type_id %}selected="selected"{% endif %}>
-                        {{ s.name }}
-                    </option>
+                            {% if s.id == t.processing_type_id %}selected="selected"{% endif %}>{{ s.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -25,14 +21,10 @@
                         name="smb_processing"
                         data-smb="task-smb-processing-connection">
                     <option {% if not t or not t.processing_smb_conn or not t.processing_smb_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                            value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_smb_conn and t.processing_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.processing_smb_conn and t.processing_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -47,7 +39,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.py)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -55,7 +48,7 @@
             <input class="input"
                    name="processingSmbFile"
                    autocomplete="off"
-                   value="{{ t.processing_smb_file or '' }}"/>
+                   value="{{ t.processing_smb_file or '' }}" />
         </div>
     </section>
     <!-- SFTP -->
@@ -68,14 +61,10 @@
                         name="sftp_processing"
                         data-sftp="task-sftp-processing-connection">
                     <option {% if not t or not t.processing_sftp_conn or not t.processing_sftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                              value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_sftp_conn and t.processing_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.processing_sftp_conn and t.processing_sftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -90,7 +79,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.py)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -98,7 +88,7 @@
             <input class="input"
                    name="processingSftpFile"
                    autocomplete="off"
-                   value="{{ t.processing_sftp_file or '' }}"/>
+                   value="{{ t.processing_sftp_file or '' }}" />
         </div>
     </section>
     <!-- FTP -->
@@ -111,14 +101,10 @@
                         name="ftp_processing"
                         data-ftp="task-ftp-processing-connection">
                     <option {% if not t or not t.processing_ftp_conn or not t.processing_ftp_conn.connection.id %}selected="selected"{% endif %}
-                                                                                                                            value="none">
-                        Choose one
-                    </option>
+                            value="none">Choose one</option>
                     {% for s in conn %}
                         <option value="{{ s.id }}"
-                                {% if t.processing_ftp_conn and t.processing_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                            {{ s.name }}
-                        </option>
+                                {% if t.processing_ftp_conn and t.processing_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -133,7 +119,8 @@
             <label class="label" data-docs="parameters">File Name (path/to/file.py)</label>
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-                     ">Wildcards and
+
+                    ">Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
@@ -141,7 +128,7 @@
             <input class="input"
                    name="processingFtpFile"
                    autocomplete="off"
-                   value="{{ t.processing_ftp_file or '' }}"/>
+                   value="{{ t.processing_ftp_file or '' }}" />
         </div>
     </section>
     <!-- GIT -->
@@ -153,7 +140,7 @@
                 <input class="input"
                        name="processingGit"
                        autocomplete="off"
-                       value="{{ t.processing_git or '' }}"/>
+                       value="{{ t.processing_git or '' }}" />
             </div>
         </div>
     </section>
@@ -166,7 +153,7 @@
                 <input class="input"
                        name="processingUrl"
                        autocomplete="off"
-                       value="{{ t.processing_url or '' }}"/>
+                       value="{{ t.processing_url or '' }}" />
             </div>
         </div>
     </section>
@@ -185,7 +172,7 @@
             <input class="input"
                    name="processingCommand"
                    autocomplete="off"
-                   value="{{ t.processing_command or '' }}"/>
+                   value="{{ t.processing_command or '' }}" />
         </div>
     </section>
 </div>

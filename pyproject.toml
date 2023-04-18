@@ -38,9 +38,23 @@ profile = "jinja"
 
 [tool.isort]
 profile = "black"
-quiet = true
 sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
-skip_gitignore = true
+skip_glob = ["runner/temp/*"]
+
+[tool.mypy]
+disable_error_code = "attr-defined, name-defined"
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+exclude = "/(temp|tests)/$"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+ignore_errors = true
+module = "*.smb_fix"
+
+[[tool.mypy.overrides]]
+ignore_errors = true
+module = "*.ldap_auth"
 
 [tool.poetry]
 authors = [
@@ -99,8 +113,8 @@ Flask-SQLAlchemy = "^3.0.0"
 Flask-SQLAlchemy-Caching = "^1.0.4"
 Flask-Script = "^2.0.6"
 Jinja2 = "^3.0.1"
-SQLAlchemy = "2.0.8"
-SQLAlchemy-Utils = "^0.40.0"
+SQLAlchemy = "2.0.9"
+SQLAlchemy-Utils = "^0.41.0"
 bs4 = "^0.0.1"
 cryptography = "^40.0.0"
 flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
@@ -109,7 +123,6 @@ flask-session2 = "^1.2.0"
 gevent = "^22.0.0"
 gunicorn = "^20.1.0"
 is-safe-url = "^1.0"
-jsmin = "^3.0.0"
 paramiko = "^3.0.0"
 pathvalidate = "^2.5.0"
 psutil = "^5.8.0"
@@ -132,12 +145,14 @@ sqlalchemy2-stubs = "^0.0.2a32"
 supervisor = "^4.2.2"
 tomlkit = "^0.11.4"
 virtualenv = "^20.7.2"
+webassets-rollup = "^1.0.0"
 whitenoise = "^6.2.0"
 xmlsec = "^1.3.11"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.0.0"
 coverage = "^7.0.0"
+djlint = "^1.19.17"
 flask-debugtoolbar = "^0.13.1"
 isort = "^5.10.1"
 mypy = "0.991"
@@ -145,7 +160,7 @@ pre-commit = "^3.0.0"
 pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 radon = "^6.0.0"
-ruff = "^0.0.260"
+ruff = "^0.0.261"
 toml = "^0.10.2"
 tox = "^4.0.8"
 types-flask = "^1.1.6"
@@ -166,6 +181,9 @@ testpaths = "tests"
 extend-exclude = ['test*', 'ldap_auth*']
 ignore = ['D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108']
 select = ['F', 'E', 'W', 'N', 'D', 'S', 'B', 'C4', 'T20', 'Q', 'SIM', 'ERA', 'PL', 'RUF']
+
+[tool.ruff.per-file-ignores]
+"runner/scripts/em_python.py" = ['SIM114']
 
 [tool.setuptools_scm]
 local_scheme = "dirty-tag"

@@ -1,8 +1,8 @@
-name: Lighthouse
+name: 🔦 Lighthouse
 on: [push]
+
 jobs:
   lhci:
-    name: Lighthouse
     runs-on: ubuntu-latest
     services:
       redis:
@@ -26,22 +26,38 @@ jobs:
         ports:
         - 5432:5432
     steps:
-    - uses: actions/checkout@v2
+    - name: 💾 Checkout
+      uses: actions/checkout@v2
       with:
         ref: ${{ github.event.pull_request.head.sha }}
-    - name: setup python
+
+    - name: 🧹 Cleanup apt list
+      uses: christopherpickering/no-azure-action@v1.1.0
+
+    - name: ⎔ Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: 📥 Download deps
+      uses: bahmutov/npm-install@v1
+      with:
+        useLockFile: false
+
+    - name: 🐍 Setup python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: 3.9
-    - name: Setup Poetry
+
+    - name: 🎶 Setup Poetry
       uses: snok/install-poetry@v1
-    - name: install deps
+
+    - name: 📥 Install
       run: |
-        sudo sed -i 's/azure\.//' /etc/apt/sources.list
-        sudo apt-get update
         sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
         poetry install
-    - name: setup db
+
+    - name: 💽 Start test services
       run: |
         poetry run flask cli reset_db
         poetry run flask db upgrade
@@ -57,7 +73,8 @@ jobs:
         FLASK_DEBUG: false
         FLASK_APP: web
         FLASK_RUN_PORT: 4998
-    - name: run Lighthouse CI
+
+    - name: 🔦 Run Lighthouse
       run: |
         npm install -g @lhci/cli@0.9.x
         lhci autorun

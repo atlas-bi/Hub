@@ -1,16 +1,24 @@
 """Python script runner."""
 
 
+import sys
 from itertools import chain
 from pathlib import Path
 from typing import IO, List, Optional
 
 import regex as re
+from flask import current_app as app
+from flask import json
 
 from runner.model import Task
+from runner.scripts import em_ftp, em_sftp, em_smb, em_ssh
 from runner.scripts.em_cmd import Cmd
 from runner.scripts.em_messages import RunnerLog
 from runner.scripts.em_params import ParamLoader
+
+sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
+
+from crypto import em_decrypt
 
 
 class PyProcesser:
@@ -269,15 +277,51 @@ class PyProcesser:
 
     def __run_script(self) -> None:
         try:
+            # pass the source connection info into the script
+            env = ""
+            connection = {}
+            if self.task.source_type_id == 1:  # sql
+                external_db = self.task.source_database_conn
+                if external_db.database_type.id == 1:  # postgres
+                    connection = {
+                        "connection_string": em_decrypt(
+                            external_db.connection_string, app.config["PASS_KEY"]
+                        ),
+                        "timeout": external_db.timeout
+                        or app.config["DEFAULT_SQL_TIMEOUT"],
+                    }
+
+                elif external_db.database_type.id == 2:  # mssql
+                    connection = {
+                        "connection_string": em_decrypt(
+                            external_db.connection_string, app.config["PASS_KEY"]
+                        ),
+                        "timeout": external_db.timeout
+                        or app.config["DEFAULT_SQL_TIMEOUT"],
+                    }
+            elif self.task.source_type_id == 2:  # smb file
+                connection = em_smb.connection_json(self.task.source_smb_conn)
+            elif self.task.source_type_id == 3:  # sftp file
+                connection = em_sftp.connection_json(self.task.source_sftp_conn)
+            elif self.task.source_type_id == 4:  # ftp file
+                connection = em_ftp.connection_json(self.task.source_ftp_conn)
+            elif self.task.source_type_id == 6:  # ssh command
+                connection = em_ssh.connection_json(self.task.source_ssh_conn)
+
+            env += f"PROJECT='{json.dumps(self.task.project)}' "
+            env += f"TASK='{json.dumps(self.task)}' "
+
+            # if data files exist, pass them as a param.
+            env += f"CONNECTION='{str(json.dumps(connection))}' " if connection else ""
+
             # create environment from params
-            env = ("").join(
+            env += ("").join(
                 [
                     f'{re.sub(r"[^a-zA-Z_]", "", key)}="{value}" '
                     for key, value in self.params.read().items()
                 ]
             )
 
-            # if data files exist, pass them as a param.
             cmd = (
                 f'{env}"{self.env_path}/bin/python" "{self.job_path}/{self.script}" '
             ) + " ".join([f'"{x.name}"' for x in self.source_files])
