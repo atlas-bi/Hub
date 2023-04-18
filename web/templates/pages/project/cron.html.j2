@@ -4,9 +4,9 @@
            type="checkbox"
            id="project_cron_check"
            data-target="project-cron"
-           {% if p.cron == 1 %}checked="checked"{% endif %}/>
+           {% if p.cron == 1 %}checked="checked"{% endif %} />
     <label for="project_cron_check">Use a cron schedule</label>
-    <input type="hidden" name="project_cron" value="{{ p.cron or 0 }}"/>
+    <input type="hidden" name="project_cron" value="{{ p.cron or 0 }}" />
 </div>
 <div class="project-cron"
      {% if not p or p and p.cron !=1 %}style="display:none;"{% endif %}>
@@ -29,56 +29,56 @@
         <input class="input"
                type="number"
                name="project_cron_year"
-               value="{{ p.cron_year }}"/>
+               value="{{ p.cron_year }}" />
     </div>
     <div class="field">
         <label class="label">Run in a specific month (1-12)</label>
         <input class="input"
                type="number"
                name="project_cron_mnth"
-               value="{{ p.cron_month }}"/>
+               value="{{ p.cron_month }}" />
     </div>
     <div class="field">
         <label class="label">Run in a specific week (1-53)</label>
         <input class="input"
                type="number"
                name="project_cron_week"
-               value="{{ p.cron_week }}"/>
+               value="{{ p.cron_week }}" />
     </div>
     <div class="field">
         <label class="label">Run on a specific day (1-31)</label>
         <input class="input"
                type="number"
                name="project_cron_day"
-               value="{{ p.cron_day }}"/>
+               value="{{ p.cron_day }}" />
     </div>
     <div class="field">
         <label class="label">Run on a specific day of the week (0 mon-6 sun)</label>
         <input class="input"
                type="number"
                name="project_cron_wday"
-               value="{{ p.cron_week_day }}"/>
+               value="{{ p.cron_week_day }}" />
     </div>
     <div class="field">
         <label class="label">Run on a specific hour of the day (0-23)</label>
         <input class="input"
                type="number"
                name="project_cron_hour"
-               value="{{ p.cron_hour }}"/>
+               value="{{ p.cron_hour }}" />
     </div>
     <div class="field">
         <label class="label">Run on a specific minute (0-59)</label>
         <input class="input"
                type="number"
                name="project_cron_min"
-               value="{{ p.cron_min }}"/>
+               value="{{ p.cron_min }}" />
     </div>
     <div class="field">
         <label class="label">Run on a specific second (0-59).. Really bro??</label>
         <input class="input"
                type="number"
                name="project_cron_sec"
-               value="{{ p.cron_sec }}"/>
+               value="{{ p.cron_sec }}" />
     </div>
     <div class="field">
         <label class="label">Start running on</label>
@@ -88,7 +88,7 @@
                        name="project_cron_sdate"
                        id="project_cron_sdate"
                        placeholder="select date"
-                       value="{{ p.cron_start_date or '' }}"/>
+                       value="{{ p.cron_start_date or '' }}" />
             </div>
             <div class="control">
                 <a class="button em-eraseInput"
@@ -109,7 +109,7 @@
                        name="project_cron_edate"
                        id="project_cron_edate"
                        placeholder="select date"
-                       value="{{ p.cron_end_date or '' }}"/>
+                       value="{{ p.cron_end_date or '' }}" />
             </div>
             <div class="control">
                 <a class="button em-eraseInput"

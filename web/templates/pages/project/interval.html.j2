@@ -8,9 +8,9 @@
            id="project_intv_check"
            type="checkbox"
            data-target="project-intv"
-           {% if p.intv == 1 %}checked="checked"{% endif %}/>
+           {% if p.intv == 1 %}checked="checked"{% endif %} />
     <label for="project_intv_check">Use an interval schedule</label>
-    <input type="hidden" name="project_intv" value="{{ p.intv or 0 }}"/>
+    <input type="hidden" name="project_intv" value="{{ p.intv or 0 }}" />
 </div>
 <div class="project-intv"
      {% if not p or p and p.intv !=1 %}style="display:none;"{% endif %}>
@@ -20,7 +20,7 @@
                type="number"
                name="project_intv_value"
                id="project_intv_value"
-               value="{{ p.intv_value }}"/>
+               value="{{ p.intv_value }}" />
     </div>
     <div class="field">
         <label class="label">Interval</label>
@@ -39,7 +39,7 @@
                    name="project_intv_sdate"
                    id="project_intv_sdate"
                    placeholder="select date"
-                   value="{{ p.intv_start_date or '' }}"/>
+                   value="{{ p.intv_start_date or '' }}" />
         </div>
         <div class="control">
             <a class="button em-eraseInput"
@@ -58,7 +58,7 @@
                    name="project_intv_edate"
                    id="project_intv_edate"
                    placeholder="select date"
-                   value="{{ p.intv_end_date or '' }}"/>
+                   value="{{ p.intv_end_date or '' }}" />
         </div>
         <div class="control">
             <a class="button em-eraseInput"
