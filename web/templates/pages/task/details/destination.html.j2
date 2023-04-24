@@ -7,7 +7,7 @@
                 <ul>
                     <li>
                         File Name:
-                        <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext)}}</span>
+                        <span class="tag is-info is-light">{{ t.destination_file_name|filename(t.file_type.ext) }}</span>
                         <div class="em-ajaxContent is-inline ml-3"
                              data-src="{{ url_for('task_files_bp.filename_preview',task_id=t.id) }}">
                             <div class="loader"></div>
@@ -127,72 +127,47 @@
             </a>
             <div class="em-ajaxContent is-inline ml-3"
                  data-src="{{ url_for('connection_bp.smb_online', smb_id=t.destination_smb_conn.id) }}">
-                <div class="loader">
-                </div>
+                <div class="loader"></div>
             </div>
             <pre class="box"><code class="language-ini">smb://{{ t.destination_smb_conn.username }}:...@{{ t.destination_smb_conn.server_ip }}({{ t.destination_smb_conn.server_name }})/{{ t.destination_smb_conn.share_name }}/{{ t.destination_smb_conn.path|clean_path }}{{ t.destination_file_name|filename(t.file_type.ext)}}</code></pre>
         {% endif %}
         {% if t.email_completion == 1 %}
             <!-- success emails -->
-            <h3 class="title is-3">
-                Success Email
-            </h3>
+            <h3 class="title is-3">Success Email</h3>
             <div class="content">
                 <ul>
-                    {% if t.email_completion_file == 1 %}
-                        <li>
-                            Output file attached to email
-                        </li>
-                    {% endif %}
+                    {% if t.email_completion_file == 1 %}<li>Output file attached to email</li>{% endif %}
                     {% if t.email_completion_file == 1 and t.email_completion_dont_send_empty_file == 1 %}
-                        <li>
-                            Will not send with empty files
-                        </li>
+                        <li>Will not send with empty files</li>
                     {% endif %}
                     {% if t.email_completion_file == 1 and t.email_completion_file_embed == 1 %}
-                        <li>
-                            File will be embedded in email body
-                        </li>
+                        <li>File will be embedded in email body</li>
                     {% endif %}
-                    {% if t.email_completion_log == 1 %}
-                        <li>
-                            Run logs embedded in email
-                        </li>
-                    {% endif %}
+                    {% if t.email_completion_log == 1 %}<li>Run logs embedded in email</li>{% endif %}
                     <li>
                         Email Recipients:
-                        <span class="tag is-info is-light">
-                            {{ t.email_completion_recipients or "None" }}
-                        </span>
+                        <span class="tag is-info is-light">{{ t.email_completion_recipients or "None" }}</span>
                     </li>
                 </ul>
             </div>
             {% if t.email_completion_message|length > 0 %}
-                <h4 class="title is-4">
-                    Message
-                </h4>
+                <h4 class="title is-4">Message</h4>
                 <pre class="box"><code class="language-text">{{ t.email_completion_message }}</code></pre>
             {% endif %}
         {% endif %}
         <!-- error emails -->
         {% if t.email_error == 1 %}
-            <h3 class="title is-3">
-                Error Email
-            </h3>
+            <h3 class="title is-3">Error Email</h3>
             <div class="content">
                 <ul>
                     <li>
                         Email Recipients:
-                        <span class="tag is-info is-light">
-                            {{ t.email_error_recipients or "None" }}
-                        </span>
+                        <span class="tag is-info is-light">{{ t.email_error_recipients or "None" }}</span>
                     </li>
                 </ul>
             </div>
             {% if t.email_error_message|length > 0 %}
-                <h4 class="title is-4">
-                    Message
-                </h4>
+                <h4 class="title is-4">Message</h4>
                 <pre class="box"><code class="language-text">{{ t.email_error_message }}</code></pre>
             {% endif %}
         {% endif %}

@@ -37,7 +37,7 @@
                    name="name"
                    autocomplete="off"
                    required="required"
-                   value="{%- if connection -%}{{ connection.name or '' }}{%- endif -%}"/>
+                   value="{%- if connection -%}{{ connection.name or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">Description</label>
@@ -46,7 +46,7 @@
                    name="description"
                    autocomplete="off"
                    required="required"
-                   value="{%- if connection -%}{{ connection.description or '' }}{%- endif -%}"/>
+                   value="{%- if connection -%}{{ connection.description or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">Address</label>
@@ -54,7 +54,7 @@
                    type="text"
                    name="address"
                    autocomplete="off"
-                   value="{%- if connection -%}{{ connection.address or '' }}{%- endif -%}"/>
+                   value="{%- if connection -%}{{ connection.address or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">Primary Contact</label>
@@ -62,7 +62,7 @@
                    type="text"
                    name="contact"
                    autocomplete="off"
-                   value="{%- if connection -%}{{ connection.primary_contact or '' }}{%- endif -%}"/>
+                   value="{%- if connection -%}{{ connection.primary_contact or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">Email Address</label>
@@ -70,7 +70,7 @@
                    type="text"
                    name="email"
                    autocomplete="off"
-                   value="{%- if connection -%}{{ connection.primary_contact_email or '' }}{%- endif -%}"/>
+                   value="{%- if connection -%}{{ connection.primary_contact_email or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">Phone</label>
@@ -78,7 +78,7 @@
                    type="text"
                    name="phone"
                    autocomplete="off"
-                   value="{%- if connection -%}{{ connection.primary_contact_phone or '' }}{%- endif -%}"/>
+                   value="{%- if connection -%}{{ connection.primary_contact_phone or '' }}{%- endif -%}" />
         </div>
         <button class="button is-info is-fullwidth my-5" type="submit">
             {% if connection %}

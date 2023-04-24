@@ -1,10 +1,13 @@
-name: test
-on:
-  pull_request:
+name: 🧪 test
+on: [push, pull_request]
+
 jobs:
   test:
-    name: python ${{ matrix.python-version }} on ${{ matrix.os }}
+    name: 🐍 Python ${{ matrix.python-version }} on 🖥️ ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.python-version }}-${{ matrix.os }}
+      cancel-in-progress: true
 
     strategy:
       matrix:
@@ -35,31 +38,44 @@ jobs:
         - 5432:5432
 
     steps:
-    - name: checkout
+    - name: 💾 Checkout
       uses: actions/checkout@v3
-    - name: setup python ${{ matrix.python-version }}
+
+    - name: 🧹 Cleanup apt list
+      uses: christopherpickering/no-azure-action@v1.1.0
+
+    - name: ⎔ Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: 📥 Download deps
+      uses: bahmutov/npm-install@v1
+      with:
+        useLockFile: false
+
+    - name: 🐍 Setup python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Setup Poetry
+    - name: 🎶 Setup Poetry
       uses: snok/install-poetry@v1
 
-    - name: install deps
+    - name: 📥 Install
       run: |
-        sudo sed -i 's/azure\.//' /etc/apt/sources.list
-        sudo apt-get update
         sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
         poetry install -vvv
-        poetry add --group dev codecov
       env:
         PYTHONWARNINGS: ignore
-    - name: start test services
+
+    - name: 💽 Start test services
       run: |
         docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=@Passw0rd>" -p 1433:1433 --name sql1 -h sql1  -d mcr.microsoft.com/mssql/server:2017-latest
         docker run -p 23:22 -d emberstack/sftp --name sftp
         docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e FTP_USER_NAME=demo -e FTP_USER_PASS=demo -e FTP_USER_HOME=/home/demo -e "PUBLICHOST=localhost" -e "ADDED_FLAGS=-d -d" stilliard/pure-ftpd
-    - name: test
+
+    - name: 🧪 Run Test
       run: poetry run tox
       env:
         POSTGRES_HOST: localhost
@@ -67,11 +83,10 @@ jobs:
         PGPASSWORD: 12345
         REDIS_HOST: localhost
         REDIS_PORT: 6379
-        # DATABASE_URL: postgresql+psycopg2://postgres:12345@localhost/postgres
-    - name: upload cov
+
+    - name: 📤 Upload Coverage
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml
-        fail_ci_if_error: true
         verbose: true

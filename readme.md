@@ -59,6 +59,7 @@ Atlas Automation Hub can be run locally. We use pyenv and poetry to manage the p
 ```bash
 pyenv local 3.9.0
 poetry install
+npm install
 
 # have you already created a database "atlas_hub_dev" and updated the config files?
 FLASK_APP=web
@@ -70,12 +71,10 @@ flask cli seed
 flask cli seed_demo
 ```
 
-Finally, to run the three site, you will need to run each command in a separate termimal session:
+Finally, use the npm script to start up the website
 
 ```bash
-FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=web && flask run
-FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=scheduler && flask run --port=5001
-FLASK_ENV=development && FLASK_DEBUG=1 && FLASK_APP=runner && flask run --port=5002
+npm start
 ```
 
 ## :test_tube: Testing
@@ -105,7 +104,7 @@ This repository uses commitizen. Commit code changes for pr's with `npm run comm
 
 ## :trophy: Credits
 
-Atlas was created by the Riverside Healthcare Analytics team. See the `credits <https://www.atlas.bi/about/>`_ for more details.
+Atlas was originally created by the Riverside Healthcare Analytics team. See the `credits <https://www.atlas.bi/about/>`_ for more details.
 
 ## :wrench: Tools
 

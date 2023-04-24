@@ -2,6 +2,22 @@
 
 BASE_DIR="/usr/lib/atlas-hub"
 
+RED=$(printf '\033[31m')
+
+if ! which node > /dev/null; then
+  echo
+  echo "${RED}Error: Node is not installed. Please install node and try again. See https://learnubuntu.com/install-node/ for help.${RESET}"
+  echo
+  exit 1
+fi
+
+if ! which npm > /dev/null; then
+  echo
+  echo "${RED}Error: Npm is not installed. Please install node and try again. See https://learnubuntu.com/install-node/ for help.${RESET}"
+  echo
+  exit 1
+fi
+
 # remove old install
 if [ -d "$BASE_DIR" ]; then
     cd "${BASE_DIR:?}" || exit; rm -rf *

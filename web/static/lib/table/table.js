@@ -8,7 +8,7 @@
   function table(el, dest, reload) {
     if (typeof dest == 'undefined') dest = el;
     if (typeof reload == 'undefined') reload = false;
-    q = new XMLHttpRequest();
+    var q = new XMLHttpRequest();
     q.open(
       'get',
       el.getAttribute('data-src'), //+ "&v=" + new Date().getTime(),
@@ -235,7 +235,7 @@
       r[++j] = '</select></div></div></div></div></div>';
     } // table
 
-    theme = '';
+    let theme = '';
     if (el.hasAttribute('data-theme')) {
       theme = ' table' + el.getAttribute('data-theme');
     }

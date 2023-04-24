@@ -20,20 +20,22 @@
         {% elif t.source_type_id == 3 and t.source_sftp_conn %}
             <!-- source SFTP -->
             <h2 class="title is-2">Data Source - SFTP Connection</h2>
-            <div class="content">
-                <ul>
-                    <li>
-                        Filename:
-                        <span class="tag is-info is-light">{{ t.source_sftp_file }}</span>
-                    </li>
-                    {% if t.source_sftp_ignore_delimiter != 1 and t.source_sftp_delimiter %}
+            {% if t.source_sftp_file %}
+                <div class="content">
+                    <ul>
                         <li>
-                            Delimiter:
-                            <span class="tag is-info is-light">{{ t.source_sftp_delimiter or "," }}</span>
+                            Filename:
+                            <span class="tag is-info is-light">{{ t.source_sftp_file }}</span>
                         </li>
-                    {% endif %}
-                </ul>
-            </div>
+                        {% if t.source_sftp_ignore_delimiter != 1 and t.source_sftp_delimiter %}
+                            <li>
+                                Delimiter:
+                                <span class="tag is-info is-light">{{ t.source_sftp_delimiter or "," }}</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
             <a title="open connection"
                class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.source_sftp_conn.connection.id) }}">
@@ -49,20 +51,22 @@
         {% elif t.source_type_id == 4 and t.source_ftp_conn %}
             <!-- source FTP -->
             <h2 class="title is-2">Data Source - FTP Connection</h2>
-            <div class="content">
-                <ul>
-                    <li>
-                        Filename:
-                        <span class="tag is-info is-light">{{ t.source_ftp_file }}</span>
-                    </li>
-                    {% if t.source_ftp_ignore_delimiter != 1 and t.source_ftp_delimiter %}
+            {% if t.source_ftp_file %}
+                <div class="content">
+                    <ul>
                         <li>
-                            Delimiter:
-                            <span class="tag is-info is-light">{{ t.source_ftp_delimiter or "," }}</span>
+                            Filename:
+                            <span class="tag is-info is-light">{{ t.source_ftp_file }}</span>
                         </li>
-                    {% endif %}
-                </ul>
-            </div>
+                        {% if t.source_ftp_ignore_delimiter != 1 and t.source_ftp_delimiter %}
+                            <li>
+                                Delimiter:
+                                <span class="tag is-info is-light">{{ t.source_ftp_delimiter or "," }}</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
             <a title="open connection"
                class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.source_ftp_conn.connection.id) }}">
@@ -79,20 +83,22 @@
         {% elif t.source_type_id == 2 and t.source_smb_conn %}
             <!-- source SMB -->
             <h2 class="title is-2">Data Source - SMB Connection</h2>
-            <div class="content">
-                <ul>
-                    <li>
-                        Filename:
-                        <span class="tag is-info is-light">{{ t.source_smb_file }}</span>
-                    </li>
-                    {% if t.source_smb_ignore_delimiter != 1 and t.source_smb_delimiter %}
+            {% if t.source_smb_file %}
+                <div class="content">
+                    <ul>
                         <li>
-                            Delimiter:
-                            <span class="tag is-info is-light">{{ t.source_smb_delimiter or "," }}</span>
+                            Filename:
+                            <span class="tag is-info is-light">{{ t.source_smb_file }}</span>
                         </li>
-                    {% endif %}
-                </ul>
-            </div>
+                        {% if t.source_smb_ignore_delimiter != 1 and t.source_smb_delimiter %}
+                            <li>
+                                Delimiter:
+                                <span class="tag is-info is-light">{{ t.source_smb_delimiter or "," }}</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
             <a title="open connection"
                class="is-inlineblock mb-3"
                href="{{ url_for('connection_bp.one_connection', connection_id=t.source_smb_conn.connection.id) }}">

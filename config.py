@@ -276,6 +276,13 @@ class Config:
 
     PYTHON_TASKS_ENABLED = True
 
+    ROLLUP_BIN = "./node_modules/.bin/rollup"
+    ROLLUP_EXTRA_ARGS = ["-c", "rollup.config.mjs"]
+
+    UGLIFYJS_BIN = "./node_modules/.bin/uglifyjs"
+
+    POSTCSS_BIN = "./node_modules/.bin/postcss"
+
 
 class DevConfig(Config):
     """Configuration overrides for development.
@@ -307,7 +314,7 @@ class DevConfig(Config):
     # migrations override
     # MIGRATIONS = "migrations_dev"
 
-    ASSETS_DEBUG = True
+    ASSETS_DEBUG = False
 
     SQLALCHEMY_RECORD_QUERIES = True
 

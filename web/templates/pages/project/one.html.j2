@@ -22,7 +22,7 @@
         <p class="control">
             <a class="button"
                title="Edit Project"
-               href="{{ url_for('project_bp.edit_project_form', project_id=p.id)}}">
+               href="{{ url_for('project_bp.edit_project_form', project_id=p.id) }}">
                 <span class="icon">
                     <i class="fas fa-pen-to-square"></i>
                 </span>
@@ -32,7 +32,7 @@
         <p class="control">
             <a class="button"
                title="Delete Project"
-               href="{{ url_for('project_bp.delete_project', project_id=p.id)}}"
+               href="{{ url_for('project_bp.delete_project', project_id=p.id) }}"
                onclick="return confirm('Are you sure you want to delete this project? All tasks and logs will also be removed.')">
                 <span class="icon">
                     <i class="fas fa-trash"></i>
@@ -43,7 +43,7 @@
         <p class="control">
             <a class="button"
                title="Duplicate Project"
-               href="{{ url_for('project_bp.duplicate_project', project_id=p.id)}}">
+               href="{{ url_for('project_bp.duplicate_project', project_id=p.id) }}">
                 <span class="icon">
                     <i class="far fa-copy"></i>
                 </span>
@@ -163,21 +163,13 @@
         </div>
     {% else %}
         <article class="message is-danger">
-            <div class="message-body">
-                Project has no run schedule!
-            </div>
+            <div class="message-body">Project has no run schedule!</div>
         </article>
     {% endif %}
     {% if p.params %}
         <div class="box">
-            <h2 class="title is-2">
-                Global Parameters
-            </h2>
-            {% if has_secrets %}
-                <button class="button show-params mb-0" type="button">
-                    Toggle Sensitive Values
-                </button>
-            {% endif %}
+            <h2 class="title is-2">Global Parameters</h2>
+            {% if has_secrets %}<button class="button show-params mb-0" type="button">Toggle Sensitive Values</button>{% endif %}
             <pre class="box param-preview mb-0"><code class="language-ini">
 {%- for param in p.params -%}
 {{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{param.value|decrypt}}{% endif %}
@@ -191,64 +183,53 @@
         </div>
     {% endif %}
     <div class="box">
-        <h2 class="title is-2">
-            Tasks
-        </h2>
+        <h2 class="title is-2">Tasks</h2>
         <div class="field has-addons">
             <p class="control">
                 <a class="button"
                    title="New Task"
-                   href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id)}}">
+                   href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id) }}">
                     <span class="icon">
                         <i class="fas fa-plus"></i>
                     </span>
-                    <span>
-                        New
-                    </span>
+                    <span>New</span>
                 </a>
             </p>
             <p class="control">
                 <a class="button"
                    title="Disable Project"
-                   href="{{ url_for('project_bp.disable_all_project_tasks', project_id=p.id)}}">
+                   href="{{ url_for('project_bp.disable_all_project_tasks', project_id=p.id) }}">
                     <span class="icon">
                         <i class="fas fa-toggle-off"></i>
                     </span>
-                    <span>
-                        Disable All
-                    </span>
+                    <span>Disable All</span>
                 </a>
             </p>
             <p class="control">
                 <a class="button"
                    title="Enable Project"
-                   href="{{ url_for('project_bp.enable_all_project_tasks', project_id=p.id)}}">
+                   href="{{ url_for('project_bp.enable_all_project_tasks', project_id=p.id) }}">
                     <span class="icon">
                         <i class="fas fa-toggle-on"></i>
                     </span>
-                    <span>
-                        Enable All
-                    </span>
+                    <span>Enable All</span>
                 </a>
             </p>
             <p class="control">
                 <a class="button"
                    title="Run Project"
-                   href="{{ url_for('project_bp.run_all_project_tasks', project_id=p.id)}}">
+                   href="{{ url_for('project_bp.run_all_project_tasks', project_id=p.id) }}">
                     <span class="icon">
                         <i class="far fa-circle-play"></i>
                     </span>
-                    <span>
-                        Run All
-                    </span>
+                    <span>Run All</span>
                 </a>
             </p>
         </div>
         <div class="em-ajaxTable no-tools no-box"
              data-theme="Exec"
              data-src="{{ url_for('table_bp.project_all_tasks', project_id=p.id) }}">
-            <div class="loader">
-            </div>
+            <div class="loader"></div>
         </div>
     </div>
 {% endblock body %}

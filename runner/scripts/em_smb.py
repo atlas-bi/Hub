@@ -10,7 +10,7 @@ import time
 import urllib
 from io import TextIOWrapper
 from pathlib import Path
-from typing import IO, Any, Generator, List, Optional, Tuple
+from typing import IO, Any, Dict, Generator, List, Optional, Tuple
 
 from flask import current_app as app
 from pathvalidate import sanitize_filename
@@ -26,6 +26,17 @@ from runner.scripts.smb_fix import SMBHandler
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
+
+
+def connection_json(connection: SMBConnection) -> Dict:
+    """Convert the connection string to json."""
+    return {
+        "share_name": str(connection.share_name).strip("/").strip("\\"),
+        "server_name": connection.server_name,
+        "server_ip": connection.server_ip,
+        "password": em_decrypt(connection.password, app.config["PASS_KEY"]),
+        "username": str(connection.username),
+    }
 
 
 def connect(

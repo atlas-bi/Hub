@@ -41,7 +41,7 @@
                    type="text"
                    name="name"
                    placeholder="friendly name"
-                   value="{%- if ftp -%}{{ ftp.name }}{%- endif -%}"/>
+                   value="{%- if ftp -%}{{ ftp.name }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -53,7 +53,7 @@
                    type="text"
                    name="address"
                    placeholder="ftp.google.com"
-                   value="{%- if ftp -%}{{ ftp.address or '' }}{%- endif -%}"/>
+                   value="{%- if ftp -%}{{ ftp.address or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -65,7 +65,7 @@
                    type="text"
                    name="path"
                    placeholder="/path/to/somewhere"
-                   value="{%- if ftp -%}{{ ftp.path or '' }}{%- endif -%}"/>
+                   value="{%- if ftp -%}{{ ftp.path or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -77,7 +77,7 @@
                    type="text"
                    name="username"
                    placeholder="username"
-                   value="{%- if ftp -%}{{ ftp.username or '' }}{%- endif -%}"/>
+                   value="{%- if ftp -%}{{ ftp.username or '' }}{%- endif -%}" />
         </div>
         <div class="field">
             <label class="label">
@@ -91,7 +91,7 @@
                            type="password"
                            name="password"
                            placeholder="password"
-                           value="{%- if ftp -%}{{ ftp.password|decrypt or '' }}{%- endif -%}"/>
+                           value="{%- if ftp -%}{{ ftp.password|decrypt or '' }}{%- endif -%}" />
                 </p>
                 <div class="control">
                     <a class="button toggle-pass "data-target="password">

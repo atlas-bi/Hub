@@ -11,7 +11,7 @@ import time
 import warnings
 from pathlib import Path
 from stat import S_ISDIR
-from typing import IO, Any, Generator, List, Optional, Tuple
+from typing import IO, Any, Dict, Generator, List, Optional, Tuple
 
 import paramiko
 from cryptography.utils import CryptographyDeprecationWarning
@@ -29,6 +29,35 @@ sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
 
 
+def connection_key(connection: ConnectionSftp) -> Optional[paramiko.pkey.PKey]:
+    """Build a ssh key from a string."""
+    key = None
+    if connection.key:
+        with tempfile.NamedTemporaryFile(mode="w+", newline="") as key_file:
+            key_file.write(em_decrypt(connection.key, app.config["PASS_KEY"]))
+            key_file.seek(0)
+
+            key = paramiko.RSAKey.from_private_key_file(
+                key_file.name,
+                password=em_decrypt(connection.password, app.config["PASS_KEY"])
+                if connection.password
+                else None,
+            )
+
+    return key
+
+
+def connection_json(connection: ConnectionSftp) -> Dict:
+    """Convert the connection string to json."""
+    return {
+        "address": connection.address,
+        "port": connection.port or 22,
+        "key": em_decrypt(connection.key, app.config["PASS_KEY"]),
+        "password": em_decrypt(connection.password, app.config["PASS_KEY"]),
+        "username": str(connection.username),
+    }
+
+
 def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
     """Connect to sftp server."""
     try:
@@ -43,23 +72,7 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
                     disabled_algorithms={"pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]},
                 )
 
-                # build ssh key file
-                key = None
-                if connection.key:
-                    with tempfile.NamedTemporaryFile(mode="w+", newline="") as key_file:
-                        key_file.write(
-                            em_decrypt(connection.key, app.config["PASS_KEY"])
-                        )
-                        key_file.seek(0)
-
-                        key = paramiko.RSAKey.from_private_key_file(
-                            key_file.name,
-                            password=em_decrypt(
-                                connection.password, app.config["PASS_KEY"]
-                            )
-                            if connection.password
-                            else None,
-                        )
+                key = connection_key(connection)
 
                 transport.connect(
                     username=str(connection.username),
