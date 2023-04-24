@@ -21,8 +21,7 @@
                 If file type is "other" then include file extension in name.
                 <br />
                 <span class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
-
-                    ">
+                     ">
                     Wildcards and
                     <a href="" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
@@ -197,9 +196,7 @@
                        id="task_overwrite_sftp_if_exists"
                        type="checkbox"
                        {% if not t or t.destination_sftp_overwrite == 1 %}checked="checked"{% endif %} />
-                <label for="task_overwrite_sftp_if_exists">
-                    Overwrite file if exists?
-                </label>
+                <label for="task_overwrite_sftp_if_exists">Overwrite file if exists?</label>
                 <input type="hidden"
                        name="task_overwrite_sftp"
                        value="{%- if not t or t.destination_sftp_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -213,9 +210,7 @@
                type="checkbox"
                data-target="task-destinationSmb"
                {% if t and t.destination_smb == 1 %}checked="checked"{% endif %} />
-        <label for="task_save_smb">
-            Upload files to SMB server (network file path)?
-        </label>
+        <label for="task_save_smb">Upload files to SMB server (network file path)?</label>
         <input type="hidden"
                name="task_save_smb"
                value="{%- if t and t.destination_smb == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -224,25 +219,17 @@
              {% if not t or (t and t.destination_smb != 1) %}
                  style="display:none;"
              {% endif %}>
-        <p class="message-header">
-            SMB (Network Folder) Location
-        </p>
+        <p class="message-header">SMB (Network Folder) Location</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
-                <label class="label">
-                    Organization
-                </label>
+                <label class="label">Organization</label>
                 <div class="select is-fullwidth">
                     <select class="input" name="smb_destination" data-smb="task-smb-connection">
                         <option {% if not t or not t.destination_smb_conn or not t.destination_smb_conn.connection.id %}selected="selected"{% endif %}
-                                value="none">
-                            Choose one
-                        </option>
+                                value="none">Choose one</option>
                         {% for s in conn %}
                             <option value="{{ s.id }}"
-                                    {% if t.destination_smb_conn and t.destination_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                                {{ s.name }}
-                            </option>
+                                    {% if t.destination_smb_conn and t.destination_smb_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -258,9 +245,7 @@
                        id="task_smb_dont_send_empty"
                        type="checkbox"
                        {% if t and t.destination_smb_dont_send_empty_file == 1 %}checked="checked"{% endif %} />
-                <label for="task_smb_dont_send_empty">
-                    Don't upload if file is empty?
-                </label>
+                <label for="task_smb_dont_send_empty">Don't upload if file is empty?</label>
                 <input type="hidden"
                        name="task_smb_dont_send_empty"
                        value="{%- if t and t.destination_smb_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -270,9 +255,7 @@
                        id="task_overwrite_smb_if_exists"
                        type="checkbox"
                        {% if not t or t.destination_smb_overwrite == 1 %}checked="checked"{% endif %} />
-                <label for="task_overwrite_smb_if_exists">
-                    Overwrite if exists?
-                </label>
+                <label for="task_overwrite_smb_if_exists">Overwrite if exists?</label>
                 <input type="hidden"
                        name="task_overwrite_smb"
                        value="{%- if not t or t.destination_smb_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -285,9 +268,7 @@
                type="checkbox"
                data-target="task-destinationFtp"
                {% if t and t.destination_ftp == 1 %}checked="checked"{% endif %} />
-        <label for="task_save_ftp">
-            Upload files to FTP server (network file path)?
-        </label>
+        <label for="task_save_ftp">Upload files to FTP server (network file path)?</label>
         <input type="hidden"
                name="task_save_ftp"
                value="{%- if t and t.destination_ftp == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -296,25 +277,17 @@
              {% if not t or (t and t.destination_ftp != 1) %}
                  style="display:none;"
              {% endif %}>
-        <p class="message-header">
-            FTP Location
-        </p>
+        <p class="message-header">FTP Location</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
-                <label class="label">
-                    Organization
-                </label>
+                <label class="label">Organization</label>
                 <div class="select is-fullwidth">
                     <select class="input" name="ftp_destination" data-ftp="task-ftp-connection">
                         <option {% if not t or not t.destination_ftp_conn or not t.destination_ftp_conn.connection.id %}selected="selected"{% endif %}
-                                value="none">
-                            Choose one
-                        </option>
+                                value="none">Choose one</option>
                         {% for s in conn %}
                             <option value="{{ s.id }}"
-                                    {% if t.destination_ftp_conn and t.destination_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>
-                                {{ s.name }}
-                            </option>
+                                    {% if t.destination_ftp_conn and t.destination_ftp_conn.connection.id == s.id %}selected="selected"{% endif %}>{{ s.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -330,9 +303,7 @@
                        id="task_ftp_dont_send_empty"
                        type="checkbox"
                        {% if t and t.destination_ftp_dont_send_empty_file == 1 %}checked="checked"{% endif %} />
-                <label for="task_ftp_dont_send_empty">
-                    Don't upload if file is empty?
-                </label>
+                <label for="task_ftp_dont_send_empty">Don't upload if file is empty?</label>
                 <input type="hidden"
                        name="task_ftp_dont_send_empty"
                        value="{%- if t and t.destination_ftp_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -342,9 +313,7 @@
                        id="task_overwrite_ftp_if_exists"
                        type="checkbox"
                        {% if not t or t.destination_ftp_overwrite == 1 %}checked="checked"{% endif %} />
-                <label for="task_overwrite_ftp_if_exists">
-                    Overwrite if exists?
-                </label>
+                <label for="task_overwrite_ftp_if_exists">Overwrite if exists?</label>
                 <input type="hidden"
                        name="task_overwrite_ftp"
                        value="{%- if not t or t.destination_ftp_overwrite == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -358,9 +327,7 @@
                type="checkbox"
                data-target="task-destinationEmail"
                {% if t and t.email_completion == 1 %}checked="checked"{% endif %} />
-        <label for="send_completion_email_check">
-            Send Success Email?
-        </label>
+        <label for="send_completion_email_check">Send Success Email?</label>
         <input type="hidden"
                name="task_send_completion_email"
                value="{%- if t and t.email_completion == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -369,23 +336,17 @@
              {% if not t or (t and t.email_completion != 1) %}
                  style="display:none;"
              {% endif %}>
-        <p class="message-header">
-            Success Email Settings
-        </p>
+        <p class="message-header">Success Email Settings</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
-                <label class="label" data-docs="tasks#email">
-                    Destination (separate addresses with ";")
-                </label>
+                <label class="label" data-docs="tasks#email">Destination (separate addresses with ";")</label>
                 <input class="input"
                        name="completionEmailRecip"
                        autocomplete="off"
                        value="{{ t.email_completion_recipients or '' }}" />
             </div>
             <div class="field">
-                <label class="label">
-                    Message
-                </label>
+                <label class="label">Message</label>
                 <textarea class="textarea" name="completion_email_msg" autocomplete="off">{{ t.email_completion_message or '' }}</textarea>
             </div>
             <!-- include run log? check -->
@@ -394,9 +355,7 @@
                        type="checkbox"
                        id="send_completion_email_log_check"
                        {% if t and t.email_completion_log == 1 %}checked="checked"{% endif %} />
-                <label for="send_completion_email_log_check">
-                    Include run logs?
-                </label>
+                <label for="send_completion_email_log_check">Include run logs?</label>
                 <input type="hidden"
                        name="task_send_completion_email_log"
                        value="{%- if t and t.email_completion_log == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -407,9 +366,7 @@
                        id="send_output_check"
                        type="checkbox"
                        {% if t and t.email_completion_file == 1 %}checked="checked"{% endif %} />
-                <label for="send_output_check">
-                    Attach output file to email?
-                </label>
+                <label for="send_output_check">Attach output file to email?</label>
                 <input type="hidden"
                        name="task_send_output"
                        value="{%- if t and t.email_completion_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -420,9 +377,7 @@
                        id="task_dont_send_empty"
                        type="checkbox"
                        {% if t and t.email_completion_dont_send_empty_file == 1 %}checked="checked"{% endif %} />
-                <label for="task_dont_send_empty">
-                    Don't email if file is empty?
-                </label>
+                <label for="task_dont_send_empty">Don't email if file is empty?</label>
                 <input type="hidden"
                        name="task_dont_send_empty"
                        value="{%- if t and t.email_completion_dont_send_empty_file == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -433,9 +388,7 @@
                        id="task_embed_output"
                        type="checkbox"
                        {% if t and t.email_completion_file_embed == 1 %}checked="checked"{% endif %} />
-                <label for="task_embed_output">
-                    Embed file in email body?
-                </label>
+                <label for="task_embed_output">Embed file in email body?</label>
                 <input type="hidden"
                        name="task_embed_output"
                        value="{%- if t and t.email_completion_file_embed == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -449,9 +402,7 @@
                data-target="task-destinationErrorEmail"
                type="checkbox"
                {% if t and t.email_error == 1 %}checked="checked"{% endif %} />
-        <label for="send_error_email_check">
-            Send Error Email?
-        </label>
+        <label for="send_error_email_check">Send Error Email?</label>
         <input type="hidden"
                name="task_send_error_email"
                value="{%- if t and t.email_error == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
@@ -460,33 +411,23 @@
              {% if not t or (t and t.email_error != 1) %}
                  style="display:none;"
              {% endif %}>
-        <p class="message-header">
-            Error Email Settings
-        </p>
+        <p class="message-header">Error Email Settings</p>
         <div class="message-body has-background-white has-text-dark">
-            <h3 class="title is-3">
-                Error Email
-            </h3>
+            <h3 class="title is-3">Error Email</h3>
             <!-- email recip and message -->
             <div class="field">
-                <label class="label" data-docs="tasks#email">
-                    Error Destination (separate addresses with ";")
-                </label>
+                <label class="label" data-docs="tasks#email">Error Destination (separate addresses with ";")</label>
                 <input class="input"
                        name="errorEmailRecip"
                        autocomplete="off"
                        value="{{ t.email_error_recipients or '' }}" />
             </div>
             <div class="field">
-                <label class="label">
-                    Error Message
-                </label>
+                <label class="label">Error Message</label>
                 <textarea class="textarea" name="errorEmailMsg" autocomplete="off">{{ t.email_error_message or '' }}</textarea>
             </div>
             <article class="message is-warning">
-                <div class="message-body">
-                    Run log will be included in error emails.
-                </div>
+                <div class="message-body">Run log will be included in error emails.</div>
             </article>
         </div>
     </article>
@@ -496,9 +437,7 @@
                id="task-ooff"
                type="checkbox"
                {% if not t or t.enabled == 1 %}checked="checked"{% endif %} />
-        <label for="task-ooff">
-            Enable task
-        </label>
+        <label for="task-ooff">Enable task</label>
         <input type="hidden"
                name="task-ooff"
                value="{%- if not t or t.enabled == 1 -%}1{%- else -%}0{%- endif -%}" />
