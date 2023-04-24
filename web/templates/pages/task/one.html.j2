@@ -189,9 +189,7 @@
                     <span class="icon is-small">
                         <i class="fas fa-terminal" aria-hidden="true"></i>
                     </span>
-                    <span>
-                        Logs
-                    </span>
+                    <span>Logs</span>
                 </a>
             </li>
             <li>
@@ -199,9 +197,7 @@
                     <span class="icon is-small">
                         <i class="fas fa-file-arrow-down" aria-hidden="true"></i>
                     </span>
-                    <span>
-                        Files
-                    </span>
+                    <span>Files</span>
                 </a>
             </li>
         </ul>
@@ -215,15 +211,13 @@
         <div class="tab-dta mb-5" id="tasklog">
             <div class="em-ajaxLogs"
                  data-src="{{ url_for('table_bp.task_log', task_id=t.id) }}">
-                <div class="loader">
-                </div>
+                <div class="loader"></div>
             </div>
         </div>
         <div class="tab-dta mb-5" id="taskfile">
             <div class="em-ajaxTable"
                  data-src="{{ url_for('table_bp.one_task_files', task_id=t.id) }}">
-                <div class="loader">
-                </div>
+                <div class="loader"></div>
             </div>
         </div>
     </div>

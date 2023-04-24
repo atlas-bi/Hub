@@ -212,16 +212,12 @@
                     {% if s.path %}
                         <br />
                         Path:
-                        <span class="tag is-light">
-                            {{ s.path|clean_path or "/" }}
-                        </span>
+                        <span class="tag is-light">{{ s.path|clean_path or "/" }}</span>
                     {% endif %}
                     {% if s.username %}
                         <br />
                         Username:
-                        <span class="tag is-light">
-                            {{ s.username }}
-                        </span>
+                        <span class="tag is-light">{{ s.username }}</span>
                     {% endif %}
                     {% if s.password %}
                         <br />
@@ -242,9 +238,7 @@
                                 <span class="icon icon-sm">
                                     <i class="fas fa-copy"></i>
                                 </span>
-                                <span>
-                                    Copy
-                                </span>
+                                <span>Copy</span>
                             </a>
                         </span>
                     {% endif %}
@@ -258,21 +252,16 @@
     {% endif %}
     {% if connection.ftp|length > 0 %}
         <div class="box">
-            <h2 class="title is-2">
-                FTP Connections
-            </h2>
+            <h2 class="title is-2">FTP Connections</h2>
             {% for s in connection.ftp %}
                 <div class="columns">
                     <div class="column is-narrow">
-                        <h3 class="title is-3">
-                            {{ s }}
-                        </h3>
+                        <h3 class="title is-3">{{ s }}</h3>
                     </div>
                     <div class="column">
                         <div class="em-ajaxContent is-inline"
                              data-src="{{ url_for('connection_bp.ftp_online',ftp_id=s.id) }}">
-                            <div class="loader">
-                            </div>
+                            <div class="loader"></div>
                         </div>
                     </div>
                 </div>
@@ -284,9 +273,7 @@
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
-                            <span>
-                                Edit
-                            </span>
+                            <span>Edit</span>
                         </a>
                     </p>
                     <p class="control">
@@ -297,30 +284,22 @@
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
                             </span>
-                            <span>
-                                Delete
-                            </span>
+                            <span>Delete</span>
                         </a>
                     </p>
                 </div>
                 <div class="content">
                     Address:
-                    <span class="tag is-light">
-                        {{ s.address or "unknown" }}
-                    </span>
+                    <span class="tag is-light">{{ s.address or "unknown" }}</span>
                     {% if s.path %}
                         <br />
                         Path:
-                        <span class="tag is-light">
-                            {{ s.path|clean_path or "/" }}
-                        </span>
+                        <span class="tag is-light">{{ s.path|clean_path or "/" }}</span>
                     {% endif %}
                     {% if s.username %}
                         <br />
                         Username:
-                        <span class="tag is-light">
-                            {{ s.username }}
-                        </span>
+                        <span class="tag is-light">{{ s.username }}</span>
                     {% endif %}
                     {% if s.password %}
                         <br />
@@ -341,9 +320,7 @@
                                 <span class="icon icon-sm">
                                     <i class="fas fa-copy"></i>
                                 </span>
-                                <span>
-                                    Copy
-                                </span>
+                                <span>Copy</span>
                             </a>
                         </span>
                     {% endif %}
@@ -353,21 +330,16 @@
     {% endif %}
     {% if connection.smb|length > 0 %}
         <div class="box">
-            <h2 class="title is-2">
-                SMB Connections
-            </h2>
+            <h2 class="title is-2">SMB Connections</h2>
             {% for s in connection.smb %}
                 <div class="columns">
                     <div class="column is-narrow">
-                        <h3 class="title is-3">
-                            {{ s }}
-                        </h3>
+                        <h3 class="title is-3">{{ s }}</h3>
                     </div>
                     <div class="column">
                         <div class="em-ajaxContent is-inline"
                              data-src="{{ url_for('connection_bp.smb_online',smb_id=s.id) }}">
-                            <div class="loader">
-                            </div>
+                            <div class="loader"></div>
                         </div>
                     </div>
                 </div>
@@ -379,9 +351,7 @@
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
-                            <span>
-                                Edit
-                            </span>
+                            <span>Edit</span>
                         </a>
                     </p>
                     <p class="control">
@@ -392,40 +362,28 @@
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
                             </span>
-                            <span>
-                                Delete
-                            </span>
+                            <span>Delete</span>
                         </a>
                     </p>
                 </div>
                 <div class="content">
                     Server Name:
-                    <span class="tag is-light">
-                        {{ s.server_name or "unknown" }}
-                    </span>
+                    <span class="tag is-light">{{ s.server_name or "unknown" }}</span>
                     <br />
                     Server IP:
-                    <span class="tag is-light">
-                        {{ s.server_ip or "unknown" }}
-                    </span>
+                    <span class="tag is-light">{{ s.server_ip or "unknown" }}</span>
                     <br />
                     Share Name:
-                    <span class="tag is-light">
-                        {{ s.share_name or "unknown" }}
-                    </span>
+                    <span class="tag is-light">{{ s.share_name or "unknown" }}</span>
                     {% if s.path %}
                         <br />
                         Path:
-                        <span class="tag is-light">
-                            {{ s.path|clean_path or "/" }}
-                        </span>
+                        <span class="tag is-light">{{ s.path|clean_path or "/" }}</span>
                     {% endif %}
                     {% if s.username %}
                         <br />
                         Username:
-                        <span class="tag is-light">
-                            {{ s.username }}
-                        </span>
+                        <span class="tag is-light">{{ s.username }}</span>
                     {% endif %}
                     {% if s.password %}
                         <br />
@@ -446,9 +404,7 @@
                                 <span class="icon icon-sm">
                                     <i class="fas fa-copy"></i>
                                 </span>
-                                <span>
-                                    Copy
-                                </span>
+                                <span>Copy</span>
                             </a>
                         </span>
                     {% endif %}
@@ -458,21 +414,16 @@
     {% endif %}
     {% if connection.ssh|length > 0 %}
         <div class="box">
-            <h2 class="title is-2">
-                SSH Connections
-            </h2>
+            <h2 class="title is-2">SSH Connections</h2>
             {% for s in connection.ssh %}
                 <div class="columns">
                     <div class="column is-narrow">
-                        <h3 class="title is-3">
-                            {{ s }}
-                        </h3>
+                        <h3 class="title is-3">{{ s }}</h3>
                     </div>
                     <div class="column">
                         <div class="em-ajaxContent is-inline"
                              data-src="{{ url_for('connection_bp.ssh_online',ssh_id=s.id) }}">
-                            <div class="loader">
-                            </div>
+                            <div class="loader"></div>
                         </div>
                     </div>
                 </div>
@@ -484,9 +435,7 @@
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
-                            <span>
-                                Edit
-                            </span>
+                            <span>Edit</span>
                         </a>
                     </p>
                     <p class="control">
@@ -497,30 +446,22 @@
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
                             </span>
-                            <span>
-                                Delete
-                            </span>
+                            <span>Delete</span>
                         </a>
                     </p>
                 </div>
                 <div class="content">
                     Address:
-                    <span class="tag is-light">
-                        {{ s.address or "unknown" }}:{{ s.port or '22' }}
-                    </span>
+                    <span class="tag is-light">{{ s.address or "unknown" }}:{{ s.port or '22' }}</span>
                     {% if s.path %}
                         <br />
                         Path:
-                        <span class="tag is-light">
-                            {{ s.path|clean_path or "/" }}
-                        </span>
+                        <span class="tag is-light">{{ s.path|clean_path or "/" }}</span>
                     {% endif %}
                     {% if s.username %}
                         <br />
                         Username:
-                        <span class="tag is-light">
-                            {{ s.username }}
-                        </span>
+                        <span class="tag is-light">{{ s.username }}</span>
                     {% endif %}
                     {% if s.password %}
                         <br />
@@ -541,9 +482,7 @@
                                 <span class="icon icon-sm">
                                     <i class="fas fa-copy"></i>
                                 </span>
-                                <span>
-                                    Copy
-                                </span>
+                                <span>Copy</span>
                             </a>
                         </span>
                     {% endif %}
@@ -557,13 +496,9 @@
     {% endif %}
     {% if connection.gpg|length > 0 %}
         <div class="box">
-            <h2 class="title is-2">
-                GPG Connections
-            </h2>
+            <h2 class="title is-2">GPG Connections</h2>
             {% for s in connection.gpg %}
-                <h3 class="title is-3">
-                    {{ s }}
-                </h3>
+                <h3 class="title is-3">{{ s }}</h3>
                 <div class="field has-addons">
                     <p class="control">
                         <a class="button"
@@ -572,9 +507,7 @@
                             <span class="icon">
                                 <i class="fas fa-pen-to-square"></i>
                             </span>
-                            <span>
-                                Edit
-                            </span>
+                            <span>Edit</span>
                         </a>
                     </p>
                     <p class="control">
@@ -585,9 +518,7 @@
                             <span class="icon">
                                 <i class="fas fa-trash"></i>
                             </span>
-                            <span>
-                                Delete
-                            </span>
+                            <span>Delete</span>
                         </a>
                     </p>
                 </div>
@@ -600,13 +531,10 @@
             {% endfor %}
         </div>
     {% endif %}
-    <h2 class="title is-2">
-        Tasks using this destination
-    </h2>
+    <h2 class="title is-2">Tasks using this destination</h2>
     <!-- ajax table -->
     <div class="em-ajaxTable mb-5"
          data-src="{{ url_for('table_bp.connection_tasks', connection_id=connection.id) }}">
-        <div class="loader">
-        </div>
+        <div class="loader"></div>
     </div>
 {% endblock body %}

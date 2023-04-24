@@ -163,21 +163,13 @@
         </div>
     {% else %}
         <article class="message is-danger">
-            <div class="message-body">
-                Project has no run schedule!
-            </div>
+            <div class="message-body">Project has no run schedule!</div>
         </article>
     {% endif %}
     {% if p.params %}
         <div class="box">
-            <h2 class="title is-2">
-                Global Parameters
-            </h2>
-            {% if has_secrets %}
-                <button class="button show-params mb-0" type="button">
-                    Toggle Sensitive Values
-                </button>
-            {% endif %}
+            <h2 class="title is-2">Global Parameters</h2>
+            {% if has_secrets %}<button class="button show-params mb-0" type="button">Toggle Sensitive Values</button>{% endif %}
             <pre class="box param-preview mb-0"><code class="language-ini">
 {%- for param in p.params -%}
 {{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{param.value|decrypt}}{% endif %}
@@ -191,9 +183,7 @@
         </div>
     {% endif %}
     <div class="box">
-        <h2 class="title is-2">
-            Tasks
-        </h2>
+        <h2 class="title is-2">Tasks</h2>
         <div class="field has-addons">
             <p class="control">
                 <a class="button"
@@ -202,9 +192,7 @@
                     <span class="icon">
                         <i class="fas fa-plus"></i>
                     </span>
-                    <span>
-                        New
-                    </span>
+                    <span>New</span>
                 </a>
             </p>
             <p class="control">
@@ -214,9 +202,7 @@
                     <span class="icon">
                         <i class="fas fa-toggle-off"></i>
                     </span>
-                    <span>
-                        Disable All
-                    </span>
+                    <span>Disable All</span>
                 </a>
             </p>
             <p class="control">
@@ -226,9 +212,7 @@
                     <span class="icon">
                         <i class="fas fa-toggle-on"></i>
                     </span>
-                    <span>
-                        Enable All
-                    </span>
+                    <span>Enable All</span>
                 </a>
             </p>
             <p class="control">
@@ -238,17 +222,14 @@
                     <span class="icon">
                         <i class="far fa-circle-play"></i>
                     </span>
-                    <span>
-                        Run All
-                    </span>
+                    <span>Run All</span>
                 </a>
             </p>
         </div>
         <div class="em-ajaxTable no-tools no-box"
              data-theme="Exec"
              data-src="{{ url_for('table_bp.project_all_tasks', project_id=p.id) }}">
-            <div class="loader">
-            </div>
+            <div class="loader"></div>
         </div>
     </div>
 {% endblock body %}
