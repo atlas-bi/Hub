@@ -29,7 +29,7 @@ def create_app() -> Flask:
     # pylint: disable=W0621
     app = Flask(__name__)
 
-    app.config["ENV"] = os.environ["FLASK_ENV"]
+    app.config["ENV"] = os.environ.get("FLASK_ENV", "production")
 
     if app.config["ENV"] == "development":
         try:
