@@ -15,7 +15,8 @@
     "npm:unpublishSafe"
   ],
   "ignoreDeps": [
-    "mypy"
+    "mypy",
+    "python"
   ],
   "labels": [
     "maintenance",
@@ -26,7 +27,9 @@
       "automerge": true,
       "matchUpdateTypes": [
         "pin",
-        "digest"
+        "digest",
+        "minor",
+        "patch"
       ]
     },
     {
@@ -44,12 +47,6 @@
       "automerge": true,
       "extends": "packages:test",
       "groupName": "test packages"
-    },
-    {
-      "automerge": true,
-      "matchDepTypes": [
-        "devDependencies"
-      ]
     }
   ],
   "pre-commit": {
