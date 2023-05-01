@@ -44,6 +44,7 @@ Database model should be cloned from `web` before running app.
 
 import contextlib
 import logging
+import os
 
 from apscheduler.schedulers import SchedulerAlreadyRunningError
 from flask import Flask, jsonify, make_response
@@ -56,6 +57,8 @@ def create_app() -> Flask:
     """Create task runner app."""
     # pylint: disable=W0621
     app = Flask(__name__)
+
+    app.config["ENV"] = os.environ["FLASK_ENV"]
 
     if app.config["ENV"] == "development":
         try:

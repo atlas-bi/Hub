@@ -35,6 +35,7 @@ Database model should be cloned from `web` before running app.
 
 """
 import logging
+import os
 
 from flask import Flask
 
@@ -47,6 +48,7 @@ def create_app() -> Flask:
     """Create task runner app."""
     # pylint: disable=W0621
     app = Flask(__name__)
+    app.config["ENV"] = os.environ["FLASK_ENV"]
 
     if app.config["ENV"] == "development":
         try:

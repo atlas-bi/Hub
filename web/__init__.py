@@ -21,12 +21,15 @@ from flask import Flask, render_template  # isort:skip
 sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
 sys.path.append(str(Path(__file__).parents[2]))
 from error_print import full_stack  # isort:skip
+import os
 
 
 def create_app() -> Flask:
     """Create app."""
     # pylint: disable=W0621
     app = Flask(__name__)
+
+    app.config["ENV"] = os.environ["FLASK_ENV"]
 
     if app.config["ENV"] == "development":
         try:
