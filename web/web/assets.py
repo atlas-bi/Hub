@@ -35,7 +35,7 @@ js = Bundle(
 web_assets.register("codemirror", js)
 
 js = Bundle(
-    "./lib/flatpickr/flatpickr.js",
+    # "./lib/flatpickr/flatpickr.js",
     "./js/base.js",
     "./js/ajax.js",
     "./lib/prism/prism.js",
@@ -60,7 +60,12 @@ js = Bundle(
 )
 web_assets.register("scroll", js)
 
-
+js = Bundle(
+    "./lib/flatpickr/flatpickr.js",
+    filters=("uglifyjs"),
+    output="js/flatpickr.min.js",
+)
+web_assets.register("js_flatpickr", js)
 js = Bundle(
     "./lib/table/table.js",
     "./lib/table/logs.js",

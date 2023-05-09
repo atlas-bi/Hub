@@ -89,9 +89,7 @@
                value="{%- if t and t.destination_create_zip == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <article class="p-0 message box is-info task-destinationZip"
-             {% if not t or (t and t.destination_create_zip != 1) %}
-                 style="display:none;"
-             {% endif %}>
+             {% if not t or (t and t.destination_create_zip != 1) %}style="display:none;"{% endif %}>
         <p class="message-header">Zip Details</p>
         <div class="message-body has-background-white has-text-dark">
             <label class="label">Zip Archive Name</label>
@@ -115,9 +113,7 @@
                value="{%- if t and t.file_gpg == 1 -%}1{%- else -%}0{%- endif -%}" />
     </div>
     <article class="p-0 message box is-info task-destinationGpg"
-             {% if not t or (t and t.file_gpg != 1) %}
-                 style="display:none;"
-             {% endif %}>
+             {% if not t or (t and t.file_gpg != 1) %}style="display:none;"{% endif %}>
         <p class="message-header">File Encryption</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
@@ -153,9 +149,7 @@
                value="{%- if t and t.destination_sftp == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <article class="p-0 message box is-info task-destinationSftp"
-             {% if not t or (t and t.destination_sftp != 1) %}
-                 style="display:none;"
-             {% endif %}>
+             {% if not t or (t and t.destination_sftp != 1) %}style="display:none;"{% endif %}>
         <p class="message-header">SFTP Location</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
@@ -216,9 +210,7 @@
                value="{%- if t and t.destination_smb == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <article class="p-0 message box is-info task-destinationSmb"
-             {% if not t or (t and t.destination_smb != 1) %}
-                 style="display:none;"
-             {% endif %}>
+             {% if not t or (t and t.destination_smb != 1) %}style="display:none;"{% endif %}>
         <p class="message-header">SMB (Network Folder) Location</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
@@ -274,9 +266,7 @@
                value="{%- if t and t.destination_ftp == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <article class="p-0 message box is-info task-destinationFtp"
-             {% if not t or (t and t.destination_ftp != 1) %}
-                 style="display:none;"
-             {% endif %}>
+             {% if not t or (t and t.destination_ftp != 1) %}style="display:none;"{% endif %}>
         <p class="message-header">FTP Location</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
@@ -333,9 +323,7 @@
                value="{%- if t and t.email_completion == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <article class="p-0 message box is-info task-destinationEmail"
-             {% if not t or (t and t.email_completion != 1) %}
-                 style="display:none;"
-             {% endif %}>
+             {% if not t or (t and t.email_completion != 1) %}style="display:none;"{% endif %}>
         <p class="message-header">Success Email Settings</p>
         <div class="message-body has-background-white has-text-dark">
             <div class="field">
@@ -408,9 +396,7 @@
                value="{%- if t and t.email_error == 1 -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
     <article class="p-0 message box is-info task-destinationErrorEmail"
-             {% if not t or (t and t.email_error != 1) %}
-                 style="display:none;"
-             {% endif %}>
+             {% if not t or (t and t.email_error != 1) %}style="display:none;"{% endif %}>
         <p class="message-header">Error Email Settings</p>
         <div class="message-body has-background-white has-text-dark">
             <h3 class="title is-3">Error Email</h3>
