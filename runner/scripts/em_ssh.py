@@ -102,7 +102,7 @@ class Ssh:
             )
             # pylint: disable=W0612
             stdin, stdout, stderr = self.session.exec_command(  # noqa: S601
-                self.command, timeout=timeout
+                ";".join(self.command.splitlines()), timeout=timeout
             )
 
             channel = stdout.channel
