@@ -122,7 +122,7 @@ class PyProcesser:
             if len(requirements_text) > 0:
                 cmd = (
                     f'"{self.env_path}/bin/pip" install --disable-pip-version-check --quiet -r '
-                    + " -r ".join([f'"{str(x.resolve())}"' for x in requirements_text])
+                    + " -r ".join([f'"{x.resolve()}"' for x in requirements_text])
                 )
                 Cmd(
                     task=self.task,
@@ -312,7 +312,7 @@ class PyProcesser:
             env += f"TASK='{json.dumps(self.task)}' "
 
             # if data files exist, pass them as a param.
-            env += f"CONNECTION='{str(json.dumps(connection))}' " if connection else ""
+            env += f"CONNECTION='{json.dumps(connection)}' " if connection else ""
 
             # create environment from params
             env += ("").join(

@@ -115,7 +115,7 @@ def project_list(my_type: str = "all") -> Response:
             status_icon = '<span class="ml-0 mr-3 icon has-text-grey"><i class="fas fa-circle-question"></i></span>'
         me.append(
             {
-                "Name": f'{status_icon}<a  href="/project/{str(proj["Project Id"])}">{proj["Name"]}</a>',
+                "Name": f'{status_icon}<a  href="/project/{proj["Project Id"]}">{proj["Name"]}</a>',
                 "Last Run": relative_to_now(proj["Last Run"])
                 if proj["Last Run"]
                 else "",
