@@ -78,7 +78,7 @@ classifiers = [
   "Natural Language :: English"
 ]
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
-documentation = "https://www.atlas.bi/docs/automation-hub/"
+documentation = "https://www.atlas.bi/docs/hub/"
 homepage = "https://atlas-hub.atlas.bi"
 keywords = [
   "Atlas Automation Hub",
@@ -96,7 +96,7 @@ packages = [
   {include = "runner"}
 ]
 readme = "readme.md"
-repository = "https://github.com/atlas-bi/atlas-automation-hub"
+repository = "https://github.com/atlas-bi/Hub"
 version = "2.9.0-alpha.1"
 
 [tool.poetry.dependencies]
