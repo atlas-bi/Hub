@@ -22,7 +22,7 @@ python3 -c "from installers import build_secrets; build_secrets()"
 install_configuration
 
 # download app
-python3 -c "from installers import download; download(\"https://github.com/atlas-bi/atlas-automation-hub/archive/refs/tags/v$VERSION.tar.gz\", \"Atlas Hub $VERSION\", \"app.tar.gz\")"
+python3 -c "from installers import download; download(\"https://github.com/atlas-bi/Hub/archive/refs/tags/v$VERSION.tar.gz\", \"Atlas Hub $VERSION\", \"app.tar.gz\")"
 tar -f "app.tar.gz" -xz  -C .
 rm "app.tar.gz"
 echo atlas-automation-hub-* | xargs -n1 -i mv {} "app"
@@ -92,6 +92,6 @@ postgres_default_user
 echo ""
 fmt_green "Thanks for installing Atlas Automation Hub!"
 echo ""
-fmt_green "Read the full install guide at https://www.atlas.bi/docs/automation-hub/"
+fmt_green "Read the full install guide at https://www.atlas.bi/docs/hub/"
 
 recommendations

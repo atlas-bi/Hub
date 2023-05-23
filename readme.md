@@ -3,33 +3,33 @@
 <h1 align="center">
     <br>
     <a href="https://www.atlas.bi">
-        <img alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/atlas-automation-hub/master/share/logo.png" width=520 />
+        <img alt="atlas logo" src="https://raw.githubusercontent.com/atlas-bi/Hub/master/share/logo.png" width=520 />
     </a>
     <br>
 </h1>
 
-<h4 align="center">Atlas Automation Hub | A simple extract, batch job and script scheduler.</h4>
+<h4 align="center">Atlas Hub | A simple extract, batch job and script scheduler.</h4>
 
 <p align="center">
-    <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://atlas-hub.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/automation-hub/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
+    <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://atlas-hub.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/hub/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
 </p>
 
 <p align="center">
-Atlas Automation Hub is a task scheduling tool for getting data from a source and depositing it in a destination - sql servers to SFTP servers.
+Atlas Hub is a task scheduling tool for getting data from a source and depositing it in a destination - sql servers to SFTP servers.
 </p>
 
 <p align="center">
-    <a href="https://www.codacy.com/gh/atlas-bi/atlas-automation-hub/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/atlas-automation-hub&amp;utm_campaign=Badge_Grade" target="_blank"><img alt="codacy badge" src="https://app.codacy.com/project/badge/Grade/4fcece7632434b7a98902bc1c02fed80" /></a>
-<a href="https://codecov.io/gh/atlas-bi/atlas-automation-hub" target="_blank">
-  <img alt="coverage badge" src="https://codecov.io/gh/atlas-bi/atlas-automation-hub/branch/main/graph/badge.svg"/>
+    <a href="https://www.codacy.com/gh/atlas-bi/Hub/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/Hub&amp;utm_campaign=Badge_Grade" target="_blank"><img alt="codacy badge" src="https://app.codacy.com/project/badge/Grade/4fcece7632434b7a98902bc1c02fed80" /></a>
+<a href="https://codecov.io/gh/atlas-bi/Hub" target="_blank">
+  <img alt="coverage badge" src="https://codecov.io/gh/atlas-bi/Hub/branch/main/graph/badge.svg"/>
 </a>
-<a href="https://github.com/atlas-bi/atlas-automation-hub/actions/workflows/test.yml" target="_blank"><img src="https://github.com/atlas-bi/atlas-automation-hub/actions/workflows/test.yml/badge.svg" /></a>
+<a href="https://github.com/atlas-bi/Hub/actions/workflows/test.yml" target="_blank"><img src="https://github.com/atlas-bi/Hub/actions/workflows/test.yml/badge.svg" /></a>
 <a href="https://discord.gg/hdz2cpygQD"><img alt="discord chat" src="https://badgen.net/discord/online-members/hdz2cpygQD/" /></a>
-<a href="https://github.com/atlas-bi/atlas-automation-hub/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/atlas-automation-hub" /></a>
+<a href="https://github.com/atlas-bi/Hub/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/Hub" /></a>
 </p>
 
 <p align="center">
-    <img alt="demo" src="https://www.atlas.bi/static/img/automation-hub/dashboard.png" width=520 />
+    <img alt="demo" src="https://www.atlas.bi/static/img/hub/dashboard.png" width=520 />
 </p>
 
 ## :thinking: What Can It Do?
@@ -54,7 +54,7 @@ Possibilities are almost unlimited....
 
 ## :runner: Start It Up
 
-Atlas Automation Hub can be run locally. We use pyenv and poetry to manage the project dependencies. Assuming you will too -
+Atlas Hub can be run locally. We use pyenv and poetry to manage the project dependencies. Assuming you will too -
 
 ```bash
 pyenv local 3.9.0
@@ -93,11 +93,11 @@ Final, simply run the tests with `tox`.
 
 ## :rocket: Install
 
-Atlas Hub is built for linux and only takes [three commands](https://www.atlas.bi/docs/automation-hub/install/) to install.
+Atlas Hub is built for linux and only takes [three commands](https://www.atlas.bi/docs/hub/install/) to install.
 
 ## :gift: Contributing
 
-Contributions are welcome! Please open an [issue](https://github.com/atlas-bi/atlas-automation-hub/issues) describing an issue or feature.
+Contributions are welcome! Please open an [issue](https://github.com/atlas-bi/Hub/issues) describing an issue or feature.
 
 This repository uses commitizen. Commit code changes for pr's with `npm run commit`.
 
@@ -110,5 +110,5 @@ Atlas was originally created by the Riverside Healthcare Analytics team. See the
 
 Special thanks to a few other tools used here.
 
-<img src="https://badgen.net/badge/icon/gitguardian?icon=gitguardian&label" alt="gitguardian"> <img src="https://img.shields.io/badge/renovate-configured-green?logo=renovatebot" alt="renovate"> <a href="https://snyk.io/test/github/atlas-bi/atlas-automation-hub"><img src="https://snyk.io/test/github/atlas-bi/atlas-automation-hub/badge.svg" alt="snyk" /></a> <a href="https://sonarcloud.io/summary/new_code?id=atlas-bi_atlas-automation-hub"><img src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_atlas-automation-hub&metric=alert_status" alt="quality gate sonar" /></a> <a href="http://commitizen.github.io/cz-cli/"><a src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg" alt="commitizen"></a>
+<img src="https://badgen.net/badge/icon/gitguardian?icon=gitguardian&label" alt="gitguardian"> <img src="https://img.shields.io/badge/renovate-configured-green?logo=renovatebot" alt="renovate"> <a href="https://snyk.io/test/github/atlas-bi/Hub"><img src="https://snyk.io/test/github/atlas-bi/Hub/badge.svg" alt="snyk" /></a> <a href="https://sonarcloud.io/summary/new_code?id=atlas-bi_Hub"><img src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_Hub&metric=alert_status" alt="quality gate sonar" /></a> <a href="http://commitizen.github.io/cz-cli/"><a src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg" alt="commitizen"></a>
 <a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release" /></a>

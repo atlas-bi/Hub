@@ -12,11 +12,11 @@
     ":enableVulnerabilityAlertsWithLabel(security)",
     ":rebaseStalePrs",
     ":npm",
-    "npm:unpublishSafe"
+    "npm:unpublishSafe",
+    "docker:disable"
   ],
   "ignoreDeps": [
-    "mypy",
-    "python"
+    "mypy"
   ],
   "labels": [
     "maintenance",

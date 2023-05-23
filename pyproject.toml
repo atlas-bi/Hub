@@ -78,7 +78,7 @@ classifiers = [
   "Natural Language :: English"
 ]
 description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
-documentation = "https://www.atlas.bi/docs/automation-hub/"
+documentation = "https://www.atlas.bi/docs/hub/"
 homepage = "https://atlas-hub.atlas.bi"
 keywords = [
   "Atlas Automation Hub",
@@ -96,8 +96,8 @@ packages = [
   {include = "runner"}
 ]
 readme = "readme.md"
-repository = "https://github.com/atlas-bi/atlas-automation-hub"
-version = "2.9.0"
+repository = "https://github.com/atlas-bi/Hub"
+version = "2.9.0-alpha.1"
 
 [tool.poetry.dependencies]
 Flask = "^2.0.1"
@@ -113,7 +113,7 @@ Flask-SQLAlchemy = "^3.0.0"
 Flask-SQLAlchemy-Caching = "^1.0.4"
 Flask-Script = "^2.0.6"
 Jinja2 = "^3.0.1"
-SQLAlchemy = "2.0.11"
+SQLAlchemy = "2.0.13"
 SQLAlchemy-Utils = "^0.41.0"
 bs4 = "^0.0.1"
 cryptography = "^40.0.0"
@@ -160,7 +160,7 @@ pre-commit = "^3.0.0"
 pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 radon = "^6.0.0"
-ruff = "^0.0.263"
+ruff = "^0.0.267"
 toml = "^0.10.2"
 tox = "^4.0.8"
 types-flask = "^1.1.6"

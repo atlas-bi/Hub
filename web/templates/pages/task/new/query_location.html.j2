@@ -178,9 +178,7 @@
         <input class="is-checkradio is-info"
                id="task_include_query_headers"
                type="checkbox"
-               {% if not t or (t and t.source_query_include_header == 1) %}
-                   checked="checked"
-               {% endif %} />
+               {% if not t or (t and t.source_query_include_header == 1) %}checked="checked"{% endif %} />
         <label for="task_include_query_headers">Include Query Headers?</label>
         <input type="hidden"
                name="task_include_query_headers"
@@ -193,9 +191,7 @@
         <input class="is-checkradio is-info"
                id="task_enable_source_cache"
                type="checkbox"
-               {% if not t or (t and t.enable_source_cache == 1) %}
-                   checked="checked"
-               {% endif %} />
+               {% if not t or (t and t.enable_source_cache == 1) %}checked="checked"{% endif %} />
         <label for="task_enable_source_cache">Enable Query Cache?</label>
         <input type="hidden"
                name="task_enable_source_cache"
@@ -208,9 +204,7 @@
         <input class="is-checkradio is-info"
                id="task_require_sql_output"
                type="checkbox"
-               {% if not t or (t and t.source_require_sql_output == 1) %}
-                   checked="checked"
-               {% endif %} />
+               {% if not t or (t and t.source_require_sql_output == 1) %}checked="checked"{% endif %} />
         <label for="task_require_sql_output">Require query output?</label>
         <input type="hidden"
                name="task_require_sql_output"
