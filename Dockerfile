@@ -1,7 +1,7 @@
 # needs a DATABASE_URL and REDIS_URL to be set
 
 # setup python
-FROM python:3.10-alpine3.15 as python_install
+FROM python:3.11-alpine3.15 as python_install
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -22,7 +22,7 @@ RUN wget -O - https://install.python-poetry.org | python3 - \
  && poetry install --no-root --only main
 
 # build assets
-FROM python:3.10-alpine3.15 as assets
+FROM python:3.11-alpine3.15 as assets
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -51,7 +51,7 @@ RUN cp web/model.py scheduler/ && cp web/model.py runner/ \
  && flask cli reset_db && flask db upgrade && flask cli seed && flask cli seed_demo
 
 # final app
-FROM python:3.10-alpine3.15
+FROM python:3.11-alpine3.15
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
