@@ -4,7 +4,7 @@
     <ul>
         {% if user %}
             <li>
-                <a href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+                <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
             </li>
             <li>
                 <a href="{{ url_for('project_bp.user_projects', user_id=user.id) }}">{{ user }}'s Projects</a>
@@ -14,7 +14,7 @@
             </li>
         {% else %}
             <li>
-                <a href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+                <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
             </li>
             <li class="is-active">
                 <a href="#">All Tasks</a>

@@ -3,7 +3,7 @@
 {% block crumbs %}
     <ul>
         <li>
-            <a href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+            <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
         </li>
         <li>
             <a href="{{ url_for('project_bp.user_projects', user_id=p.project_owner.id) }}">{{ p.project_owner }}'s Projects</a>
