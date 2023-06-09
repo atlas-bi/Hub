@@ -35,9 +35,9 @@
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "8.0.7",
+    "@semantic-release/github": "8.1.0",
     "@semantic-release/npm": "10.0.3",
-    "@semantic-release/release-notes-generator": "11.0.1",
+    "@semantic-release/release-notes-generator": "11.0.2",
     "browser-sync": "^2.29.1",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.42.0",
@@ -47,7 +47,7 @@
     "gulp-rename": "2.0.0",
     "gulp-uglify": "3.0.2",
     "prettier": "2.8.8",
-    "semantic-release": "21.0.2"
+    "semantic-release": "21.0.3"
   },
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
