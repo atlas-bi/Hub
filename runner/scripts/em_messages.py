@@ -89,18 +89,22 @@ class RunnerException(Exception):
                 )
                 raise
 
+            subject = "Error in Project: %s / Task: %s / Run: %s %s" % (
+                task.project.name,
+                task.name,
+                run_id,
+                date,
+            )
+
+            if task.email_error_subject:
+                subject = task.email_error_subject
+
             try:
                 Smtp(
                     task=task,
                     run_id=run_id,
                     recipients=task.email_error_recipients,
-                    subject="Error in Project: %s / Task: %s / Run: %s %s"
-                    % (
-                        task.project.name,
-                        task.name,
-                        run_id,
-                        date,
-                    ),
+                    subject=subject,
                     message=template.render(
                         task=task,
                         success=0,

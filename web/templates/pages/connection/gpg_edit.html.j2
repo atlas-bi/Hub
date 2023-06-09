@@ -3,7 +3,7 @@
 {% block crumbs %}
     <ul>
         <li>
-            <a href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+            <a href="{{ url_for("connection_bp.all_connections") }}">All Connections</a>
         </li>
         <li>
             <a href="{{ url_for('connection_bp.one_connection', connection_id=connection.id) }}">{{ connection }}</a>

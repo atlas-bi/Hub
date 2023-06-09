@@ -531,3 +531,29 @@ def task_database_source() -> str:
         database_source=dest,
         title="Connections",
     )
+
+
+@task_bp.route("/task/<task_id>/email_success_subject_preview")
+@login_required
+def email_success_subject_preview(task_id: int) -> str:
+    """Generate a task filename preview."""
+    try:
+        return requests.get(
+            f"{app.config['RUNNER_HOST']}/task/{task_id}/email_success_subject_preview",
+            timeout=60,
+        ).text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+
+
+@task_bp.route("/task/<task_id>/email_error_subject_preview")
+@login_required
+def email_error_subject_preview(task_id: int) -> str:
+    """Generate a task filename preview."""
+    try:
+        return requests.get(
+            f"{app.config['RUNNER_HOST']}/task/{task_id}/email_error_subject_preview",
+            timeout=60,
+        ).text
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'

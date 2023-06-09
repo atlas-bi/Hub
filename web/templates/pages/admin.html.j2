@@ -4,7 +4,7 @@
     <h1 class="title is-1">
         Admin Area
         <div class="em-ajaxContent is-inline is-pulled-right"
-             data-src="{{ url_for('admin_bp.version') }}"></div>
+             data-src="{{ url_for("admin_bp.version") }}"></div>
     </h1>
     <div class="box">
         <h2 class="title is-2">App Tasks</h2>
@@ -12,7 +12,7 @@
             <p class="control">
                 <a class="button"
                    title="Edit Project"
-                   href="{{ url_for('admin_bp.reset_tasks') }}">
+                   href="{{ url_for("admin_bp.reset_tasks") }}">
                     <span class="icon">
                         <i class="fas fa-rotate"></i>
                     </span>
@@ -21,7 +21,7 @@
             </p>
             <p class="control">
                 <a class="button"
-                   href="{{ url_for('admin_bp.reschedule_tasks') }}"
+                   href="{{ url_for("admin_bp.reschedule_tasks") }}"
                    title="resume all jobs">
                     <span class="icon">
                         <i class="fas fa-calendar"></i>
@@ -41,7 +41,7 @@
                 <div class="field has-addons">
                     <p class="control">
                         <a class="button"
-                           href="{{ url_for('admin_bp.pause_scheduler') }}"
+                           href="{{ url_for("admin_bp.pause_scheduler") }}"
                            title="pause scheduler">
                             <span class="icon">
                                 <i class="fas fa-circle-pause"></i>
@@ -51,7 +51,7 @@
                     </p>
                     <p class="control">
                         <a class="button"
-                           href="{{ url_for('admin_bp.resume_scheduler') }}"
+                           href="{{ url_for("admin_bp.resume_scheduler") }}"
                            title="resume scheduler">
                             <span class="icon">
                                 <i class="fas fa-circle-play"></i>
@@ -61,7 +61,7 @@
                     </p>
                     <p class="control">
                         <a class="button"
-                           href="{{ url_for('admin_bp.kill_scheduler') }}"
+                           href="{{ url_for("admin_bp.kill_scheduler") }}"
                            title="kill scheduler"
                            onclick="return confirm('Are you sure? Click Restart Web Service to start again.')">
                             <span class="icon">
@@ -98,12 +98,12 @@
     <div class="tab-cnt">
         <div class="tab-dta is-active" id="task_history">
             <div class="em-ajaxTable"
-                 data-src="{{ url_for('table_bp.tasklog_userevents') }}">
+                 data-src="{{ url_for("table_bp.tasklog_userevents") }}">
                 <div class="loader"></div>
             </div>
         </div>
         <div class="tab-dta" id="login_history">
-            <div class="em-ajaxTable" data-src="{{ url_for('table_bp.user_auth') }}">
+            <div class="em-ajaxTable" data-src="{{ url_for("table_bp.user_auth") }}">
                 <div class="loader"></div>
             </div>
         </div>
