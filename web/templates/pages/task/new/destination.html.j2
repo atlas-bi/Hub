@@ -334,6 +334,23 @@
                        value="{{ t.email_completion_recipients or '' }}" />
             </div>
             <div class="field">
+                <label class="label" data-docs="tasks#email">Subject</label>
+                <small>
+                    <span class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
+                         ">
+                        Wildcards and
+                        <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                        can be used in filenames.
+                    </span>
+                </small>
+                <input class="input"
+                       name="completionEmailSubject"
+                       autocomplete="off"
+                       placeholder="leave blank for default subject"
+                       value="{{ t.email_completion_subject or '' }}" />
+                <label class="label has-text-weight-normal"></label>
+            </div>
+            <div class="field">
                 <label class="label">Message</label>
                 <textarea class="textarea" name="completion_email_msg" autocomplete="off">{{ t.email_completion_message or '' }}</textarea>
             </div>
@@ -407,6 +424,14 @@
                        name="errorEmailRecip"
                        autocomplete="off"
                        value="{{ t.email_error_recipients or '' }}" />
+            </div>
+            <div class="field">
+                <label class="label" data-docs="tasks#email">Error Subject</label>
+                <input class="input"
+                       name="errorEmailSubject"
+                       placeholder="leave blank for default subject"
+                       autocomplete="off"
+                       value="{{ t.email_error_subject or '' }}" />
             </div>
             <div class="field">
                 <label class="label">Error Message</label>
