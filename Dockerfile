@@ -1,7 +1,7 @@
 # needs a DATABASE_URL and REDIS_URL to be set
 
 # setup python
-FROM python:3.11-alpine as python_install
+FROM python:3.11-alpine3.15 as python_install
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -22,7 +22,7 @@ RUN wget -O - https://install.python-poetry.org | python3 - \
  && poetry install --no-root --only main
 
 # build assets
-FROM python:3.11-alpine as assets
+FROM python:3.11-alpine3.15 as assets
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -42,15 +42,16 @@ COPY web ./web
 COPY runner ./runner
 COPY scheduler ./scheduler
 COPY scripts ./scripts
-COPY config.py pyproject.toml ./
+COPY config.py pyproject.toml package.json gulpfile.mjs rollup.config.mjs babel.config.js ./
 
 RUN cp web/model.py scheduler/ && cp web/model.py runner/ \
- && apk update && apk add --no-cache openldap-dev unixodbc-dev \
+ && apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm \
+ && npm install \
  && flask assets build \
  && flask cli reset_db && flask db upgrade && flask cli seed && flask cli seed_demo
 
 # final app
-FROM python:3.11-alpine
+FROM python:3.11-alpine3.15
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -62,11 +63,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 ARG DATABASE_URL \
     REDIS_URL
 
-RUN apk update && apk add --no-cache openldap-dev unixodbc-dev
+RUN apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm
 
 WORKDIR /app
 
 COPY --from=assets app ./
+
+RUN npm install
 
 EXPOSE $PORT
 CMD (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

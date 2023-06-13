@@ -70,7 +70,6 @@
         scroll_ajax.abort();
       }
       scroll_ajax = new XMLHttpRequest();
-
       scroll_ajax.open('get', url + '?lt=' + log_id_min, true);
       scroll_ajax.send();
 
@@ -107,7 +106,7 @@
       'scroll',
       debounce(() => {
         loader(container, url);
-      }, 10),
+      }, 100),
     );
 
     box.appendChild(container);
@@ -451,6 +450,6 @@
         });
       }
     }
-    loader(container, url);
+    // loader(container, url);
   }
 })((window.rhcTable = window.rhcTable || {}));

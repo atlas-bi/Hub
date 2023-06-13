@@ -1,7 +1,7 @@
 <nav class="navbar is-transparent atlas-navbar has-shadow">
     <div class="container">
         <div class="navbar-brand">
-            <a class="navbar-item mr-5" href="{{ url_for('dashboard_bp.dash') }}">
+            <a class="navbar-item mr-5" href="{{ url_for("dashboard_bp.dash") }}">
                 <img src="{{ url_for('static', filename='img/hub-logo.png') }}"
                      width="235"
                      height="50"
@@ -27,18 +27,18 @@
                     <div class="navbar-link">Projects</div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider" />
-                        <a class="navbar-item" href="{{ url_for('project_bp.user_projects') }}">My Projects</a>
-                        <a class="navbar-item" href="{{ url_for('project_bp.all_projects') }}">All Projects</a>
+                        <a class="navbar-item" href="{{ url_for("project_bp.user_projects") }}">My Projects</a>
+                        <a class="navbar-item" href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
                         <a class="navbar-item"
-                           href="{{ url_for('project_bp.new_project_form') }}">New Project</a>
+                           href="{{ url_for("project_bp.new_project_form") }}">New Project</a>
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable is-boxed">
                     <div class="navbar-link">Tasks</div>
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider" />
-                        <a class="navbar-item" href="{{ url_for('task_bp.my_tasks') }}">My Tasks</a>
-                        <a class="navbar-item" href="{{ url_for('task_bp.all_tasks') }}">All Tasks</a>
+                        <a class="navbar-item" href="{{ url_for("task_bp.my_tasks") }}">My Tasks</a>
+                        <a class="navbar-item" href="{{ url_for("task_bp.all_tasks") }}">All Tasks</a>
                     </div>
                 </div>
                 <div class="navbar-item has-dropdown is-hoverable is-boxed">
@@ -46,13 +46,13 @@
                     <div class="navbar-dropdown">
                         <hr class=" hide-desktop dropdown-divider" />
                         <a class="navbar-item"
-                           href="{{ url_for('connection_bp.all_connections') }}">All Connections</a>
+                           href="{{ url_for("connection_bp.all_connections") }}">All Connections</a>
                         <a class="navbar-item"
-                           href="{{ url_for('connection_bp.new_connection') }}">New Connection</a>
+                           href="{{ url_for("connection_bp.new_connection") }}">New Connection</a>
                     </div>
                 </div>
-                <a class="navbar-item" href="{{ url_for('admin_bp.admin') }}">Admin</a>
-                <a class="navbar-item" href="{{ url_for('dashboard_bp.dash') }}">Dashboard</a>
+                <a class="navbar-item" href="{{ url_for("admin_bp.admin") }}">Admin</a>
+                <a class="navbar-item" href="{{ url_for("dashboard_bp.dash") }}">Dashboard</a>
                 <a class="navbar-item button is-info mt-2 ml-2"
                    href="https://www.atlas.bi/docs/automation-hub"
                    target="_blank"

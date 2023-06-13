@@ -1,6 +1,6 @@
 import gulp from 'gulp';
 import autoprefexer from 'gulp-autoprefixer';
-import dartSass from 'sass';
+import * as dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 const sass = gulpSass(dartSass);
 
@@ -9,9 +9,6 @@ import fontawesomeSubset from 'fontawesome-subset';
 import {deleteSync} from 'del';
 import purgecss from 'gulp-purgecss';
 import cssnano from 'gulp-cssnano';
-import concat from 'gulp-concat';
-import rename from 'gulp-rename';
-import uglify from 'gulp-uglify';
 
 gulp.task('font:inter', function() {
   return gulp.src('node_modules/@fontsource/inter/**/*').pipe(replace(/\.\/files\//g, '/static/fonts/inter/files/')).pipe(gulp.dest('web/static/fonts/inter'))

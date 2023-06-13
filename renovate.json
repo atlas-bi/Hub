@@ -12,7 +12,8 @@
     ":enableVulnerabilityAlertsWithLabel(security)",
     ":rebaseStalePrs",
     ":npm",
-    "npm:unpublishSafe"
+    "npm:unpublishSafe",
+    "docker:disable"
   ],
   "ignoreDeps": [
     "mypy"
@@ -26,7 +27,9 @@
       "automerge": true,
       "matchUpdateTypes": [
         "pin",
-        "digest"
+        "digest",
+        "minor",
+        "patch"
       ]
     },
     {
@@ -44,12 +47,6 @@
       "automerge": true,
       "extends": "packages:test",
       "groupName": "test packages"
-    },
-    {
-      "automerge": true,
-      "matchDepTypes": [
-        "devDependencies"
-      ]
     }
   ],
   "pre-commit": {

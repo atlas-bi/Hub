@@ -170,6 +170,7 @@ def task_new(project_id: int) -> Union[str, Response]:
         email_completion=form.get("task_send_completion_email", 0, type=int),
         email_completion_recipients=form.get("completionEmailRecip", "", type=str),
         email_completion_message=form.get("completion_email_msg", "", type=str),
+        email_completion_subject=form.get("completionEmailSubject", "", type=str),
         email_completion_log=form.get("task_send_completion_email_log", 0, type=int),
         email_completion_file=form.get("task_send_output", 0, type=int),
         email_completion_dont_send_empty_file=form.get(
@@ -179,6 +180,7 @@ def task_new(project_id: int) -> Union[str, Response]:
         email_error=form.get("task_send_error_email", 0, type=int),
         email_error_recipients=form.get("errorEmailRecip", "", type=str),
         email_error_message=form.get("errorEmailMsg", "", type=str),
+        email_error_subject=form.get("errorEmailSubject", "", type=str),
         enabled=form.get("task-ooff", 0, type=int),
     )
 
@@ -491,6 +493,7 @@ def task_edit_post(task_id: int) -> Response:
             email_completion=form.get("task_send_completion_email", 0, type=int),
             email_completion_recipients=form.get("completionEmailRecip", "", type=str),
             email_completion_message=form.get("completion_email_msg", "", type=str),
+            email_completion_subject=form.get("completionEmailSubject", "", type=str),
             email_completion_log=form.get(
                 "task_send_completion_email_log", 0, type=int
             ),
@@ -502,6 +505,7 @@ def task_edit_post(task_id: int) -> Response:
             email_error=form.get("task_send_error_email", 0, type=int),
             email_error_recipients=form.get("errorEmailRecip", "", type=str),
             email_error_message=form.get("errorEmailMsg", "", type=str),
+            email_error_subject=form.get("errorEmailSubject", "", type=str),
             enabled=form.get("task-ooff", 0, type=int),
         )
     )

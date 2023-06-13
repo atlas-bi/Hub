@@ -969,12 +969,14 @@ class Task(db.Model):
     email_completion_file = db.Column(db.Integer, nullable=True)
     email_completion_file_embed = db.Column(db.Integer, nullable=True)
     email_completion_recipients = db.Column(db.String(1000), nullable=True)
+    email_completion_subject = db.Column(db.String(8000), nullable=True)
     email_completion_message = db.Column(db.String(8000), nullable=True)
     email_completion_dont_send_empty_file = db.Column(db.Integer, nullable=True)
 
     # error email
     email_error = db.Column(db.Integer, nullable=True, index=True)
     email_error_recipients = db.Column(db.String(1000), nullable=True)
+    email_error_subject = db.Column(db.String(8000), nullable=True)
     email_error_message = db.Column(db.String(8000), nullable=True)
 
     # rerun on fail
