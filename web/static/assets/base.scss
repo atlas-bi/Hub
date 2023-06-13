@@ -2,18 +2,24 @@
 @use '../../../node_modules/@fontsource/rasa/scss/mixins' as Rasa;
 
 @include Inter.faces(
-  $family: "Inter",
+  $family: 'Inter',
   $subsets: latin,
-  $weights: (300, 400, 500, 600, 700),
-  $directory:'/static/fonts/inter/files',
+  $weights: (
+    300,
+    400,
+    500,
+    600,
+    700,
+  ),
+  $directory: '/static/fonts/inter/files',
   $display: swap
 );
 
 @include Rasa.faces(
-  $family: "Rasa",
+  $family: 'Rasa',
   $subsets: latin,
   $weights: 600,
-  $directory:'/static/fonts/rasa/files',
+  $directory: '/static/fonts/rasa/files',
   $display: swap
 );
 
