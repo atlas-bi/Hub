@@ -794,18 +794,25 @@ class Runner:
                     )
                     return
 
+            subject = "Project: %s / Task: %s / Run: %s %s" % (
+                self.task.project.name,
+                self.task.name,
+                self.run_id,
+                date,
+            )
+
+            if self.task.email_completion_subject:
+                subject = self.param_loader.insert_file_params(
+                    self.task.email_completion_subject
+                )
+                subject = DateParsing(self.task, None, subject).string_to_date()
+
             try:
                 Smtp(
                     task=self.task,
                     run_id=self.run_id,
                     recipients=self.task.email_completion_recipients,
-                    subject="Project: %s / Task: %s / Run: %s %s"
-                    % (
-                        self.task.project.name,
-                        self.task.name,
-                        self.run_id,
-                        date,
-                    ),
+                    subject=subject,
                     message=template.render(
                         task=self.task,
                         success=1,

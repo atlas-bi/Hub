@@ -4,7 +4,7 @@
     <h1 class="title is-1">Dashboard</h1>
     <h2 class="title is-2">Run Plan</h2>
     <div class="em-ajaxContent block"
-         data-src="{{ url_for('dashboard_bp.active_schedule') }}"
+         data-src="{{ url_for("dashboard_bp.active_schedule") }}"
          style="height:264px">
         <div class="loader"></div>
     </div>
@@ -29,7 +29,7 @@
             <div class="tab-dta is-active" id="errored">
                 <div class="block">
                     <a title="run all now"
-                       href="{{ url_for('dashboard_bp.dash_errored_run') }}">
+                       href="{{ url_for("dashboard_bp.dash_errored_run") }}">
                         <span class="icon">
                             <i class="far fa-play-circle"></i>
                         </span>
@@ -52,7 +52,7 @@
             <div class="tab-dta" id="scheduled">
                 <div class="block">
                     <a title="run all now"
-                       href="{{ url_for('dashboard_bp.dash_scheduled_run') }}">
+                       href="{{ url_for("dashboard_bp.dash_scheduled_run") }}">
                         <span class="icon">
                             <i class="far fa-play-circle"></i>
                         </span>
@@ -62,7 +62,7 @@
                     <span class="has-text-grey-light">/</span>
                     &#8195;
                     <a title="disable all"
-                       href="{{ url_for('dashboard_bp.dash_scheduled_disable') }}">
+                       href="{{ url_for("dashboard_bp.dash_scheduled_disable") }}">
                         <span class="icon">
                             <i class="fas fa-toggle-off"></i>
                         </span>
@@ -78,7 +78,7 @@
             <div class="tab-dta" id="orphaned">
                 <div class="block">
                     <a title="delete all"
-                       href="{{ url_for('dashboard_bp.dash_orphans_delete') }}">
+                       href="{{ url_for("dashboard_bp.dash_orphans_delete") }}">
                         <span class="icon">
                             <i class="fas fa-trash"></i>
                         </span>
@@ -87,7 +87,7 @@
                 </div>
                 <div class="em-ajaxTable"
                      data-theme="Exec"
-                     data-src="{{ url_for('table_bp.table_jobs_orphans') }}">
+                     data-src="{{ url_for("table_bp.table_jobs_orphans") }}">
                     <div class="loader"></div>
                 </div>
             </div>

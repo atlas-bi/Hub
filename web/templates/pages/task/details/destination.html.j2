@@ -148,6 +148,14 @@
                         Email Recipients:
                         <span class="tag is-info is-light">{{ t.email_completion_recipients or "None" }}</span>
                     </li>
+                    <li>
+                        Email Subject:
+                        <span class="tag is-info is-light">{{ t.email_completion_subject or "default" }}</span>
+                        <div class="em-ajaxContent is-inline ml-3"
+                             data-src="{{ url_for('task_bp.email_success_subject_preview',task_id=t.id) }}">
+                            <div class="loader"></div>
+                        </div>
+                    </li>
                 </ul>
             </div>
             {% if t.email_completion_message|length > 0 %}
@@ -163,6 +171,10 @@
                     <li>
                         Email Recipients:
                         <span class="tag is-info is-light">{{ t.email_error_recipients or "None" }}</span>
+                    </li>
+                    <li>
+                        Email Subject:
+                        <span class="tag is-info is-light">{{ t.email_error_subject or "default" }}</span>
                     </li>
                 </ul>
             </div>

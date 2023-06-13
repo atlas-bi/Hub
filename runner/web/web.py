@@ -433,6 +433,27 @@ def filename_preview(task_id: int) -> str:
         return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">No preview.</span>'
 
 
+@web_bp.route("/api/task/<task_id>/email_success_subject_preview")
+def email_success_subject_preview(task_id: int) -> str:
+    """Generate email subject preview."""
+    try:
+        task = Task.query.filter_by(id=task_id).first()
+        param_loader = ParamLoader(task, None)
+
+        # insert params
+        email_subject = param_loader.insert_file_params(task.email_completion_subject)
+
+        # parse python dates
+        email_subject = DateParsing(task, None, email_subject).string_to_date()
+
+        if task.file_type and task.file_type.id != 4:
+            email_subject = f"{email_subject}.{task.file_type.ext}"
+
+        return f'<span class="tag is-success is-light">ex: {email_subject}</span>'
+    except BaseException as e:
+        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">No preview.</span>'
+
+
 @web_bp.route("/api/task/<task_id>/refresh_cache")
 def refresh_cache(task_id: int) -> str:
     """Get source code for a task."""
