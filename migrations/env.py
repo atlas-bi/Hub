@@ -20,6 +20,7 @@ logger = logging.getLogger("alembic.env")
 # target_metadata = mymodel.Base.metadata
 from flask import current_app
 
+
 def get_engine():
      try:
          # this works with Flask-SQLAlchemy<3 and Alchemical

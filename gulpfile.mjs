@@ -1,6 +1,6 @@
 import gulp from 'gulp';
 import autoprefexer from 'gulp-autoprefixer';
-import dartSass from 'sass';
+import * as dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 const sass = gulpSass(dartSass);
 

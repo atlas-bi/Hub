@@ -1,55 +1,26 @@
-$fontDir: '/static/fonts/inter/';
-@import '../../../node_modules/@fontsource/inter/scss/mixins';
+@use '../../../node_modules/@fontsource/inter/scss/mixins' as Inter;
+@use '../../../node_modules/@fontsource/rasa/scss/mixins' as Rasa;
 
-@include fontFace(
-  $fontName: Inter,
-  $weight: 300,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/static/fonts/inter/files'
+@include Inter.faces(
+  $family: 'Inter',
+  $subsets: latin,
+  $weights: (
+    300,
+    400,
+    500,
+    600,
+    700,
+  ),
+  $directory: '/static/fonts/inter/files',
+  $display: swap
 );
 
-@include fontFace(
-  $fontName: Inter,
-  $weight: 400,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/static/fonts/inter/files'
-);
-
-@include fontFace(
-  $fontName: Inter,
-  $weight: 500,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/static/fonts/inter/files'
-);
-
-@include fontFace(
-  $fontName: Inter,
-  $weight: 600,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/static/fonts/inter/files'
-);
-
-@include fontFace(
-  $fontName: Inter,
-  $weight: 700,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/static/fonts/inter/files'
-);
-
-$fontDir: '/static/fonts/rasa/';
-@import '../../../node_modules/@fontsource/rasa/scss/mixins';
-
-@include fontFace(
-  $fontName: Rasa,
-  $weight: 600,
-  $display: swap,
-  $unicodeMap: latin,
-  $fontDir: '/static/fonts/rasa/files'
+@include Rasa.faces(
+  $family: 'Rasa',
+  $subsets: latin,
+  $weights: 600,
+  $directory: '/static/fonts/rasa/files',
+  $display: swap
 );
 
 $title-family: 'Rasa', 'Georgia', 'Times New Roman', serif;
