@@ -6,8 +6,8 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.21.4",
-    "@fontsource/inter": "5.0.2",
-    "@fontsource/rasa": "5.0.2",
+    "@fontsource/inter": "5.0.3",
+    "@fontsource/rasa": "5.0.3",
     "@hotwired/turbo": "^7.3.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.0",
@@ -25,7 +25,7 @@
     "gulp-sass": "5.1.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^3.20.2",
-    "sass": "1.63.3",
+    "sass": "1.63.4",
     "uglify-js": "^3.17.4"
   },
   "description": "A task scheduling tool.",
@@ -36,7 +36,7 @@
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "9.0.3",
-    "@semantic-release/npm": "10.0.3",
+    "@semantic-release/npm": "10.0.4",
     "@semantic-release/release-notes-generator": "11.0.3",
     "browser-sync": "^2.29.1",
     "cz-conventional-changelog": "3.3.0",
@@ -47,7 +47,7 @@
     "gulp-rename": "2.0.0",
     "gulp-uglify": "3.0.2",
     "prettier": "2.8.8",
-    "semantic-release": "21.0.3"
+    "semantic-release": "21.0.5"
   },
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
@@ -80,5 +80,5 @@
     "test:lint": "poetry run tox -e lint",
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\""
   },
-  "version": "2.10.2"
+  "version": "2.10.3"
 }
