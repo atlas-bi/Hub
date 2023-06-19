@@ -1,10 +1,11 @@
 """Python script runner."""
 
 
+import datetime
 import sys
 from itertools import chain
 from pathlib import Path
-from typing import IO, List, Optional
+from typing import IO, List, Optional, Union
 
 import regex as re
 from flask import current_app as app
@@ -308,8 +309,112 @@ class PyProcesser:
             elif self.task.source_type_id == 6:  # ssh command
                 connection = em_ssh.connection_json(self.task.source_ssh_conn)
 
-            env += f"PROJECT='{json.dumps(self.task.project)}' "
-            env += f"TASK='{json.dumps(self.task)}' "
+            def clean_string(text: Optional[Union[str, int, datetime.datetime]]) -> str:
+                return str(text).replace("'", "").replace('"', "")
+
+            project_data = {
+                "id": clean_string(self.task.project.id),
+                "name": clean_string(self.task.project.name),
+                "description": clean_string(self.task.project.description),
+                "owner_id": clean_string(self.task.project.owner_id),
+                "cron": clean_string(self.task.project.cron),
+                "cron_year": clean_string(self.task.project.cron_year),
+                "cron_month": clean_string(self.task.project.cron_month),
+                "cron_week": clean_string(self.task.project.cron_week),
+                "cron_day": clean_string(self.task.project.cron_day),
+                "cron_week_day": clean_string(self.task.project.cron_week_day),
+                "cron_hour": clean_string(self.task.project.cron_hour),
+                "cron_min": clean_string(self.task.project.cron_min),
+                "cron_sec": clean_string(self.task.project.cron_sec),
+                "cron_start_date": clean_string(self.task.project.cron_start_date),
+                "cron_end_date": clean_string(self.task.project.cron_end_date),
+                "intv": clean_string(self.task.project.intv),
+                "intv_type": clean_string(self.task.project.intv_type),
+                "intv_value": clean_string(self.task.project.intv_value),
+                "intv_start_date": clean_string(self.task.project.intv_start_date),
+                "intv_end_date": clean_string(self.task.project.intv_end_date),
+                "ooff_date": clean_string(self.task.project.ooff),
+                "created": clean_string(self.task.project.created),
+                "creator_id": clean_string(self.task.project.creator_id),
+                "updated": clean_string(self.task.project.updated),
+                "updater_id": clean_string(self.task.project.updater_id),
+                "sequence_tasks": clean_string(self.task.project.sequence_tasks),
+            }
+
+            env += f"PROJECT='{json.dumps(project_data)}' "
+
+            task_data = {
+                "id": clean_string(self.task.id),
+                "name": clean_string(self.task.name),
+                "project_id": clean_string(self.task.project_id),
+                "status_id": clean_string(self.task.status_id),
+                "status": clean_string(self.task.status.name),
+                "enabled": clean_string(self.task.enabled),
+                "order": clean_string(self.task.order),
+                "last_run": clean_string(self.task.last_run),
+                "next_run": clean_string(self.task.next_run),
+                "last_run_job_id": clean_string(self.task.last_run_job_id),
+                "created": clean_string(self.task.created),
+                "creator_id": clean_string(self.task.creator_id),
+                "updated": clean_string(self.task.updated),
+                "updater_id": clean_string(self.task.updater_id),
+                "source_type_id": clean_string(self.task.source_type_id),
+                "source_database_id": clean_string(self.task.source_database_id),
+                "source_query_type_id": clean_string(self.task.source_query_type_id),
+                "source_query_include_header": clean_string(
+                    self.task.source_query_include_header
+                ),
+                "source_git": clean_string(self.task.source_git),
+                "source_url": clean_string(self.task.source_url),
+                "source_require_sql_output": clean_string(
+                    self.task.source_require_sql_output
+                ),
+                "enable_source_cache": clean_string(self.task.enable_source_cache),
+                "destination_file_delimiter": clean_string(
+                    self.task.destination_file_delimiter
+                ),
+                "destination_file_name": clean_string(self.task.destination_file_name),
+                "destination_ignore_delimiter": clean_string(
+                    self.task.destination_ignore_delimiter
+                ),
+                "destination_file_line_terminator": clean_string(
+                    self.task.destination_file_line_terminator
+                ),
+                "destination_quote_level_id": clean_string(
+                    self.task.destination_quote_level_id
+                ),
+                "destination_create_zip": clean_string(
+                    self.task.destination_create_zip
+                ),
+                "destination_zip_name": clean_string(self.task.destination_zip_name),
+                "destination_file_type_id": clean_string(
+                    self.task.destination_file_type_id
+                ),
+                "email_completion": clean_string(self.task.email_completion),
+                "email_completion_log": clean_string(self.task.email_completion_log),
+                "email_completion_file": clean_string(self.task.email_completion_file),
+                "email_completion_file_embed": clean_string(
+                    self.task.email_completion_file_embed
+                ),
+                "email_completion_dont_send_empty_file": clean_string(
+                    self.task.email_completion_dont_send_empty_file
+                ),
+                "email_completion_recipients": clean_string(
+                    self.task.email_completion_recipients
+                ),
+                "email_completion_message": clean_string(
+                    self.task.email_completion_message
+                ),
+                "email_error": clean_string(self.task.email_error),
+                "email_error_recipients": clean_string(
+                    self.task.email_error_recipients
+                ),
+                "email_error_message": clean_string(self.task.email_error_message),
+                "max_retries": clean_string(self.task.max_retries),
+                "est_duration": clean_string(self.task.est_duration),
+            }
+
+            env = f"TASK='{json.dumps(task_data)}' "
 
             # if data files exist, pass them as a param.
             env += f"CONNECTION='{json.dumps(connection)}' " if connection else ""
