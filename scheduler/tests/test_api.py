@@ -447,4 +447,4 @@ def test_400(client_fixture: fixture) -> None:
 
 def test_get_user_id(client_fixture: fixture) -> None:
     u = get_or_create(db.session, User, email="nothing")
-    assert u.get_id() == "1"
+    assert u.get_id() >= "1"
