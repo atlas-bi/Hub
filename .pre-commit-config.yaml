@@ -48,6 +48,6 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.31.0
+  rev: v1.31.1
   hooks:
   - id: djlint-jinja
