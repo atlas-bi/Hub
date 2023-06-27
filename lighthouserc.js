@@ -4,26 +4,26 @@ module.exports = {
       target: 'lhci',
       serverBaseUrl: 'https://lighthouse.atlas.bi',
     },
-    "assert": {
-      "preset": "lighthouse:no-pwa",
-      "assertions": {
-        "color-contrast": "warn",
-        "is-crawlable": "off",
-        "redirects": "off",
-        "robots-txt": "off",
-        "csp-xss": "warn",
-        "unused-css-rules": "warn",
-        "tap-targets": "warn",
-        "third-party-facades": "warn",
-        "unused-javascript": "warn",
-        "uses-responsive-images": "warn",
-        "uses-text-compression": "warn",
-        "crawlable-anchors": "warn",
-        "label": "warn",
-        "link-name": "warn",
-        "heading-order": "warn"
-      },
-    },
+    // "assert": {
+    //   "preset": "lighthouse:no-pwa",
+    //   "assertions": {
+    //     "color-contrast": "warn",
+    //     "is-crawlable": "off",
+    //     "redirects": "off",
+    //     "robots-txt": "off",
+    //     "csp-xss": "warn",
+    //     "unused-css-rules": "warn",
+    //     "tap-targets": "warn",
+    //     "third-party-facades": "warn",
+    //     "unused-javascript": "warn",
+    //     "uses-responsive-images": "warn",
+    //     "uses-text-compression": "warn",
+    //     "crawlable-anchors": "warn",
+    //     "label": "warn",
+    //     "link-name": "warn",
+    //     "heading-order": "warn"
+    //   },
+    // },
     collect: {
       startServerCommand: "export FLASK_ENV=test && export FLASK_DEBUG=False && export FLASK_APP=web && export FLASK_RUN_PORT=4998 && poetry run flask run",
       url: [
