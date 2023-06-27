@@ -23,7 +23,7 @@ def seed(session: SqlSession, model: Any) -> None:
     # pylint: disable=too-many-branches
     # pylint: disable=too-many-statements
     # login types
-
+    get_or_create(session, model.User, account_name="admin")
     get_or_create(session, model.LoginType, name="login")
     get_or_create(session, model.LoginType, name="logout")
     get_or_create(session, model.LoginType, name="bad login")
