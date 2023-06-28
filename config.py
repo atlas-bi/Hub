@@ -114,9 +114,6 @@ class Config:
     # compression
     MINIFY_HTML = True
 
-    # migrations
-    MIGRATIONS = "migrations"
-
     # saml config
     BASE_DIR = Path(__file__).resolve().parent
     BASE_URL = "https://automationhub.MyOrg.net/"
@@ -310,9 +307,6 @@ class DevConfig(Config):
             user="username", pw="password", url="server", db="atlas_hub_dev"
         ),
     ).replace("postgres://", "postgresql://")
-
-    # migrations override
-    # MIGRATIONS = "migrations_dev"
 
     ASSETS_DEBUG = False
 
