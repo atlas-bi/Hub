@@ -23,14 +23,14 @@
                    font-size: 35px;
                    margin:0;
                    font-weight:lighter">Atlas / Hub</h2>
-        <div style="color: #6c7378;font-size: 15px;">&#169; 2020 Riverside Healthcare</div>
+        <div style="color: #6c7378;font-size: 15px;">&#169;{{ date.year}} {{ org }}</div>
     </div>
     <!-- task title -->
     <h3>
         Project:
         <a style="color: #6c7378;
                   text-decoration: none"
-           href="{{ host }}/project/{{ task.projectId }}">{{ task.project.name }}</a>
+           href="{{ host }}/project/{{ task.project.id }}">{{ task.project.name }}</a>
         / Task:
         <a style="color: #6c7378;
                   text-decoration: none"
