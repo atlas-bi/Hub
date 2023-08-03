@@ -92,10 +92,7 @@
                    value="{%- if sftp -%}{{ sftp.username or '' }}{%- endif -%}" />
         </div>
         <div class="field">
-            <label class="label">
-                Password
-                <span class="has-text-grey">*</span>
-            </label>
+            <label class="label">Password</label>
             <div class="field has-addons">
                 <p class="control is-expanded">
                     <input class="input"
@@ -106,6 +103,25 @@
                 </p>
                 <div class="control">
                     <a class="button toggle-pass "data-target="password">
+                        <span class="icon">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Key Password</label>
+            <div class="field has-addons">
+                <p class="control is-expanded">
+                    <input class="input"
+                           type="password"
+                           name="key_password"
+                           placeholder="key_password"
+                           value="{%- if sftp -%}{{ sftp.key_password|decrypt or '' }}{%- endif -%}" />
+                </p>
+                <div class="control">
+                    <a class="button toggle-pass "data-target="key_password">
                         <span class="icon">
                             <i class="fas fa-eye"></i>
                         </span>

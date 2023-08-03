@@ -217,6 +217,14 @@ def edit_connection_sftp(connection_id: int, sftp_id: int) -> Union[Response, st
                 if form.get("password", type=str)
                 else None
             ),
+            "key_password": (
+                em_encrypt(
+                    form.get("key_password", "", type=str).strip(),
+                    app.config["PASS_KEY"],
+                )
+                if form.get("key_password", type=str)
+                else None
+            ),
         }
     )
 
@@ -267,6 +275,13 @@ def new_connection_sftp(connection_id: int) -> Union[str, Response]:
                 form.get("password", "", type=str).strip(), app.config["PASS_KEY"]
             )
             if form.get("password", type=str)
+            else None
+        ),
+        key_password=(
+            em_encrypt(
+                form.get("key_password", "", type=str).strip(), app.config["PASS_KEY"]
+            )
+            if form.get("key_password", type=str)
             else None
         ),
     )

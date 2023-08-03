@@ -1,25 +1,32 @@
 {
-  "author": "Lotus <declininglotus@gmail.com>",
+  "author": "Google Inc.",
   "description": "Self-host the Rasa font in a neatly bundled NPM package.",
-  "homepage": "https://github.com/fontsource/fontsource/tree/main/fonts/google/rasa#readme",
+  "homepage": "https://fontsource.org/fonts/rasa",
   "keywords": [
     "fontsource",
     "font",
     "font family",
     "google fonts",
+    "rasa",
     "Rasa",
-    "rasa"
+    "css",
+    "sass",
+    "front-end",
+    "web",
+    "typeface",
+    "variable"
   ],
-  "license": "MIT",
+  "license": "OFL-1.1",
   "main": "index.css",
   "name": "@fontsource/rasa",
   "publishConfig": {
     "access": "public"
   },
+  "publishHash": "d06bed800a4e0ec6",
   "repository": {
     "directory": "fonts/google/rasa",
     "type": "git",
-    "url": "https://github.com/fontsource/fontsource.git"
+    "url": "https://github.com/fontsource/font-files.git"
   },
-  "version": "4.5.14"
+  "version": "5.0.3"
 }
