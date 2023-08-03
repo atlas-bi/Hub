@@ -374,6 +374,7 @@ class ConnectionSftp(db.Model):
     username = db.Column(db.String(120), nullable=True)
     key = db.Column(db.String(8000), nullable=True)
     password = db.Column(db.Text, nullable=True)
+    key_password = db.Column(db.Text, nullable=True)
     task = db.relationship(
         "Task",
         backref="destination_sftp_conn",

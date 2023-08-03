@@ -39,8 +39,8 @@ def connection_key(connection: ConnectionSftp) -> Optional[paramiko.pkey.PKey]:
 
             key = paramiko.RSAKey.from_private_key_file(
                 key_file.name,
-                password=em_decrypt(connection.password, app.config["PASS_KEY"])
-                if connection.password
+                password=em_decrypt(connection.key_password, app.config["PASS_KEY"])
+                if connection.key_password
                 else None,
             )
 
@@ -54,6 +54,7 @@ def connection_json(connection: ConnectionSftp) -> Dict:
         "port": connection.port or 22,
         "key": em_decrypt(connection.key, app.config["PASS_KEY"]),
         "password": em_decrypt(connection.password, app.config["PASS_KEY"]),
+        "key_password": em_decrypt(connection.key_password, app.config["PASS_KEY"]),
         "username": str(connection.username),
     }
 
@@ -74,15 +75,28 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
 
                 key = connection_key(connection)
 
-                transport.connect(
-                    username=str(connection.username),
-                    password=(
+                if key and connection.password and connection.username:
+                    transport.start_client(event=None, timeout=15)
+                    transport.get_remote_server_key()
+                    transport.auth_publickey(connection.username, key, event=None)
+                    transport.auth_password(
+                        connection.username,
                         em_decrypt(connection.password, app.config["PASS_KEY"])
-                        if key is None
-                        else ""
-                    ),
-                    pkey=key,
-                )
+                        if connection.password
+                        else "",
+                        event=None,
+                    )
+
+                else:
+                    transport.connect(
+                        username=str(connection.username),
+                        password=(
+                            em_decrypt(connection.password, app.config["PASS_KEY"])
+                            if connection.password
+                            else ""
+                        ),
+                        pkey=key,
+                    )
 
                 conn = paramiko.SFTPClient.from_transport(transport)
                 if conn is None:
