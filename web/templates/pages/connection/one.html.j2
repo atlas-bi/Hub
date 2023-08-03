@@ -242,6 +242,29 @@
                             </a>
                         </span>
                     {% endif %}
+                    {% if s.key_password %}
+                        <br />
+                        Key Password:
+                        <span>
+                            <span class="tag is-light">
+                                <input type="password"
+                                       class="transparent"
+                                       readonly="true"
+                                       value="{{ s.key_password|decrypt }}"
+                                       style="width:{{ s.key_password|decrypt|length * 7 }}px;
+                                              cursor: text" />
+                            </span>
+                            <a class="copy-input ml-3"
+                               title="copy password"
+                               data-value="{{ s.key_password|decrypt }}"
+                               href="">
+                                <span class="icon icon-sm">
+                                    <i class="fas fa-copy"></i>
+                                </span>
+                                <span>Copy</span>
+                            </a>
+                        </span>
+                    {% endif %}
                     {% if s.key and s.key != "" %}
                         <br />
                         SSH Key: <pre class="box"><code class="language-bash">{{ s.key|decrypt }}</code></pre>
