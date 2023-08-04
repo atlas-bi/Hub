@@ -65,8 +65,8 @@ class PyProcesser:
 
         # if output is not a file list, then swallow it.
 
-        if isinstance(eval(self.output), List):
-            return [Path(x) for x in eval(self.output)]
+        if isinstance(self.output, List):
+            return self.output
         return None
 
     def __build_env(self) -> None:

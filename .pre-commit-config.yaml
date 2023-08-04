@@ -34,12 +34,12 @@ repos:
     exclude: migrations* | docs*
     additional_dependencies: [toml]
 - repo: https://github.com/psf/black
-  rev: 23.3.0
+  rev: 23.7.0
   hooks:
   - id: black
     language_version: python3.9
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.9.0
+  rev: v2.10.0
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
@@ -48,6 +48,6 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.31.1
+  rev: v1.32.1
   hooks:
   - id: djlint-jinja
