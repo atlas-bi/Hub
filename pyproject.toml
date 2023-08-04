@@ -97,7 +97,7 @@ packages = [
 ]
 readme = "readme.md"
 repository = "https://github.com/atlas-bi/Hub"
-version = "2.11.0-alpha.2"
+version = "2.11.0"
 
 [tool.poetry.dependencies]
 Flask = "^2.0.1"
