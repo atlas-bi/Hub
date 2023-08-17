@@ -240,6 +240,11 @@ class Config:
     HTTP_VERIFY_SSL = False
 
     """
+        Azure Devops connection
+    """
+    DEVOPS_URL = "https://dev.azure.com/orgname/"
+    DEVOPS_TOKEN = r"token"
+    """
         Default SQL Connection Settings
     """
     # minutes

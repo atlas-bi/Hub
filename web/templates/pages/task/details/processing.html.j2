@@ -22,6 +22,17 @@
                  data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
                 <div class="loader"></div>
             </div>
+        {% elif t.processing_devops and t.processing_type_id == 7 %}
+            <!-- code from url -->
+            <h2 class="title is-2">Processing Script - Devops Address</h2>
+            <a title="open page"
+               class="is-inlineblock mb-3"
+               href="{{ t.processing_devops }}"
+               target="_blank">{{ t.processing_devops }}</a>
+            <div class="em-ajaxContent"
+                 data-src="{{ url_for('task_bp.task_get_processing_code', task_id=t.id) }}">
+                <div class="loader"></div>
+            </div>
         {% elif t.processing_type_id == 1 and t.processing_smb_conn %}
             <!-- processing SMB -->
             <h2 class="title is-2">Processing Script - SMB Connection</h2>

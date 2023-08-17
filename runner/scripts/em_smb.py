@@ -147,6 +147,7 @@ class Smb:
             self.password = app.config["SMB_PASSWORD"]
             self.server_ip = app.config["SMB_SERVER_IP"]
             self.server_name = app.config["SMB_SERVER_NAME"]
+            self.subfolder = app.config["SMB_SUBFOLDER"]
 
         self.conn = self.__connect()
 
@@ -299,7 +300,8 @@ class Smb:
             else:
                 dest_path = str(
                     Path(
-                        Path(sanitize_filename(self.task.project.name or ""))
+                        Path(sanitize_filename(self.subfolder or ""))
+                        / Path(sanitize_filename(self.task.project.name or ""))
                         / sanitize_filename(self.task.name or "")
                         / sanitize_filename(self.task.last_run_job_id or "")
                         / file_name

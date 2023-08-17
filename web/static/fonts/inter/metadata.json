@@ -1,11 +1,15 @@
 {
   "category": "sans-serif",
   "defSubset": "latin",
-  "fontId": "inter",
-  "fontName": "Inter",
+  "family": "Inter",
+  "id": "inter",
   "lastModified": "2022-09-22",
-  "license": "https://fonts.google.com/attribution",
-  "source": "https://fonts.google.com/",
+  "license": {
+    "attribution": "Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)",
+    "type": "OFL-1.1",
+    "url": "http://scripts.sil.org/OFL"
+  },
+  "source": "https://github.com/google/fonts",
   "styles": [
     "normal"
   ],
