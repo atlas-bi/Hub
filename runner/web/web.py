@@ -33,6 +33,7 @@ from runner.scripts.em_smb import Smb
 from runner.scripts.em_smb import connect as smb_connect
 from runner.scripts.em_smtp import Smtp
 from runner.scripts.em_sqlserver import connect as sql_connect
+from runner.scripts.em_jdbc import connect as jdbc_connect
 from runner.scripts.em_ssh import connect as ssh_connect
 from runner.scripts.task_runner import Runner
 
@@ -358,6 +359,13 @@ def database_online(database_id: int) -> str:
                     database_connection.connection_string, app.config["PASS_KEY"]
                 ).strip(),
                 database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
+            )
+            conn.close()
+        elif database_connection.type_id == 3:
+            conn, _ = jdbc_connect(
+                em_decrypt(
+                    database_connection.connection_string, app.config["PASS_KEY"]
+                ).strip(),
             )
             conn.close()
         else:
