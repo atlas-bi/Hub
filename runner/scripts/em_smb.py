@@ -190,10 +190,15 @@ class Smb:
             new_path = str(Path(directory).joinpath(dirname))
             yield from self._walk(new_path)
 
-    def __load_file(self, file_name: str) -> IO[str]:
+    def __load_file(self, file_name: str, index: int, length: int) -> IO[str]:
+        RunnerLog(
+            self.task, self.run_id, 10, f"({index} of {length}) downloading {file_name}"
+        )
+
         director = urllib.request.build_opener(SMBHandler)
 
         password = em_decrypt(self.password, app.config["PASS_KEY"])
+
         open_file_for_read = director.open(
             f"smb://{self.username}:{password}@{self.server_name},{self.server_ip}/{self.share_name}/{file_name}"
         )
@@ -279,9 +284,12 @@ class Smb:
                 )
 
                 # if a file was found, try to open.
-                return [self.__load_file(file_name) for file_name in file_list]
+                return [
+                    self.__load_file(file_name, i, len(file_list))
+                    for i, file_name in enumerate(file_list, 1)
+                ]
 
-            return [self.__load_file(file_name)]
+            return [self.__load_file(file_name, 1, 1)]
         except BaseException as e:
             raise RunnerException(
                 self.task,
