@@ -120,6 +120,7 @@ cryptography = "^41.0.0"
 flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
 flask-redis = "^0.4.0"
 flask-session2 = "^1.2.0"
+gevent = "^23.9.1"
 gunicorn = "^21.0.0"
 is-safe-url = "^1.0"
 paramiko = "^3.0.0"
@@ -148,7 +149,6 @@ virtualenv = "^20.7.2"
 webassets-rollup = "^1.0.0"
 whitenoise = "^6.2.0"
 xmlsec = "^1.3.11"
-gevent = "^23.9.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.0.0"
@@ -180,7 +180,7 @@ testpaths = "tests"
 
 [tool.ruff]
 extend-exclude = ['test*', 'ldap_auth*']
-ignore = ['B034', 'PLR1714','S602', 'S605', 'D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108']
+ignore = ['B034', 'PLR1714', 'S602', 'S605', 'D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108']
 select = ['F', 'E', 'W', 'N', 'D', 'S', 'B', 'C4', 'T20', 'Q', 'SIM', 'ERA', 'PL', 'RUF']
 
 [tool.ruff.per-file-ignores]

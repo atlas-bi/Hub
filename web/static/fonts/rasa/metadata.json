@@ -1,22 +1,46 @@
 {
-  "id": "rasa",
-  "family": "Rasa",
-  "subsets": ["gujarati", "latin", "latin-ext", "vietnamese"],
-  "weights": [300, 400, 500, 600, 700],
-  "styles": ["italic", "normal"],
-  "defSubset": "latin",
-  "variable": {
-    "ital": {"default": "0", "min": "0", "max": "1", "step": "1"},
-    "wght": {"default": "400", "min": "300", "max": "700", "step": "1"}
-  },
-  "lastModified": "2023-08-25",
-  "version": "v22",
   "category": "serif",
+  "defSubset": "latin",
+  "family": "Rasa",
+  "id": "rasa",
+  "lastModified": "2023-08-25",
   "license": {
+    "attribution": "Copyright 2015 The Yrsa-Rasa Project Authors (https://github.com/rosettatype/yrsa-rasa/)",
     "type": "OFL-1.1",
-    "url": "http://scripts.sil.org/OFL",
-    "attribution": "Copyright 2015 The Yrsa-Rasa Project Authors (https://github.com/rosettatype/yrsa-rasa/)"
+    "url": "http://scripts.sil.org/OFL"
   },
   "source": "https://github.com/google/fonts",
-  "type": "google"
+  "styles": [
+    "italic",
+    "normal"
+  ],
+  "subsets": [
+    "gujarati",
+    "latin",
+    "latin-ext",
+    "vietnamese"
+  ],
+  "type": "google",
+  "variable": {
+    "ital": {
+      "default": "0",
+      "max": "1",
+      "min": "0",
+      "step": "1"
+    },
+    "wght": {
+      "default": "400",
+      "max": "700",
+      "min": "300",
+      "step": "1"
+    }
+  },
+  "version": "v22",
+  "weights": [
+    300,
+    400,
+    500,
+    600,
+    700
+  ]
 }
