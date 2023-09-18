@@ -3,7 +3,7 @@
   "defSubset": "latin",
   "family": "Rasa",
   "id": "rasa",
-  "lastModified": "2023-03-21",
+  "lastModified": "2023-08-25",
   "license": {
     "attribution": "Copyright 2015 The Yrsa-Rasa Project Authors (https://github.com/rosettatype/yrsa-rasa/)",
     "type": "OFL-1.1",
@@ -35,7 +35,7 @@
       "step": "1"
     }
   },
-  "version": "v19",
+  "version": "v22",
   "weights": [
     300,
     400,
