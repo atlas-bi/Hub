@@ -22,11 +22,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "publishHash": "d06bed800a4e0ec6",
+  "publishHash": "4690bed5d065c819",
   "repository": {
     "directory": "fonts/google/rasa",
     "type": "git",
     "url": "https://github.com/fontsource/font-files.git"
   },
-  "version": "5.0.3"
+  "version": "5.0.12"
 }

@@ -3,8 +3,15 @@
 
 import json
 import platform
+from pathlib import Path
 
 import requests
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib  # type: ignore
+
 from flask import Blueprint
 from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
@@ -26,28 +33,25 @@ admin_bp = Blueprint("admin_bp", __name__)
 @login_required
 def version() -> str:
     """Check installed version."""
-    if platform.system() == "Linux":
-        installed_version = None
-        upgrade_version = None
-
-        # this is working on docker ubuntu, but not ubuntu server...
-        # out = subprocess.check_output("apt-cache policy atlas-hub", shell=True)
-        # installed = re.search(r"Installed:\s(.+?)$", out.decode("utf8"), flags=re.M)
-        # upgrade = re.search(r"Candidate:\s(.+?)$", out.decode("utf8"), flags=re.M)
-
-        # if installed:
-        #     installed_version = installed.group(1)
-
-        # if upgrade:
-        #     upgrade_version = upgrade.group(1)
-
-        return render_template(
-            "pages/version.html.j2",
-            installed_version=installed_version,
-            upgrade_version=upgrade_version,
+    installed_version = tomllib.loads(
+        Path(Path.cwd() / "pyproject.toml").read_text(encoding="utf8")
+    )["tool"]["poetry"]["version"]
+    upgrade_version = None
+    try:
+        response = requests.get(
+            "https://api.github.com/repos/atlas-bi/Hub/releases/latest", timeout=10
         )
+        upgrade_version = response.json()["name"]
+        print(response.json()["name"])
+    except BaseException as e:
+        print(e)
+        pass
 
-    return ""
+    return render_template(
+        "pages/version.html.j2",
+        installed_version=installed_version,
+        upgrade_version=upgrade_version,
+    )
 
 
 @admin_bp.route("/admin")

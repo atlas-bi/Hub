@@ -22,11 +22,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "publishHash": "f30be48934c43ab4",
+  "publishHash": "326faff29b179b18",
   "repository": {
     "directory": "fonts/google/inter",
     "type": "git",
     "url": "https://github.com/fontsource/font-files.git"
   },
-  "version": "5.0.3"
+  "version": "5.0.8"
 }

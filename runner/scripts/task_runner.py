@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import sys
+import tempfile
 import time
 import urllib.parse
 from pathlib import Path
@@ -596,10 +597,33 @@ class Runner:
                 self.task, self.run_id, 8, f"Processing script failure:\n{e}"
             )
 
-        # # allow processer to rename file
+        # allow processor to rename file
         if output:
-            RunnerLog(self.task, self.run_id, 8, f"Processing script output:\n{output}")
-            self.data_files = output
+            RunnerLog(
+                self.task,
+                self.run_id,
+                8,
+                f"Processing script generated files:\n{output}",
+            )
+
+            # convert the files into a set of named temp files and remove them.
+            self.source_files = []
+            for file in output:
+                original = Path(file)
+                original_name = str(original.absolute())
+                with tempfile.NamedTemporaryFile(
+                    mode="wb+", delete=False, dir=self.temp_path
+                ) as data_file:
+                    # write contents
+                    data_file.write(original.read_bytes())
+
+                    # set name and remove original
+                    original.unlink()
+
+                    os.link(data_file.name, original_name)
+
+                data_file.name = original_name  # type: ignore[misc]
+                self.source_files.append(data_file)
 
     def __store_files(self) -> None:
         if not self.source_files or len(self.source_files) == 0:
@@ -619,13 +643,16 @@ class Runner:
                 else Path(this_file.name).stat().st_size
             )
 
+            # get new parameters just in case it was changed in the processing script.
+            params = ParamLoader(self.task, self.run_id)
+
             # get file name. if no name specified in task setting, then use temp name.
             try:
                 file_name, file_path, file_hash = File(
                     task=self.task,
                     run_id=self.run_id,
                     data_file=this_file,
-                    params=self.param_loader,
+                    params=params,
                 ).save()
 
             except BaseException as e:
