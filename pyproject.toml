@@ -77,7 +77,7 @@ classifiers = [
   "Intended Audience :: Healthcare Industry",
   "Natural Language :: English"
 ]
-description = "Atlas Autmoation Hub is a task scheduling tool for moving data."
+description = "Atlas Automation Hub is a task scheduling tool for moving data."
 documentation = "https://www.atlas.bi/docs/hub/"
 homepage = "https://atlas-hub.atlas.bi"
 keywords = [
