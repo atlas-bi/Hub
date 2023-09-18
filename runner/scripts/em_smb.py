@@ -314,13 +314,15 @@ class Smb:
 
             path_builder = ""
             for my_path in my_dir:
-                path_builder += my_path + "/"
+                #only create directory if backup dir
+                if self.connection is None:
+                    path_builder += my_path + "/"
 
-                try:
-                    self.conn.listPath(self.share_name, path_builder)
-                # pylint: disable=broad-except
-                except OperationFailure:
-                    self.conn.createDirectory(self.share_name, path_builder)
+                    try:
+                        self.conn.listPath(self.share_name, path_builder)
+                    # pylint: disable=broad-except
+                    except OperationFailure:
+                        self.conn.createDirectory(self.share_name, path_builder)
 
             # pylint: disable=useless-else-on-loop
             else:
@@ -345,7 +347,7 @@ class Smb:
                     str(self.dir.joinpath(file_name)), "rb", buffering=0
                 ) as file_obj:
                     uploaded_size = self.conn.storeFile(
-                        self.share_name, dest_path, file_obj
+                        self.share_name, dest_path, file_obj,timeout=120
                     )
 
             server_name = (

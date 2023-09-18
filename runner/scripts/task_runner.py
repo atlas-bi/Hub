@@ -705,14 +705,16 @@ class Runner:
                 if self.query_output_size is not None
                 else Path(this_file.name).stat().st_size
             )
-
+            # get new parameters just in case it was changed in processing script:
+            params = ParamLoader(self.task, self.run_id)
+            
             # get file name. if no name specified in task setting, then use temp name.
             try:
                 file_name, file_path, file_hash = File(
                     task=self.task,
                     run_id=self.run_id,
                     data_file=this_file,
-                    params=self.param_loader,
+                    params=params,
                 ).save()
 
             except BaseException as e:
