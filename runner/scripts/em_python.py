@@ -69,7 +69,7 @@ class PyProcesser:
             output = ast.literal_eval(self.output)
             if isinstance(output, List):
                 return output
-        except BaseException as e:
+        except BaseException:
             # will raise an exception on some output.
             pass
         return None
@@ -198,6 +198,7 @@ class PyProcesser:
                     "dateutil": "python-dateutil",
                     "smb": "pysmb",
                     "dotenv": "python-dotenv",
+                    "azure": "azure-devops",
                 }
 
                 # clean list
@@ -370,6 +371,7 @@ class PyProcesser:
                     self.task.source_query_include_header
                 ),
                 "source_git": clean_string(self.task.source_git),
+                "source_devops": clean_string(self.task.source_devops),
                 "source_url": clean_string(self.task.source_url),
                 "source_require_sql_output": clean_string(
                     self.task.source_require_sql_output

@@ -51,6 +51,7 @@ def seed(session: SqlSession, model: Any) -> None:
     get_or_create(session, model.TaskProcessingType, name="Git URL")
     get_or_create(session, model.TaskProcessingType, name="Other URL (no auth)")
     get_or_create(session, model.TaskProcessingType, name="Source Code")
+    get_or_create(session, model.TaskProcessingType, name="Devops")
 
     # task source query type
     get_or_create(session, model.TaskSourceQueryType, name="Git URL")
@@ -61,6 +62,7 @@ def seed(session: SqlSession, model: Any) -> None:
         session, model.TaskSourceQueryType, name="File Path (SFTP Connection)"
     )
     get_or_create(session, model.TaskSourceQueryType, name="File Path (FTP Connection)")
+    get_or_create(session, model.TaskSourceQueryType, name="Devops")
 
     # database type
     get_or_create(session, model.ConnectionDatabaseType, name="Postgres")

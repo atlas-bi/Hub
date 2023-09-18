@@ -36,6 +36,18 @@
                  data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
                 <div class="loader"></div>
             </div>
+        {% elif t.source_devops and t.source_type_id == 1 and t.source_query_type_id == 7 %}
+            <!-- code from url -->
+            <div class="content">
+                <a title="open page"
+                   class="is-inlineblock mb-3"
+                   href="{{ t.source_devops }}"
+                   target="_blank">{{ t.source_devops }}</a>
+            </div>
+            <div class="em-ajaxContent"
+                 data-src="{{ url_for('task_bp.task_get_source_code', task_id=t.id) }}">
+                <div class="loader"></div>
+            </div>
         {% elif t.source_url and t.source_type_id == 1 and t.source_query_type_id == 3 %}
             <!-- code from url -->
             <div class="content">

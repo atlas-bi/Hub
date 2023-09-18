@@ -63,7 +63,11 @@ def reset_db() -> None:
 @cli_bp.cli.command("seed")
 @with_appcontext
 def db_seed() -> None:
-    """Add command to seed the database."""
+    """Add command to seed the database.
+
+    This is run on each deploy to keep db settings updated.
+    poetry run flask --app=web cli seed
+    """
     sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
     from database import seed
 

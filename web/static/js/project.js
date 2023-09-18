@@ -601,7 +601,9 @@
         p.querySelector('.task-query-location').style.removeProperty('display');
         p.querySelector('.task-query-headers').style.removeProperty('display');
         p.querySelector('.task-query-cache').style.removeProperty('display');
-        p.querySelector('.task-query-requireOut').style.removeProperty('display');
+        p.querySelector('.task-query-requireOut').style.removeProperty(
+          'display',
+        );
       } else if (t.value === '2') {
         p.querySelector('.task-sourceSmb').style.removeProperty('display');
       } else if (t.value === '3') {
@@ -619,6 +621,7 @@
       p = t.closest('body');
 
       p.querySelector('.task-sourceGit').style.display = 'none';
+      p.querySelector('.task-sourceDevops').style.display = 'none';
       p.querySelector('.task-sourceFtpQuery').style.display = 'none';
       p.querySelector('.task-sourceSmbQuery').style.display = 'none';
       p.querySelector('.task-sourceSftpQuery').style.display = 'none';
@@ -639,12 +642,15 @@
         );
       } else if (t.value === '6') {
         p.querySelector('.task-sourceFtpQuery').style.removeProperty('display');
+      } else if (t.value === '7') {
+        p.querySelector('.task-sourceDevops').style.removeProperty('display');
       }
     } else if (e.target.closest('select[name="processingType"]')) {
       t = e.target.closest('select[name="processingType"]');
       p = t.closest('body');
 
       p.querySelector('.task-processingGit').style.display = 'none';
+      p.querySelector('.task-processingDevops').style.display = 'none';
       p.querySelector('.task-processingFtp').style.display = 'none';
       p.querySelector('.task-processingSmb').style.display = 'none';
       p.querySelector('.task-processingSftp').style.display = 'none';
@@ -667,6 +673,10 @@
       } else if (t.value === '6') {
         p.querySelector('.task-processingCode').style.removeProperty('display');
         p.querySelector('.task-processingCommand').style.display = 'none';
+      } else if (t.value === '7') {
+        p.querySelector('.task-processingDevops').style.removeProperty(
+          'display',
+        );
       } else {
         p.querySelector('.task-processingCommand').style.display = 'none';
       }

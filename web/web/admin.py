@@ -22,10 +22,6 @@ from web import db
 from web.model import Task, TaskLog
 from web.web import submit_executor
 
-# import re
-# import subprocess
-
-
 admin_bp = Blueprint("admin_bp", __name__)
 
 
@@ -42,9 +38,7 @@ def version() -> str:
             "https://api.github.com/repos/atlas-bi/Hub/releases/latest", timeout=10
         )
         upgrade_version = response.json()["name"]
-        print(response.json()["name"])
-    except BaseException as e:
-        print(e)
+    except:  # noqa: E722
         pass
 
     return render_template(

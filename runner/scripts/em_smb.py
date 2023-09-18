@@ -147,6 +147,7 @@ class Smb:
             self.password = app.config["SMB_PASSWORD"]
             self.server_ip = app.config["SMB_SERVER_IP"]
             self.server_name = app.config["SMB_SERVER_NAME"]
+            self.subfolder = app.config["SMB_SUBFOLDER"]
 
         self.conn = self.__connect()
 
@@ -307,7 +308,14 @@ class Smb:
             else:
                 dest_path = str(
                     Path(
-                        Path(sanitize_filename(self.task.project.name or ""))
+                        (
+                            Path(
+                                sanitize_filename(self.subfolder)
+                                / sanitize_filename(self.task.project.name or "")
+                            )
+                            if self.subfolder
+                            else Path(sanitize_filename(self.task.project.name or ""))
+                        )
                         / sanitize_filename(self.task.name or "")
                         / sanitize_filename(self.task.last_run_job_id or "")
                         / file_name
@@ -320,13 +328,16 @@ class Smb:
 
             path_builder = ""
             for my_path in my_dir:
-                path_builder += my_path + "/"
+                # only create directories in the backup drive. For tasks
+                # the user must already have a usable folder created.
+                if self.connection is None:
+                    path_builder += my_path + "/"
 
-                try:
-                    self.conn.listPath(self.share_name, path_builder)
-                # pylint: disable=broad-except
-                except OperationFailure:
-                    self.conn.createDirectory(self.share_name, path_builder)
+                    try:
+                        self.conn.listPath(self.share_name, path_builder)
+                    # pylint: disable=broad-except
+                    except OperationFailure:
+                        self.conn.createDirectory(self.share_name, path_builder)
 
             # pylint: disable=useless-else-on-loop
             else:

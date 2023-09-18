@@ -69,6 +69,16 @@ class Smtp:
                     app.config["SMTP_SERVER"], app.config["SMTP_PORT"], timeout=180
                 )
                 mail_server.ehlo()
+
+                if app.config["SMTP_USE_TLS"]:
+                    mail_server.starttls()
+                    mail_server.ehlo()
+
+                if app.config["SMTP_USERNAME"]:
+                    mail_server.login(
+                        app.config["SMTP_USERNAME"], app.config["SMTP_PASSWORD"]
+                    )
+
                 mail_server.sendmail(
                     app.config["SMTP_SENDER_EMAIL"], phone, self.msg.as_string()
                 )

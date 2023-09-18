@@ -141,6 +141,19 @@
             </div>
         </div>
     </section>
+    <!-- Devops -->
+    <section class="task-processingDevops"
+             {% if not t or t.processing_type_id != 7 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Devops Address</label>
+            <div class="control">
+                <input class="input"
+                       name="processingDevops"
+                       autocomplete="off"
+                       value="{{ t.processing_devops or '' }}" />
+            </div>
+        </div>
+    </section>
     <!-- URL -->
     <section class="task-processingUrl"
              {% if not t or t.processing_type_id != 5 %}style="display:none;"{% endif %}>
