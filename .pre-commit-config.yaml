@@ -12,8 +12,11 @@ exclude: >
   (?x)(
       migrations/|
       migrations_dev/|
-      package-lock.jons|
-      poetry.lock
+      package-lock.json|
+      poetry.lock|
+      web/static/.*\.min.*|
+      web/static/fonts/|
+      web/static/css/
   )
 
 repos:
@@ -23,7 +26,6 @@ repos:
   - id: pretty-format-json
     args: [--autofix]
   - id: check-json
-    exclude: package-lock.json
   - id: check-toml
   - id: check-yaml
   - id: end-of-file-fixer
