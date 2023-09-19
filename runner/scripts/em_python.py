@@ -66,7 +66,9 @@ class PyProcesser:
 
         # if output is not a file list, then swallow it.
         try:
-            output = ast.literal_eval(self.output)
+            # just get the last line of the output to allow other
+            # debug statements
+            output = ast.literal_eval(self.output.splitlines()[-1])
             if isinstance(output, List):
                 return output
         except BaseException:

@@ -147,7 +147,7 @@ class Smb:
             self.password = app.config["SMB_PASSWORD"]
             self.server_ip = app.config["SMB_SERVER_IP"]
             self.server_name = app.config["SMB_SERVER_NAME"]
-            self.subfolder = app.config["SMB_SUBFOLDER"]
+            self.subfolder = app.config.get("SMB_SUBFOLDER")
 
         self.conn = self.__connect()
 
@@ -362,7 +362,7 @@ class Smb:
                     str(self.dir.joinpath(file_name)), "rb", buffering=0
                 ) as file_obj:
                     uploaded_size = self.conn.storeFile(
-                        self.share_name, dest_path, file_obj
+                        self.share_name, dest_path, file_obj, timeout=120
                     )
 
             server_name = (

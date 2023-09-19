@@ -70,13 +70,14 @@ class Smtp:
                 )
                 mail_server.ehlo()
 
-                if app.config["SMTP_USE_TLS"]:
+                if app.config.get("SMTP_USE_TLS", False):
                     mail_server.starttls()
                     mail_server.ehlo()
 
-                if app.config["SMTP_USERNAME"]:
+                if app.config.get("SMTP_USERNAME"):
                     mail_server.login(
-                        app.config["SMTP_USERNAME"], app.config["SMTP_PASSWORD"]
+                        app.config["SMTP_USERNAME"],
+                        app.config.get("SMTP_PASSWORD", None),
                     )
 
                 mail_server.sendmail(
