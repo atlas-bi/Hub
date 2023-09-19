@@ -1,7 +1,9 @@
 {
-  "author": "Google Inc.",
+  "name": "@fontsource/rasa",
+  "version": "5.0.3",
   "description": "Self-host the Rasa font in a neatly bundled NPM package.",
-  "homepage": "https://fontsource.org/fonts/rasa",
+  "main": "index.css",
+  "publishConfig": {"access": "public"},
   "keywords": [
     "fontsource",
     "font",
@@ -16,17 +18,13 @@
     "typeface",
     "variable"
   ],
+  "author": "Google Inc.",
   "license": "OFL-1.1",
-  "main": "index.css",
-  "name": "@fontsource/rasa",
-  "publishConfig": {
-    "access": "public"
-  },
-  "publishHash": "d06bed800a4e0ec6",
+  "homepage": "https://fontsource.org/fonts/rasa",
   "repository": {
-    "directory": "fonts/google/rasa",
     "type": "git",
-    "url": "https://github.com/fontsource/font-files.git"
+    "url": "https://github.com/fontsource/font-files.git",
+    "directory": "fonts/google/rasa"
   },
-  "version": "5.0.3"
+  "publishHash": "d06bed800a4e0ec6"
 }

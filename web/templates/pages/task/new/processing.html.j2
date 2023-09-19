@@ -40,7 +40,7 @@
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
                      ">Wildcards and
-                    <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                    <a href="https://strftime.org" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
             </label>
@@ -79,7 +79,7 @@
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
                      ">Wildcards and
-                    <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                    <a href="https://strftime.org" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
             </label>
@@ -118,7 +118,7 @@
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
                      ">Wildcards and
-                    <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                    <a href="https://strftime.org" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
             </label>
@@ -138,6 +138,19 @@
                        name="processingGit"
                        autocomplete="off"
                        value="{{ t.processing_git or '' }}" />
+            </div>
+        </div>
+    </section>
+    <!-- Devops -->
+    <section class="task-processingDevops"
+             {% if not t or t.processing_type_id != 7 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Devops Address</label>
+            <div class="control">
+                <input class="input"
+                       name="processingDevops"
+                       autocomplete="off"
+                       value="{{ t.processing_devops or '' }}" />
             </div>
         </div>
     </section>

@@ -8,6 +8,7 @@ import os
 import socket
 import sys
 import tempfile
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -29,6 +30,7 @@ from urllib.request import ftpwrapper
 from urllib.response import addinfourl
 
 from nmb.NetBIOS import NetBIOS
+from smb.base import NotConnectedError, SMBTimeout
 from smb.SMBConnection import SMBConnection
 
 USE_NTLM = True
@@ -90,7 +92,28 @@ class SMBHandler(urllib.request.BaseHandler):
             conn = SMBConnection(
                 user, passwd, myname, server_name, domain=domain, use_ntlm_v2=USE_NTLM
             )
-            conn.connect(host, port)
+
+            # retry
+            retry = 0
+            while True:
+                try:
+                    connected = conn.connect(host, port, timeout=120)
+                    if not connected:
+                        raise AssertionError()
+                    break
+
+                except (
+                    AssertionError,
+                    ConnectionResetError,
+                    SMBTimeout,
+                    NotConnectedError,
+                ) as e:
+                    if retry <= 10:
+                        retry += 1
+                        time.sleep(5)  # wait 5 sec before retrying
+                        continue
+
+                    raise ValueError(f"Connection failed.\n{e}")
 
             headers = email.message.Message()
             if req.data:

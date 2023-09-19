@@ -240,6 +240,13 @@ class Config:
     HTTP_VERIFY_SSL = False
 
     """
+        Azure Devops connection
+    """
+
+    DEVOPS_URL = "https://dev.azure.com/orgname/"
+    DEVOPS_TOKEN = r"token"
+
+    """
         Default SQL Connection Settings
     """
     # minutes
@@ -266,6 +273,9 @@ class Config:
     SMTP_SENDER_EMAIL = "noreply@example.net"
     SMTP_DEFAULT_RECIEVER = "noreply@example.net"
     SMTP_SUBJECT_PREFIX = "### "
+    SMTP_USE_TLS = False
+    SMTP_USERNAME = None
+    SMTP_PASSWORD = None
 
     EXECUTOR_TYPE = "thread"
     EXECUTOR_MAX_WORKERS = 12

@@ -1,6 +1,7 @@
 """Runner API routes."""
 
 import datetime
+import re
 import sys
 from pathlib import Path
 
@@ -24,6 +25,7 @@ from runner.scripts.em_code import SourceCode
 from runner.scripts.em_date import DateParsing
 from runner.scripts.em_ftp import Ftp
 from runner.scripts.em_ftp import connect as ftp_connect
+from runner.scripts.em_jdbc import connect as jdbc_connect
 from runner.scripts.em_params import ParamLoader
 from runner.scripts.em_postgres import connect as pg_connect
 from runner.scripts.em_sftp import Sftp
@@ -265,6 +267,8 @@ def task_get_source_code(task_id: int) -> dict:
         # pylint: disable=R1705
         if task.source_query_type_id == 1:
             return jsonify({"code": source.gitlab(task.source_git)})
+        elif task.source_query_type_id == 7:
+            return jsonify({"code": source.devops(task.source_devops)})
         elif task.source_query_type_id == 3:
             return jsonify({"code": source.web_url(task.source_url)})
         elif task.source_query_type_id == 4:
@@ -291,7 +295,18 @@ def task_get_processing_git_code(task_id: int) -> dict:
         elif task.processing_type_id == 6:
             # we should be using the sourcecode class to insert vars
             return jsonify({"code": task.processing_code})
-
+        elif task.processing_type_id == 7:
+            # if there is a branch we need rearrange the url.
+            branch = re.findall(r"(&version[=]GB.+?)$", task.processing_devops)
+            url = (
+                re.sub(
+                    (branch[0] if len(branch) > 0 else ""), "", task.processing_devops
+                )
+                + "/"
+                + task.processing_command
+                + (branch[0] if len(branch) > 0 else "")
+            )
+            return jsonify({"code": source.devops(url)})
         return jsonify({})
     # pylint: disable=broad-except
     except BaseException as e:
@@ -351,6 +366,13 @@ def database_online(database_id: int) -> str:
                     database_connection.connection_string, app.config["PASS_KEY"]
                 ).strip(),
                 database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
+            )
+            conn.close()
+        elif database_connection.type_id == 3:
+            conn, _ = jdbc_connect(
+                em_decrypt(
+                    database_connection.connection_string, app.config["PASS_KEY"]
+                ).strip(),
             )
             conn.close()
         else:
@@ -465,6 +487,9 @@ def refresh_cache(task_id: int) -> str:
             return "Cache refreshed."
         elif task.source_query_type_id == 3:
             source.web_url(task.source_url)
+            return "Cache refreshed."
+        elif task.source_query_type_id == 7:
+            source.devops(task.source_devops)
             return "Cache refreshed."
 
         return "Cache refreshing is only for git or web source queries."

@@ -21,11 +21,10 @@ from flask_migrate import Migrate
 from flask_redis import FlaskRedis
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy_caching import CachingQuery
 
 cache = Cache()
 compress = Compress()
-db = SQLAlchemy(query_class=CachingQuery)
+db = SQLAlchemy()
 executor = Executor()
 htmlmin = HTMLMIN(remove_empty_space=True)
 migrate = Migrate(compare_type=True)
