@@ -37,7 +37,7 @@ def version() -> str:
         response = requests.get(
             "https://api.github.com/repos/atlas-bi/Hub/releases/latest", timeout=10
         )
-        upgrade_version = response.json()["name"]
+        upgrade_version = response.json()["name"].replace("v", "")
     except:  # noqa: E722
         pass
 
