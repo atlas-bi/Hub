@@ -1,7 +1,9 @@
 {
-  "author": "Google Inc.",
+  "name": "@fontsource/inter",
+  "version": "5.0.3",
   "description": "Self-host the Inter font in a neatly bundled NPM package.",
-  "homepage": "https://fontsource.org/fonts/inter",
+  "main": "index.css",
+  "publishConfig": {"access": "public"},
   "keywords": [
     "fontsource",
     "font",
@@ -16,17 +18,13 @@
     "typeface",
     "variable"
   ],
+  "author": "Google Inc.",
   "license": "OFL-1.1",
-  "main": "index.css",
-  "name": "@fontsource/inter",
-  "publishConfig": {
-    "access": "public"
-  },
-  "publishHash": "f30be48934c43ab4",
+  "homepage": "https://fontsource.org/fonts/inter",
   "repository": {
-    "directory": "fonts/google/inter",
     "type": "git",
-    "url": "https://github.com/fontsource/font-files.git"
+    "url": "https://github.com/fontsource/font-files.git",
+    "directory": "fonts/google/inter"
   },
-  "version": "5.0.3"
+  "publishHash": "f30be48934c43ab4"
 }

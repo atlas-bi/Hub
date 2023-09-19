@@ -147,6 +147,7 @@ class Smb:
             self.password = app.config["SMB_PASSWORD"]
             self.server_ip = app.config["SMB_SERVER_IP"]
             self.server_name = app.config["SMB_SERVER_NAME"]
+            self.subfolder = app.config.get("SMB_SUBFOLDER")
 
         self.conn = self.__connect()
 
@@ -190,10 +191,15 @@ class Smb:
             new_path = str(Path(directory).joinpath(dirname))
             yield from self._walk(new_path)
 
-    def __load_file(self, file_name: str) -> IO[str]:
+    def __load_file(self, file_name: str, index: int, length: int) -> IO[str]:
+        RunnerLog(
+            self.task, self.run_id, 10, f"({index} of {length}) downloading {file_name}"
+        )
+
         director = urllib.request.build_opener(SMBHandler)
 
         password = em_decrypt(self.password, app.config["PASS_KEY"])
+
         open_file_for_read = director.open(
             f"smb://{self.username}:{password}@{self.server_name},{self.server_ip}/{self.share_name}/{file_name}"
         )
@@ -279,9 +285,12 @@ class Smb:
                 )
 
                 # if a file was found, try to open.
-                return [self.__load_file(file_name) for file_name in file_list]
+                return [
+                    self.__load_file(file_name, i, len(file_list))
+                    for i, file_name in enumerate(file_list, 1)
+                ]
 
-            return [self.__load_file(file_name)]
+            return [self.__load_file(file_name, 1, 1)]
         except BaseException as e:
             raise RunnerException(
                 self.task,
@@ -299,7 +308,14 @@ class Smb:
             else:
                 dest_path = str(
                     Path(
-                        Path(sanitize_filename(self.task.project.name or ""))
+                        (
+                            Path(
+                                sanitize_filename(self.subfolder)
+                                / sanitize_filename(self.task.project.name or "")
+                            )
+                            if self.subfolder
+                            else Path(sanitize_filename(self.task.project.name or ""))
+                        )
                         / sanitize_filename(self.task.name or "")
                         / sanitize_filename(self.task.last_run_job_id or "")
                         / file_name
@@ -312,13 +328,16 @@ class Smb:
 
             path_builder = ""
             for my_path in my_dir:
-                path_builder += my_path + "/"
+                # only create directories in the backup drive. For tasks
+                # the user must already have a usable folder created.
+                if self.connection is None:
+                    path_builder += my_path + "/"
 
-                try:
-                    self.conn.listPath(self.share_name, path_builder)
-                # pylint: disable=broad-except
-                except OperationFailure:
-                    self.conn.createDirectory(self.share_name, path_builder)
+                    try:
+                        self.conn.listPath(self.share_name, path_builder)
+                    # pylint: disable=broad-except
+                    except OperationFailure:
+                        self.conn.createDirectory(self.share_name, path_builder)
 
             # pylint: disable=useless-else-on-loop
             else:
@@ -343,7 +362,7 @@ class Smb:
                     str(self.dir.joinpath(file_name)), "rb", buffering=0
                 ) as file_obj:
                     uploaded_size = self.conn.storeFile(
-                        self.share_name, dest_path, file_obj
+                        self.share_name, dest_path, file_obj, timeout=120
                     )
 
             server_name = (

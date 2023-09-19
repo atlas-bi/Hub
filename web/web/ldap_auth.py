@@ -101,6 +101,7 @@ class LDAP:
             conn.set_option(ldap.OPT_NETWORK_TIMEOUT, self.app.config["LDAP_TIMEOUT"])
             conn = self._set_custom_options(conn)
             conn.protocol_version = ldap.VERSION3
+            conn.set_option(ldap.OPT_REFERRALS, 0)
             if self.app.config["LDAP_USE_TLS"]:
                 conn.start_tls_s()
             return conn

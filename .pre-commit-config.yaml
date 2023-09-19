@@ -12,8 +12,11 @@ exclude: >
   (?x)(
       migrations/|
       migrations_dev/|
-      package-lock.jons|
-      poetry.lock
+      package-lock.json|
+      poetry.lock|
+      web/static/.*\.min.*|
+      web/static/fonts/|
+      web/static/css/
   )
 
 repos:
@@ -23,7 +26,6 @@ repos:
   - id: pretty-format-json
     args: [--autofix]
   - id: check-json
-    exclude: package-lock.json
   - id: check-toml
   - id: check-yaml
   - id: end-of-file-fixer
@@ -34,7 +36,7 @@ repos:
     exclude: migrations* | docs*
     additional_dependencies: [toml]
 - repo: https://github.com/psf/black
-  rev: 23.7.0
+  rev: 23.9.1
   hooks:
   - id: black
     language_version: python3.9
@@ -48,6 +50,6 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.32.1
+  rev: v1.33.0
   hooks:
   - id: djlint-jinja

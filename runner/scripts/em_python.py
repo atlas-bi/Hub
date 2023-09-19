@@ -1,6 +1,7 @@
 """Python script runner."""
 
 
+import ast
 import datetime
 import sys
 from itertools import chain
@@ -64,9 +65,15 @@ class PyProcesser:
         self.__run_script()
 
         # if output is not a file list, then swallow it.
-
-        if isinstance(self.output, List):
-            return self.output
+        try:
+            # just get the last line of the output to allow other
+            # debug statements
+            output = ast.literal_eval(self.output.splitlines()[-1])
+            if isinstance(output, List):
+                return output
+        except BaseException:
+            # will raise an exception on some output.
+            pass
         return None
 
     def __build_env(self) -> None:
@@ -193,6 +200,7 @@ class PyProcesser:
                     "dateutil": "python-dateutil",
                     "smb": "pysmb",
                     "dotenv": "python-dotenv",
+                    "azure": "azure-devops",
                 }
 
                 # clean list
@@ -365,6 +373,7 @@ class PyProcesser:
                     self.task.source_query_include_header
                 ),
                 "source_git": clean_string(self.task.source_git),
+                "source_devops": clean_string(self.task.source_devops),
                 "source_url": clean_string(self.task.source_url),
                 "source_require_sql_output": clean_string(
                     self.task.source_require_sql_output

@@ -8,12 +8,15 @@ import os
 import re
 import shutil
 import sys
+import tempfile
 import time
 import urllib.parse
 from pathlib import Path
 from typing import IO, List, Optional
 
+import azure.devops.credentials as cd
 import requests
+from azure.devops.connection import Connection
 from flask import current_app as app
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
@@ -25,6 +28,7 @@ from runner.scripts.em_code import SourceCode
 from runner.scripts.em_date import DateParsing
 from runner.scripts.em_file import File, file_size
 from runner.scripts.em_ftp import Ftp
+from runner.scripts.em_jdbc import Jdbc
 from runner.scripts.em_messages import RunnerException, RunnerLog
 from runner.scripts.em_params import ParamLoader
 from runner.scripts.em_postgres import Postgres
@@ -64,6 +68,14 @@ while True:
         break
     except OverflowError:
         MAX_INT = int(MAX_INT / 10)
+
+
+class AttributeDict(dict):
+    """Allow parameter access with dot notation."""
+
+    __getattr__ = dict.__getitem__  # type: ignore
+    __setattr__ = dict.__setitem__  # type: ignore
+    __delattr__ = dict.__delitem__  # type: ignore
 
 
 class Runner:
@@ -265,6 +277,25 @@ class Runner:
                         self.task, self.run_id, 20, f"Failed to run query.\n{message}"
                     )
 
+            elif external_db.database_type.id == 3:  # jdbc
+                try:
+                    self.query_output_size, self.source_files = Jdbc(
+                        task=self.task,
+                        run_id=self.run_id,
+                        connection=em_decrypt(
+                            external_db.connection_string, app.config["PASS_KEY"]
+                        ),
+                        directory=self.temp_path,
+                    ).run(query)
+
+                except ValueError as message:
+                    raise RunnerException(self.task, self.run_id, 20, message)
+
+                except BaseException as message:
+                    raise RunnerException(
+                        self.task, self.run_id, 20, f"Failed to run query.\n{message}"
+                    )
+
             RunnerLog(
                 self.task,
                 self.run_id,
@@ -352,6 +383,9 @@ class Runner:
         elif self.task.source_query_type_id == 1:  # gitlab url
             query = self.source_loader.gitlab(self.task.source_git)
 
+        elif self.task.source_query_type_id == 7:  # devops url
+            query = self.source_loader.devops(self.task.source_devops)
+
         elif self.task.source_query_type_id == 4:  # code
             query = self.source_loader.source()
 
@@ -389,6 +423,7 @@ class Runner:
         # 4 = git url
         # 5 = other url
         # 6 = source code
+        # 7 = devops url
 
         processing_script_name = self.temp_path / (self.run_id + ".py")
 
@@ -558,6 +593,95 @@ class Runner:
             self.task.processing_type_id == 6 and self.task.processing_code is not None
         ):
             my_file = self.task.processing_code
+
+        elif (
+            self.task.processing_type_id == 7
+            and self.task.processing_devops is not None
+        ):
+            # if a dir is specified then download all files
+            if (
+                self.task.processing_command is not None
+                and self.task.processing_command != ""
+            ):
+                try:
+                    token = app.config["DEVOPS_TOKEN"]
+                    creds = cd.BasicAuthentication("", token)
+                    connection = Connection(
+                        base_url=app.config["DEVOPS_URL"], creds=creds
+                    )
+                    # Get a client (the "core" client provides access to projects, teams, etc)
+                    core_client = connection.clients.get_core_client()
+
+                    get_projects_response = core_client.get_projects()
+
+                    git = connection.clients.get_git_client()
+
+                    url = self.task.processing_devops
+
+                    # get the org, project and repository from the url
+                    org_name = re.findall(r"\.(?:com)\/(.+?)\/", url)
+                    project = re.findall(rf"\.(?:com\/{org_name[0]})\/(.+?)\/", url)
+                    repo_name = re.findall(
+                        rf"\.(?:com\/{org_name[0]}\/{project[0]}\/_git)\/(.+?)\?", url
+                    )
+                    # need this to get the projects id
+                    projects = [
+                        i for i in get_projects_response if (i.name == project[0])
+                    ]
+                    path = re.findall(r"(path[=])\/(.+?)(&|$)", url)
+
+                    # if branch is specified, we need to get that, else pass in main branch.
+                    this_branch = re.findall(r"(version[=]GB)(.+?)$", url)
+                    version = AttributeDict(
+                        {
+                            "version": (
+                                "main" if len(this_branch) == 0 else this_branch[0][1]
+                            ),
+                            "version_type": 0,
+                            "version_options": 0,
+                        }
+                    )
+
+                    # this for repository id.
+                    repos = git.get_repositories(
+                        [i for i in projects if (i.name == project[0])][0].id
+                    )
+                    repo_id = [i.id for i in repos if (i.name == repo_name[0])][0]
+
+                    item = git.get_items(
+                        repository_id=repo_id,
+                        scope_path=urllib.parse.unquote(path[0][1]),
+                        version_descriptor=version,
+                    )
+                    for i in item:
+                        if i.is_folder is not None:
+                            tree = git.get_tree(repository_id=repo_id, sha1=i.object_id)
+                            for ob in tree.tree_entries:
+                                obj = git.get_blob_content(
+                                    repository_id=repo_id,
+                                    sha1=ob.object_id,
+                                    download=True,
+                                )
+                                with open(
+                                    os.path.join(str(self.temp_path), ob.relative_path),
+                                    "wb",
+                                ) as f:
+                                    for code in obj:
+                                        f.write(code)
+
+                # pylint: disable=broad-except
+                except BaseException:
+                    raise RunnerException(
+                        self.task,
+                        self.run_id,
+                        8,
+                        "Processor failed to connect to devops repo.",
+                    )
+
+            # otherwise get py file
+            else:
+                my_file = self.source_loader.devops(self.task.processing_devops)
+
         elif self.task.processing_type_id > 0:
             raise RunnerException(
                 self.task,
@@ -596,10 +720,33 @@ class Runner:
                 self.task, self.run_id, 8, f"Processing script failure:\n{e}"
             )
 
-        # # allow processer to rename file
+        # allow processor to rename file
         if output:
-            RunnerLog(self.task, self.run_id, 8, f"Processing script output:\n{output}")
-            self.data_files = output
+            RunnerLog(
+                self.task,
+                self.run_id,
+                8,
+                f"Processing script generated files:\n{output}",
+            )
+
+            # convert the files into a set of named temp files and remove them.
+            self.source_files = []
+            for file in output:
+                original = Path(file)
+                original_name = str(original.absolute())
+                with tempfile.NamedTemporaryFile(
+                    mode="wb+", delete=False, dir=self.temp_path
+                ) as data_file:
+                    # write contents
+                    data_file.write(original.read_bytes())
+
+                    # set name and remove original
+                    original.unlink()
+
+                    os.link(data_file.name, original_name)
+
+                data_file.name = original_name  # type: ignore[misc]
+                self.source_files.append(data_file)
 
     def __store_files(self) -> None:
         if not self.source_files or len(self.source_files) == 0:
@@ -619,13 +766,16 @@ class Runner:
                 else Path(this_file.name).stat().st_size
             )
 
+            # get new parameters just in case it was changed in the processing script.
+            params = ParamLoader(self.task, self.run_id)
+
             # get file name. if no name specified in task setting, then use temp name.
             try:
                 file_name, file_path, file_hash = File(
                     task=self.task,
                     run_id=self.run_id,
                     data_file=this_file,
-                    params=self.param_loader,
+                    params=params,
                 ).save()
 
             except BaseException as e:
