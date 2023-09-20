@@ -7,9 +7,9 @@ Database migrations are run through a manager script.
 
 .. code-block:: console
 
-    export FLASK_APP=web
-    flask db migrate
-    flask db upgrade
+    warning, this will use db from prod config.
+    poetry run flask --app=web db migrate
+    poetry run flask --app=web db upgrade
 
 Sometimes there is a conflict between flask-migrations (Alembic migrations)
 and the Postgresql db - Postgres will add some indexes that flask-migrations
@@ -818,7 +818,7 @@ class Task(db.Model):
 
     # source locations
 
-    # git/url/code/sftp/ftp/smb
+    # git/url/code/sftp/ftp/smb/devops
     source_query_type_id = db.Column(
         db.Integer, db.ForeignKey(TaskSourceQueryType.id), nullable=True, index=True
     )
@@ -830,7 +830,6 @@ class Task(db.Model):
 
     # source devops
     source_devops = db.Column(db.String(1000), nullable=True)
-    
     # source web url
     source_url = db.Column(db.String(1000), nullable=True)
 

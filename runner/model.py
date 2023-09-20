@@ -7,9 +7,9 @@ Database migrations are run through a manager script.
 
 .. code-block:: console
 
-    export FLASK_APP=web
-    flask db migrate
-    flask db upgrade
+    warning, this will use db from prod config.
+    poetry run flask --app=web db migrate
+    poetry run flask --app=web db upgrade
 
 Sometimes there is a conflict between flask-migrations (Alembic migrations)
 and the Postgresql db - Postgres will add some indexes that flask-migrations

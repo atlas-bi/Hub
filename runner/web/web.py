@@ -1,6 +1,7 @@
 """Runner API routes."""
 
 import datetime
+import re
 import sys
 import re
 from pathlib import Path
@@ -25,6 +26,7 @@ from runner.scripts.em_code import SourceCode
 from runner.scripts.em_date import DateParsing
 from runner.scripts.em_ftp import Ftp
 from runner.scripts.em_ftp import connect as ftp_connect
+from runner.scripts.em_jdbc import connect as jdbc_connect
 from runner.scripts.em_params import ParamLoader
 from runner.scripts.em_postgres import connect as pg_connect
 from runner.scripts.em_sftp import Sftp
@@ -296,9 +298,16 @@ def task_get_processing_git_code(task_id: int) -> dict:
             # we should be using the sourcecode class to insert vars
             return jsonify({"code": task.processing_code})
         elif task.processing_type_id == 7:
-            #if there is a branch we need rearrange the url.
-            branch = re.findall(r"(&version[=]GB.+?)$",task.processing_devops)
-            url = re.sub((branch[0] if len(branch) >0 else ''),'',task.processing_devops) + "/"+task.processing_command + (branch[0] if len(branch) >0 else '')
+            # if there is a branch we need rearrange the url.
+            branch = re.findall(r"(&version[=]GB.+?)$", task.processing_devops)
+            url = (
+                re.sub(
+                    (branch[0] if len(branch) > 0 else ""), "", task.processing_devops
+                )
+                + "/"
+                + task.processing_command
+                + (branch[0] if len(branch) > 0 else "")
+            )
             return jsonify({"code": source.devops(url)})
         return jsonify({})
     # pylint: disable=broad-except

@@ -1,6 +1,7 @@
 """Python script runner."""
 
 
+import ast
 import datetime
 import sys
 from itertools import chain
@@ -64,9 +65,17 @@ class PyProcesser:
         self.__run_script()
 
         # if output is not a file list, then swallow it.
-
-        if isinstance(self.output, List):
-            return self.output
+        try:
+            # just get the last line of the output to allow other
+            # debug statements
+            output = ast.literal_eval(self.output.splitlines()[-1])
+            if isinstance(output, List):
+                # check if they are existing
+                valid_paths = [x for x in output if Path(x).is_file()]
+                return valid_paths or None
+        except BaseException:
+            # will raise an exception on some output.
+            pass
         return None
 
     def __build_env(self) -> None:

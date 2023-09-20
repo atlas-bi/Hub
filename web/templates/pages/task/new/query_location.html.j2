@@ -49,6 +49,21 @@
         </div>
     </section>
     <!--
+                 url to Devops or other source. Site settings must have base path configured. This site requires login
+ -->
+    <section class="task-sourceDevops block"
+             {% if not t or t.source_query_type_id != 7 %}style="display:none;"{% endif %}>
+        <div class="field">
+            <label class="label">Devops Address</label>
+            <div class="control">
+                <input class="input"
+                       name="sourceDevops"
+                       autocomplete="off"
+                       value="{{ t.source_devops or '' }}" />
+            </div>
+        </div>
+    </section>
+    <!--
                 smb
 -->
     <section class="task-sourceSmbQuery block"
@@ -79,7 +94,7 @@
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
                      ">Wildcards and
-                    <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                    <a href="https://strftime.org" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
             </label>
@@ -120,7 +135,7 @@
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
                      ">Wildcards and
-                    <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                    <a href="https://strftime.org" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
             </label>
@@ -161,7 +176,7 @@
             <label class="label has-text-weight-normal">
                 <small class="has-tooltip has-tooltip-arrow has-tooltip-multiline" data-tooltip="{% include "/sections/py_dates.html.j2" %}
                      ">Wildcards and
-                    <a href="" target="_blank" rel="noopener">strftime patterns</a>
+                    <a href="https://strftime.org" target="_blank" rel="noopener">strftime patterns</a>
                     can be used in filenames.
                 </small>
             </label>
@@ -187,9 +202,7 @@
         </div>
     </section>
     <div class="field task-query-headers"
-         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %}
-             style="display:none;"
-         {% endif %}>
+         {% if t and t.source_type_id in [3,2,5,6] %}style="display:none;"{% endif %}>
         <input class="is-checkradio is-info"
                id="task_include_query_headers"
                type="checkbox"
@@ -199,10 +212,8 @@
                name="task_include_query_headers"
                value="{%- if not t or (t and t.source_query_include_header == 1) -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
-    <div class="field"
-         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %}
-             style="display:none;"
-         {% endif %}>
+    <div class="field task-query-cache"
+         {% if t and t.source_type_id in [3,2,5,6] %}style="display:none;"{% endif %}>
         <input class="is-checkradio is-info"
                id="task_enable_source_cache"
                type="checkbox"
@@ -212,10 +223,8 @@
                name="task_enable_source_cache"
                value="{%- if not t or (t and t.enable_source_cache == 1) -%} 1 {%- else -%} 0 {%- endif -%}" />
     </div>
-    <div class="field"
-         {% if not t or not t.source_type_id or t.source_type_id == 3 or t.source_type_id == 2 or t.source_type_id == 5 or t.source_type_id == 6 %}
-             style="display:none;"
-         {% endif %}>
+    <div class="field task-query-requireOut"
+         {% if t and t.source_type_id in [3,2,5,6] %}style="display:none;"{% endif %}>
         <input class="is-checkradio is-info"
                id="task_require_sql_output"
                type="checkbox"

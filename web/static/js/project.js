@@ -593,11 +593,17 @@
       p.querySelector('.task-query-location').style.display = 'none';
       p.querySelector('.task-sourceSsh').style.display = 'none';
       p.querySelector('.task-query-headers').style.display = 'none';
+      p.querySelector('.task-query-cache').style.display = 'none';
+      p.querySelector('.task-query-requireOut').style.display = 'none';
 
       if (t.value === '1') {
         p.querySelector('.task-sourceDatabase').style.removeProperty('display');
         p.querySelector('.task-query-location').style.removeProperty('display');
         p.querySelector('.task-query-headers').style.removeProperty('display');
+        p.querySelector('.task-query-cache').style.removeProperty('display');
+        p.querySelector('.task-query-requireOut').style.removeProperty(
+          'display',
+        );
       } else if (t.value === '2') {
         p.querySelector('.task-sourceSmb').style.removeProperty('display');
       } else if (t.value === '3') {
@@ -614,7 +620,7 @@
       t = e.target.closest('select[name="sourceQueryType"]');
       p = t.closest('body');
 
-      p.querySelector('.task-sourceGit').style.display = 'none';      
+      p.querySelector('.task-sourceGit').style.display = 'none';
       p.querySelector('.task-sourceDevops').style.display = 'none';
       p.querySelector('.task-sourceFtpQuery').style.display = 'none';
       p.querySelector('.task-sourceSmbQuery').style.display = 'none';
@@ -668,7 +674,9 @@
         p.querySelector('.task-processingCode').style.removeProperty('display');
         p.querySelector('.task-processingCommand').style.display = 'none';
       } else if (t.value === '7') {
-        p.querySelector('.task-processingDevops').style.removeProperty('display');
+        p.querySelector('.task-processingDevops').style.removeProperty(
+          'display',
+        );
       } else {
         p.querySelector('.task-processingCommand').style.display = 'none';
       }

@@ -5,8 +5,10 @@ import re
 import urllib.parse
 from typing import Optional
 
+import azure.devops.credentials as cd
 import requests
 import urllib3
+from azure.devops.connection import Connection
 from flask import current_app as app
 
 from runner.extensions import db
@@ -24,6 +26,14 @@ class AttributeDict(dict):
     __getattr__ = dict.__getitem__
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
+
+class AttributeDict(dict):
+    """Allow parameter access with dot notation."""
+
+    __getattr__ = dict.__getitem__  # type: ignore
+    __setattr__ = dict.__setitem__  # type: ignore
+    __delattr__ = dict.__delitem__  # type: ignore
+
 
 class SourceCode:
     """Group of functions used to get various type of source code for task runner."""
@@ -50,12 +60,12 @@ class SourceCode:
         self.refresh_cache = refresh_cache
 
     def devops(self, url: str) -> str:
-        """get source code from azure devops using authentication"""
+        """Get source code from azure devops using authentication."""
         if url:
             try:
                 token = app.config["DEVOPS_TOKEN"]
-                creds = cd.BasicAuthentication('',token)
-                connection = Connection(base_url=app.config["DEVOPS_URL"],creds=creds)
+                creds = cd.BasicAuthentication("", token)
+                connection = Connection(base_url=app.config["DEVOPS_URL"], creds=creds)
                 # Get a client (the "core" client provides access to projects, teams, etc)
                 core_client = connection.clients.get_core_client()
 
@@ -63,29 +73,41 @@ class SourceCode:
 
                 git = connection.clients.get_git_client()
 
-
-                #get the org, project and repository from the url
-                orgName = re.findall(r"\.(?:com)\/(.+?)\/", url)
-                project = re.findall(rf"\.(?:com\/{orgName[0]})\/(.+?)\/", url)
-                repoName = re.findall(rf"\.(?:com\/{orgName[0]}\/{project[0]}\/_git)\/(.+?)\?", url)
-                path = re.findall(r"(path[=])\/(.+?)(&|$)",url)
-                branch = re.findall(r"(version[=]GB)(.+?)$",url)
-                version = AttributeDict({'version':('main' if len(branch) == 0 else branch[0][1]), 'version_type':0,'version_options':0})  
-                #need this to get the projects id
+                # get the org, project and repository from the url
+                org_name = re.findall(r"\.(?:com)\/(.+?)\/", url)
+                project = re.findall(rf"\.(?:com\/{org_name[0]})\/(.+?)\/", url)
+                repo_name = re.findall(
+                    rf"\.(?:com\/{org_name[0]}\/{project[0]}\/_git)\/(.+?)\?", url
+                )
+                path = re.findall(r"(path[=])\/(.+?)(&|$)", url)
+                branch = re.findall(r"(version[=]GB)(.+?)$", url)
+                version = AttributeDict(
+                    {
+                        "version": ("main" if len(branch) == 0 else branch[0][1]),
+                        "version_type": 0,
+                        "version_options": 0,
+                    }
+                )
+                # need this to get the projects id
                 projects = [i for i in get_projects_response if (i.name == project[0])]
 
-                #this for repository id.
-                repos = git.get_repositories([i for i in projects if (i.name == project[0])][0].id)
-                repo_id = [i.id for i in repos if (i.name == repoName[0])][0]
+                # this for repository id.
+                repos = git.get_repositories(
+                    [i for i in projects if (i.name == project[0])][0].id
+                )
+                repo_id = [i.id for i in repos if (i.name == repo_name[0])][0]
 
-                
-                item = git.get_item_content(repository_id = repo_id,path=urllib.parse.unquote(path[0][1]), version_descriptor = version)
+                item = git.get_item_content(
+                    repository_id=repo_id,
+                    path=urllib.parse.unquote(path[0][1]),
+                    version_descriptor=version,
+                )
                 text = ""
                 for x in item:
-                    text = text + x.decode('utf-8')
+                    text = text + x.decode("utf-8")
                 if path[0][1].endswith(".sql"):
-                    #\ufeff character shows up sometimes. Lets remove it.
-                    self.query = text.replace(u'\ufeff','') 
+                    # \ufeff character shows up sometimes. Lets remove it.
+                    self.query = text.replace("\ufeff", "")
                     self.db_type = (
                         "mssql"
                         if self.task.source_database_conn
@@ -105,7 +127,7 @@ class SourceCode:
                                 15,
                                 "Source cache manually refreshed.",
                             )
-                     # insert params
+                    # insert params
                     return self.cleanup()
 
                 return (
@@ -161,7 +183,6 @@ class SourceCode:
         raise RunnerException(
             self.task, self.run_id, 15, "No url specified to get source from."
         )
-
 
     def gitlab(self, url: str) -> str:
         """Get source code from gitlab using authentication."""
