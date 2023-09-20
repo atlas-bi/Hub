@@ -729,24 +729,33 @@ class Runner:
                 f"Processing script generated files:\n{output}",
             )
 
-            # convert the files into a set of named temp files and remove them.
-            self.source_files = []
-            for file in output:
-                original = Path(file)
-                original_name = str(original.absolute())
-                with tempfile.NamedTemporaryFile(
-                    mode="wb+", delete=False, dir=self.temp_path
-                ) as data_file:
-                    # write contents
-                    data_file.write(original.read_bytes())
+            try:
+                # convert the files into a set of named temp files and remove them.
+                self.source_files = []
+                for file in output:
+                    original = Path(file)
+                    original_name = str(original.absolute())
+                    with tempfile.NamedTemporaryFile(
+                        mode="wb+", delete=False, dir=self.temp_path
+                    ) as data_file:
+                        # write contents
+                        data_file.write(original.read_bytes())
 
-                    # set name and remove original
-                    original.unlink()
+                        # set name and remove original
+                        original.unlink()
 
-                    os.link(data_file.name, original_name)
+                        os.link(data_file.name, original_name)
 
-                data_file.name = original_name  # type: ignore[misc]
-                self.source_files.append(data_file)
+                    data_file.name = original_name  # type: ignore[misc]
+                    self.source_files.append(data_file)
+
+            except BaseException as e:
+                raise RunnerException(
+                    self.task,
+                    self.run_id,
+                    8,
+                    f"Failed to load files from processing script output:\n{e}",
+                )
 
     def __store_files(self) -> None:
         if not self.source_files or len(self.source_files) == 0:
