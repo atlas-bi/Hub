@@ -70,7 +70,9 @@ class PyProcesser:
             # debug statements
             output = ast.literal_eval(self.output.splitlines()[-1])
             if isinstance(output, List):
-                return output
+                # check if they are existing
+                valid_paths = [x for x in output if Path(x).is_file()]
+                return valid_paths or None
         except BaseException:
             # will raise an exception on some output.
             pass
