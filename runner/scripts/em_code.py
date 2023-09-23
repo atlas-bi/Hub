@@ -16,16 +16,8 @@ from runner.model import Task
 from runner.scripts.em_messages import RunnerException, RunnerLog
 from runner.scripts.em_params import ParamLoader
 
-import azure.devops.credentials as cd
-from azure.devops.connection import Connection
-
-
 urllib3.disable_warnings()  # type: ignore
 
-class AttributeDict(dict):
-    __getattr__ = dict.__getitem__
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
 
 class AttributeDict(dict):
     """Allow parameter access with dot notation."""

@@ -3,7 +3,6 @@
 import datetime
 import re
 import sys
-import re
 from pathlib import Path
 
 from flask import Blueprint
@@ -35,7 +34,6 @@ from runner.scripts.em_smb import Smb
 from runner.scripts.em_smb import connect as smb_connect
 from runner.scripts.em_smtp import Smtp
 from runner.scripts.em_sqlserver import connect as sql_connect
-from runner.scripts.em_jdbc import connect as jdbc_connect
 from runner.scripts.em_ssh import connect as ssh_connect
 from runner.scripts.task_runner import Runner
 

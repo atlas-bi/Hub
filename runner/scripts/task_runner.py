@@ -37,7 +37,6 @@ from runner.scripts.em_sftp import Sftp
 from runner.scripts.em_smb import Smb
 from runner.scripts.em_smtp import Smtp
 from runner.scripts.em_sqlserver import SqlServer
-from runner.scripts.em_jdbc import Jdbc
 from runner.scripts.em_ssh import Ssh
 from runner.scripts.em_system import system_monitor
 from runner.web.filters import datetime_format
@@ -277,16 +276,6 @@ class Runner:
                     raise RunnerException(
                         self.task, self.run_id, 20, f"Failed to run query.\n{message}"
                     )
-            elif external_db.database_type.id == 3:  # jdbc
-                try:
-                    self.query_output_size, self.source_files = Jdbc(
-                        task=self.task,
-                        run_id=self.run_id,
-                        connection=em_decrypt(
-                            external_db.connection_string, app.config["PASS_KEY"]
-                        ),
-                        directory=self.temp_path,
-                    ).run(query)
 
             elif external_db.database_type.id == 3:  # jdbc
                 try:
@@ -306,6 +295,7 @@ class Runner:
                     raise RunnerException(
                         self.task, self.run_id, 20, f"Failed to run query.\n{message}"
                     )
+                
             RunnerLog(
                 self.task,
                 self.run_id,
@@ -691,6 +681,7 @@ class Runner:
             # otherwise get py file
             else:
                 my_file = self.source_loader.devops(self.task.processing_devops)
+                
         elif self.task.processing_type_id > 0:
             raise RunnerException(
                 self.task,
