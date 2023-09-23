@@ -295,7 +295,7 @@ class Runner:
                     raise RunnerException(
                         self.task, self.run_id, 20, f"Failed to run query.\n{message}"
                     )
-                
+
             RunnerLog(
                 self.task,
                 self.run_id,
@@ -681,7 +681,7 @@ class Runner:
             # otherwise get py file
             else:
                 my_file = self.source_loader.devops(self.task.processing_devops)
-                
+
         elif self.task.processing_type_id > 0:
             raise RunnerException(
                 self.task,
