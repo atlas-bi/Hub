@@ -310,8 +310,8 @@ class Smb:
                     Path(
                         (
                             Path(
-                                sanitize_filename(self.subfolder)
-                                / sanitize_filename(self.task.project.name or "")
+                                Path(sanitize_filename(self.subfolder or ""))
+                                / Path(sanitize_filename(self.task.project.name or ""))
                             )
                             if self.subfolder
                             else Path(sanitize_filename(self.task.project.name or ""))
