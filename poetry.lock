@@ -912,18 +912,18 @@ resolved_reference = "8433cc30fd4dff046a95dd02e26a3e901595be21"
 
 [[package]]
 name = "flask-caching"
-version = "2.0.2"
+version = "2.1.0"
 description = "Adds caching support to Flask applications."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Flask-Caching-2.0.2.tar.gz", hash = "sha256:24b60c552d59a9605cc1b6a42c56cdb39a82a28dab4532bbedb9222ae54ecb4e"},
-    {file = "Flask_Caching-2.0.2-py3-none-any.whl", hash = "sha256:19571f2570e9b8dd9dd9d2f49d7cbee69c14ebe8cc001100b1eb98c379dd80ad"},
+    {file = "Flask-Caching-2.1.0.tar.gz", hash = "sha256:b7500c145135836a952e3de3a80881d9654e327a29c852c9265607f5c449235c"},
+    {file = "Flask_Caching-2.1.0-py3-none-any.whl", hash = "sha256:f02645a629a8c89800d96dc8f690a574a0d49dcd66c7536badc6d362ba46b716"},
 ]
 
 [package.dependencies]
 cachelib = ">=0.9.0,<0.10.0"
-Flask = "<3"
+Flask = "*"
 
 [[package]]
 name = "flask-compress"
