@@ -2814,13 +2814,13 @@ url = ["furl (>=0.4.1)"]
 
 [[package]]
 name = "sqlalchemy2-stubs"
-version = "0.0.2a35"
+version = "0.0.2a36"
 description = "Typing Stubs for SQLAlchemy 1.4"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "sqlalchemy2-stubs-0.0.2a35.tar.gz", hash = "sha256:bd5d530697d7e8c8504c7fe792ef334538392a5fb7aa7e4f670bfacdd668a19d"},
-    {file = "sqlalchemy2_stubs-0.0.2a35-py3-none-any.whl", hash = "sha256:593784ff9fc0dc2ded1895e3322591689db3be06f3ca006e3ef47640baf2d38a"},
+    {file = "sqlalchemy2-stubs-0.0.2a36.tar.gz", hash = "sha256:1c820c176a50401b7b3fc1e25019703b2c0753fe99a79d7e19305146baf1f60f"},
+    {file = "sqlalchemy2_stubs-0.0.2a36-py3-none-any.whl", hash = "sha256:9b5b3eb263cdc649b6a5619d2c089b98290406027a01e1de171eeb98c38ce678"},
 ]
 
 [package.dependencies]
