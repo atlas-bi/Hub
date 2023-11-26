@@ -81,13 +81,13 @@ aio = ["aiohttp (>=3.0)"]
 
 [[package]]
 name = "azure-devops"
-version = "7.1.0b3"
+version = "7.1.0b4"
 description = "Python wrapper around the Azure DevOps 7.x APIs"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "azure-devops-7.1.0b3.tar.gz", hash = "sha256:644e34d110f016e65c7b36647274c90c20223bf2ecca9be8806aa5a4c754b4e7"},
-    {file = "azure_devops-7.1.0b3-py3-none-any.whl", hash = "sha256:ef082a59e79e7f5d979481c7737093cb54618f362b216292fcce7f26d9c452c3"},
+    {file = "azure-devops-7.1.0b4.tar.gz", hash = "sha256:f04ba939112579f3d530cfecc044a74ef9e9339ba23c9ee1ece248241f07ff85"},
+    {file = "azure_devops-7.1.0b4-py3-none-any.whl", hash = "sha256:f827e9fbc7c77bc6f2aaee46e5717514e9fe7d676c87624eccd0ca640b54f122"},
 ]
 
 [package.dependencies]
@@ -3126,19 +3126,19 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.24.6"
+version = "20.24.7"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "virtualenv-20.24.6-py3-none-any.whl", hash = "sha256:520d056652454c5098a00c0f073611ccbea4c79089331f60bf9d7ba247bb7381"},
-    {file = "virtualenv-20.24.6.tar.gz", hash = "sha256:02ece4f56fbf939dbbc33c0715159951d6bf14aaf5457b092e4548e1382455af"},
+    {file = "virtualenv-20.24.7-py3-none-any.whl", hash = "sha256:a18b3fd0314ca59a2e9f4b556819ed07183b3e9a3702ecfe213f593d44f7b3fd"},
+    {file = "virtualenv-20.24.7.tar.gz", hash = "sha256:69050ffb42419c91f6c1284a7b24e0475d793447e35929b488bf6a0aade39353"},
 ]
 
 [package.dependencies]
 distlib = ">=0.3.7,<1"
 filelock = ">=3.12.2,<4"
-platformdirs = ">=3.9.1,<4"
+platformdirs = ">=3.9.1,<5"
 
 [package.extras]
 docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.2)", "sphinx-argparse (>=0.4)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=23.6)"]
@@ -3326,4 +3326,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "91289f632e46ee0ad31dcddc05e4740e8afca1fd0897bdc91b103c2743488526"
+content-hash = "42c0a77b4f617f7c5926b8357a7dc685b383a27e5934a09b7ed07e83cb187f5a"
