@@ -6,8 +6,8 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.22.20",
-    "@fontsource/inter": "5.0.3",
-    "@fontsource/rasa": "5.0.3",
+    "@fontsource/inter": "5.0.16",
+    "@fontsource/rasa": "5.0.18",
     "@hotwired/turbo": "^7.3.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.4",
@@ -17,20 +17,20 @@
     "bulma-checkradio": "2.1.3",
     "bulma-switch": "2.0.4",
     "bulma-tooltip": "3.0.2",
-    "del": "7.0.0",
+    "del": "7.1.0",
     "fontawesome-subset": "4.4.0",
     "gulp": "4.0.2",
-    "gulp-autoprefixer": "8.0.0",
+    "gulp-autoprefixer": "9.0.0",
     "gulp-replace": "1.1.4",
     "gulp-sass": "5.1.0",
     "npm-run-all": "^4.1.5",
-    "rollup": "^3.29.2",
+    "rollup": "^4.0.0",
     "sass": "^1.67.0",
     "uglify-js": "^3.17.4"
   },
   "description": "A task scheduling tool.",
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "6.4.0",
+    "@fortawesome/fontawesome-free": "6.5.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "^11.0.0",
     "@semantic-release/exec": "6.0.3",
@@ -80,5 +80,5 @@
     "test:lint": "poetry run tox -e lint",
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\""
   },
-  "version": "2.12.3"
+  "version": "2.12.10"
 }
