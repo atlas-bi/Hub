@@ -12,7 +12,6 @@ run with::
 
 """
 
-
 from pytest import fixture
 
 from web.extensions import db

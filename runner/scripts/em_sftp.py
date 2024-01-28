@@ -1,6 +1,5 @@
 """SFTP connection manager."""
 
-
 import csv
 import fnmatch
 import os
@@ -39,9 +38,11 @@ def connection_key(connection: ConnectionSftp) -> Optional[paramiko.pkey.PKey]:
 
             key = paramiko.RSAKey.from_private_key_file(
                 key_file.name,
-                password=em_decrypt(connection.key_password, app.config["PASS_KEY"])
-                if connection.key_password
-                else None,
+                password=(
+                    em_decrypt(connection.key_password, app.config["PASS_KEY"])
+                    if connection.key_password
+                    else None
+                ),
             )
 
     return key
@@ -81,9 +82,11 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
                     transport.auth_publickey(connection.username, key, event=None)
                     transport.auth_password(
                         connection.username,
-                        em_decrypt(connection.password, app.config["PASS_KEY"])
-                        if connection.password
-                        else "",
+                        (
+                            em_decrypt(connection.password, app.config["PASS_KEY"])
+                            if connection.password
+                            else ""
+                        ),
                         event=None,
                     )
 
