@@ -70,7 +70,7 @@ class Jdbc:
         log = TaskLog(
             task_id=self.task.id,
             job_id=self.run_id,
-            status_id=20,
+            status_id=22,
             message=("Getting first %d query rows." % size),
         )
         db.session.add(log)
