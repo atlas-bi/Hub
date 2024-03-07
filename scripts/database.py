@@ -67,6 +67,7 @@ def seed(session: SqlSession, model: Any) -> None:
     # database type
     get_or_create(session, model.ConnectionDatabaseType, name="Postgres")
     get_or_create(session, model.ConnectionDatabaseType, name="SQL Sever")
+    get_or_create(session, model.ConnectionDatabaseType, name="Jdbc")
 
     # file types
     get_or_create(session, model.TaskDestinationFileType, name="CSV (.csv)", ext="csv")
@@ -103,3 +104,4 @@ def seed(session: SqlSession, model: Any) -> None:
     get_or_create(session, model.TaskStatus, name="SSH")
     get_or_create(session, model.TaskStatus, name="SQL Server")
     get_or_create(session, model.TaskStatus, name="Postgres")
+    get_or_create(session, model.TaskStatus, name="Jdbc")
