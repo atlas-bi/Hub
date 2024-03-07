@@ -148,7 +148,7 @@ class CronValidator:
             parts = expr.split()
             parts[0] = re.sub("[nd|st|rd|th]", "", parts[0])
             try:
-                st_day = self._cron_days[parts[1].upper()]
+                self._cron_days[parts[1].upper()]
             except KeyError:
                 msg = f"({prefix}) Invalid value '{expr}'"
                 raise ValueError(msg)
@@ -156,7 +156,7 @@ class CronValidator:
         elif re.match(r"^last\s\D{3}$", expr, re.IGNORECASE):
             parts = expr.split()
             try:
-                st_day = self._cron_days[parts[1].upper()]
+                self._cron_days[parts[1].upper()]
             except KeyError:
                 msg = f"({prefix}) Invalid value '{expr}'"
                 raise ValueError(msg)
@@ -182,9 +182,7 @@ class CronValidator:
         elif "*" == expr:
             pass
         elif "," in expr:
-            """
-            get values with a comma and then run each part through months again.
-            """
+            # get values with a comma and then run each part through months again.
             limit = 12
             expr_ls = expr.split(",")
             if len(expr_ls) > limit:
@@ -273,7 +271,7 @@ class CronValidator:
             msg = f"({prefix}) Illegal Expression Format '{expr}'"
             raise ValueError(msg)
 
-    def check_range(self, expr: str, mi: str, mx: str, prefix: str, type: str = None):
+    def check_range(self, expr, mi, mx, prefix, type=None):
         """
         check if expression value within range of specified limit
         """
@@ -286,9 +284,7 @@ class CronValidator:
                 msg = f"({prefix}) Accepted week value is {mi}~{mx} but '{expr}' is provided"
             raise ValueError(msg)
 
-    def compare_range(
-        self, prefix: str, st: str, ed: str, mi: str, mx: str, type: str = None
-    ):
+    def compare_range(self, prefix, st, ed, mi, mx, type=None):
         """check 2 expression values size
         does not allow {st} value to be greater than {ed} value
         """

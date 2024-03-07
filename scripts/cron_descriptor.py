@@ -4,7 +4,6 @@ Returns schedules in a readable format.
 """
 
 import calendar
-import datetime
 import re
 
 
@@ -222,11 +221,11 @@ class ExpressionDescriptor:
         def get_day_name(s):
             try:
                 return calendar.day_name[int(s)]
-            except:
+            except Exception:
                 pass
             try:
                 return calendar.day_name[list(calendar.day_abbr).index(s.title())]
-            except:
+            except Exception:
                 return s
 
         return self.get_segment_description(
@@ -267,11 +266,11 @@ class ExpressionDescriptor:
         def get_month_name(s):
             try:
                 return calendar.month_name[int(s)]
-            except:
+            except Exception:
                 pass
             try:
                 return calendar.month_name[list(calendar.month_abbr).index(s.title())]
-            except:
+            except Exception:
                 return s
 
         return self.get_segment_description(
