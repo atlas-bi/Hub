@@ -5,6 +5,7 @@
     poetry run pytest tests/ \
        --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 """
+
 import sys
 from pathlib import Path
 
