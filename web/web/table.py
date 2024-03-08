@@ -824,7 +824,7 @@ def project_all_tasks(project_id: int) -> Response:
                     if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                     else (task["Next Run"] if task["Next Run"] else "")
                 ),
-                "Run Rank": (task["Run Rank"] if "Run Rank" in task else None),
+                "Run Rank": task.get("Run Rank", None),
             }
         )
 
