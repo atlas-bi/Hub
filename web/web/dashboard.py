@@ -66,9 +66,9 @@ def search() -> dict:
         .all()
     )
     for row in connections:
-        connection_json[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-        ] = " / ".join([x for x in row[1:] if x.strip()])
+        connection_json[url_for("connection_bp.one_connection", connection_id=row[0])] = (
+            " / ".join([x for x in row[1:] if x.strip()])
+        )
 
     connection_sftp = {}
     sftp_connections = db.session.query(
