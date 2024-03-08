@@ -71,43 +71,9 @@
                 <h3 class="title is-3">Cron Schedule - Run on specific dates/times</h3>
                 <div class="content">
                     Run
-                    <!-- month, year -->
+                    <!-- cron schedule -->
                     <span class="em-pSection">
-                        {% if p.cron_month != None or p.cron_year != None %}<em>every</em>{% endif %}
-                        {% if p.cron_month != None %}<em>{{ p.cron_month|cron_month }},</em>{% endif %}
-                        {% if p.cron_year != None %}<em>{{ p.cron_year }}</em>{% endif %}
-                    </span>
-                    <!-- week of year -->
-                    <span class="em-pSection">
-                        {% if p.cron_week != None %}
-                            on the
-                            <em>{{ p.cron_week|num_st }}</em>
-                            week of the year,
-                        {% endif %}
-                    </span>
-                    <!-- day of week -->
-                    <span class="em-pSection">
-                        {% if p.cron_week_day != None %}
-                            on
-                            <em>{{ p.cron_week_day|cron_week_day }}</em>
-                            ,
-                        {% endif %}
-                    </span>
-                    <!-- day of month -->
-                    <span class="em-pSection">
-                        {% if p.cron_day != None %}
-                            on the
-                            <em>{{ p.cron_day|num_st }}</em>
-                            day of the month,
-                        {% endif %}
-                    </span>
-                    <!-- time -->
-                    <span class="em-pSection">
-                        {% if p.cron_hour or p.cron_min or p.cron_sec %}
-                            at
-                            <em>{{ p.cron_hour|time }}:{{ p.cron_min|time }}:{{ p.cron_sec|time }}</em>
-                            (hh:mm:ss),
-                        {% endif %}
+                        {{ cron_desc }}
                     </span>
                     <!-- start / end dates -->
                     <span class="em-pSection">

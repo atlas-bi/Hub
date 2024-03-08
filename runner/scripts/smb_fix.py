@@ -1,4 +1,5 @@
 """Update to an older version of https://github.com/miketeo/pysmb. Waiting for next release."""
+
 # flake8: noqa
 # type: ignore
 # mypy: ignore-errors
@@ -134,9 +135,7 @@ class SMBHandler(urllib.request.BaseHandler):
 
             return addinfourl(fp, headers, req.get_full_url())
         except Exception as ex:
-            raise urllib.error.URLError("smb error: %s" % ex).with_traceback(
-                sys.exc_info()[2]
-            )
+            raise urllib.error.URLError("smb error: %s" % ex).with_traceback(sys.exc_info()[2])
 
     def createTempFile(self):
         return tempfile.TemporaryFile()

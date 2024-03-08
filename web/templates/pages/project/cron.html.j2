@@ -20,63 +20,55 @@
             Leaving an option blank will treat it as a wildcard. See
             <a target="_blank"
                title="cron job guide"
-               href="https://ostechnix.com/a-beginners-guide-to-cron-jobs/">this article</a>
-            for examples.
+               href="https://apscheduler.readthedocs.io/en/3.x/modules/triggers/cron.html#expression-types">this article
+            for what is allowed.</a>
         </div>
     </article>
     <div class="field">
-        <label class="label">Run in a specific year (4 dgt)</label>
+        <label class="label">Year(s) to run in. (4 dgt)</label>
         <input class="input"
-               type="number"
                name="project_cron_year"
                value="{{ p.cron_year }}" />
     </div>
     <div class="field">
-        <label class="label">Run in a specific month (1-12)</label>
+        <label class="label">Month(s) to run in. Allows numbers and 3 letter month names.</label>
         <input class="input"
-               type="number"
                name="project_cron_mnth"
                value="{{ p.cron_month }}" />
     </div>
     <div class="field">
-        <label class="label">Run in a specific week (1-53)</label>
+        <label class="label">Week(s) to run in.(1-53)</label>
         <input class="input"
-               type="number"
                name="project_cron_week"
                value="{{ p.cron_week }}" />
     </div>
     <div class="field">
-        <label class="label">Run on a specific day (1-31)</label>
+        <label class="label">Day(s) of the month to run in. Allows day numbers/3 letter names and specific days of the month. e.g. 1st sun, last tue </label>
         <input class="input"
-               type="number"
                name="project_cron_day"
                value="{{ p.cron_day }}" />
     </div>
     <div class="field">
-        <label class="label">Run on a specific day of the week (0 mon-6 sun)</label>
+        <label class="label">Day(s) of the week to run in. (0 mon-6 sun)</label>
         <input class="input"
-               type="number"
                name="project_cron_wday"
                value="{{ p.cron_week_day }}" />
     </div>
     <div class="field">
-        <label class="label">Run on a specific hour of the day (0-23)</label>
+        <label class="label">Hour(s) of the day to run in. (0-23)</label>
         <input class="input"
-               type="number"
                name="project_cron_hour"
                value="{{ p.cron_hour }}" />
     </div>
     <div class="field">
-        <label class="label">Run on a specific minute (0-59)</label>
+        <label class="label">Minute(s) of the hour to run in. (0-59)</label>
         <input class="input"
-               type="number"
                name="project_cron_min"
                value="{{ p.cron_min }}" />
     </div>
     <div class="field">
-        <label class="label">Run on a specific second (0-59).. Really bro??</label>
+        <label class="label">Second(s) of the minutes to run in. (0-59).. Really bro??</label>
         <input class="input"
-               type="number"
                name="project_cron_sec"
                value="{{ p.cron_sec }}" />
     </div>

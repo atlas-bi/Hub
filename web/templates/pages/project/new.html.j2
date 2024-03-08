@@ -25,6 +25,7 @@
             New Project
         {% endif %}
     </h1>
+    {% if error %} <article class="message is-danger"><strong>Error: </strong> {{ error }} </article>{% endif %}
     <form method="post"
           action="{%- if p -%}{{ url_for('project_bp.edit_project', project_id=p.id) }}{%- else -%}{{ url_for("project_bp.new_project") }}{%- endif -%}"
           id="project-new">
@@ -49,8 +50,7 @@
                 <div class="field">
                     <input class="is-checkradio is-info"
                            id="project_take_ownership"
-                           type="checkbox"
-                           checked="checked" />
+                           type="checkbox" />
                     <label for="project_take_ownership">Take Ownership of Project</label>
                     <input type="hidden" name="project_ownership" value="1" />
                 </div>
