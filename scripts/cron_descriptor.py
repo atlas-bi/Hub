@@ -222,11 +222,10 @@ class ExpressionDescriptor:
             try:
                 return calendar.day_name[int(s)]
             except Exception:
-                pass
-            try:
-                return calendar.day_name[list(calendar.day_abbr).index(s.title())]
-            except Exception:
-                return s
+                try:
+                    return calendar.day_name[list(calendar.day_abbr).index(s.title())]
+                except Exception:
+                    return s
 
         return self.get_segment_description(
             self.cron_week_day,
@@ -267,11 +266,12 @@ class ExpressionDescriptor:
             try:
                 return calendar.month_name[int(s)]
             except Exception:
-                pass
-            try:
-                return calendar.month_name[list(calendar.month_abbr).index(s.title())]
-            except Exception:
-                return s
+                try:
+                    return calendar.month_name[
+                        list(calendar.month_abbr).index(s.title())
+                    ]
+                except Exception:
+                    return s
 
         return self.get_segment_description(
             self.cron_month,
