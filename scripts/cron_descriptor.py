@@ -225,7 +225,7 @@ class ExpressionDescriptor:
         return self.get_segment_description(
             self.cron_week_day,
             ", every day",
-            lambda s: get_day_name(s),
+            get_day_name,
             lambda s: f", every {s} days of the week",
             lambda s: ", {0} through {1}",
             lambda s: ", only on {0}",
@@ -269,7 +269,7 @@ class ExpressionDescriptor:
         return self.get_segment_description(
             self.cron_month,
             "",
-            lambda s: get_month_name(s),
+            get_month_name,
             lambda s: f", every {s} months",
             lambda s: ", {0} through {1}",
             lambda s: ", only in {0}",
@@ -306,7 +306,7 @@ class ExpressionDescriptor:
             description = self.get_segment_description(
                 exp,
                 ", every day" if self.cron_week_day == "*" else "",
-                lambda s: _add_suffix(s),
+                _add_suffix,
                 lambda s: ", every day" if s == "1" else ", every {0}",
                 lambda s: ", between {0} and {1} day of the month",
                 lambda s: " on the {0} of the month",
