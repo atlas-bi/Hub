@@ -9,6 +9,7 @@ These items can be imported into other
 scripts after running :obj:`web.create_app`
 
 """
+
 import logging
 
 from flask_assets import Environment

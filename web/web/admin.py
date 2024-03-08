@@ -1,6 +1,5 @@
 """Admin web views."""
 
-
 import json
 import platform
 from pathlib import Path
@@ -100,9 +99,7 @@ def reset_tasks() -> Response:
 def pause_scheduler() -> Response:
     """Stop all jobs from future runs."""
     try:
-        output = json.loads(
-            requests.get(app.config["SCHEDULER_HOST"] + "/pause", timeout=60).text
-        )
+        output = json.loads(requests.get(app.config["SCHEDULER_HOST"] + "/pause", timeout=60).text)
 
         if output.get("error"):
             msg = output["error"]
@@ -152,9 +149,7 @@ def resume_scheduler() -> Response:
 def kill_scheduler() -> Response:
     """Kill the scheduler."""
     try:
-        output = json.loads(
-            requests.get(app.config["SCHEDULER_HOST"] + "/kill", timeout=60).text
-        )
+        output = json.loads(requests.get(app.config["SCHEDULER_HOST"] + "/kill", timeout=60).text)
 
         msg = output["message"]
         add_user_log(msg, 0)

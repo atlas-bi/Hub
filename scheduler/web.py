@@ -37,9 +37,7 @@ def schedule() -> Response:
 
     Merge two lists and put 0 where needed.
     """
-    now = datetime.datetime.now(
-        datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
-    )
+    now = datetime.datetime.now(datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo)
     tomorrow = now + datetime.timedelta(hours=24)
 
     hour_list = ["now"]

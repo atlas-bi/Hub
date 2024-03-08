@@ -1,6 +1,5 @@
 """FTP connection manager."""
 
-
 import csv
 import fnmatch
 import ftplib  # noqa: S402
@@ -44,9 +43,7 @@ def connect(connection: ConnectionFtp) -> FTP:
                 conn = FTP(connection.address or "")  # noqa: S321
                 conn.login(
                     user=(connection.username or ""),
-                    passwd=(
-                        em_decrypt(connection.password, app.config["PASS_KEY"]) or ""
-                    ),
+                    passwd=(em_decrypt(connection.password, app.config["PASS_KEY"]) or ""),
                 )
                 break
             except ftplib.error_reply as e:
@@ -95,9 +92,7 @@ class Ftp:
         except ValueError as e:
             raise RunnerException(self.task, self.run_id, 13, str(e))
 
-    def _walk(
-        self, directory: str
-    ) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
+    def _walk(self, directory: str) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
         dirs = []
         nondirs = []
 
@@ -124,13 +119,8 @@ class Ftp:
         self.conn.retrbinary("RETR " + file_name, callback=handle_binary)
         data = "".join([str(x) for x in my_binary])
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", delete=False, dir=self.dir
-        ) as data_file:
-            if (
-                self.task.source_sftp_ignore_delimiter != 1
-                and self.task.source_sftp_delimiter
-            ):
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, dir=self.dir) as data_file:
+            if self.task.source_sftp_ignore_delimiter != 1 and self.task.source_sftp_delimiter:
                 my_delimiter = self.task.source_sftp_delimiter or ","
 
                 csv_reader = csv.reader(
@@ -216,9 +206,7 @@ class Ftp:
 
         # pylint: disable=broad-except
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 13, f"Failed to change path.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 13, f"Failed to change path.\n{e}")
 
         if overwrite != 1:
             try:
@@ -255,6 +243,4 @@ class Ftp:
             self.conn.close()
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 13, f"Failed to close connection.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 13, f"Failed to close connection.\n{e}")

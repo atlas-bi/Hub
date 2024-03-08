@@ -1,6 +1,5 @@
 """Exception and logging messages."""
 
-
 import datetime
 import sys
 from dataclasses import dataclass
@@ -112,8 +111,7 @@ class RunnerException(Exception):
                         logs=logs,
                         org=app.config["ORG_NAME"],
                     ),
-                    short_message=task.email_error_message
-                    or f"Atlas Hub task {task} failed.",
+                    short_message=task.email_error_message or f"Atlas Hub task {task} failed.",
                     attachments=[],
                 )
             except BaseException as e:
@@ -136,9 +134,7 @@ class RunnerException(Exception):
             if (redis_client.zincrby(f"runner_{task.id}_attempt", 0, "inc") or 1) <= (
                 task.max_retries or 0
             ):
-                run_number = int(
-                    redis_client.zincrby(f"runner_{task.id}_attempt", 0, "inc") or 1
-                )
+                run_number = int(redis_client.zincrby(f"runner_{task.id}_attempt", 0, "inc") or 1)
 
                 # schedule a rerun in 5 minutes.
                 RunnerLog(

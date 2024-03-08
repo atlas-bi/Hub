@@ -78,9 +78,7 @@ class Smtp:
                         app.config.get("SMTP_PASSWORD", None),
                     )
 
-                mail_server.sendmail(
-                    app.config["SMTP_SENDER_EMAIL"], phone, self.msg.as_string()
-                )
+                mail_server.sendmail(app.config["SMTP_SENDER_EMAIL"], phone, self.msg.as_string())
                 mail_server.quit()
 
                 log = TaskLog(
@@ -110,9 +108,7 @@ class Smtp:
             self.msg = MIMEMultipart()
             self.msg["From"] = email.utils.formataddr(  # type: ignore[attr-defined]
                 (
-                    email.header.Header(app.config["SMTP_SENDER_NAME"], "utf-8").encode(
-                        "utf-8"
-                    ),
+                    email.header.Header(app.config["SMTP_SENDER_NAME"], "utf-8").encode("utf-8"),
                     app.config["SMTP_SENDER_EMAIL"],
                 )
             )

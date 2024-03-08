@@ -20,7 +20,6 @@ migrations file - so flask-migrations think it has already applied the migration
 
 """
 
-
 import datetime
 from dataclasses import dataclass
 from typing import Optional
@@ -201,13 +200,9 @@ class Project(db.Model):
     )
 
     created = db.Column(db.DateTime, server_default=functions.now())
-    creator_id = db.Column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    creator_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True, index=True)
     updated = db.Column(db.DateTime, onupdate=functions.now())
-    updater_id = db.Column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    updater_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True, index=True)
 
     def __str__(self) -> str:
         """Return default string."""
@@ -364,9 +359,7 @@ class ConnectionSftp(db.Model):
     password: Optional[str] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    connection_id = db.Column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
+    connection_id = db.Column(db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True)
     name = db.Column(db.String(500), nullable=True)
     address = db.Column(db.String(500), nullable=True)
     port = db.Column(db.Integer, nullable=True)
@@ -418,9 +411,7 @@ class ConnectionSsh(db.Model):
     password: Optional[str] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    connection_id = db.Column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
+    connection_id = db.Column(db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True)
     name = db.Column(db.String(500), nullable=True)
     address = db.Column(db.String(500), nullable=True)
     port = db.Column(db.Integer, nullable=True)
@@ -451,9 +442,7 @@ class ConnectionGpg(db.Model):
     key: Optional[str] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    connection_id = db.Column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
+    connection_id = db.Column(db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True)
     name = db.Column(db.String(500), nullable=True)
     key = db.Column(db.String(8000), nullable=True)
     task_source = db.relationship(
@@ -484,9 +473,7 @@ class ConnectionFtp(db.Model):
     password: Optional[str] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    connection_id = db.Column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
+    connection_id = db.Column(db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True)
     name = db.Column(db.String(500), nullable=True)
     address = db.Column(db.String(500), nullable=True)
     path = db.Column(db.String(500), nullable=True)
@@ -534,9 +521,7 @@ class ConnectionSmb(db.Model):
     server_name: Optional[str] = None
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    connection_id = db.Column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
+    connection_id = db.Column(db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True)
     name = db.Column(db.String(120), nullable=True)
     share_name = db.Column(db.String(500), nullable=True)
     path = db.Column(db.String(1000), nullable=True)
@@ -597,9 +582,7 @@ class ConnectionDatabase(db.Model):
     type_id = db.Column(
         db.Integer, db.ForeignKey(ConnectionDatabaseType.id), nullable=True, index=True
     )
-    connection_id = db.Column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
+    connection_id = db.Column(db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True)
     name = db.Column(db.String(500), nullable=True)
     connection_string = db.Column(db.Text, nullable=True)
     timeout = db.Column(db.Integer, nullable=True)
@@ -657,9 +640,7 @@ class ProjectParam(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     key = db.Column(db.String(500), nullable=True)
     value = db.Column(db.String(8000), nullable=True)
-    project_id = db.Column(
-        db.Integer, db.ForeignKey(Project.id), nullable=True, index=True
-    )
+    project_id = db.Column(db.Integer, db.ForeignKey(Project.id), nullable=True, index=True)
     sensitive = db.Column(db.Integer, nullable=True, index=True)
 
 
@@ -790,25 +771,17 @@ class Task(db.Model):
     # general information
     id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String(1000), nullable=True)
-    project_id = db.Column(
-        db.Integer, db.ForeignKey(Project.id), nullable=True, index=True
-    )
-    status_id = db.Column(
-        db.Integer, db.ForeignKey(TaskStatus.id), nullable=True, index=True
-    )
+    project_id = db.Column(db.Integer, db.ForeignKey(Project.id), nullable=True, index=True)
+    status_id = db.Column(db.Integer, db.ForeignKey(TaskStatus.id), nullable=True, index=True)
     enabled = db.Column(db.Integer, nullable=True, index=True)
     order = db.Column(db.Integer, nullable=True, index=True)
     last_run = db.Column(db.DateTime, nullable=True)
     last_run_job_id = db.Column(db.String(30), nullable=True, index=True)
     next_run = db.Column(db.DateTime, nullable=True, index=True)
     created = db.Column(db.DateTime, server_default=functions.now(), index=True)
-    creator_id = db.Column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    creator_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True, index=True)
     updated = db.Column(db.DateTime, onupdate=functions.now(), index=True)
-    updater_id = db.Column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    updater_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True, index=True)
 
     """ data source """
     # db/sftp/smb/ftp
@@ -960,9 +933,7 @@ class Task(db.Model):
     destination_smb_dont_send_empty_file = db.Column(db.Integer, nullable=True)
 
     file_gpg = db.Column(db.Integer, nullable=True, index=True)
-    file_gpg_id = db.Column(
-        db.Integer, db.ForeignKey(ConnectionGpg.id), nullable=True, index=True
-    )
+    file_gpg_id = db.Column(db.Integer, db.ForeignKey(ConnectionGpg.id), nullable=True, index=True)
 
     destination_quote_level_id = db.Column(
         db.Integer, db.ForeignKey(QuoteLevel.id), nullable=True, index=True
@@ -1039,16 +1010,12 @@ class TaskLog(db.Model):
     job_id = db.Column(db.String(1000), nullable=True, index=True)
     id = db.Column(db.Integer, primary_key=True, index=True)
     task_id = db.Column(db.Integer, db.ForeignKey(Task.id), nullable=True, index=True)
-    status_id = db.Column(
-        db.Integer, db.ForeignKey(TaskStatus.id), nullable=True, index=True
-    )
+    status_id = db.Column(db.Integer, db.ForeignKey(TaskStatus.id), nullable=True, index=True)
     message = db.Column(db.Text, nullable=True)
     status_date = db.Column(db.DateTime, default=datetime.datetime.now, index=True)
     error = db.Column(db.Integer, nullable=True, index=True)
 
-    __table_args__ = (
-        db.Index("ix_task_log_status_date_error", "status_date", "error"),
-    )
+    __table_args__ = (db.Index("ix_task_log_status_date_error", "status_date", "error"),)
 
 
 @dataclass
@@ -1074,9 +1041,7 @@ class TaskFile(db.Model):
     file_hash = db.Column(db.String(1000), nullable=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now, index=True)
 
-    __table_args__ = (
-        db.Index("ix_task_file_id_task_id_job_id", "id", "task_id", "job_id"),
-    )
+    __table_args__ = (db.Index("ix_task_file_id_task_id_job_id", "id", "task_id", "job_id"),)
 
 
 @dataclass

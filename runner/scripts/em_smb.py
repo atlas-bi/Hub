@@ -39,9 +39,7 @@ def connection_json(connection: SMBConnection) -> Dict:
     }
 
 
-def connect(
-    username: str, password: str, server_name: str, server_ip: str
-) -> SMBConnection:
+def connect(username: str, password: str, server_name: str, server_ip: str) -> SMBConnection:
     """Connect to SMB server.
 
     After making a connection we save it to redis. Next time we need a connection
@@ -137,9 +135,7 @@ class Smb:
             self.username = self.connection.username
             self.password = self.connection.password
             self.server_ip = self.connection.server_ip
-            self.server_name = (
-                self.connection.server_name if self.connection else "Error"
-            )
+            self.server_name = self.connection.server_name if self.connection else "Error"
         else:
             # default connection for backups
             self.share_name = app.config["SMB_DEFAULT_SHARE"].strip("/").strip("\\")
@@ -170,9 +166,7 @@ class Smb:
         except ValueError as e:
             raise RunnerException(self.task, self.run_id, 10, str(e))
 
-    def _walk(
-        self, directory: str
-    ) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
+    def _walk(self, directory: str) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
         dirs = []
         nondirs = []
 
@@ -192,9 +186,7 @@ class Smb:
             yield from self._walk(new_path)
 
     def __load_file(self, file_name: str, index: int, length: int) -> IO[str]:
-        RunnerLog(
-            self.task, self.run_id, 10, f"({index} of {length}) downloading {file_name}"
-        )
+        RunnerLog(self.task, self.run_id, 10, f"({index} of {length}) downloading {file_name}")
 
         director = urllib.request.build_opener(SMBHandler)
 
@@ -214,14 +206,9 @@ class Smb:
 
         # send back contents
 
-        with tempfile.NamedTemporaryFile(
-            mode="wb+", delete=False, dir=self.dir
-        ) as data_file:
+        with tempfile.NamedTemporaryFile(mode="wb+", delete=False, dir=self.dir) as data_file:
             for data in load_data(open_file_for_read):
-                if (
-                    self.task.source_smb_ignore_delimiter != 1
-                    and self.task.source_smb_delimiter
-                ):
+                if self.task.source_smb_ignore_delimiter != 1 and self.task.source_smb_delimiter:
                     my_delimiter = self.task.source_smb_delimiter or ","
 
                     csv_reader = csv.reader(
@@ -358,16 +345,12 @@ class Smb:
                     except BaseException:
                         pass
 
-                with open(
-                    str(self.dir.joinpath(file_name)), "rb", buffering=0
-                ) as file_obj:
+                with open(str(self.dir.joinpath(file_name)), "rb", buffering=0) as file_obj:
                     uploaded_size = self.conn.storeFile(
                         self.share_name, dest_path, file_obj, timeout=120
                     )
 
-            server_name = (
-                "backup" if self.connection is None else self.connection.server_name
-            )
+            server_name = "backup" if self.connection is None else self.connection.server_name
 
             RunnerLog(
                 self.task,

@@ -67,9 +67,7 @@ def submit_executor(name: str, *args: Any) -> None:
     future.add_done_callback(func)
 
     # update active executor list
-    redis_client.set(
-        f"atlas_hub_executors-{current_user.id}", json.dumps(active_executors)
-    )
+    redis_client.set(f"atlas_hub_executors-{current_user.id}", json.dumps(active_executors))
 
 
 def executor_finished(name: str, future: Future) -> None:
@@ -78,9 +76,7 @@ def executor_finished(name: str, future: Future) -> None:
         redis_client.get(f"atlas_hub_executors-{current_user.id}") or json.dumps({})
     )
     active_executors[name + "-done"] = future.result()
-    redis_client.set(
-        f"atlas_hub_executors-{current_user.id}", json.dumps(active_executors)
-    )
+    redis_client.set(f"atlas_hub_executors-{current_user.id}", json.dumps(active_executors))
 
 
 def send_task_to_scheduler(task_id: int) -> None:
@@ -132,15 +128,12 @@ def send_task_to_runner(task_id: int) -> None:
                 .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
                 .first()
             ).id == int(task_id):
-                requests.get(
-                    app.config["SCHEDULER_HOST"] + "/run/" + str(task.id), timeout=60
-                )
+                requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task.id), timeout=60)
 
                 log = TaskLog(
                     task_id=task_id,
                     status_id=7,
-                    message=(current_user.full_name or "none")
-                    + ": Task sent to runner.",
+                    message=(current_user.full_name or "none") + ": Task sent to runner.",
                 )
                 db.session.add(log)
                 db.session.commit()
@@ -154,13 +147,9 @@ def send_task_to_runner(task_id: int) -> None:
                 )
                 db.session.add(log)
                 db.session.commit()
-                raise ValueError(
-                    "Task was not scheduled. It is not the first sequence task."
-                )
+                raise ValueError("Task was not scheduled. It is not the first sequence task.")
         else:
-            requests.get(
-                app.config["SCHEDULER_HOST"] + "/run/" + str(task.id), timeout=60
-            )
+            requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task.id), timeout=60)
 
     except (requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError):
         logging.error({"empty_msg": "Error - Scheduler offline."})
@@ -168,8 +157,7 @@ def send_task_to_runner(task_id: int) -> None:
             task_id=task_id,
             status_id=7,
             error=1,
-            message=(current_user.full_name or "none")
-            + ": Failed to send task to runner.",
+            message=(current_user.full_name or "none") + ": Failed to send task to runner.",
         )
         db.session.add(log)
         db.session.commit()
@@ -207,9 +195,7 @@ def sub_enable_task(task_id: int) -> None:
             send_task_to_scheduler(task_id)
         else:
             # make sure it is not in the scheduler.
-            requests.get(
-                app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60
-            )
+            requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60)
     else:
         send_task_to_scheduler(task_id)
 
@@ -354,11 +340,7 @@ def schedule_project(project_list: List[int]) -> str:
         log = TaskLog(
             status_id=7,
             error=1,
-            message=(
-                (current_user.full_name or "none")
-                + ": Failed to schedule task.\n"
-                + str(e)
-            ),
+            message=((current_user.full_name or "none") + ": Failed to schedule task.\n" + str(e)),
         )
         db.session.add(log)
         db.session.commit()
@@ -389,9 +371,7 @@ def enable_project(project_list: List[int]) -> str:
             status_id=7,
             error=1,
             message=(
-                (current_user.full_name or "none")
-                + ": Failed to enable project.\n"
-                + str(e)
+                (current_user.full_name or "none") + ": Failed to enable project.\n" + str(e)
             ),
         )
         db.session.add(log)
@@ -404,9 +384,7 @@ def enable_project(project_list: List[int]) -> str:
 def sub_disable_task(task_id: int) -> None:
     """Shared function for disabling a task."""
     try:
-        requests.get(
-            app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60
-        )
+        requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60)
 
         # also clear retry counter
         redis_client.delete(f"runner_{task_id}_attempt")
@@ -437,9 +415,7 @@ def disable_task(task_list: List[int]) -> str:
 
         if task.project and task.project.sequence_tasks == 1:
             # update sequence
-            for task in Task.query.filter_by(
-                project_id=task.project_id, enabled=1
-            ).all():
+            for task in Task.query.filter_by(project_id=task.project_id, enabled=1).all():
                 sub_enable_task(task.id)
             return "Task disabled, sequence updated."
 

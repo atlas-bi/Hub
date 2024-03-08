@@ -11,7 +11,6 @@ run with::
 
 """
 
-
 from flask import url_for
 from flask.wrappers import Response
 from flask_login import current_user

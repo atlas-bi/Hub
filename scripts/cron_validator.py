@@ -41,17 +41,11 @@ class CronValidator:
         self._month(expr=self.cron_month, prefix="Month")
         self._day_of_month(expr=self.cron_day, prefix="Day")
         self._day_of_week(expr=self.cron_week_day, prefix="Week Day")
-        self._number_validate(
-            expr=self.cron_year, prefix="Year", mi=1970, mx=2099, limit=84
-        )
+        self._number_validate(expr=self.cron_year, prefix="Year", mi=1970, mx=2099, limit=84)
         self._number_validate(expr=self.cron_week, prefix="Week", mi=1, mx=53, limit=53)
         self._number_validate(expr=self.cron_hour, prefix="Hour", mi=0, mx=23, limit=24)
-        self._number_validate(
-            expr=self.cron_min, prefix="Minute", mi=0, mx=59, limit=60
-        )
-        self._number_validate(
-            expr=self.cron_sec, prefix="Second", mi=0, mx=59, limit=60
-        )
+        self._number_validate(expr=self.cron_min, prefix="Minute", mi=0, mx=59, limit=60)
+        self._number_validate(expr=self.cron_sec, prefix="Second", mi=0, mx=59, limit=60)
 
     def _number_validate(self, expr: str, prefix: str, mi: int, mx: int, limit: int):
         """validates any records that are number only
@@ -86,9 +80,7 @@ class CronValidator:
             fst_parts = parts[0].split("-")
             self.check_range(expr=fst_parts[0], mi=mi, mx=mx, prefix=prefix)
             self.check_range(expr=fst_parts[1], mi=mi, mx=mx, prefix=prefix)
-            self.compare_range(
-                st=fst_parts[0], ed=fst_parts[1], mi=mi, mx=mx, prefix=prefix
-            )
+            self.compare_range(st=fst_parts[0], ed=fst_parts[1], mi=mi, mx=mx, prefix=prefix)
             self.check_range(ty="interval", expr=parts[1], mi=1, mx=mx, prefix=prefix)
 
         elif re.match(r"^\*/\d*$", expr):
@@ -102,9 +94,7 @@ class CronValidator:
                 raise ValueError(msg)
             else:
                 for n in expr_ls:
-                    self._number_validate(
-                        expr=n.strip(), prefix=prefix, mi=mi, mx=mx, limit=limit
-                    )
+                    self._number_validate(expr=n.strip(), prefix=prefix, mi=mi, mx=mx, limit=limit)
         else:
             msg = f"({prefix}) Illegal Expression Format '{expr}'"
             raise ValueError(msg)
@@ -250,9 +240,7 @@ class CronValidator:
                 for day in expr_ls:
                     self._day_of_week(expr=day.strip(), prefix=prefix)
         # if it is number only then just use _number_validate function
-        elif re.match(
-            r"^(\*|(\d{1})-(\d{1})(/(\d{1}))?|\*/\d{1}|\d{1}(/\d{1})?)$", expr
-        ):
+        elif re.match(r"^(\*|(\d{1})-(\d{1})(/(\d{1}))?|\*/\d{1}|\d{1}(/\d{1})?)$", expr):
             self._number_validate(expr=expr, prefix=prefix, mi=mi, mx=mx, limit=7)
         elif expr.upper() in self._cron_days.keys():
             pass
@@ -264,9 +252,7 @@ class CronValidator:
             except KeyError:
                 msg = f"({prefix}) Invalid value '{expr}'"
                 raise ValueError(msg)
-            self.compare_range(
-                st=st_day, ed=ed_day, mi=mi, mx=mx, prefix=prefix, ty="dow"
-            )
+            self.compare_range(st=st_day, ed=ed_day, mi=mi, mx=mx, prefix=prefix, ty="dow")
         else:
             msg = f"({prefix}) Illegal Expression Format '{expr}'"
             raise ValueError(msg)
@@ -290,9 +276,7 @@ class CronValidator:
         """
         if int(st) > int(ed):
             if ty is None:
-                msg = (
-                    f"({prefix}) Invalid range '{st}-{ed}'. Accepted range is {mi}-{mx}"
-                )
+                msg = f"({prefix}) Invalid range '{st}-{ed}'. Accepted range is {mi}-{mx}"
             elif ty == "dow":
                 msg = f"({prefix}) Invalid range '{self._cron_days[st]}-{self._cron_days[ed]}'. Accepted range is {mi}-{mx}"
             raise ValueError(msg)
