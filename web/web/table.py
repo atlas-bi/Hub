@@ -77,18 +77,18 @@ def project_list(my_type: str = "all") -> Response:
     projects = (
         db.session.query()
         .select_from(Project)
-        .outerjoin(Task, Task.project_id == Project.id)
-        .outerjoin(User, User.id == Project.owner_id)
+        .outerjoin(Task, Task.project_id == Project.c.id)
+        .outerjoin(User, User.id == Project.c.owner_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         .group_by(*groups.values())
     )
 
     if my_type.isdigit():
-        projects = projects.filter(User.id == int(my_type))
+        projects = projects.filter(User.c.id == int(my_type))
 
     elif my_type != "all":
-        projects = projects.filter(User.id == current_user.id)
+        projects = projects.filter(User.c.id == current_user.id)
 
     me = [{"head": '["Name","Last Run","Next Run","Tasks"]'}]
 
@@ -154,9 +154,9 @@ def tasklog_userevents() -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .outerjoin(Task, Task.id == TaskLog.task_id)
-        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
-        .filter(TaskLog.status_id == 7)
+        .outerjoin(Task, Task.id == TaskLog.c.task_id)
+        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.c.status_id)
+        .filter(TaskLog.c.status_id == 7)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -226,7 +226,7 @@ def user_auth() -> Response:
     logs = (
         db.session.query()
         .select_from(Login)
-        .join(LoginType, LoginType.id == Login.type_id)
+        .join(LoginType, LoginType.id == Login.c.type_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -285,95 +285,95 @@ def connection_tasks(connection_id: int) -> Response:
     }
 
     s_sftp = (
-        db.session.query(Task.id, ConnectionSftp.name)
+        db.session.query(Task.c.id, ConnectionSftp.c.name)
         .select_from(Task)
-        .join(ConnectionSftp, ConnectionSftp.id == Task.source_sftp_id)
-        .filter(ConnectionSftp.connection_id == connection_id)
-        .filter(Task.source_type_id == 3)  # sftp
+        .join(ConnectionSftp, ConnectionSftp.id == Task.c.source_sftp_id)
+        .filter(ConnectionSftp.c.connection_id == connection_id)
+        .filter(Task.c.source_type_id == 3)  # sftp
     )
     d_sftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSftp, ConnectionSftp.id == Task.destination_sftp_id)
-        .filter(ConnectionSftp.connection_id == connection_id)
-        .filter(Task.destination_sftp == 1)  # enabled
-        .add_columns(Task.id, ConnectionSftp.name)
+        .join(ConnectionSftp, ConnectionSftp.id == Task.c.destination_sftp_id)
+        .filter(ConnectionSftp.c.connection_id == connection_id)
+        .filter(Task.c.destination_sftp == 1)  # enabled
+        .add_columns(Task.c.id, ConnectionSftp.c.name)
     )
     q_sftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSftp, ConnectionSftp.id == Task.query_sftp_id)
-        .filter(ConnectionSftp.connection_id == connection_id)
-        .filter(Task.source_query_type_id == 3)  # sftp
-        .add_columns(Task.id, ConnectionSftp.name)
+        .join(ConnectionSftp, ConnectionSftp.id == Task.c.query_sftp_id)
+        .filter(ConnectionSftp.c.connection_id == connection_id)
+        .filter(Task.c.source_query_type_id == 3)  # sftp
+        .add_columns(Task.c.id, ConnectionSftp.c.name)
     )
 
     s_ssh = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSsh, ConnectionSsh.id == Task.source_ssh_id)
-        .filter(ConnectionSsh.connection_id == connection_id)
-        .filter(Task.source_type_id == 6)  # ssh
-        .add_columns(Task.id, ConnectionSsh.name)
+        .join(ConnectionSsh, ConnectionSsh.id == Task.c.source_ssh_id)
+        .filter(ConnectionSsh.c.connection_id == connection_id)
+        .filter(Task.c.source_type_id == 6)  # ssh
+        .add_columns(Task.c.id, ConnectionSsh.c.name)
     )
 
     s_ftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionFtp, ConnectionFtp.id == Task.source_ftp_id)
-        .filter(ConnectionFtp.connection_id == connection_id)
-        .filter(Task.source_type_id == 4)  # ftp
-        .add_columns(Task.id, ConnectionFtp.name)
+        .join(ConnectionFtp, ConnectionFtp.id == Task.c.source_ftp_id)
+        .filter(ConnectionFtp.c.connection_id == connection_id)
+        .filter(Task.c.source_type_id == 4)  # ftp
+        .add_columns(Task.c.id, ConnectionFtp.c.name)
     )
     d_ftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionFtp, ConnectionFtp.id == Task.destination_ftp_id)
-        .filter(ConnectionFtp.connection_id == connection_id)
-        .filter(Task.destination_ftp == 1)  # enabled
-        .add_columns(Task.id, ConnectionFtp.name)
+        .join(ConnectionFtp, ConnectionFtp.id == Task.c.destination_ftp_id)
+        .filter(ConnectionFtp.c.connection_id == connection_id)
+        .filter(Task.c.destination_ftp == 1)  # enabled
+        .add_columns(Task.c.id, ConnectionFtp.c.name)
     )
     q_ftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionFtp, ConnectionFtp.id == Task.query_ftp_id)
-        .filter(ConnectionFtp.connection_id == connection_id)
-        .filter(Task.source_query_type_id == 4)  # ftp
-        .add_columns(Task.id, ConnectionFtp.name)
+        .join(ConnectionFtp, ConnectionFtp.id == Task.c.query_ftp_id)
+        .filter(ConnectionFtp.c.connection_id == connection_id)
+        .filter(Task.c.source_query_type_id == 4)  # ftp
+        .add_columns(Task.c.id, ConnectionFtp.c.name)
     )
 
     s_smb = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSmb, ConnectionSmb.id == Task.source_smb_id)
-        .filter(ConnectionSmb.connection_id == connection_id)
-        .filter(Task.source_type_id == 2)  # smb
-        .add_columns(Task.id, ConnectionSmb.name)
+        .join(ConnectionSmb, ConnectionSmb.id == Task.c.source_smb_id)
+        .filter(ConnectionSmb.c.connection_id == connection_id)
+        .filter(Task.c.source_type_id == 2)  # smb
+        .add_columns(Task.c.id, ConnectionSmb.c.name)
     )
     d_smb = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSmb, ConnectionSmb.id == Task.destination_smb_id)
-        .filter(ConnectionSmb.connection_id == connection_id)
-        .filter(Task.destination_smb == 1)  # enabled
-        .add_columns(Task.id, ConnectionSmb.name)
+        .join(ConnectionSmb, ConnectionSmb.id == Task.c.destination_smb_id)
+        .filter(ConnectionSmb.c.connection_id == connection_id)
+        .filter(Task.c.destination_smb == 1)  # enabled
+        .add_columns(Task.c.id, ConnectionSmb.c.name)
     )
     q_smb = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSmb, ConnectionSmb.id == Task.query_smb_id)
-        .filter(ConnectionSmb.connection_id == connection_id)
-        .filter(Task.source_query_type_id == 2)  # smb
-        .add_columns(Task.id, ConnectionSmb.name)
+        .join(ConnectionSmb, ConnectionSmb.id == Task.c.query_smb_id)
+        .filter(ConnectionSmb.c.connection_id == connection_id)
+        .filter(Task.c.source_query_type_id == 2)  # smb
+        .add_columns(Task.c.id, ConnectionSmb.c.name)
     )
 
     s_database = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionDatabase, ConnectionDatabase.id == Task.source_database_id)
-        .filter(ConnectionDatabase.connection_id == connection_id)
-        .filter(Task.source_type_id == 1)  # database
-        .add_columns(Task.id, ConnectionDatabase.name)
+        .join(ConnectionDatabase, ConnectionDatabase.id == Task.c.source_database_id)
+        .filter(ConnectionDatabase.c.connection_id == connection_id)
+        .filter(Task.c.source_type_id == 1)  # database
+        .add_columns(Task.c.id, ConnectionDatabase.c.name)
     )
 
     summary = s_sftp.union_all(
@@ -383,9 +383,9 @@ def connection_tasks(connection_id: int) -> Response:
     tasks = (
         db.session.query()
         .select_from(Task)
-        .join(summary, summary.c.task_id == Task.id)
-        .outerjoin(Project, Project.id == Task.project_id)
-        .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
+        .join(summary, summary.task_id == Task.c.id)
+        .outerjoin(Project, Project.id == Task.c.project_id)
+        .outerjoin(TaskStatus, TaskStatus.id == Task.c.status_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -535,9 +535,9 @@ def dash_tasks(task_type: str) -> Response:
     tasks = (
         db.session.query()
         .select_from(Task)
-        .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-        .outerjoin(Project, Project.id == Task.project_id)
-        .outerjoin(User, User.id == Project.owner_id)
+        .outerjoin(TaskStatus, TaskStatus.id == Task.c.status_id)
+        .outerjoin(Project, Project.id == Task.c.project_id)
+        .outerjoin(User, User.id == Project.c.owner_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -545,25 +545,25 @@ def dash_tasks(task_type: str) -> Response:
     me = [{"head": '["Name", "Owner", "Last Run", "Next Run", "Actions"]'}]
 
     if task_type == "errored":
-        tasks = tasks.filter(Task.status_id == 2, Task.enabled == 1)
+        tasks = tasks.filter(Task.c.status_id == 2, Task.c.enabled == 1)
 
     elif task_type == "scheduled":
         try:
             ids = json.loads(
                 requests.get(app.config["SCHEDULER_HOST"] + "/scheduled", timeout=60).text
             )
-            tasks = tasks.filter(and_(Task.id.in_(ids), Task.enabled == 1))  # type: ignore[attr-defined, union-attr]
+            tasks = tasks.filter(and_(Task.c.id.in_(ids), Task.c.enabled == 1))  # type: ignore[attr-defined, union-attr]
         except (
             requests.exceptions.ConnectionError,
             urllib3.exceptions.NewConnectionError,
         ):
-            tasks = tasks.filter(Task.id == -1)
+            tasks = tasks.filter(Task.c.id == -1)
             me.append({"empty_msg": "Error - Scheduler is offline."})
 
     elif task_type == "active":
         try:
-            tasks = tasks.filter(Task.status_id == 1).filter(
-                Task.enabled == 1
+            tasks = tasks.filter(Task.c.status_id == 1).filter(
+                Task.c.enabled == 1
             )  # running and enabled
         except (
             requests.exceptions.ConnectionError,
@@ -666,9 +666,9 @@ def task_list(my_type: str) -> Response:
         tasks = (
             db.session.query()
             .select_from(Task)
-            .outerjoin(Project, Project.id == Task.project_id)
-            .outerjoin(User, User.id == Project.owner_id)
-            .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
+            .outerjoin(Project, Project.id == Task.c.project_id)
+            .outerjoin(User, User.id == Project.c.owner_id)
+            .outerjoin(TaskStatus, TaskStatus.id == Task.c.status_id)
             .add_columns(*cols.values())
             .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
@@ -677,10 +677,10 @@ def task_list(my_type: str) -> Response:
         tasks = (
             db.session.query()
             .select_from(Task)
-            .outerjoin(Project, Project.id == Task.project_id)
-            .outerjoin(User, User.id == Project.owner_id)
-            .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-            .filter(User.id == int(my_type))
+            .outerjoin(Project, Project.id == Task.c.project_id)
+            .outerjoin(User, User.id == Project.c.owner_id)
+            .outerjoin(TaskStatus, TaskStatus.id == Task.c.status_id)
+            .filter(User.c.id == int(my_type))
             .add_columns(*cols.values())
             .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
@@ -689,10 +689,10 @@ def task_list(my_type: str) -> Response:
         tasks = (
             db.session.query()
             .select_from(Task)
-            .outerjoin(Project, Project.id == Task.project_id)
-            .outerjoin(User, User.id == Project.owner_id)
-            .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-            .filter(User.id == current_user.id)
+            .outerjoin(Project, Project.id == Task.c.project_id)
+            .outerjoin(User, User.id == Project.c.owner_id)
+            .outerjoin(TaskStatus, TaskStatus.id == Task.c.status_id)
+            .filter(User.c.id == current_user.id)
             .add_columns(*cols.values())
             .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
@@ -783,8 +783,8 @@ def project_all_tasks(project_id: int) -> Response:
     tasks = (
         db.session.query()
         .select_from(Task)
-        .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-        .filter(Task.project_id == project_id)
+        .outerjoin(TaskStatus, TaskStatus.id == Task.c.status_id)
+        .filter(Task.c.project_id == project_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -849,9 +849,9 @@ def task_log(task_id: int) -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .join(Task, Task.id == TaskLog.task_id)
-        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
-        .filter(Task.id == task_id)
+        .join(Task, Task.id == TaskLog.c.task_id)
+        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.c.status_id)
+        .filter(Task.c.id == task_id)
         .add_columns(*cols.values())
         .order_by(text(str("task_log.id desc")))
     )
@@ -862,10 +862,10 @@ def task_log(task_id: int) -> Response:
     me.append({"empty_msg": "No log messages."})
 
     if request.args.get("gte"):
-        logs = logs.filter(TaskLog.id >= request.args["gte"])
+        logs = logs.filter(TaskLog.c.id >= request.args["gte"])
 
     elif request.args.get("lt"):
-        logs = logs.filter(TaskLog.id < request.args["lt"]).limit(40)
+        logs = logs.filter(TaskLog.c.id < request.args["lt"]).limit(40)
 
     else:
         logs = logs.limit(40).offset(0)
@@ -923,10 +923,10 @@ def dash_log() -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .join(Task, Task.id == TaskLog.task_id)
-        .outerjoin(Project, Project.id == Task.project_id)
-        .outerjoin(User, User.id == Project.owner_id)
-        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
+        .join(Task, Task.id == TaskLog.c.task_id)
+        .outerjoin(Project, Project.id == Task.c.project_id)
+        .outerjoin(User, User.id == Project.c.owner_id)
+        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.c.status_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -1022,11 +1022,11 @@ def dash_error_log() -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .join(Task, Task.id == TaskLog.task_id)
-        .join(Project, Project.id == Task.project_id)
-        .join(User, User.id == Project.owner_id)
-        .join(TaskStatus, TaskStatus.id == TaskLog.status_id)
-        .filter(TaskLog.error == 1)
+        .join(Task, Task.id == TaskLog.c.task_id)
+        .join(Project, Project.id == Task.c.project_id)
+        .join(User, User.id == Project.c.owner_id)
+        .join(TaskStatus, TaskStatus.id == TaskLog.c.status_id)
+        .filter(TaskLog.c.error == 1)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -1115,7 +1115,7 @@ def one_task_files(task_id: int) -> Response:
     my_files = (
         db.session.query()
         .select_from(TaskFile)
-        .filter(TaskFile.task_id == task_id)
+        .filter(TaskFile.c.task_id == task_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )

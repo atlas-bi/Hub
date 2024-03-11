@@ -185,7 +185,7 @@ class Smb:
             new_path = str(Path(directory).joinpath(dirname))
             yield from self._walk(new_path)
 
-    def __load_file(self, file_name: str, index: int, length: int) -> IO[str]:
+    def __load_file(self, file_name: str, index: int, length: int) -> IO[bytes]:
         RunnerLog(self.task, self.run_id, 10, f"({index} of {length}) downloading {file_name}")
 
         director = urllib.request.build_opener(SMBHandler)
@@ -196,7 +196,7 @@ class Smb:
             f"smb://{self.username}:{password}@{self.server_name},{self.server_ip}/{self.share_name}/{file_name}"
         )
 
-        def load_data(file_obj: TextIOWrapper) -> Generator:
+        def load_data(file_obj: IO[str]) -> Generator[str, None, None]:
             with file_obj as this_file:
                 while True:
                     data = this_file.read(1024)
@@ -219,7 +219,7 @@ class Smb:
                     writer.writerows(csv_reader)
 
                 else:
-                    data_file.write(data)
+                    data_file.write(data.encode("utf-8"))
 
             original_name = str(self.dir.joinpath(file_name.split("/")[-1]))
             if os.path.islink(original_name):
@@ -233,7 +233,7 @@ class Smb:
 
         return data_file
 
-    def read(self, file_name: str) -> List[IO[str]]:
+    def read(self, file_name: str) -> List[IO[bytes]]:
         """Read file contents of network file path.
 
         Data is loaded into a temp file.

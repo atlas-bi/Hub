@@ -102,7 +102,7 @@ class Jdbc:
     def __close(self) -> None:
         self.conn.close()
 
-    def run(self, query: str) -> Tuple[int, List[IO[str]]]:
+    def run(self, query: str) -> Tuple[int, List[IO[bytes]]]:
         """Run a sql query.
 
         Data is loaded into a temp file.
@@ -112,7 +112,7 @@ class Jdbc:
         self.cur.execute(query)
 
         with tempfile.NamedTemporaryFile(
-            mode="w+", newline="", delete=False, dir=self.dir
+            mode="wb+", newline="", delete=False, dir=self.dir
         ) as data_file:
             writer = csv.writer(data_file)
 

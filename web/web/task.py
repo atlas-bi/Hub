@@ -41,19 +41,19 @@ def all_tasks() -> Union[str, Response]:
     owners = (
         db.session.query()
         .select_from(User)
-        .join(Project, Project.owner_id == User.id)
-        .join(Task, Task.project_id == Project.id)
-        .add_columns(User.full_name, User.id, func.count(Task.id))
-        .group_by(User.full_name, User.id)
+        .join(Project, Project.owner_id == User.c.id)
+        .join(Task, Task.project_id == Project.c.id)
+        .add_columns(User.c.full_name, User.c.id, func.count(Task.c.id))
+        .group_by(User.c.full_name, User.c.id)
         .all()
     )
 
     projects = (
         db.session.query()
         .select_from(Project)
-        .join(Task, Task.project_id == Project.id)
-        .add_columns(Project.name, Project.id, func.count(Task.id))
-        .group_by(Project.name, Project.id)
+        .join(Task, Task.project_id == Project.c.id)
+        .add_columns(Project.c.name, Project.c.id, func.count(Task.c.id))
+        .group_by(Project.c.name, Project.c.id)
         .all()
     )
     return render_template(
@@ -67,7 +67,7 @@ def my_tasks() -> Union[str, Response]:
     """Page for my tasks."""
     me = (
         Task.query.join(Project)
-        .join(User, User.id == Project.owner_id)
+        .join(User, User.id == Project.c.owner_id)
         .filter(User.id == current_user.id)
         .count()
     )
@@ -78,11 +78,11 @@ def my_tasks() -> Union[str, Response]:
     projects = (
         db.session.query()
         .select_from(Project)
-        .join(User, User.id == Project.owner_id)
-        .join(Task, Task.project_id == Project.id)
+        .join(User, User.id == Project.c.owner_id)
+        .join(Task, Task.project_id == Project.c.id)
         .filter(User.id == current_user.id)
-        .add_columns(Project.name, Project.id, func.count(Task.id))
-        .group_by(Project.name, Project.id)
+        .add_columns(Project.c.name, Project.c.id, func.count(Task.c.id))
+        .group_by(Project.c.name, Project.c.id)
         .all()
     )
 

@@ -28,8 +28,7 @@ def job_sync() -> None:
             db.session.execute(
                 update(Task)
                 .where(
-                    Task.enabled == 0
-                    and (Task.next_run is not None or Task.est_duration is not None)
+                    Task.c.enabled == 0, (Task.c.next_run != None or Task.c.est_duration != None)
                 )
                 .values(next_run=None, est_duration=None)
             )

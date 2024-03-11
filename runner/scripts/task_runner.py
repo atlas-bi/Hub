@@ -97,7 +97,7 @@ class Runner:
 
         task = Task.query.filter_by(id=task_id).first()
 
-        self.source_files: List[IO[str]]
+        self.source_files: List[IO[bytes]]
         self.output_files: List[str] = []
 
         print("starting task " + str(task.id))  # noqa: T201

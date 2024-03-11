@@ -15,6 +15,7 @@ from flask import current_app as app
 from flask import jsonify
 from flask_login import current_user, login_required
 from sqlalchemy import and_, or_
+from werkzeug import Response
 
 from web import db, executor, redis_client
 from web.model import Project, Task, TaskLog
@@ -27,7 +28,7 @@ executors_bp = Blueprint("executors_bp", __name__)
 
 @executors_bp.route("/executor/status")
 @login_required
-def executor_status() -> dict:
+def executor_status() -> Response:
     """Get list of active executor jobs."""
     active_executors = json.loads(
         redis_client.get(f"atlas_hub_executors-{current_user.id}") or json.dumps({})
@@ -175,16 +176,16 @@ def sub_enable_task(task_id: int) -> None:
         # only add job if its first in sequence
         if Task.query.filter(
             or_(  # type: ignore[type-var]
-                and_(Task.project_id == task.project_id, Task.enabled == 1),
-                Task.id == task_id,
+                and_(Task.c.project_id == task.project_id, Task.c.enabled == 1),
+                Task.c.id == task_id,
             )
         ).order_by(
             Task.order.asc(), Task.name.asc()  # type: ignore[union-attr]
         ).first() is not None and (
             Task.query.filter(
                 or_(  # type: ignore[type-var]
-                    and_(Task.project_id == task.project_id, Task.enabled == 1),
-                    Task.id == task_id,
+                    and_(Task.c.project_id == task.project_id, Task.c.enabled == 1),
+                    Task.c.id == task_id,
                 )
             )
             .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
@@ -225,8 +226,8 @@ def enable_task(task_list: List[int]) -> str:
         # reschedule all tasks in project
         tasks = Task.query.filter(
             or_(  # type: ignore[type-var]
-                and_(Task.project_id == task.project_id, Task.enabled == 1),
-                Task.id == task_id,
+                and_(Task.c.project_id == task.project_id, Task.c.enabled == 1),
+                Task.c.id == task_id,
             )
         )
         try:

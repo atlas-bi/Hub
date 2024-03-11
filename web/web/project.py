@@ -35,13 +35,13 @@ def form_to_date(date_string: Optional[str]) -> Optional[datetime.datetime]:
 @login_required
 def all_projects() -> Union[Response, str]:
     """List all projects."""
-    if db.session.query().select_from(Project).add_columns(Project.id).first():
+    if db.session.query().select_from(Project).add_columns(Project.c.id).first():
         owners = (
             db.session.query()
             .select_from(User)
-            .join(Project, Project.owner_id == User.id)
-            .add_columns(User.full_name, User.id, func.count(Project.id))
-            .group_by(User.full_name, User.id)
+            .join(Project, Project.owner_id == User.c.id)
+            .add_columns(User.c.full_name, User.c.id, func.count(Project.c.id))
+            .group_by(User.c.full_name, User.c.id)
             .all()
         )
         return render_template("pages/project/all.html.j2", title="Projects", owners=owners)
@@ -62,8 +62,8 @@ def user_projects(user_id: int) -> Union[Response, str]:
     if (
         db.session.query()
         .select_from(Project)
-        .add_columns(Project.id)
-        .filter(Project.owner_id == user_id)
+        .add_columns(Project.c.id)
+        .filter(Project.c.owner_id == user_id)
         .first()
     ):
         return render_template(
@@ -138,7 +138,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
 
 @project_bp.route("/project/<project_id>/edit", methods=["POST"])
 @login_required
-def edit_project(project_id: int) -> Response:
+def edit_project(project_id: int) -> Response | str:
     """Save project edits."""
     cache.clear()
     error = None
@@ -254,7 +254,7 @@ def new_project_form() -> str:
 
 @project_bp.route("/project/new", methods=["POST"])
 @login_required
-def new_project() -> Response:
+def new_project() -> Response | str:
     """Save a new project."""
     cache.clear()
     error = None
@@ -357,7 +357,7 @@ def delete_project(project_id: int) -> Response:
         for x in (
             db.session.query()
             .select_from(Task)
-            .filter(Task.project_id == project_id)
+            .filter(Task.c.project_id == project_id)
             .add_columns(text("task.id"))
             .all()
         )
@@ -385,7 +385,9 @@ def delete_project(project_id: int) -> Response:
     db.session.commit()
 
     # delete tasks
-    db.session.query(Task).filter(Task.project_id == project_id).delete(synchronize_session=False)
+    db.session.query(Task).filter(Task.c.project_id == project_id).delete(
+        synchronize_session=False
+    )
     db.session.commit()
 
     # delete params
