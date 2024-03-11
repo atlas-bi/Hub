@@ -35,7 +35,8 @@ class Cmd:
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            out_bytes = subprocess.check_output(self.cmd, stderr=subprocess.STDOUT, shell=True)
+            cmd_args = self.cmd.split()
+            out_bytes = subprocess.check_output(cmd_args, stderr=subprocess.STDOUT)
             out = out_bytes.decode("utf-8")
 
             if "Error" in out:
