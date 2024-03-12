@@ -176,16 +176,21 @@ def sub_enable_task(task_id: int) -> None:
         # only add job if its first in sequence
         if Task.query.filter(
             or_(  # type: ignore[type-var]
-                and_(Task.c.project_id == task.project_id, Task.c.enabled == 1),
-                Task.c.id == task_id,
+                and_(
+                    Task.__table__.c.project_id == task.project_id, Task.__table__.c.enabled == 1
+                ),
+                Task.__table__.c.id == task_id,
             )
         ).order_by(
             Task.order.asc(), Task.name.asc()  # type: ignore[union-attr]
         ).first() is not None and (
             Task.query.filter(
                 or_(  # type: ignore[type-var]
-                    and_(Task.c.project_id == task.project_id, Task.c.enabled == 1),
-                    Task.c.id == task_id,
+                    and_(
+                        Task.__table__.c.project_id == task.project_id,
+                        Task.__table__.c.enabled == 1,
+                    ),
+                    Task.__table__.c.id == task_id,
                 )
             )
             .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
@@ -226,8 +231,10 @@ def enable_task(task_list: List[int]) -> str:
         # reschedule all tasks in project
         tasks = Task.query.filter(
             or_(  # type: ignore[type-var]
-                and_(Task.c.project_id == task.project_id, Task.c.enabled == 1),
-                Task.c.id == task_id,
+                and_(
+                    Task.__table__.c.project_id == task.project_id, Task.__table__.c.enabled == 1
+                ),
+                Task.__table__.c.id == task_id,
             )
         )
         try:

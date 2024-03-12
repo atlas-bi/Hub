@@ -97,7 +97,7 @@ class Runner:
 
         task = Task.query.filter_by(id=task_id).first()
 
-        self.source_files: List[IO[bytes]]
+        self.source_files: List[IO[str]]
         self.output_files: List[str] = []
 
         print("starting task " + str(task.id))  # noqa: T201
@@ -685,10 +685,10 @@ class Runner:
                     original = Path(file)
                     original_name = str(original.absolute())
                     with tempfile.NamedTemporaryFile(
-                        mode="wb+", delete=False, dir=self.temp_path
+                        mode="w+", delete=False, dir=self.temp_path
                     ) as data_file:
                         # write contents
-                        data_file.write(original.read_bytes())
+                        data_file.write(original.read_text())
 
                         # set name and remove original
                         original.unlink()

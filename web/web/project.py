@@ -35,13 +35,15 @@ def form_to_date(date_string: Optional[str]) -> Optional[datetime.datetime]:
 @login_required
 def all_projects() -> Union[Response, str]:
     """List all projects."""
-    if db.session.query().select_from(Project).add_columns(Project.c.id).first():
+    if db.session.query().select_from(Project).add_columns(Project.__table__.c.id).first():
         owners = (
             db.session.query()
             .select_from(User)
-            .join(Project, Project.owner_id == User.c.id)
-            .add_columns(User.c.full_name, User.c.id, func.count(Project.c.id))
-            .group_by(User.c.full_name, User.c.id)
+            .join(Project, Project.owner_id == User.__table__.c.id)
+            .add_columns(
+                User.__table__.c.full_name, User.__table__.c.id, func.count(Project.__table__.c.id)
+            )
+            .group_by(User.__table__.c.full_name, User.__table__.c.id)
             .all()
         )
         return render_template("pages/project/all.html.j2", title="Projects", owners=owners)
@@ -59,13 +61,7 @@ def user_projects(user_id: int) -> Union[Response, str]:
         flash("That user doesn't exist.")
         return redirect(url_for("project_bp.all_projects"))
 
-    if (
-        db.session.query()
-        .select_from(Project)
-        .add_columns(Project.c.id)
-        .filter(Project.c.owner_id == user_id)
-        .first()
-    ):
+    if Project.query.filter(Project.owner_id == user_id).first():
         return render_template(
             "pages/project/all.html.j2",
             title=my_user.full_name + "'s Projects",
@@ -357,7 +353,7 @@ def delete_project(project_id: int) -> Response:
         for x in (
             db.session.query()
             .select_from(Task)
-            .filter(Task.c.project_id == project_id)
+            .filter(Task.__table__.c.project_id == project_id)
             .add_columns(text("task.id"))
             .all()
         )
@@ -385,7 +381,7 @@ def delete_project(project_id: int) -> Response:
     db.session.commit()
 
     # delete tasks
-    db.session.query(Task).filter(Task.c.project_id == project_id).delete(
+    db.session.query(Task).filter(Task.__table__.c.project_id == project_id).delete(
         synchronize_session=False
     )
     db.session.commit()

@@ -356,70 +356,80 @@ class ExpressionDescriptor:
 
         """
 
-        description = None
+        description = ""
         expression = expression.strip()
         if not expression or expression == "":
-            return
-
+            return description
         if expression == "*":
             return all_description
-        if "/" in expression:
-            segments = expression.split("/")
-            interval_description = get_interval_description_format(segments[1]).format(
-                get_single_item_description(segments[1])
+
+        if not any(ext in expression for ext in ["/", "-", ",", " "]):
+            return get_description_format(expression).format(
+                get_single_item_description(expression)
             )
-
-            if "-" in segments[0]:
-                between_segment_description = self.generate_between_segment_description(
-                    segments[0],
-                    get_between_description_format,
-                    get_single_item_description,
-                )
-
-                description = f"{interval_description}, {between_segment_description}"
-            elif not any(ext in segments[0] for ext in ["*", ","]):
-                range_item_description = (
-                    get_description_format(segments[0])
-                    .format(get_single_item_description(segments[0]))
-                    .replace(", ", "")
-                )
-
-                description = f"{interval_description}, starting {range_item_description}"
-        elif "-" in expression:
-            description = self.generate_between_segment_description(
-                expression, get_between_description_format, get_single_item_description
-            )
-        elif "," in expression:
+        if "," in expression:
             segments = expression.split(",")
-            description_content = ", ".join(
-                self.get_segment_description(
-                    seg.strip(),
+            description_content = ""
+            for i, seg in enumerate(segments):
+                seg = seg.strip()
+                if i > 0 and len(segments) > 2:
+                    description_content += ", "
+
+                    if i < len(segments) - 1:
+                        description_content += " "
+
+                if i > 0 and len(segments) > 1 and (i == len(segments) - 1 or len(segments) == 2):
+                    description_content += " and "
+                description_content += self.get_segment_description(
+                    seg,
                     all_description,
                     get_single_item_description,
                     get_interval_description_format,
                     get_between_description_format,
-                    get_description_format,
+                    get_single_item_description,
                     get_range_format,
                 )
-                for seg in segments
-            )
+                # replace weirdness
+                description_content = description_content.replace("and ,", "and")
+                description_content = description_content.replace("of the month", "")
 
-            # Replace consecutive 'and ,' with 'and'
-            description = description_content.replace("and ,", "and")
-            description = description.replace("of the month", "")
+            description = get_description_format(expression).format(description_content)
         elif " " in expression and not any(ext in expression for ext in ["/", "-", ","]):
             daypart = expression.split()
             if len(daypart) > 1 and daypart[1].lower() in map(str.lower, calendar.day_abbr):
                 expression = (
                     f"{daypart[0]} {calendar.day_name[self._cron_days[daypart[1].upper()]]}"
                 )
-
             description = get_description_format(expression).format(
                 get_single_item_description(expression)
             )
-        else:
-            description = get_description_format(expression).format(
-                get_single_item_description(expression)
+        elif "/" in expression:
+            segments = expression.split("/")
+            description = get_interval_description_format(segments[1]).format(
+                get_single_item_description(segments[1])
+            )
+
+            # interval contains 'between' piece (i.e. 2-59/3 )
+            if "-" in segments[0]:
+                between_segment_description = self.generate_between_segment_description(
+                    segments[0],
+                    get_between_description_format,
+                    get_single_item_description,
+                )
+                if not between_segment_description.startswith(", "):
+                    description += ", "
+
+                description += between_segment_description
+            elif not any(ext in segments[0] for ext in ["*", ","]):
+                range_item_description = get_description_format(segments[0]).format(
+                    get_single_item_description(segments[0])
+                )
+                range_item_description = range_item_description.replace(", ", "")
+
+                description += f", starting {range_item_description}"
+        elif "-" in expression:
+            description = self.generate_between_segment_description(
+                expression, get_between_description_format, get_single_item_description
             )
 
         return description

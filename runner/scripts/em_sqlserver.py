@@ -101,7 +101,7 @@ class SqlServer:
     def __close(self) -> None:
         self.conn.close()
 
-    def run(self, query: str) -> Tuple[int, List[IO[bytes]]]:
+    def run(self, query: str) -> Tuple[int, List[IO[str]]]:
         """Run a sql query and return temp file location.
 
         Data is loaded into a temp file.
@@ -111,7 +111,7 @@ class SqlServer:
         self.cur.execute(query)
 
         with tempfile.NamedTemporaryFile(
-            mode="wb+", newline="", delete=False, dir=self.dir
+            mode="w+", newline="", delete=False, dir=self.dir
         ) as data_file:
             writer = csv.writer(data_file)
 

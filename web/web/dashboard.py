@@ -36,33 +36,45 @@ def search() -> Response:
     """Search data."""
     my_json = {}
 
-    tasks = db.session.query(Task.c.id, Task.c.name).order_by(Task.c.name).all()
+    tasks = (
+        db.session.query(Task.__table__.c.id, Task.__table__.c.name)
+        .order_by(Task.__table__.c.name)
+        .all()
+    )
     task_json = {}
     for t_id, t_name in tasks:
         task_json[url_for("task_bp.one_task", task_id=t_id)] = t_name
 
     project_json = {}
-    projects = db.session.query(Project.c.id, Project.c.name).order_by(Project.c.name).all()
+    projects = (
+        db.session.query(Project.__table__.c.id, Project.__table__.c.name)
+        .order_by(Project.__table__.c.name)
+        .all()
+    )
     for t_id, t_name in projects:
         project_json[url_for("project_bp.one_project", project_id=t_id)] = t_name
 
     user_json = {}
-    users = db.session.query(User.c.id, User.c.full_name).order_by(User.c.full_name).all()
+    users = (
+        db.session.query(User.__table__.c.id, User.__table__.c.full_name)
+        .order_by(User.__table__.c.full_name)
+        .all()
+    )
     for t_id, t_name in users:
         user_json[url_for("project_bp.user_projects", user_id=t_id)] = t_name
 
     connection_json = {}
     connections = (
         db.session.query(
-            Connection.c.id,
-            Connection.c.name,
-            Connection.c.description,
-            Connection.c.address,
-            Connection.c.primary_contact,
-            Connection.c.primary_contact_email,
-            Connection.c.primary_contact_phone,
+            Connection.__table__.c.id,
+            Connection.__table__.c.name,
+            Connection.__table__.c.description,
+            Connection.__table__.c.address,
+            Connection.__table__.c.primary_contact,
+            Connection.__table__.c.primary_contact_email,
+            Connection.__table__.c.primary_contact_phone,
         )
-        .order_by(Connection.c.name)
+        .order_by(Connection.__table__.c.name)
         .all()
     )
     for row in connections:
@@ -72,10 +84,10 @@ def search() -> Response:
 
     connection_sftp = {}
     sftp_connections = db.session.query(
-        ConnectionSftp.c.connection_id,
-        ConnectionSftp.c.id,
-        ConnectionSftp.c.name,
-        ConnectionSftp.c.address,
+        ConnectionSftp.__table__.c.connection_id,
+        ConnectionSftp.__table__.c.id,
+        ConnectionSftp.__table__.c.name,
+        ConnectionSftp.__table__.c.address,
     )
     for row in sftp_connections.all():
         connection_sftp[
@@ -83,10 +95,10 @@ def search() -> Response:
         ] = " / ".join([x for x in row[2:] if x.strip()])
     connection_ftp = {}
     ftp_connections = db.session.query(
-        ConnectionFtp.c.connection_id,
-        ConnectionFtp.c.id,
-        ConnectionFtp.c.name,
-        ConnectionFtp.c.address,
+        ConnectionFtp.__table__.c.connection_id,
+        ConnectionFtp.__table__.c.id,
+        ConnectionFtp.__table__.c.name,
+        ConnectionFtp.__table__.c.address,
     )
     for row in ftp_connections.all():
         connection_ftp[
@@ -94,7 +106,9 @@ def search() -> Response:
         ] = " / ".join([x for x in row[2:] if x.strip()])
     connection_database = {}
     database_connections = db.session.query(
-        ConnectionDatabase.c.connection_id, ConnectionDatabase.c.id, ConnectionDatabase.c.name
+        ConnectionDatabase.__table__.c.connection_id,
+        ConnectionDatabase.__table__.c.id,
+        ConnectionDatabase.__table__.c.name,
     )
     for row in database_connections.all():
         connection_database[
@@ -102,12 +116,12 @@ def search() -> Response:
         ] = " / ".join([x for x in row[2:] if x.strip()])
     connection_smb = {}
     smb_connections = db.session.query(
-        ConnectionSmb.c.connection_id,
-        ConnectionSmb.c.id,
-        ConnectionSmb.c.name,
-        ConnectionSmb.c.server_name,
-        ConnectionSmb.c.server_ip,
-        ConnectionSmb.c.share_name,
+        ConnectionSmb.__table__.c.connection_id,
+        ConnectionSmb.__table__.c.id,
+        ConnectionSmb.__table__.c.name,
+        ConnectionSmb.__table__.c.server_name,
+        ConnectionSmb.__table__.c.server_ip,
+        ConnectionSmb.__table__.c.share_name,
     )
     for row in smb_connections.all():
         connection_smb[
@@ -115,10 +129,10 @@ def search() -> Response:
         ] = " / ".join([x for x in row[2:] if x.strip()])
     connection_ssh = {}
     ssh_connections = db.session.query(
-        ConnectionSsh.c.connection_id,
-        ConnectionSsh.c.id,
-        ConnectionSsh.c.name,
-        ConnectionSsh.c.address,
+        ConnectionSsh.__table__.c.connection_id,
+        ConnectionSsh.__table__.c.id,
+        ConnectionSsh.__table__.c.name,
+        ConnectionSsh.__table__.c.address,
     )
     for row in ssh_connections.all():
         connection_ssh[
@@ -126,7 +140,9 @@ def search() -> Response:
         ] = " / ".join([x for x in row[2:] if x.strip()])
     connection_gpg = {}
     gpg_connections = db.session.query(
-        ConnectionGpg.c.connection_id, ConnectionGpg.c.id, ConnectionGpg.c.name
+        ConnectionGpg.__table__.c.connection_id,
+        ConnectionGpg.__table__.c.id,
+        ConnectionGpg.__table__.c.name,
     )
     for row in gpg_connections.all():
         connection_gpg[
@@ -154,13 +170,7 @@ def home() -> Union[Response, str]:
 
     If user has projects, they will direct to that screen.
     """
-    if (
-        db.session.query()
-        .select_from(Project)
-        .add_columns(Project.c.id)
-        .filter(Project.c.owner_id == current_user.id)
-        .first()
-    ):
+    if Project.query.filter(Project.owner_id == current_user.id).first():
         return render_template(
             "pages/project/all.html.j2",
             title=current_user.full_name + "'s Projects",

@@ -35,7 +35,7 @@ class PyProcesser:
         run_id: str,
         directory: Path,
         script: str,
-        source_files: List[IO[bytes]],
+        source_files: List[IO[str]],
         params: ParamLoader,
     ) -> None:
         """Set up class parameters."""

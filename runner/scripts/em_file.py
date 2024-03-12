@@ -59,7 +59,7 @@ class File:
     # pylint: disable=too-few-public-methods
     # pylint: disable=too-many-instance-attributes
     def __init__(
-        self, task: Task, run_id: Optional[str], data_file: IO[bytes], params: ParamLoader
+        self, task: Task, run_id: Optional[str], data_file: IO[str], params: ParamLoader
     ) -> None:
         """Set up class parameters."""
         self.task = task
@@ -158,7 +158,7 @@ class File:
             with open(self.data_file.name, "r", newline="") as data_file:
                 reader = csv.reader(data_file)
 
-                with open(self.file_path, mode="w", encoding="utf-8") as myfile:
+                with open(self.file_path, mode="w") as myfile:
                     # if csv (1) or text (2) and had delimiter
 
                     if (
