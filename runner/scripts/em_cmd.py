@@ -2,6 +2,7 @@
 
 import os
 import re
+import shlex
 import subprocess
 from typing import Optional
 
@@ -23,11 +24,7 @@ class Cmd:
     ) -> None:
         """Set system path and variables."""
         self.task = task
-        self.cmd = (
-            "PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-            + " export PATH && "
-            + cmd
-        )
+        self.cmd = cmd
         self.success_msg = success_msg
         self.error_msg = error_msg
         self.run_id = run_id
@@ -35,8 +32,13 @@ class Cmd:
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            cmd_args = self.cmd.split()
-            out_bytes = subprocess.check_output(cmd_args, stderr=subprocess.STDOUT)
+            env = {
+                **os.environ,
+                "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+                + os.environ["PATH"],
+            }
+            cmd_args = shlex.split(self.cmd)
+            out_bytes = subprocess.check_output(cmd_args, stderr=subprocess.STDOUT, env=env)
             out = out_bytes.decode("utf-8")
 
             if "Error" in out:
@@ -107,7 +109,15 @@ class Cmd:
     def run(self) -> str:
         """Run input command as a subprocess command."""
         try:
-            out = os.popen(self.cmd + " 2>&1").read()
+            env = {
+                **os.environ,
+                "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+                + os.environ["PATH"],
+            }
+            cmd_args = shlex.split(self.cmd)
+            out = subprocess.Popen(
+                cmd_args, stderr=subprocess.PIPE, stdout=subprocess.PIPE, env=env
+            ).read()
 
             if "Error" in out:
                 RunnerLog(
