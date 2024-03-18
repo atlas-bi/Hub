@@ -9,6 +9,7 @@ run with::
    --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 """
+
 # flake8: noqa,
 # pylint: skip-file
 # check all admin links

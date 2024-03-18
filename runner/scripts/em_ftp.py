@@ -1,6 +1,5 @@
 """FTP connection manager."""
 
-
 import csv
 import fnmatch
 import ftplib  # noqa: S402
