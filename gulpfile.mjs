@@ -3,19 +3,19 @@ import autoprefexer from 'gulp-autoprefixer';
 import * as dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 const sass = gulpSass(dartSass);
-
+import postcss from 'gulp-postcss';
 import replace from 'gulp-replace';
 import fontawesomeSubset from 'fontawesome-subset';
 import {deleteSync} from 'del';
 import purgecss from 'gulp-purgecss';
-import cssnano from 'gulp-cssnano';
+import cssnano from 'cssnano';
 
 gulp.task('font:inter', function() {
-  return gulp.src('node_modules/@fontsource/inter/**/*').pipe(replace(/\.\/files\//g, '/static/fonts/inter/files/')).pipe(gulp.dest('web/static/fonts/inter'))
+  return gulp.src('node_modules/@fontsource/inter/**/*', { removeBOM: false }).pipe(replace(/\.\/files\//g, '/static/fonts/inter/files/')).pipe(gulp.dest('web/static/fonts/inter'))
 });
 
 gulp.task('font:rasa', function() {
-  return gulp.src('node_modules/@fontsource/rasa/**/*').pipe(replace(/\.\/files\//g, '/static/fonts/rasa/files/')).pipe(gulp.dest('web/static/fonts/rasa'))
+  return gulp.src('node_modules/@fontsource/rasa/**/*', { removeBOM: false }).pipe(replace(/\.\/files\//g, '/static/fonts/rasa/files/')).pipe(gulp.dest('web/static/fonts/rasa'))
 });
 
 
@@ -30,6 +30,11 @@ gulp.task('fontawesome', function(done) {
 });
 
 gulp.task('sass', function() {
+  const plugins = [
+    cssnano({
+      preset: ['default', { discardComments: true }],
+    }),
+  ];
   return gulp.src("web/static/assets/**/*.scss")
     .pipe(sass().on('error', sass.logError))
     .pipe(
@@ -42,7 +47,7 @@ gulp.task('sass', function() {
     .pipe(autoprefexer({
         overrideBrowserslist: ['last 2 versions']
     }))
-    .pipe(cssnano())
+    .pipe(postcss(plugins))
     .pipe(gulp.dest('web/static/css/'))
 });
 
