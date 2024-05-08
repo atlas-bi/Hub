@@ -21,6 +21,7 @@ class Cmd:
         cmd: str,
         success_msg: str,
         error_msg: str,
+        env: Optional[str],
     ) -> None:
         """Set system path and variables."""
         self.task = task
@@ -28,15 +29,20 @@ class Cmd:
         self.success_msg = success_msg
         self.error_msg = error_msg
         self.run_id = run_id
+        self.env = env
 
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
+            envir = re.findall(r"(.*?='\{.*?\}')", self.cmd)
             env = {
                 **os.environ,
                 "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
                 + os.environ["PATH"],
             }
+            for i in envir:
+                self.cmd.replace(i, "")
+
             cmd_args = shlex.split(self.cmd)
             out_bytes = subprocess.check_output(cmd_args, stderr=subprocess.STDOUT, env=env)
             out = out_bytes.decode("utf-8")

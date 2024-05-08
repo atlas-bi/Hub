@@ -383,15 +383,15 @@ class PyProcesser:
                 "est_duration": clean_string(self.task.est_duration),
             }
 
-            env = f"TASK='{json.dumps(task_data)}' "
+            env += f"TASK:'{json.dumps(task_data)}' "
 
             # if data files exist, pass them as a param.
-            env += f"CONNECTION='{json.dumps(connection)}' " if connection else ""
+            env += f"CONNECTION:'{json.dumps(connection)}' " if connection else ""
 
             # create environment from params
             env += ("").join(
                 [
-                    f'{re.sub(r"[^a-zA-Z_]", "", key)}="{value}" '
+                    f'{re.sub(r"[^a-zA-Z_]", "", key)}:"{value}" '
                     for key, value in self.params.read().items()
                 ]
             )
