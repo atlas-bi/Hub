@@ -185,7 +185,7 @@ class Smb:
             new_path = str(Path(directory).joinpath(dirname))
             yield from self._walk(new_path)
 
-    def __load_file(self, file_name: str, index: int, length: int) -> IO[str]:
+    def __load_file(self, file_name: str, index: int, length: int) -> IO[Any]:
         RunnerLog(self.task, self.run_id, 10, f"({index} of {length}) downloading {file_name}")
 
         director = urllib.request.build_opener(SMBHandler)
@@ -196,7 +196,7 @@ class Smb:
             f"smb://{self.username}:{password}@{self.server_name},{self.server_ip}/{self.share_name}/{file_name}"
         )
 
-        def load_data(file_obj: IO[str]) -> Generator[str, None, None]:
+        def load_data(file_obj: TextIOWrapper) -> Generator:
             with file_obj as this_file:
                 while True:
                     data = this_file.read(1024)
@@ -206,7 +206,7 @@ class Smb:
 
         # send back contents
 
-        with tempfile.NamedTemporaryFile(mode="w+", delete=False, dir=self.dir) as data_file:
+        with tempfile.NamedTemporaryFile(mode="wb+", delete=False, dir=self.dir) as data_file:
             for data in load_data(open_file_for_read):
                 if self.task.source_smb_ignore_delimiter != 1 and self.task.source_smb_delimiter:
                     my_delimiter = self.task.source_smb_delimiter or ","

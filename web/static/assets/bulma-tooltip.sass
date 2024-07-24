@@ -1,0 +1,273 @@
+@use '../../../node_modules/bulma/sass/utilities/initial-variables' as iv
+@use '../../../node_modules/bulma/sass/utilities/derived-variables' as dv
+@use '../../../node_modules/bulma/sass/utilities/mixins' as *
+$tooltip-arrow-size: 6px !default
+$tooltip-background-color: iv.$grey-dark !default
+$tooltip-background-opacity: 0.9 !default
+$tooltip-color: iv.$white !default
+$tooltip-font-family: dv.$family-primary !default
+$tooltip-font-size: iv.$size-7
+$tooltip-max-width: 15rem !default
+$tooltip-padding: .5rem 1rem !default
+$tooltip-radius: iv.$radius-small !default
+$tooltip-z-index: 1020 !default
+
+=tooltip-hover
+	&:focus::before,
+	&:focus::after,
+	&:hover::before,
+	&:hover::after,
+	&.has-tooltip-active::before,
+	&.has-tooltip-active::after
+		@content
+
+=tooltip-arrow-top
+	&::after
+		top: 0
+		right: auto
+		bottom: auto
+		left: 50%
+		margin-top: $tooltip-arrow-size * -1 + 1
+		margin-right: auto
+		margin-bottom: auto
+		margin-left: $tooltip-arrow-size * -1 + 1
+		border-color: rgba($tooltip-background-color, $tooltip-background-opacity) transparent transparent transparent
+
+=tooltip-box-top
+	&::before
+		top: 0
+		right: auto
+		bottom: auto
+		left: 50%
+		top: 0
+		margin-top: $tooltip-arrow-size * -1 + 1
+		margin-bottom: auto
+		transform: translate(-50%, -100%)
+
+=tooltip-top
+	+tooltip-arrow-top
+	+tooltip-box-top
+
+=tooltip-arrow-bottom
+	&::after
+		top: auto
+		right: auto
+		bottom: 0
+		left: 50%
+		margin-top: auto
+		margin-right: auto
+		margin-bottom: $tooltip-arrow-size * -1 + 1
+		margin-left: $tooltip-arrow-size * -1 + 1
+		border-color: transparent transparent rgba($tooltip-background-color, $tooltip-background-opacity) transparent
+
+=tooltip-box-bottom
+	&::before
+		top: auto
+		right: auto
+		bottom: 0
+		left: 50%
+		margin-top: auto
+		margin-bottom: $tooltip-arrow-size * -1 + 1
+		transform: translate(-50%, 100%)
+
+=tooltip-bottom
+	+tooltip-arrow-bottom
+	+tooltip-box-bottom
+
+
+=tooltip-arrow-left
+	&::after
+		top: auto
+		right: auto
+		bottom: 50%
+		left: 0
+		margin-top: auto
+		margin-right: auto
+		margin-bottom: $tooltip-arrow-size * -1
+		margin-left: $tooltip-arrow-size * -2 + 1
+		border-color: transparent transparent transparent rgba($tooltip-background-color, $tooltip-background-opacity)
+
+=tooltip-box-left
+	&::before
+		top: auto
+		right: auto
+		bottom: 50%
+		left: $tooltip-arrow-size * -2 + 1
+		transform: translate(-100%, 50%)
+
+=tooltip-left
+	+tooltip-arrow-left
+	+tooltip-box-left
+
+
+=tooltip-arrow-right
+	&::after
+		top: auto
+		right: 0
+		bottom: 50%
+		left: auto
+		margin-top: auto
+		margin-right: $tooltip-arrow-size * -2 + 1
+		margin-bottom: $tooltip-arrow-size * -1
+		margin-left: auto
+		border-color: transparent rgba($tooltip-background-color, $tooltip-background-opacity) transparent transparent
+
+=tooltip-box-right
+	&::before
+		top: auto
+		right: $tooltip-arrow-size * -2 + 1
+		bottom: 50%
+		left: auto
+		margin-top: auto
+		transform: translate(100%, 50%)
+
+=tooltip-right
+	+tooltip-arrow-right
+	+tooltip-box-right
+
+
+=tooltip-direction($direction)
+	@if $direction == 'top'
+		@include tooltip-top
+	@else if $direction == 'right'
+		@include tooltip-right
+	@else if $direction == 'bottom'
+		@include tooltip-bottom
+	@else if $direction == 'left'
+		@include tooltip-left
+
+=tooltip-fade
+	&::before,
+	&::after
+		transition: opacity .3s linear, visibility .3s linear
+
+=tooltip-arrow
+	&::after
+		content: ''
+		border-style: solid
+		border-width: $tooltip-arrow-size
+		border-color: rgba($tooltip-background-color, $tooltip-background-opacity) transparent transparent transparent
+		margin-bottom: $tooltip-arrow-size * -1 + 1
+	+tooltip-arrow-top
+
+=tooltip-box
+	&::before
+		background: rgba($tooltip-background-color, $tooltip-background-opacity)
+		border-radius: $tooltip-radius
+		content: attr(data-tooltip)
+		padding: $tooltip-padding
+		text-overflow: ellipsis
+		white-space: pre
+	+tooltip-box-top
+
+=tooltip-multiline
+	&::before
+		height: auto
+		width: $tooltip-max-width
+		max-width: $tooltip-max-width
+		text-overflow: clip
+		white-space: normal
+		word-break: keep-all
+
+[data-tooltip]
+	&:not(.is-loading),
+	&:not(.is-disabled),
+	&:not([disabled])
+		cursor: pointer
+		overflow: visible
+		position: relative
+
+		&::before,
+		&::after
+			box-sizing: border-box
+			color: $tooltip-color
+			display: inline-block
+			font-family: $tooltip-font-family
+			font-size: $tooltip-font-size
+			hyphens: auto
+			opacity: 0
+			overflow: hidden
+			pointer-events: none
+			position: absolute
+			visibility: hidden
+			z-index: $tooltip-z-index
+	
+		+tooltip-arrow
+		+tooltip-box
+
+		&.has-tooltip-bottom
+			+tooltip-direction('bottom')
+
+		&.has-tooltip-left
+			+tooltip-direction('left')
+
+		&.has-tooltip-right
+			+tooltip-direction('right')
+
+		&.has-tooltip-multiline
+			+tooltip-multiline
+
+		@each $name, $pair in dv.$colors
+			@if length($name) > 1
+				$color: nth($pair, 1)
+				$color-invert: nth($pair, 2)
+				&.has-tooltip-#{$name}
+					&.has-tooltip-bottom
+						&::after
+							border-color: transparent transparent rgba($color, $tooltip-background-opacity) transparent
+					&.has-tooltip-left
+						&::after
+							border-color: transparent transparent transparent rgba($color, $tooltip-background-opacity)
+					&.has-tooltip-right
+						&::after
+							border-color: transparent rgba($color, $tooltip-background-opacity) transparent transparent
+					&:not(.has-tooltip-bottom),
+					&:not(.has-tooltip-left),
+					&:not(.has-tooltip-right)
+						&::after
+							border-color: rgba($color, $tooltip-background-opacity) transparent transparent transparent
+					&:before
+						background-color: rgba($color, $tooltip-background-opacity)
+						color: $color-invert
+
+		+tooltip-hover
+			opacity: 1
+			visibility: visible
+
+		&.has-tooltip-fade
+			+tooltip-fade
+
+@each $direction in top, right, bottom, left
+	+mobile
+		.has-tooltip-#{$direction}-mobile
+			@include tooltip-direction(#{$direction})
+	+tablet
+		.has-tooltip-#{$direction}-tablet
+			@include tooltip-direction(#{$direction})
+	+tablet-only
+		.has-tooltip-#{$direction}-tablet-only
+			@include tooltip-direction(#{$direction})
+	+touch
+		.has-tooltip-#{$direction}-touch
+			@include tooltip-direction(#{$direction})
+	+desktop
+		.has-tooltip-#{$direction}-desktop
+			@include tooltip-direction(#{$direction})
+	+desktop-only
+		.has-tooltip-#{$direction}-desktop-only
+			@include tooltip-direction(#{$direction})
+	+until-widescreen
+		.has-tooltip-#{$direction}-until-widescreen
+			@include tooltip-direction(#{$direction})
+	+widescreen
+		.has-tooltip-#{$direction}-widescreen
+			@include tooltip-direction(#{$direction})
+	+widescreen-only
+		.has-tooltip-#{$direction}-widescreen-only
+			@include tooltip-direction(#{$direction})
+	+until-fullhd
+		.has-tooltip-#{$direction}-until-fullhd
+			@include tooltip-direction(#{$direction})
+	+fullhd
+		.has-tooltip-#{$direction}-fullhd
+			@include tooltip-direction(#{$direction})

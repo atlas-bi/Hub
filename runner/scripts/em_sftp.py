@@ -176,7 +176,7 @@ class Sftp:
             f"Downloading {file_size(self.conn.stat(file_name).st_size or 0)} from {file_name}.",
         )
 
-        sftp_file = self.conn.open(file_name, mode="r")
+        sftp_file = self.conn.open(file_name, mode="rb")
 
         def load_data(file_obj: SFTPFile) -> Generator:
             with file_obj as this_file:
@@ -186,7 +186,7 @@ class Sftp:
                         break
                     yield data
 
-        with tempfile.NamedTemporaryFile(mode="w", delete=False, dir=self.dir) as data_file:
+        with tempfile.NamedTemporaryFile(mode="w+", delete=False, dir=self.dir) as data_file:
             for data in load_data(sftp_file):
                 if self.task.source_sftp_ignore_delimiter != 1 and self.task.source_sftp_delimiter:
                     my_delimiter = self.task.source_sftp_delimiter or ","

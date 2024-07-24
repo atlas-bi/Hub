@@ -19,9 +19,9 @@
         <div class="content">
             {% for d in connections %}
                 {% if loop.index0 > 0 and loop.index0 % 4 == 0 or loop.index0==connections|length %}</div>{% endif %}
-            {% if loop.index0 % 4 == 0 or loop.index0 ==0 %}<div class="tile is-ancestor">{% endif %}
-                <div class="tile is-parent is-3">
-                    <article class="tile is-child box">
+            {% if loop.index0 % 4 == 0 or loop.index0 ==0 %}<div class="columns">{% endif %}
+                <div class="column is-3">
+                    <article class="box is-col-min-4">
                         <a href="{{ url_for('connection_bp.one_connection', connection_id=d.id) }}">
                             <h3 class="title is-3 is-inline-block has-text-link">{{ d }}</h3>
                             <span class="icon is-pulled-right is-medium ml-5 has-text-link">

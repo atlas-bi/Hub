@@ -98,7 +98,7 @@ def schedule() -> Response:
 
 
 @web_bp.route("/api/add/<task_id>")
-def add_task(task_id: int) -> str | Response:
+def add_task(task_id: int) -> Response:
     """Schedule task to run.
 
     First check for any existing schedules, remove them, then add a new schedule.

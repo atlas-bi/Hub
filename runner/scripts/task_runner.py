@@ -189,6 +189,8 @@ class Runner:
                 next_task_id = task_id_list[
                     task_id_list.index(task.id) + 1 : task_id_list.index(task.id) + 2
                 ]
+                # find a way to check that next ids are the same rank then loop through them.
+                # also will need to make sure that all tasks in same rank are done before kicking off next rank job.
                 if next_task_id:
                     # trigger next task
                     RunnerLog(
