@@ -23,9 +23,7 @@ def run_task(task_id: int) -> Response:
     redis_client.delete("runner_" + str(task_id) + "_attempt")
     if task:
         try:
-            requests.get(
-                app.config["SCHEDULER_HOST"] + "/run/" + str(task_id), timeout=60
-            )
+            requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task_id), timeout=60)
             log = TaskLog(  # type: ignore[call-arg]
                 task_id=task.id,
                 status_id=7,
@@ -135,9 +133,7 @@ def task_status(task_id: int) -> Response:
     task = Task.query.filter_by(id=task_id).first()
 
     if task:
-        attempt = (
-            redis_client.zincrby("runner_" + str(task_id) + "_attempt", 0, "inc") or 0
-        )
+        attempt = redis_client.zincrby("runner_" + str(task_id) + "_attempt", 0, "inc") or 0
 
         return jsonify(
             {
@@ -157,17 +153,13 @@ def task_status(task_id: int) -> Response:
                     else "N/A"
                 ),
                 "next_run_abs": (
-                    " (%s)"
-                    % task.next_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
+                    " (%s)" % task.next_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
                     if task.next_run  # and task.next_run > datetime.datetime.now()
                     else ""
                 ),
-                "last_run": (
-                    relative_to_now(task.last_run.astimezone()) if task.last_run else ""
-                ),
+                "last_run": (relative_to_now(task.last_run.astimezone()) if task.last_run else ""),
                 "last_run_abs": (
-                    " (%s)"
-                    % task.last_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
+                    " (%s)" % task.last_run.astimezone().strftime("%a, %b %-d, %Y %H:%M:%S")
                     if task.last_run
                     else ""
                 ),
@@ -199,10 +191,7 @@ def delete_task(task_id: int) -> Response:
 
         log = TaskLog(  # type: ignore[call-arg]
             status_id=7,
-            message=(current_user.full_name or "none")
-            + ": Task deleted. ("
-            + str(task_id)
-            + ")",
+            message=(current_user.full_name or "none") + ": Task deleted. (" + str(task_id) + ")",
         )
         db.session.add(log)
         db.session.commit()
@@ -258,8 +247,7 @@ def reset_task(task_id: int) -> Response:
         log = TaskLog(  # type: ignore[call-arg]
             task_id=task.id,
             status_id=7,
-            message=(current_user.full_name or "none")
-            + ": Reset task status to completed.",
+            message=(current_user.full_name or "none") + ": Reset task status to completed.",
         )
         db.session.add(log)
         db.session.commit()

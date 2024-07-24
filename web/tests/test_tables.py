@@ -11,6 +11,7 @@ run with::
 
 
 """
+
 import json
 
 from pytest import fixture
@@ -127,7 +128,4 @@ def test_table_tasks_files(client_fixture: fixture) -> None:
 
     task = Task.query.first()
     if task:
-        assert (
-            client_fixture.get("/table/task/" + str(task.id) + "/files").status_code
-            == 200
-        )
+        assert client_fixture.get("/table/task/" + str(task.id) + "/files").status_code == 200

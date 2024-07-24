@@ -44,9 +44,7 @@ def all_projects() -> Union[Response, str]:
             .group_by(User.full_name, User.id)
             .all()
         )
-        return render_template(
-            "pages/project/all.html.j2", title="Projects", owners=owners
-        )
+        return render_template("pages/project/all.html.j2", title="Projects", owners=owners)
     return redirect(url_for("project_bp.new_project_form"))
 
 
@@ -132,9 +130,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
     me = Project.query.filter_by(id=project_id).first()
 
     if me:
-        return render_template(
-            "pages/project/new.html.j2", p=me, title="Editing " + me.name
-        )
+        return render_template("pages/project/new.html.j2", p=me, title="Editing " + me.name)
 
     flash("The project does not exist.")
     return redirect(url_for("project_bp.all_projects"))
@@ -142,7 +138,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
 
 @project_bp.route("/project/<project_id>/edit", methods=["POST"])
 @login_required
-def edit_project(project_id: int) -> Response:
+def edit_project(project_id: int) -> Union[str, Response]:
     """Save project edits."""
     cache.clear()
     error = None
@@ -161,24 +157,28 @@ def edit_project(project_id: int) -> Response:
     cron_hour = form.get("project_cron_hour", None, type=str)
     cron_min = form.get("project_cron_min", None, type=str)
     cron_sec = form.get("project_cron_sec", None, type=str)
-    try:
-        CronValidator(
-            cron=cron,
-            cron_year=cron_year,
-            cron_month=cron_month,
-            cron_week=cron_week,
-            cron_day=cron_day,
-            cron_week_day=cron_week_day,
-            cron_hour=cron_hour,
-            cron_min=cron_min,
-            cron_sec=cron_sec,
-        ).validate()
+    if cron == 1:
+        try:
+            CronValidator(
+                cron=cron,
+                cron_year=cron_year,
+                cron_month=cron_month,
+                cron_week=cron_week,
+                cron_day=cron_day,
+                cron_week_day=cron_week_day,
+                cron_hour=cron_hour,
+                cron_min=cron_min,
+                cron_sec=cron_sec,
+            ).validate()
 
-    except ValueError as e:
-        error = str(e)
-        return render_template(
-            "pages/project/new.html.j2", p=me2, title="Editing " + me2.name, error=error
-        )
+        except ValueError as e:
+            error = str(e)
+            return render_template(
+                "pages/project/new.html.j2",
+                p=me2,
+                title="Editing " + me2.name,
+                error=error,
+            )
     # pylint: disable=R1735
     me.update(
         dict(  # noqa: C408
@@ -200,16 +200,12 @@ def edit_project(project_id: int) -> Response:
             cron_hour=cron_hour,
             cron_min=cron_min,
             cron_sec=cron_sec,
-            cron_start_date=form_to_date(
-                form.get("project_cron_sdate", None, type=str)
-            ),
+            cron_start_date=form_to_date(form.get("project_cron_sdate", None, type=str)),
             cron_end_date=form_to_date(form.get("project_cron_edate", None, type=str)),
             intv=form.get("project_intv", 0, type=int),
             intv_value=form.get("project_intv_value", None, type=int),
             intv_type=form.get("project_intv_intv", None, type=str),
-            intv_start_date=form_to_date(
-                form.get("project_intv_sdate", None, type=str)
-            ),
+            intv_start_date=form_to_date(form.get("project_intv_sdate", None, type=str)),
             intv_end_date=form_to_date(form.get("project_intv_edate", None, type=str)),
             ooff=form.get("project_ooff", 0, type=int),
             ooff_date=form_to_date(form.get("project_ooff_date", None, type=str)),
@@ -262,7 +258,7 @@ def new_project_form() -> str:
 
 @project_bp.route("/project/new", methods=["POST"])
 @login_required
-def new_project() -> Response:
+def new_project() -> Union[str, Response]:
     """Save a new project."""
     cache.clear()
     error = None
@@ -277,27 +273,28 @@ def new_project() -> Response:
     cron_min = form.get("project_cron_min", None, type=str)
     cron_sec = form.get("project_cron_sec", None, type=str)
 
-    try:
-        CronValidator(
-            cron=cron,
-            cron_year=cron_year,
-            cron_month=cron_month,
-            cron_week=cron_week,
-            cron_day=cron_day,
-            cron_week_day=cron_week_day,
-            cron_hour=cron_hour,
-            cron_min=cron_min,
-            cron_sec=cron_sec,
-        ).validate()
+    if cron == 1:
+        try:
+            CronValidator(
+                cron=cron,
+                cron_year=cron_year,
+                cron_month=cron_month,
+                cron_week=cron_week,
+                cron_day=cron_day,
+                cron_week_day=cron_week_day,
+                cron_hour=cron_hour,
+                cron_min=cron_min,
+                cron_sec=cron_sec,
+            ).validate()
 
-    except ValueError as e:
-        error = str(e)
-        return render_template(
-            "pages/project/new.html.j2",
-            p=Project.query.filter_by(id=0).first(),
-            title="New Project",
-            error=error,
-        )
+        except ValueError as e:
+            error = str(e)
+            return render_template(
+                "pages/project/new.html.j2",
+                p=Project.query.filter_by(id=0).first(),
+                title="New Project",
+                error=error,
+            )
 
     # create project
     me = Project(
@@ -393,15 +390,11 @@ def delete_project(project_id: int) -> Response:
     db.session.commit()
 
     # delete tasks
-    db.session.query(Task).filter(Task.project_id == project_id).delete(
-        synchronize_session=False
-    )
+    db.session.query(Task).filter(Task.project_id == project_id).delete(synchronize_session=False)
     db.session.commit()
 
     # delete params
-    ProjectParam.query.filter_by(project_id=project_id).delete(
-        synchronize_session=False
-    )
+    ProjectParam.query.filter_by(project_id=project_id).delete(synchronize_session=False)
     db.session.commit()
 
     # delete project
@@ -493,9 +486,7 @@ def duplicate_project(project_id: int) -> Response:
                         db.session.add(new_param)
                         db.session.commit()
 
-        return redirect(
-            url_for("project_bp.one_project", project_id=my_project_copy.id)
-        )
+        return redirect(url_for("project_bp.one_project", project_id=my_project_copy.id))
 
     flash("Project does not exist.")
     return redirect(url_for("project_bp.all_projects"))

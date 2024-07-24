@@ -47,9 +47,7 @@ class ParamLoader:
 
         # parse python dates
         for key, value in params_dict.items():
-            params_dict[key] = re.sub(
-                r"\bparse\((.*?)\)", insert_date, value, re.IGNORECASE
-            )
+            params_dict[key] = re.sub(r"\bparse\((.*?)\)", insert_date, value, re.IGNORECASE)
         # sort by key length.. longest first to avoid replacing wrong values
         return dict(sorted(params_dict.items(), key=lambda x: len(x[0]), reverse=True))
 

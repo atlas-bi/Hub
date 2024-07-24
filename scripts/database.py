@@ -1,3 +1,5 @@
+"""Initial creation and seed of the database."""
+
 from typing import Any
 
 from sqlalchemy.orm import Session as SqlSession
@@ -43,9 +45,7 @@ def seed(session: SqlSession, model: Any) -> None:
     get_or_create(session, model.TaskSourceType, name="SSH Command")
 
     # task processing type
-    get_or_create(
-        session, model.TaskProcessingType, name="Network File (SMB Connection)"
-    )
+    get_or_create(session, model.TaskProcessingType, name="Network File (SMB Connection)")
     get_or_create(session, model.TaskProcessingType, name="File (SFTP Connection)")
     get_or_create(session, model.TaskProcessingType, name="File (FTP Connection)")
     get_or_create(session, model.TaskProcessingType, name="Git URL")
@@ -58,9 +58,7 @@ def seed(session: SqlSession, model: Any) -> None:
     get_or_create(session, model.TaskSourceQueryType, name="File Path (SMB Connection)")
     get_or_create(session, model.TaskSourceQueryType, name="Other URL (no auth)")
     get_or_create(session, model.TaskSourceQueryType, name="Source Code")
-    get_or_create(
-        session, model.TaskSourceQueryType, name="File Path (SFTP Connection)"
-    )
+    get_or_create(session, model.TaskSourceQueryType, name="File Path (SFTP Connection)")
     get_or_create(session, model.TaskSourceQueryType, name="File Path (FTP Connection)")
     get_or_create(session, model.TaskSourceQueryType, name="Devops")
 
@@ -72,9 +70,7 @@ def seed(session: SqlSession, model: Any) -> None:
     # file types
     get_or_create(session, model.TaskDestinationFileType, name="CSV (.csv)", ext="csv")
     get_or_create(session, model.TaskDestinationFileType, name="Text (.txt)", ext="txt")
-    get_or_create(
-        session, model.TaskDestinationFileType, name="Excel (.csv)", ext="csv"
-    )
+    get_or_create(session, model.TaskDestinationFileType, name="Excel (.csv)", ext="csv")
     get_or_create(
         session,
         model.TaskDestinationFileType,

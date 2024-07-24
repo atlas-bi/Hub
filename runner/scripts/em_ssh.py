@@ -1,4 +1,5 @@
 """SSH connection handler."""
+
 import select
 import sys
 import time
@@ -73,18 +74,14 @@ class Ssh:
         try:
             return connect(self.connection)
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 19, f"Failed to connect.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 19, f"Failed to connect.\n{e}")
 
     def __close(self) -> None:
         try:
             self.session.close()
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 19, f"Failed to disconnect.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 19, f"Failed to disconnect.\n{e}")
 
     def run(self) -> None:
         """Run an SSH Command.
@@ -113,11 +110,7 @@ class Ssh:
             stderr_data = b""
             stdout_data = b""
 
-            while (
-                not channel.closed
-                or channel.recv_ready()
-                or channel.recv_stderr_ready()
-            ):
+            while not channel.closed or channel.recv_ready() or channel.recv_stderr_ready():
                 got_chunk = False
                 readq, _, _ = select.select([stdout.channel], [], [], timeout)
 
@@ -126,9 +119,7 @@ class Ssh:
                         stdout_data += stdout.channel.recv(len(chunk.in_buffer))
                         got_chunk = True
                     if chunk.recv_stderr_ready():
-                        stderr_data += stderr.channel.recv_stderr(
-                            len(chunk.in_stderr_buffer)
-                        )
+                        stderr_data += stderr.channel.recv_stderr(len(chunk.in_stderr_buffer))
                         got_chunk = True
 
                     if (
@@ -163,8 +154,6 @@ class Ssh:
             )
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 19, f"Failed to run command.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 19, f"Failed to run command.\n{e}")
 
         self.__close()

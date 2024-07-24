@@ -13,7 +13,7 @@ from flask import current_app as app
 
 filters_bp = Blueprint("filters_bp", __name__)
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from scripts.crypto import em_decrypt
+from crypto import em_decrypt
 
 
 @filters_bp.app_template_filter("duration")

@@ -14,6 +14,7 @@ Database must be seeded on first run of atlas hub.
     flask seed_demo
 
 """
+
 # pylint: disable=C0301
 
 import sys

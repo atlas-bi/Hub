@@ -1,6 +1,5 @@
 """Task source code handler."""
 
-
 import re
 import urllib.parse
 from typing import Optional
@@ -43,8 +42,7 @@ class SourceCode:
         self.params = params
         self.db_type = (
             "mssql"
-            if self.task.source_database_conn
-            and self.task.source_database_conn.type_id == 2
+            if self.task.source_database_conn and self.task.source_database_conn.type_id == 2
             else None
         )
 
@@ -84,9 +82,7 @@ class SourceCode:
                 projects = [i for i in get_projects_response if (i.name == project[0])]
 
                 # this for repository id.
-                repos = git.get_repositories(
-                    [i for i in projects if (i.name == project[0])][0].id
-                )
+                repos = git.get_repositories([i for i in projects if (i.name == project[0])][0].id)
                 repo_id = [i.id for i in repos if (i.name == repo_name[0])][0]
 
                 item = git.get_item_content(
@@ -122,20 +118,12 @@ class SourceCode:
                     # insert params
                     return self.cleanup()
 
-                return (
-                    text
-                    if not text.startswith("<!DOCTYPE")
-                    else "Visit URL to view code"
-                )
+                return text if not text.startswith("<!DOCTYPE") else "Visit URL to view code"
 
             # pylint: disable=broad-except
             except BaseException as e:
                 # only use cache if we have a run id. Otherwise failures are from code preview.
-                if (
-                    self.run_id
-                    and self.task.enable_source_cache == 1
-                    and self.task.source_cache
-                ):
+                if self.run_id and self.task.enable_source_cache == 1 and self.task.source_cache:
                     RunnerLog(
                         self.task,
                         self.run_id,
@@ -172,9 +160,7 @@ class SourceCode:
                         f"Failed to get source from {url}.\n{e}",
                     )
 
-        raise RunnerException(
-            self.task, self.run_id, 15, "No url specified to get source from."
-        )
+        raise RunnerException(self.task, self.run_id, 15, "No url specified to get source from.")
 
     def gitlab(self, url: str) -> str:
         """Get source code from gitlab using authentication."""
@@ -186,23 +172,17 @@ class SourceCode:
             try:
                 # convert the "raw" url into an api url
                 branch = urllib.parse.quote(
-                    urllib.parse.unquote(
-                        re.findall(r"\/(?:raw|blob)\/(.+?)\/", url)[0]
-                    ),
+                    urllib.parse.unquote(re.findall(r"\/(?:raw|blob)\/(.+?)\/", url)[0]),
                     safe="",
                 )
 
                 project = urllib.parse.quote(
-                    urllib.parse.unquote(
-                        re.findall(r"\.(?:com|net|org)\/(.+?)\/-", url)[0]
-                    ),
+                    urllib.parse.unquote(re.findall(r"\.(?:com|net|org)\/(.+?)\/-", url)[0]),
                     safe="",
                 )
 
                 file_path = urllib.parse.quote(
-                    urllib.parse.unquote(
-                        re.findall(r"\/(?:raw|blob)\/.+?\/(.+?)$", url)[0]
-                    ),
+                    urllib.parse.unquote(re.findall(r"\/(?:raw|blob)\/.+?\/(.+?)$", url)[0]),
                     safe="",
                 )
 
@@ -262,11 +242,7 @@ class SourceCode:
             # pylint: disable=broad-except
             except BaseException as e:
                 # only use cache if we have a run id. Otherwise failures are from code preview.
-                if (
-                    self.run_id
-                    and self.task.enable_source_cache == 1
-                    and self.task.source_cache
-                ):
+                if self.run_id and self.task.enable_source_cache == 1 and self.task.source_cache:
                     RunnerLog(
                         self.task,
                         self.run_id,
@@ -303,9 +279,7 @@ class SourceCode:
                         f"Failed to get source from {url}.\n{e}",
                     )
 
-        raise RunnerException(
-            self.task, self.run_id, 15, "No url specified to get source from."
-        )
+        raise RunnerException(self.task, self.run_id, 15, "No url specified to get source from.")
 
     def web_url(self, url: str) -> str:
         """Get contents of a webpage."""
@@ -318,8 +292,7 @@ class SourceCode:
             self.query = page.text
             self.db_type = (
                 "mssql"
-                if self.task.source_database_conn
-                and self.task.source_database_conn.type_id == 2
+                if self.task.source_database_conn and self.task.source_database_conn.type_id == 2
                 else None
             )
             if page.status_code != 200:
@@ -331,20 +304,14 @@ class SourceCode:
                 db.session.commit()
 
                 if self.refresh_cache:
-                    RunnerLog(
-                        self.task, self.run_id, 15, "Source cache manually refreshed."
-                    )
+                    RunnerLog(self.task, self.run_id, 15, "Source cache manually refreshed.")
 
             # insert params
             return self.cleanup()
 
         # pylint: disable=broad-except
         except BaseException as e:
-            if (
-                self.run_id
-                and self.task.enable_source_cache == 1
-                and self.task.source_cache
-            ):
+            if self.run_id and self.task.enable_source_cache == 1 and self.task.source_cache:
                 RunnerLog(
                     self.task,
                     self.run_id,
@@ -363,11 +330,7 @@ class SourceCode:
 
                 return self.cleanup()
 
-            elif (
-                self.run_id
-                and self.task.enable_source_cache == 1
-                and not self.task.source_cache
-            ):
+            elif self.run_id and self.task.enable_source_cache == 1 and not self.task.source_cache:
                 raise RunnerException(
                     self.task,
                     self.run_id,
@@ -385,8 +348,7 @@ class SourceCode:
             self.query = query or self.task.source_code or ""
             self.db_type = (
                 "mssql"
-                if self.task.source_database_conn
-                and self.task.source_database_conn.type_id == 2
+                if self.task.source_database_conn and self.task.source_database_conn.type_id == 2
                 else None
             )
             return self.cleanup()
@@ -414,16 +376,12 @@ class SourceCode:
         # only needed for mssql
         if self.task.source_type_id == 1 and self.db_type == "mssql":
             query = re.sub(
-                re.compile(
-                    r"(^;?\s*;?)\buse\b\s+.+", flags=re.IGNORECASE | re.MULTILINE
-                ),
+                re.compile(r"(^;?\s*;?)\buse\b\s+.+", flags=re.IGNORECASE | re.MULTILINE),
                 "",
                 query,
             )
             query = re.sub(
-                re.compile(
-                    r"(^;?\s*;?)\buse\b\s+.+?;", flags=re.IGNORECASE | re.MULTILINE
-                ),
+                re.compile(r"(^;?\s*;?)\buse\b\s+.+?;", flags=re.IGNORECASE | re.MULTILINE),
                 "",
                 query,
             )
@@ -439,9 +397,7 @@ class SourceCode:
 
             # remove " go"
             query = re.sub(
-                re.compile(
-                    r"^;?\s*?;?\bgo\b\s*?;?", flags=re.IGNORECASE | re.MULTILINE
-                ),
+                re.compile(r"^;?\s*?;?\bgo\b\s*?;?", flags=re.IGNORECASE | re.MULTILINE),
                 r"",
                 query,
             )

@@ -70,17 +70,15 @@ class Smtp:
                 )
                 mail_server.ehlo()
 
-                if app.config.get("SMTP_USE_TLS", False) == True:
+                if app.config.get("SMTP_USE_TLS", False):
                     mail_server.starttls()
                     mail_server.ehlo()
                     mail_server.login(
                         app.config["SMTP_USERNAME"],
                         app.config.get("SMTP_PASSWORD", None),
-                        )
+                    )
 
-                mail_server.sendmail(
-                    app.config["SMTP_SENDER_EMAIL"], phone, self.msg.as_string()
-                )
+                mail_server.sendmail(app.config["SMTP_SENDER_EMAIL"], phone, self.msg.as_string())
                 mail_server.quit()
 
                 log = TaskLog(
@@ -110,9 +108,7 @@ class Smtp:
             self.msg = MIMEMultipart()
             self.msg["From"] = email.utils.formataddr(  # type: ignore[attr-defined]
                 (
-                    email.header.Header(app.config["SMTP_SENDER_NAME"], "utf-8").encode(
-                        "utf-8"
-                    ),
+                    email.header.Header(app.config["SMTP_SENDER_NAME"], "utf-8").encode("utf-8"),
                     app.config["SMTP_SENDER_EMAIL"],
                 )
             )
@@ -143,13 +139,13 @@ class Smtp:
             )
 
             mail_server.ehlo()
-            if app.config.get("SMTP_USE_TLS", False) == True:
+            if app.config.get("SMTP_USE_TLS", False):
                 mail_server.starttls()
                 mail_server.ehlo()
                 mail_server.login(
                     app.config["SMTP_USERNAME"],
                     app.config.get("SMTP_PASSWORD", None),
-                    )
+                )
             mail_server.sendmail(
                 app.config["SMTP_SENDER_EMAIL"], self.mailto, self.msg.as_string()
             )
