@@ -685,18 +685,18 @@ class Runner:
                     original = Path(file)
                     original_name = str(original.absolute())
                     with tempfile.NamedTemporaryFile(
-                        mode="w+", delete=False, dir=self.temp_path
+                        mode="wb+", delete=False, dir=self.temp_path
                     ) as data_file:
                         # write contents
-                        data_file.write(original.read_text())
+                        data_file.write(original.read_bytes())
 
                         # set name and remove original
                         original.unlink()
 
                         os.link(data_file.name, original_name)
 
-                    data_file.name = original_name  # type: ignore[misc]
-                    self.source_files.append(data_file)
+                    data_file.name = original_name
+                    self.source_files.append(data_file)  # type: ignore
 
             except BaseException as e:
                 raise RunnerException(
@@ -861,6 +861,7 @@ class Runner:
 
             output: List[List[str]] = []
             empty = 0
+            num_lines = 0
             attachments: List[str] = []
 
             if self.task.email_completion_file == 1 and len(self.output_files) > 0:
@@ -868,16 +869,24 @@ class Runner:
                     if self.task.email_completion_file_embed == 1:
                         with open(output_file, newline="") as csvfile:
                             output.extend(list(csv.reader(csvfile)))
-
+                        with open(output_file, "r") as f:
+                            num_lines = len(f.readlines())
                     # check attachement file size if the task
                     # should not send blank files
                     if (
                         self.task.email_completion_dont_send_empty_file == 1
                         and output_file
                         # if query and data is blank, or other types and file is 0
-                        and os.path.getsize(output_file) == 0
+                        # don't attach file if it is just the header.
+                        and (
+                            os.path.getsize(output_file) == 0
+                            or (self.task.source_query_include_header == 1 and num_lines <= 1)
+                        )
                     ):
                         empty = 1
+                    # there may be multiple output files. If one isn't empty, still include it.
+                    else:
+                        empty = 0
 
                     attachments.append(output_file)
 

@@ -158,7 +158,7 @@ def one_task_file_send_email(task_id: int, file_id: int) -> Response:
     try:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         output = requests.get(
-            f"{app.config['RUNNER_HOST']}/send_email/{task_id}/{my_file.job_id}/{file_id}",
+            f"{app.config['RUNNER_HOST']}/send_email/{my_file.job_id}/{file_id}",
             timeout=60,
         ).json()
         if output.get("error"):
