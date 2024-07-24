@@ -1,28 +1,28 @@
-@use "sass:math";
-@use "sass:meta";
+@use 'sass:math';
+@use 'sass:meta';
 @use '../../../node_modules/@fontsource/inter/scss/mixins' as Inter;
 @use '../../../node_modules/@fontsource/rasa/scss/mixins' as Rasa;
-@use '../../../node_modules/bulma/sass/utilities' with(
-
-$family-primary:
-  'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif',
-  $cssvars-prefix: ""
-);
+@use '../../../node_modules/bulma/sass/utilities'
+  with(
+    $family-primary:
+      'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif',
+    $cssvars-prefix: ''
+  );
 @use '../../../node_modules/bulma/sass/elements' with (
-  $title-family: "Rasa, Georgia, Times New Roman, serif"
+  $title-family: 'Rasa, Georgia, Times New Roman, serif'
 );
-@forward "../../../node_modules/bulma/sass/base";
-@use "../../../node_modules/bulma/sass/components" with (
+@forward '../../../node_modules/bulma/sass/base';
+@use '../../../node_modules/bulma/sass/components' with (
   $breadcrumb-item-active-color: #363636
 );
 
-@forward "../../../node_modules/bulma/sass/layout";
-@forward "../../../node_modules/bulma/sass/form";
-@forward "../../../node_modules/bulma/sass/grid";
-@forward "../../../node_modules/bulma/sass/helpers";
+@forward '../../../node_modules/bulma/sass/layout';
+@forward '../../../node_modules/bulma/sass/form';
+@forward '../../../node_modules/bulma/sass/grid';
+@forward '../../../node_modules/bulma/sass/helpers';
 
 // Import the themes so that all CSS variables have a value
-@use "../../../node_modules/bulma/sass/themes";
+@use '../../../node_modules/bulma/sass/themes';
 
 @forward 'bulma-switch';
 @forward 'bulma-tooltip';
@@ -59,7 +59,6 @@ $family-primary:
   $directory: '/static/fonts/rasa/files',
   $display: swap
 );
-
 
 .column {
   min-width: 0px;
