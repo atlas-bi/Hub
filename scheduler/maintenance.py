@@ -7,7 +7,7 @@ from pathlib import Path
 
 import psutil
 from flask import current_app as app
-from sqlalchemy import update
+from sqlalchemy import and_, or_, update
 
 from scheduler.extensions import atlas_scheduler, db
 from scheduler.model import Task
@@ -28,8 +28,10 @@ def job_sync() -> None:
             db.session.execute(
                 update(Task)
                 .where(
-                    Task.enabled == 0
-                    and (Task.next_run is not None or Task.est_duration is not None)
+                    and_(
+                        Task.enabled == 0,
+                        or_(Task.next_run != None, Task.est_duration != None),  # noqa: E711
+                    )
                 )
                 .values(next_run=None, est_duration=None)
             )
@@ -53,15 +55,9 @@ def drop_them(temp_path: Path, age: int) -> None:
     for temp_file in temp_path.glob("*/*/*"):
         if os.stat(temp_file.resolve()).st_mtime < time.time() - age:
             try:
-                if (
-                    Path(temp_file.resolve()).exists()
-                    and Path(temp_file.resolve()).is_dir()
-                ):
+                if Path(temp_file.resolve()).exists() and Path(temp_file.resolve()).is_dir():
                     shutil.rmtree(temp_file.resolve())
-                if (
-                    Path(temp_file.resolve()).exists()
-                    and Path(temp_file.resolve()).is_file()
-                ):
+                if Path(temp_file.resolve()).exists() and Path(temp_file.resolve()).is_file():
                     os.remove(temp_file.resolve())
 
             # pylint: disable=broad-except

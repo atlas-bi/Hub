@@ -77,18 +77,18 @@ def project_list(my_type: str = "all") -> Response:
     projects = (
         db.session.query()
         .select_from(Project)
-        .outerjoin(Task, Task.project_id == Project.id)
-        .outerjoin(User, User.id == Project.owner_id)
+        .outerjoin(Task, Task.project_id == Project.__table__.c.id)
+        .outerjoin(User, User.id == Project.__table__.c.owner_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         .group_by(*groups.values())
     )
 
     if my_type.isdigit():
-        projects = projects.filter(User.id == int(my_type))
+        projects = projects.filter(User.__table__.c.id == int(my_type))
 
     elif my_type != "all":
-        projects = projects.filter(User.id == current_user.id)
+        projects = projects.filter(User.__table__.c.id == current_user.id)
 
     me = [{"head": '["Name","Last Run","Next Run","Tasks"]'}]
 
@@ -116,14 +116,12 @@ def project_list(my_type: str = "all") -> Response:
         me.append(
             {
                 "Name": f'{status_icon}<a  href="/project/{proj["Project Id"]}">{proj["Name"]}</a>',
-                "Last Run": relative_to_now(proj["Last Run"])
-                if proj["Last Run"]
-                else "",
-                "Next Run": datetime.datetime.strftime(
-                    proj["Next Run"], " %m/%-d/%y %H:%M"
-                )
-                if proj["Next Run"] and isinstance(proj["Next Run"], datetime.datetime)
-                else (proj["Next Run"] if proj["Next Run"] else "None"),
+                "Last Run": (relative_to_now(proj["Last Run"]) if proj["Last Run"] else ""),
+                "Next Run": (
+                    datetime.datetime.strftime(proj["Next Run"], " %m/%-d/%y %H:%M")
+                    if proj["Next Run"] and isinstance(proj["Next Run"], datetime.datetime)
+                    else (proj["Next Run"] if proj["Next Run"] else "None")
+                ),
                 "Tasks": str((proj["Tasks"] or 0)),
             }
         )
@@ -156,9 +154,9 @@ def tasklog_userevents() -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .outerjoin(Task, Task.id == TaskLog.task_id)
-        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
-        .filter(TaskLog.status_id == 7)
+        .outerjoin(Task, Task.id == TaskLog.__table__.c.task_id)
+        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.__table__.c.status_id)
+        .filter(TaskLog.__table__.c.status_id == 7)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -176,13 +174,11 @@ def tasklog_userevents() -> Response:
 
         me.append(
             {
-                "Task Name": '<a  href="/task/'
-                + str(log["Task Id"])
-                + '">'
-                + log["Task Name"]
-                + "</a>"
-                if log["Task Name"]
-                else "N/A",
+                "Task Name": (
+                    '<a  href="/task/' + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
+                    if log["Task Name"]
+                    else "N/A"
+                ),
                 "Run Id": (
                     "<a  href='/task/"
                     + str(log["Task Id"])
@@ -194,13 +190,14 @@ def tasklog_userevents() -> Response:
                     if log["Job Id"]
                     else ""
                 ),
-                "Status Date": datetime.datetime.strftime(
-                    log["Status Date"],
-                    "%a, %b %-d, %Y %H:%M:%S.%f",
-                )
-                if log["Status Date"]
-                and isinstance(log["Status Date"], datetime.datetime)
-                else (log["Status Date"] if log["Status Date"] else "None"),
+                "Status Date": (
+                    datetime.datetime.strftime(
+                        log["Status Date"],
+                        "%a, %b %-d, %Y %H:%M:%S.%f",
+                    )
+                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
+                    else (log["Status Date"] if log["Status Date"] else "None")
+                ),
                 "Message": log["Message"],
                 "class": "error" if log["Status Id"] == 2 or log["Error"] == 1 else "",
             }
@@ -229,7 +226,7 @@ def user_auth() -> Response:
     logs = (
         db.session.query()
         .select_from(Login)
-        .join(LoginType, LoginType.id == Login.type_id)
+        .join(LoginType, LoginType.id == Login.__table__.c.type_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -248,13 +245,14 @@ def user_auth() -> Response:
         me.append(
             {
                 "User": log["User"],
-                "Login Date": datetime.datetime.strftime(
-                    log["Login Date"],
-                    "%a, %b %-d, %Y %H:%M:%S.%f",
-                )
-                if log["Login Date"]
-                and isinstance(log["Login Date"], datetime.datetime)
-                else (log["Login Date"] if log["Login Date"] else "None"),
+                "Login Date": (
+                    datetime.datetime.strftime(
+                        log["Login Date"],
+                        "%a, %b %-d, %Y %H:%M:%S.%f",
+                    )
+                    if log["Login Date"] and isinstance(log["Login Date"], datetime.datetime)
+                    else (log["Login Date"] if log["Login Date"] else "None")
+                ),
                 "Action": log["Login Type"] if log["Login Type"] else "None",
                 "class": "error" if log["Login Type Id"] == 3 else "",
             }
@@ -287,95 +285,95 @@ def connection_tasks(connection_id: int) -> Response:
     }
 
     s_sftp = (
-        db.session.query(Task.id, ConnectionSftp.name)
+        db.session.query(Task.__table__.c.id, ConnectionSftp.__table__.c.name)
         .select_from(Task)
-        .join(ConnectionSftp, ConnectionSftp.id == Task.source_sftp_id)
-        .filter(ConnectionSftp.connection_id == connection_id)
-        .filter(Task.source_type_id == 3)  # sftp
+        .join(ConnectionSftp, ConnectionSftp.id == Task.__table__.c.source_sftp_id)
+        .filter(ConnectionSftp.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_type_id == 3)  # sftp
     )
     d_sftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSftp, ConnectionSftp.id == Task.destination_sftp_id)
-        .filter(ConnectionSftp.connection_id == connection_id)
-        .filter(Task.destination_sftp == 1)  # enabled
-        .add_columns(Task.id, ConnectionSftp.name)
+        .join(ConnectionSftp, ConnectionSftp.id == Task.__table__.c.destination_sftp_id)
+        .filter(ConnectionSftp.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.destination_sftp == 1)  # enabled
+        .add_columns(Task.__table__.c.id, ConnectionSftp.__table__.c.name)
     )
     q_sftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSftp, ConnectionSftp.id == Task.query_sftp_id)
-        .filter(ConnectionSftp.connection_id == connection_id)
-        .filter(Task.source_query_type_id == 3)  # sftp
-        .add_columns(Task.id, ConnectionSftp.name)
+        .join(ConnectionSftp, ConnectionSftp.id == Task.__table__.c.query_sftp_id)
+        .filter(ConnectionSftp.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_query_type_id == 3)  # sftp
+        .add_columns(Task.__table__.c.id, ConnectionSftp.__table__.c.name)
     )
 
     s_ssh = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSsh, ConnectionSsh.id == Task.source_ssh_id)
-        .filter(ConnectionSsh.connection_id == connection_id)
-        .filter(Task.source_type_id == 6)  # ssh
-        .add_columns(Task.id, ConnectionSsh.name)
+        .join(ConnectionSsh, ConnectionSsh.id == Task.__table__.c.source_ssh_id)
+        .filter(ConnectionSsh.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_type_id == 6)  # ssh
+        .add_columns(Task.__table__.c.id, ConnectionSsh.__table__.c.name)
     )
 
     s_ftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionFtp, ConnectionFtp.id == Task.source_ftp_id)
-        .filter(ConnectionFtp.connection_id == connection_id)
-        .filter(Task.source_type_id == 4)  # ftp
-        .add_columns(Task.id, ConnectionFtp.name)
+        .join(ConnectionFtp, ConnectionFtp.id == Task.__table__.c.source_ftp_id)
+        .filter(ConnectionFtp.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_type_id == 4)  # ftp
+        .add_columns(Task.__table__.c.id, ConnectionFtp.__table__.c.name)
     )
     d_ftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionFtp, ConnectionFtp.id == Task.destination_ftp_id)
-        .filter(ConnectionFtp.connection_id == connection_id)
-        .filter(Task.destination_ftp == 1)  # enabled
-        .add_columns(Task.id, ConnectionFtp.name)
+        .join(ConnectionFtp, ConnectionFtp.id == Task.__table__.c.destination_ftp_id)
+        .filter(ConnectionFtp.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.destination_ftp == 1)  # enabled
+        .add_columns(Task.__table__.c.id, ConnectionFtp.__table__.c.name)
     )
     q_ftp = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionFtp, ConnectionFtp.id == Task.query_ftp_id)
-        .filter(ConnectionFtp.connection_id == connection_id)
-        .filter(Task.source_query_type_id == 4)  # ftp
-        .add_columns(Task.id, ConnectionFtp.name)
+        .join(ConnectionFtp, ConnectionFtp.id == Task.__table__.c.query_ftp_id)
+        .filter(ConnectionFtp.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_query_type_id == 4)  # ftp
+        .add_columns(Task.__table__.c.id, ConnectionFtp.__table__.c.name)
     )
 
     s_smb = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSmb, ConnectionSmb.id == Task.source_smb_id)
-        .filter(ConnectionSmb.connection_id == connection_id)
-        .filter(Task.source_type_id == 2)  # smb
-        .add_columns(Task.id, ConnectionSmb.name)
+        .join(ConnectionSmb, ConnectionSmb.id == Task.__table__.c.source_smb_id)
+        .filter(ConnectionSmb.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_type_id == 2)  # smb
+        .add_columns(Task.__table__.c.id, ConnectionSmb.__table__.c.name)
     )
     d_smb = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSmb, ConnectionSmb.id == Task.destination_smb_id)
-        .filter(ConnectionSmb.connection_id == connection_id)
-        .filter(Task.destination_smb == 1)  # enabled
-        .add_columns(Task.id, ConnectionSmb.name)
+        .join(ConnectionSmb, ConnectionSmb.id == Task.__table__.c.destination_smb_id)
+        .filter(ConnectionSmb.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.destination_smb == 1)  # enabled
+        .add_columns(Task.__table__.c.id, ConnectionSmb.__table__.c.name)
     )
     q_smb = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionSmb, ConnectionSmb.id == Task.query_smb_id)
-        .filter(ConnectionSmb.connection_id == connection_id)
-        .filter(Task.source_query_type_id == 2)  # smb
-        .add_columns(Task.id, ConnectionSmb.name)
+        .join(ConnectionSmb, ConnectionSmb.id == Task.__table__.c.query_smb_id)
+        .filter(ConnectionSmb.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_query_type_id == 2)  # smb
+        .add_columns(Task.__table__.c.id, ConnectionSmb.__table__.c.name)
     )
 
     s_database = (
         db.session.query()
         .select_from(Task)
-        .join(ConnectionDatabase, ConnectionDatabase.id == Task.source_database_id)
-        .filter(ConnectionDatabase.connection_id == connection_id)
-        .filter(Task.source_type_id == 1)  # database
-        .add_columns(Task.id, ConnectionDatabase.name)
+        .join(ConnectionDatabase, ConnectionDatabase.id == Task.__table__.c.source_database_id)
+        .filter(ConnectionDatabase.__table__.c.connection_id == connection_id)
+        .filter(Task.__table__.c.source_type_id == 1)  # database
+        .add_columns(Task.__table__.c.id, ConnectionDatabase.__table__.c.name)
     )
 
     summary = s_sftp.union_all(
@@ -385,9 +383,9 @@ def connection_tasks(connection_id: int) -> Response:
     tasks = (
         db.session.query()
         .select_from(Task)
-        .join(summary, summary.c.task_id == Task.id)
-        .outerjoin(Project, Project.id == Task.project_id)
-        .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
+        .join(summary, summary.task_id == Task.__table__.c.id)
+        .outerjoin(Project, Project.id == Task.__table__.c.project_id)
+        .outerjoin(TaskStatus, TaskStatus.id == Task.__table__.c.status_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -416,37 +414,38 @@ def connection_tasks(connection_id: int) -> Response:
                 + '">'
                 + task["Task Name"]
                 + "</a>",
-                "Project Name": '<a  href="/project/'
-                + str(task["Project Id"])
-                + '">'
-                + task["Project Name"]
-                + "</a>"
-                if task["Project Id"]
-                else "Orphan :'(",
+                "Project Name": (
+                    '<a  href="/project/'
+                    + str(task["Project Id"])
+                    + '">'
+                    + task["Project Name"]
+                    + "</a>"
+                    if task["Project Id"]
+                    else "Orphan :'("
+                ),
                 "Connection": task["Connection"],
-                "Enabled": "<a  href=/task/"
-                + str(task["Task Id"])
-                + "/disable>Disable</a>"
-                if task["Enabled"] == 1
-                else "<a  href=/task/" + str(task["Task Id"]) + "/enable>Enable</a>",
-                "Last Run": datetime.datetime.strftime(
-                    task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
-                )
-                if task["Last Run"] and isinstance(task["Last Run"], datetime.datetime)
-                else (task["Last Run"] if task["Last Run"] else "Never"),
-                "Run Now": "<a  href='/task/"
-                + str(task["Task Id"])
-                + "/run'>Run Now</a>",
+                "Enabled": (
+                    "<a  href=/task/" + str(task["Task Id"]) + "/disable>Disable</a>"
+                    if task["Enabled"] == 1
+                    else "<a  href=/task/" + str(task["Task Id"]) + "/enable>Enable</a>"
+                ),
+                "Last Run": (
+                    datetime.datetime.strftime(task["Last Run"], "%a, %b %-d, %Y %H:%M:%S")
+                    if task["Last Run"] and isinstance(task["Last Run"], datetime.datetime)
+                    else (task["Last Run"] if task["Last Run"] else "Never")
+                ),
+                "Run Now": "<a  href='/task/" + str(task["Task Id"]) + "/run'>Run Now</a>",
                 "Status": task["Status"] if task["Status"] else "None",
-                "Next Run": datetime.datetime.strftime(
-                    task["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
-                )
-                if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
-                else (task["Next Run"] if task["Next Run"] else "None"),
-                "class": "error"
-                if task["Status Id"] == 2
-                or (not task["Next Run"] and task["Enabled"] == 1)
-                else "",
+                "Next Run": (
+                    datetime.datetime.strftime(task["Next Run"], "%a, %b %-d, %Y %H:%M:%S")
+                    if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+                    else (task["Next Run"] if task["Next Run"] else "None")
+                ),
+                "class": (
+                    "error"
+                    if task["Status Id"] == 2 or (not task["Next Run"] and task["Enabled"] == 1)
+                    else ""
+                ),
             }
         )
 
@@ -458,8 +457,7 @@ def connection_tasks(connection_id: int) -> Response:
 def table_jobs_orphans() -> Response:
     """Get a table of any jobs without a linked task."""
     active_tasks = [
-        x[0]
-        for x in db.session.query().select_from(Task).add_columns(text("task.id")).all()
+        x[0] for x in db.session.query().select_from(Task).add_columns(text("task.id")).all()
     ]
 
     page = request.args.get("p", default=1, type=int)
@@ -479,9 +477,7 @@ def table_jobs_orphans() -> Response:
             if int(job["id"]) not in active_tasks:
                 table.append(
                     {
-                        "Action": "<a  href='/task/"
-                        + job["id"]
-                        + "/delete'>Delete</a>",
+                        "Action": "<a  href='/task/" + job["id"] + "/delete'>Delete</a>",
                         "Name": job["name"],
                         "Id": job["id"],
                         "Next Run": job["next_run_time"],
@@ -539,9 +535,9 @@ def dash_tasks(task_type: str) -> Response:
     tasks = (
         db.session.query()
         .select_from(Task)
-        .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-        .outerjoin(Project, Project.id == Task.project_id)
-        .outerjoin(User, User.id == Project.owner_id)
+        .outerjoin(TaskStatus, TaskStatus.id == Task.__table__.c.status_id)
+        .outerjoin(Project, Project.id == Task.__table__.c.project_id)
+        .outerjoin(User, User.id == Project.__table__.c.owner_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -549,27 +545,25 @@ def dash_tasks(task_type: str) -> Response:
     me = [{"head": '["Name", "Owner", "Last Run", "Next Run", "Actions"]'}]
 
     if task_type == "errored":
-        tasks = tasks.filter(Task.status_id == 2, Task.enabled == 1)
+        tasks = tasks.filter(Task.__table__.c.status_id == 2, Task.__table__.c.enabled == 1)
 
     elif task_type == "scheduled":
         try:
             ids = json.loads(
-                requests.get(
-                    app.config["SCHEDULER_HOST"] + "/scheduled", timeout=60
-                ).text
+                requests.get(app.config["SCHEDULER_HOST"] + "/scheduled", timeout=60).text
             )
-            tasks = tasks.filter(and_(Task.id.in_(ids), Task.enabled == 1))  # type: ignore[attr-defined, union-attr]
+            tasks = tasks.filter(and_(Task.__table__.c.id.in_(ids), Task.__table__.c.enabled == 1))  # type: ignore[attr-defined, union-attr]
         except (
             requests.exceptions.ConnectionError,
             urllib3.exceptions.NewConnectionError,
         ):
-            tasks = tasks.filter(Task.id == -1)
+            tasks = tasks.filter(Task.__table__.c.id == -1)
             me.append({"empty_msg": "Error - Scheduler is offline."})
 
     elif task_type == "active":
         try:
-            tasks = tasks.filter(Task.status_id == 1).filter(
-                Task.enabled == 1
+            tasks = tasks.filter(Task.__table__.c.status_id == 1).filter(
+                Task.__table__.c.enabled == 1
             )  # running and enabled
         except (
             requests.exceptions.ConnectionError,
@@ -620,17 +614,13 @@ def dash_tasks(task_type: str) -> Response:
                     if task["Owner Id"]
                     else ""
                 ),
-                "Last Run": relative_to_now(task["Last Run"])
-                if task["Last Run"]
-                else "Never",
-                "Started": relative_to_now(task["Last Run"])
-                if task["Last Run"]
-                else "Never",
-                "Next Run": datetime.datetime.strftime(
-                    task["Next Run"], "%m/%-d/%y %H:%M"
-                )
-                if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
-                else (task["Next Run"] if task["Next Run"] else "None"),
+                "Last Run": (relative_to_now(task["Last Run"]) if task["Last Run"] else "Never"),
+                "Started": (relative_to_now(task["Last Run"]) if task["Last Run"] else "Never"),
+                "Next Run": (
+                    datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
+                    if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+                    else (task["Next Run"] if task["Next Run"] else "None")
+                ),
                 "Actions": (
                     (
                         "<a  href='/task/"
@@ -676,9 +666,9 @@ def task_list(my_type: str) -> Response:
         tasks = (
             db.session.query()
             .select_from(Task)
-            .outerjoin(Project, Project.id == Task.project_id)
-            .outerjoin(User, User.id == Project.owner_id)
-            .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
+            .outerjoin(Project, Project.id == Task.__table__.c.project_id)
+            .outerjoin(User, User.id == Project.__table__.c.owner_id)
+            .outerjoin(TaskStatus, TaskStatus.id == Task.__table__.c.status_id)
             .add_columns(*cols.values())
             .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
@@ -687,10 +677,10 @@ def task_list(my_type: str) -> Response:
         tasks = (
             db.session.query()
             .select_from(Task)
-            .outerjoin(Project, Project.id == Task.project_id)
-            .outerjoin(User, User.id == Project.owner_id)
-            .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-            .filter(User.id == int(my_type))
+            .outerjoin(Project, Project.id == Task.__table__.c.project_id)
+            .outerjoin(User, User.id == Project.__table__.c.owner_id)
+            .outerjoin(TaskStatus, TaskStatus.id == Task.__table__.c.status_id)
+            .filter(User.__table__.c.id == int(my_type))
             .add_columns(*cols.values())
             .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
@@ -699,10 +689,10 @@ def task_list(my_type: str) -> Response:
         tasks = (
             db.session.query()
             .select_from(Task)
-            .outerjoin(Project, Project.id == Task.project_id)
-            .outerjoin(User, User.id == Project.owner_id)
-            .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-            .filter(User.id == current_user.id)
+            .outerjoin(Project, Project.id == Task.__table__.c.project_id)
+            .outerjoin(User, User.id == Project.__table__.c.owner_id)
+            .outerjoin(TaskStatus, TaskStatus.id == Task.__table__.c.status_id)
+            .filter(User.__table__.c.id == current_user.id)
             .add_columns(*cols.values())
             .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
         )
@@ -739,18 +729,16 @@ def task_list(my_type: str) -> Response:
         data = {
             "Name": f'<div class="field has-addons">{enabled}{status_icon}<a  href="/task/{task["Task Id"]}">{task["Name"]}</a></div>',
             "Last Run": relative_to_now(task["Last Run"]) if task["Last Run"] else "",
-            "Next Run": datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
-            if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
-            else (task["Next Run"] if task["Next Run"] else ""),
+            "Next Run": (
+                datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
+                if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+                else (task["Next Run"] if task["Next Run"] else "")
+            ),
         }
 
         if my_type == "all":
             data["Owner"] = (
-                "<a href='project/user/"
-                + str(task["Owner Id"])
-                + "' >"
-                + task["Owner"]
-                + "</a>"
+                "<a href='project/user/" + str(task["Owner Id"]) + "' >" + task["Owner"] + "</a>"
                 if task["Owner"]
                 else ""
             )
@@ -795,8 +783,8 @@ def project_all_tasks(project_id: int) -> Response:
     tasks = (
         db.session.query()
         .select_from(Task)
-        .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
-        .filter(Task.project_id == project_id)
+        .outerjoin(TaskStatus, TaskStatus.id == Task.__table__.c.status_id)
+        .filter(Task.__table__.c.project_id == project_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
@@ -829,18 +817,14 @@ def project_all_tasks(project_id: int) -> Response:
         me.append(
             {
                 "Name": f'<div class="field has-addons">{enabled}{status_icon}<a  href="/task/{task["Task Id"]}">{task["Name"]}</a></div>',
-                "Last Run": relative_to_now(task["Last Run"])
-                if task["Last Run"]
-                else "",
-                "Run Now": "<a href='/task/"
-                + str(task["Task Id"])
-                + "/run'>Run Now</a>",
-                "Next Run": datetime.datetime.strftime(
-                    task["Next Run"], "%m/%-d/%y %H:%M"
-                )
-                if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
-                else (task["Next Run"] if task["Next Run"] else ""),
-                "Run Rank": (task["Run Rank"] if "Run Rank" in task else None),
+                "Last Run": (relative_to_now(task["Last Run"]) if task["Last Run"] else ""),
+                "Run Now": "<a href='/task/" + str(task["Task Id"]) + "/run'>Run Now</a>",
+                "Next Run": (
+                    datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
+                    if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
+                    else (task["Next Run"] if task["Next Run"] else "")
+                ),
+                "Run Rank": task.get("Run Rank", None),
             }
         )
 
@@ -865,9 +849,9 @@ def task_log(task_id: int) -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .join(Task, Task.id == TaskLog.task_id)
-        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
-        .filter(Task.id == task_id)
+        .join(Task, Task.id == TaskLog.__table__.c.task_id)
+        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.__table__.c.status_id)
+        .filter(Task.__table__.c.id == task_id)
         .add_columns(*cols.values())
         .order_by(text(str("task_log.id desc")))
     )
@@ -878,10 +862,10 @@ def task_log(task_id: int) -> Response:
     me.append({"empty_msg": "No log messages."})
 
     if request.args.get("gte"):
-        logs = logs.filter(TaskLog.id >= request.args["gte"])
+        logs = logs.filter(TaskLog.__table__.c.id >= request.args["gte"])
 
     elif request.args.get("lt"):
-        logs = logs.filter(TaskLog.id < request.args["lt"]).limit(40)
+        logs = logs.filter(TaskLog.__table__.c.id < request.args["lt"]).limit(40)
 
     else:
         logs = logs.limit(40).offset(0)
@@ -893,12 +877,14 @@ def task_log(task_id: int) -> Response:
             {
                 "log_id": log["log_id"],
                 "job_id": ("(" + str(log["job_id"]) + ")" if log["job_id"] else ""),
-                "date": datetime.datetime.strftime(
-                    log["date"],
-                    "%m/%-d/%y %H:%M:%S",
-                )
-                if log["date"] and isinstance(log["date"], datetime.datetime)
-                else (log["date"] if log["date"] else "None"),
+                "date": (
+                    datetime.datetime.strftime(
+                        log["date"],
+                        "%m/%-d/%y %H:%M:%S",
+                    )
+                    if log["date"] and isinstance(log["date"], datetime.datetime)
+                    else (log["date"] if log["date"] else "None")
+                ),
                 "status": log["status"] if log["status"] else "None",
                 "message": html.escape(log["message"]),
                 "class": "error" if log["status_id"] == 2 or log["error"] == 1 else "",
@@ -937,19 +923,15 @@ def dash_log() -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .join(Task, Task.id == TaskLog.task_id)
-        .outerjoin(Project, Project.id == Task.project_id)
-        .outerjoin(User, User.id == Project.owner_id)
-        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.status_id)
+        .join(Task, Task.id == TaskLog.__table__.c.task_id)
+        .outerjoin(Project, Project.id == Task.__table__.c.project_id)
+        .outerjoin(User, User.id == Project.__table__.c.owner_id)
+        .outerjoin(TaskStatus, TaskStatus.id == TaskLog.__table__.c.status_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'
-        }
-    ]
+    me = [{"head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'}]
     me.append({"total": str(logs.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
     me.append({"page_size": str(10)})
@@ -961,38 +943,35 @@ def dash_log() -> Response:
 
         me.append(
             {
-                "Task Name": '<a  href="/task/'
-                + str(log["Task Id"])
-                + '">'
-                + log["Task Name"]
-                + "</a>"
-                if log["Task Name"]
-                else "N/A",
+                "Task Name": (
+                    '<a  href="/task/' + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
+                    if log["Task Name"]
+                    else "N/A"
+                ),
                 "Project Name": (
-                    '<a  href="/project/'
-                    + str(log["Project Id"])
-                    + '">'
-                    + log["Project Name"]
-                    + "</a>"
-                )
-                if log["Project Id"]
-                else "N/A",
+                    (
+                        '<a  href="/project/'
+                        + str(log["Project Id"])
+                        + '">'
+                        + log["Project Name"]
+                        + "</a>"
+                    )
+                    if log["Project Id"]
+                    else "N/A"
+                ),
                 "Owner": (
-                    "<a href='project/user/"
-                    + str(log["Owner Id"])
-                    + "' >"
-                    + log["Owner"]
-                    + "</a>"
+                    "<a href='project/user/" + str(log["Owner Id"]) + "' >" + log["Owner"] + "</a>"
                     if log["Owner"]
                     else "N/A"
                 ),
-                "Status Date": datetime.datetime.strftime(
-                    log["Status Date"],
-                    "%a, %b %-d, %Y %H:%M:%S.%f",
-                )
-                if log["Status Date"]
-                and isinstance(log["Status Date"], datetime.datetime)
-                else (log["Status Date"] if log["Status Date"] else "None"),
+                "Status Date": (
+                    datetime.datetime.strftime(
+                        log["Status Date"],
+                        "%a, %b %-d, %Y %H:%M:%S.%f",
+                    )
+                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
+                    else (log["Status Date"] if log["Status Date"] else "None")
+                ),
                 "my_date_sort": log["Status Date"],
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": (
@@ -1043,20 +1022,16 @@ def dash_error_log() -> Response:
     logs = (
         db.session.query()
         .select_from(TaskLog)
-        .join(Task, Task.id == TaskLog.task_id)
-        .join(Project, Project.id == Task.project_id)
-        .join(User, User.id == Project.owner_id)
-        .join(TaskStatus, TaskStatus.id == TaskLog.status_id)
-        .filter(TaskLog.error == 1)
+        .join(Task, Task.id == TaskLog.__table__.c.task_id)
+        .join(Project, Project.id == Task.__table__.c.project_id)
+        .join(User, User.id == Project.__table__.c.owner_id)
+        .join(TaskStatus, TaskStatus.id == TaskLog.__table__.c.status_id)
+        .filter(TaskLog.__table__.c.error == 1)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'
-        }
-    ]
+    me = [{"head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'}]
     me.append({"total": str(logs.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
     me.append({"page_size": str(10)})
@@ -1068,38 +1043,35 @@ def dash_error_log() -> Response:
 
         me.append(
             {
-                "Task Name": '<a  href="/task/'
-                + str(log["Task Id"])
-                + '">'
-                + log["Task Name"]
-                + "</a>"
-                if log["Task Name"]
-                else "N/A",
+                "Task Name": (
+                    '<a  href="/task/' + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
+                    if log["Task Name"]
+                    else "N/A"
+                ),
                 "Project Name": (
-                    '<a  href="/project/'
-                    + str(log["Project Id"])
-                    + '">'
-                    + log["Project Name"]
-                    + "</a>"
-                )
-                if log["Project Id"]
-                else "N/A",
+                    (
+                        '<a  href="/project/'
+                        + str(log["Project Id"])
+                        + '">'
+                        + log["Project Name"]
+                        + "</a>"
+                    )
+                    if log["Project Id"]
+                    else "N/A"
+                ),
                 "Owner": (
-                    "<a href='project/user/"
-                    + str(log["Owner Id"])
-                    + "' >"
-                    + log["Owner"]
-                    + "</a>"
+                    "<a href='project/user/" + str(log["Owner Id"]) + "' >" + log["Owner"] + "</a>"
                     if log["Owner"]
                     else "N/A"
                 ),
-                "Status Date": datetime.datetime.strftime(
-                    log["Status Date"],
-                    "%a, %b %-d, %Y %H:%M:%S.%f",
-                )
-                if log["Status Date"]
-                and isinstance(log["Status Date"], datetime.datetime)
-                else (log["Status Date"] if log["Status Date"] else "None"),
+                "Status Date": (
+                    datetime.datetime.strftime(
+                        log["Status Date"],
+                        "%a, %b %-d, %Y %H:%M:%S.%f",
+                    )
+                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
+                    else (log["Status Date"] if log["Status Date"] else "None")
+                ),
                 "my_date_sort": log["Status Date"],
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": (
@@ -1143,16 +1115,12 @@ def one_task_files(task_id: int) -> Response:
     my_files = (
         db.session.query()
         .select_from(TaskFile)
-        .filter(TaskFile.task_id == task_id)
+        .filter(TaskFile.__table__.c.task_id == task_id)
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["File Name", "Run Id", "Created", "md5 Hash", "File Size", "Action"]'
-        }
-    ]
+    me = [{"head": '["File Name", "Run Id", "Created", "md5 Hash", "File Size", "Action"]'}]
     me.append({"total": str(my_files.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
     me.append({"page_size": str(10)})
@@ -1180,8 +1148,7 @@ def one_task_files(task_id: int) -> Response:
                             my_file["Created"],
                             "%a, %b %-d, %Y %H:%M:%S.%f",
                         )
-                        if my_file["Created"]
-                        and isinstance(my_file["Created"], datetime.datetime)
+                        if my_file["Created"] and isinstance(my_file["Created"], datetime.datetime)
                         else (my_file["Created"] if my_file["Created"] else "N/A")
                     ),
                     "File Size": my_file["File Size"],
@@ -1220,8 +1187,7 @@ def one_task_files(task_id: int) -> Response:
                             + "/file/"
                             + str(my_file["File Id"])
                             + "/sendEmail' >Send to Email</a><br />"
-                            if task.email_completion == 1
-                            and task.email_completion_file == 1
+                            if task.email_completion == 1 and task.email_completion_file == 1
                             else ""
                         )
                         + (

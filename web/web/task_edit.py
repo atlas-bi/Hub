@@ -42,17 +42,11 @@ def task_new_get(project_id: int) -> Union[str, Response]:
     me = Project.query.filter_by(id=project_id).first()
     if me:
         source_type = TaskSourceType.query.order_by(TaskSourceType.name).all()
-        source_query_type = TaskSourceQueryType.query.order_by(
-            TaskSourceQueryType.name
-        ).all()
+        source_query_type = TaskSourceQueryType.query.order_by(TaskSourceQueryType.name).all()
         source = ConnectionDatabase.query.order_by(ConnectionDatabase.name).all()
         conn = Connection.query.order_by(Connection.name).all()
-        file_type = TaskDestinationFileType.query.order_by(
-            TaskDestinationFileType.id
-        ).all()
-        processing_type = TaskProcessingType.query.order_by(
-            TaskProcessingType.name
-        ).all()
+        file_type = TaskDestinationFileType.query.order_by(TaskDestinationFileType.id).all()
+        processing_type = TaskProcessingType.query.order_by(TaskProcessingType.name).all()
         quote_level = QuoteLevel.query.order_by(QuoteLevel.id).all()
 
         return render_template(
@@ -90,26 +84,20 @@ def task_new(project_id: int) -> Union[str, Response]:
         order=form.get("task-rank", 0, type=int),
         source_type_id=form.get("sourceType", None, type=int),
         source_database_id=form.get("task-source-database", None, type=int),
-        source_query_include_header=form.get(
-            "task_include_query_headers", None, type=int
-        ),
+        source_query_include_header=form.get("task_include_query_headers", None, type=int),
         source_smb_id=form.get("task-source-smb", None, type=int),
         source_smb_file=form.get("sourceSmbFile", None, type=str),
         source_smb_ignore_delimiter=form.get("task_smb_ignore_delimiter", 0, type=int),
         source_smb_delimiter=form.get("sourceSmbDelimiter", None, type=str),
         source_sftp_id=form.get("task-source-sftp", None, type=int),
         source_sftp_file=form.get("sourceSftpFile", None, type=str),
-        source_sftp_ignore_delimiter=form.get(
-            "task_sftp_ignore_delimiter", None, type=int
-        ),
+        source_sftp_ignore_delimiter=form.get("task_sftp_ignore_delimiter", None, type=int),
         enable_source_cache=form.get("task_enable_source_cache", None, type=int),
         source_require_sql_output=form.get("task_require_sql_output", None, type=int),
         source_sftp_delimiter=form.get("sourceSftpDelimiter", None, type=str),
         source_ftp_id=form.get("task-source-ftp", None, type=int),
         source_ftp_file=form.get("sourceFtpFile", None, type=str),
-        source_ftp_ignore_delimiter=form.get(
-            "task_ftp_ignore_delimiter", None, type=int
-        ),
+        source_ftp_ignore_delimiter=form.get("task_ftp_ignore_delimiter", None, type=int),
         source_ftp_delimiter=form.get("sourceFtpDelimiter", None, type=str),
         source_ssh_id=form.get("task-source-ssh", None, type=int),
         source_query_type_id=form.get("sourceQueryType", None, type=int),
@@ -146,38 +134,28 @@ def task_new(project_id: int) -> Union[str, Response]:
         ),
         destination_file_delimiter=form.get("fileDelimiter", None, type=str),
         destination_file_line_terminator=form.get("fileTerminator", None, type=str),
-        destination_ignore_delimiter=form.get(
-            "task_ignore_file_delimiter", None, type=int
-        ),
+        destination_ignore_delimiter=form.get("task_ignore_file_delimiter", None, type=int),
         file_gpg=form.get("task_file_gpg", 0, type=int),
         file_gpg_id=form.get("task-file-gpg", None, type=int),
         destination_sftp=form.get("task_save_sftp", 0, type=int),
         destination_sftp_id=form.get("task-destination-sftp", None, type=int),
         destination_sftp_overwrite=form.get("task_overwrite_sftp", None, type=int),
-        destination_sftp_dont_send_empty_file=form.get(
-            "task_sftp_dont_send_empty", 0, type=int
-        ),
+        destination_sftp_dont_send_empty_file=form.get("task_sftp_dont_send_empty", 0, type=int),
         destination_ftp=form.get("task_save_ftp", 0, type=int),
         destination_ftp_id=form.get("task-destination-ftp", None, type=int),
         destination_ftp_overwrite=form.get("task_overwrite_ftp", None, type=int),
-        destination_ftp_dont_send_empty_file=form.get(
-            "task_ftp_dont_send_empty", 0, type=int
-        ),
+        destination_ftp_dont_send_empty_file=form.get("task_ftp_dont_send_empty", 0, type=int),
         destination_smb=form.get("task_save_smb", 0, type=int),
         destination_smb_id=form.get("task-destination-smb", None, type=int),
         destination_smb_overwrite=form.get("task_overwrite_smb", None, type=int),
-        destination_smb_dont_send_empty_file=form.get(
-            "task_smb_dont_send_empty", 0, type=int
-        ),
+        destination_smb_dont_send_empty_file=form.get("task_smb_dont_send_empty", 0, type=int),
         email_completion=form.get("task_send_completion_email", 0, type=int),
         email_completion_recipients=form.get("completionEmailRecip", "", type=str),
         email_completion_message=form.get("completion_email_msg", "", type=str),
         email_completion_subject=form.get("completionEmailSubject", "", type=str),
         email_completion_log=form.get("task_send_completion_email_log", 0, type=int),
         email_completion_file=form.get("task_send_output", 0, type=int),
-        email_completion_dont_send_empty_file=form.get(
-            "task_dont_send_empty", 0, type=int
-        ),
+        email_completion_dont_send_empty_file=form.get("task_dont_send_empty", 0, type=int),
         email_completion_file_embed=form.get("task_embed_output", 0, type=int),
         email_error=form.get("task_send_error_email", 0, type=int),
         email_error_recipients=form.get("errorEmailRecip", "", type=str),
@@ -232,20 +210,14 @@ def task_edit_get(task_id: int) -> Union[Response, str]:
 
     if me:
         source_type = TaskSourceType.query.order_by(TaskSourceType.name).all()
-        processing_type = TaskProcessingType.query.order_by(
-            TaskProcessingType.name
-        ).all()
-        source_query_type = TaskSourceQueryType.query.order_by(
-            TaskSourceQueryType.name
-        ).all()
+        processing_type = TaskProcessingType.query.order_by(TaskProcessingType.name).all()
+        source_query_type = TaskSourceQueryType.query.order_by(TaskSourceQueryType.name).all()
 
         source = ConnectionDatabase.query.order_by(ConnectionDatabase.name).all()
 
         conn = Connection.query.order_by(Connection.name).all()
 
-        file_type = TaskDestinationFileType.query.order_by(
-            TaskDestinationFileType.id
-        ).all()
+        file_type = TaskDestinationFileType.query.order_by(TaskDestinationFileType.id).all()
         sftp_dest = (
             ConnectionSftp.query.filter_by(
                 connection_id=me.destination_sftp_conn.connection_id
@@ -268,60 +240,42 @@ def task_edit_get(task_id: int) -> Union[Response, str]:
             else ""
         )
         gpg_file = (
-            (
-                ConnectionGpg.query.filter_by(
-                    connection_id=me.file_gpg_conn.connection_id
-                ).all()
-            )
+            (ConnectionGpg.query.filter_by(connection_id=me.file_gpg_conn.connection_id).all())
             if me.file_gpg_conn
             else ""
         )
         sftp_source = (
-            ConnectionSftp.query.filter_by(
-                connection_id=me.source_sftp_conn.connection_id
-            ).all()
+            ConnectionSftp.query.filter_by(connection_id=me.source_sftp_conn.connection_id).all()
             if me.source_sftp_id
             else ""
         )
         sftp_query = (
-            ConnectionSftp.query.filter_by(
-                connection_id=me.query_sftp_conn.connection_id
-            ).all()
+            ConnectionSftp.query.filter_by(connection_id=me.query_sftp_conn.connection_id).all()
             if me.query_sftp_id
             else ""
         )
         ssh_source = (
-            ConnectionSsh.query.filter_by(
-                connection_id=me.source_ssh_conn.connection_id
-            ).all()
+            ConnectionSsh.query.filter_by(connection_id=me.source_ssh_conn.connection_id).all()
             if me.source_ssh_id
             else ""
         )
         ftp_source = (
-            ConnectionFtp.query.filter_by(
-                connection_id=me.source_ftp_conn.connection_id
-            ).all()
+            ConnectionFtp.query.filter_by(connection_id=me.source_ftp_conn.connection_id).all()
             if me.source_ftp_id
             else ""
         )
         ftp_query = (
-            ConnectionFtp.query.filter_by(
-                connection_id=me.query_ftp_conn.connection_id
-            ).all()
+            ConnectionFtp.query.filter_by(connection_id=me.query_ftp_conn.connection_id).all()
             if me.query_ftp_id
             else ""
         )
         smb_source = (
-            ConnectionSmb.query.filter_by(
-                connection_id=me.source_smb_conn.connection_id
-            ).all()
+            ConnectionSmb.query.filter_by(connection_id=me.source_smb_conn.connection_id).all()
             if me.source_smb_id
             else ""
         )
         smb_query = (
-            ConnectionSmb.query.filter_by(
-                connection_id=me.query_smb_conn.connection_id
-            ).all()
+            ConnectionSmb.query.filter_by(connection_id=me.query_smb_conn.connection_id).all()
             if me.query_smb_id
             else ""
         )
@@ -341,16 +295,12 @@ def task_edit_get(task_id: int) -> Union[Response, str]:
             else ""
         )
         ftp_processing = (
-            ConnectionFtp.query.filter_by(
-                connection_id=me.processing_ftp_conn.connection_id
-            ).all()
+            ConnectionFtp.query.filter_by(connection_id=me.processing_ftp_conn.connection_id).all()
             if me.processing_ftp_id
             else ""
         )
         smb_processing = (
-            ConnectionSmb.query.filter_by(
-                connection_id=me.processing_smb_conn.connection_id
-            ).all()
+            ConnectionSmb.query.filter_by(connection_id=me.processing_smb_conn.connection_id).all()
             if me.processing_smb_id
             else ""
         )
@@ -411,30 +361,20 @@ def task_edit_post(task_id: int) -> Response:
             order=form.get("task-rank", 0, type=int),
             source_type_id=form.get("sourceType", None, type=int),
             source_database_id=form.get("task-source-database", None, type=int),
-            source_query_include_header=form.get(
-                "task_include_query_headers", None, type=int
-            ),
+            source_query_include_header=form.get("task_include_query_headers", None, type=int),
             source_smb_id=form.get("task-source-smb", None, type=int),
             source_smb_file=form.get("sourceSmbFile", None, type=str),
-            source_smb_ignore_delimiter=form.get(
-                "task_smb_ignore_delimiter", 0, type=int
-            ),
+            source_smb_ignore_delimiter=form.get("task_smb_ignore_delimiter", 0, type=int),
             source_smb_delimiter=form.get("sourceSmbDelimiter", None, type=str),
             source_sftp_id=form.get("task-source-sftp", None, type=int),
             source_sftp_file=form.get("sourceSftpFile", None, type=str),
-            source_sftp_ignore_delimiter=form.get(
-                "task_sftp_ignore_delimiter", None, type=int
-            ),
+            source_sftp_ignore_delimiter=form.get("task_sftp_ignore_delimiter", None, type=int),
             source_sftp_delimiter=form.get("sourceSftpDelimiter", None, type=str),
             source_ftp_id=form.get("task-source-ftp", None, type=int),
             source_ftp_file=form.get("sourceFtpFile", None, type=str),
-            source_ftp_ignore_delimiter=form.get(
-                "task_ftp_ignore_delimiter", None, type=int
-            ),
+            source_ftp_ignore_delimiter=form.get("task_ftp_ignore_delimiter", None, type=int),
             enable_source_cache=form.get("task_enable_source_cache", None, type=int),
-            source_require_sql_output=form.get(
-                "task_require_sql_output", None, type=int
-            ),
+            source_require_sql_output=form.get("task_require_sql_output", None, type=int),
             source_ftp_delimiter=form.get("sourceFtpDelimiter", None, type=str),
             source_ssh_id=form.get("task-source-ssh", None, type=int),
             source_query_type_id=form.get("sourceQueryType", None, type=int),
@@ -471,9 +411,7 @@ def task_edit_post(task_id: int) -> Response:
             ),
             destination_file_delimiter=form.get("fileDelimiter", None, type=str),
             destination_file_line_terminator=form.get("fileTerminator", None, type=str),
-            destination_ignore_delimiter=form.get(
-                "task_ignore_file_delimiter", None, type=int
-            ),
+            destination_ignore_delimiter=form.get("task_ignore_file_delimiter", None, type=int),
             file_gpg=form.get("task_file_gpg", 0, type=int),
             file_gpg_id=form.get("task-file-gpg", None, type=int),
             destination_sftp=form.get("task_save_sftp", 0, type=int),
@@ -485,26 +423,18 @@ def task_edit_post(task_id: int) -> Response:
             destination_ftp=form.get("task_save_ftp", 0, type=int),
             destination_ftp_id=form.get("task-destination-ftp", None, type=int),
             destination_ftp_overwrite=form.get("task_overwrite_ftp", None, type=int),
-            destination_ftp_dont_send_empty_file=form.get(
-                "task_ftp_dont_send_empty", 0, type=int
-            ),
+            destination_ftp_dont_send_empty_file=form.get("task_ftp_dont_send_empty", 0, type=int),
             destination_smb=form.get("task_save_smb", 0, type=int),
             destination_smb_id=form.get("task-destination-smb", None, type=int),
             destination_smb_overwrite=form.get("task_overwrite_smb", None, type=int),
-            destination_smb_dont_send_empty_file=form.get(
-                "task_smb_dont_send_empty", 0, type=int
-            ),
+            destination_smb_dont_send_empty_file=form.get("task_smb_dont_send_empty", 0, type=int),
             email_completion=form.get("task_send_completion_email", 0, type=int),
             email_completion_recipients=form.get("completionEmailRecip", "", type=str),
             email_completion_message=form.get("completion_email_msg", "", type=str),
             email_completion_subject=form.get("completionEmailSubject", "", type=str),
-            email_completion_log=form.get(
-                "task_send_completion_email_log", 0, type=int
-            ),
+            email_completion_log=form.get("task_send_completion_email_log", 0, type=int),
             email_completion_file=form.get("task_send_output", 0, type=int),
-            email_completion_dont_send_empty_file=form.get(
-                "task_dont_send_empty", 0, type=int
-            ),
+            email_completion_dont_send_empty_file=form.get("task_dont_send_empty", 0, type=int),
             email_completion_file_embed=form.get("task_embed_output", 0, type=int),
             email_error=form.get("task_send_error_email", 0, type=int),
             email_error_recipients=form.get("errorEmailRecip", "", type=str),

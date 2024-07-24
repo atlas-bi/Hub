@@ -11,6 +11,7 @@ run with::
 
 
 """
+
 import time
 from datetime import datetime
 
@@ -37,9 +38,7 @@ def test_projects_home(client_fixture: fixture) -> None:
 
     # if we have a project, we should go to the project list page
     p_id, t_id = create_demo_task(db.session)
-    page = client_fixture.get(
-        url_for("project_bp.all_projects"), follow_redirects=False
-    )
+    page = client_fixture.get(url_for("project_bp.all_projects"), follow_redirects=False)
     assert page.status_code == 200
     assert page.request.path == url_for("project_bp.all_projects")
     assert "Projects" in page.get_data(as_text=True)
@@ -147,7 +146,7 @@ def test_create_cron_project(client_fixture: fixture) -> None:
         "project_name": "test cron project",
         "project_desc": "my cron project description",
         "project_cron": "1",
-        "project_cron_year": "1",
+        "project_cron_year": "1970",
         "project_cron_mnth": "1",
         "project_cron_week": "1",
         "project_cron_day": "1",
@@ -199,7 +198,7 @@ def test_edit_project(client_fixture: fixture) -> None:
         "project_name": "test cron project",
         "project_desc": "my cron project description",
         "project_cron": "1",
-        "project_cron_year": "1",
+        "project_cron_year": "2024",
         "project_cron_mnth": "1",
         "project_cron_week": "1",
         "project_cron_day": "1",

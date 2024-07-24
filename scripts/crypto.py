@@ -1,6 +1,5 @@
 """Password encryption and decryption."""
 
-
 from base64 import b64decode, b64encode
 
 from cryptography.fernet import Fernet

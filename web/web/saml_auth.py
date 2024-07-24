@@ -1,6 +1,5 @@
 """SAML Login/Logout web views."""
 
-
 from flask import Blueprint, Flask, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, request, session, url_for
@@ -66,9 +65,7 @@ def idp_initiated() -> Response:
         logging.warning(identity)
 
         if identity:
-            account_name = identity.get(app.config["SAML_ATTR_MAP"]["account_name"])[
-                0
-            ].lower()
+            account_name = identity.get(app.config["SAML_ATTR_MAP"]["account_name"])[0].lower()
 
             email = identity.get(app.config["SAML_ATTR_MAP"]["email"])[0].lower()
 

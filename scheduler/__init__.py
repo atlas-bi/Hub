@@ -41,7 +41,6 @@ Database model should be cloned from `web` before running app.
 
 """
 
-
 import contextlib
 import logging
 import os
