@@ -229,7 +229,7 @@ def test_delete_task(client_fixture: fixture) -> None:
 def test_run_task(client_fixture: fixture) -> None:
     p_id, t_id = create_demo_task(db.session)
     page = client_fixture.get(f"/api/run/{t_id}")
-    assert "Connection refused" in page.json["error"]
+    assert page.json == {"message": "Scheduler: task job added!"}
     assert page.status_code == 200
 
 

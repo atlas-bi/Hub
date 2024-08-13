@@ -68,7 +68,7 @@ task('fontawesome', function(done) {
 task('sass', function() {
   const plugins = [
     cssnano({
-      preset: ['default', { discardComments: true }],
+      preset: ['default', { discardComments: false }],
     }),
   ];
   return src("web/static/assets/**/*.scss")

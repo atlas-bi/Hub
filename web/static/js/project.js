@@ -725,6 +725,7 @@
       weekNumbers: true,
       time_24hr: true,
     });
+    /*eslint no-unused-vars: ["error", { "caughtErrors": "none" }]*/
   } catch (e) {
     // nothing
   }

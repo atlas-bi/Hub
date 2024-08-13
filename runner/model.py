@@ -21,54 +21,59 @@ migrations file - so flask-migrations think it has already applied the migration
 """
 
 import datetime
-from dataclasses import dataclass
 from typing import List, Optional
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import functions
 
-from .extensions import db
+from .extensions import (
+    db,
+    intpk,
+    str_5,
+    str_10,
+    str_30,
+    str_120,
+    str_200,
+    str_400,
+    str_500,
+    str_1000,
+    str_8000,
+    timestamp,
+)
 
 
-@dataclass
 class LoginType(db.Model):
     """Lookup table of user login types."""
 
     __tablename__ = "login_type"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_120]]
     login: Mapped[List["Login"]] = relationship(back_populates="login_type", lazy=True)
 
 
-@dataclass
 class Login(db.Model):
     """Table should contain all login attempts."""
 
     __tablename__ = "login"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    type_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(LoginType.id), nullable=True
-    )
-    username: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    login_date: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, server_default=functions.now()
-    )
+    id: Mapped[intpk]
+    type_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(LoginType.id))
+    username: Mapped[Optional[str_120]]
+    login_date: Mapped[Optional[timestamp]]
     login_type: Mapped["LoginType"] = relationship(back_populates="login")
 
 
-@dataclass
 class User(db.Model):
     """Table containing any user-specific information."""
 
     # pylint: disable=too-many-instance-attributes
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    account_name: Mapped[Optional[str]] = mapped_column(db.String(200), nullable=True, index=True)
-    email: Mapped[Optional[str]] = mapped_column(db.String(200), nullable=True, index=True)
-    full_name: Mapped[Optional[str]] = mapped_column(db.String(200), nullable=True)
-    first_name: Mapped[Optional[str]] = mapped_column(db.String(200), nullable=True)
+    id: Mapped[intpk]
+    account_name: Mapped[Optional[str_200]] = mapped_column(index=True)
+    email: Mapped[Optional[str_200]] = mapped_column(index=True)
+    full_name: Mapped[Optional[str_200]]
+    first_name: Mapped[Optional[str_200]]
     project_owner: Mapped["Project"] = relationship(
         backref="project_owner", lazy=True, foreign_keys="Project.owner_id"
     )
@@ -101,47 +106,38 @@ class User(db.Model):
         return self.full_name or f"User {self.id}"
 
 
-@dataclass
 class Project(db.Model):
     """Table containing project details."""
 
     # pylint: disable=too-many-instance-attributes
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    description: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-    owner_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_120]]
+    description: Mapped[Optional[str_8000]]
+    owner_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(User.id), index=True)
 
-    cron: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    cron_year: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_month: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_week: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_day: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_week_day: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_hour: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_min: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_sec: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    cron_start_date: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, nullable=True
-    )
-    cron_end_date: Mapped[Optional[datetime.datetime]] = mapped_column(db.DateTime, nullable=True)
+    cron: Mapped[Optional[int]]
+    cron_year: Mapped[Optional[str_120]]
+    cron_month: Mapped[Optional[str_120]]
+    cron_week: Mapped[Optional[str_120]]
+    cron_day: Mapped[Optional[str_120]]
+    cron_week_day: Mapped[Optional[str_120]]
+    cron_hour: Mapped[Optional[str_120]]
+    cron_min: Mapped[Optional[str_120]]
+    cron_sec: Mapped[Optional[str_120]]
+    cron_start_date: Mapped[Optional[datetime.datetime]]
+    cron_end_date: Mapped[Optional[datetime.datetime]]
 
-    intv: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    intv_type: Mapped[Optional[str]] = mapped_column(db.String(5), nullable=True)
-    intv_value: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    intv_start_date: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, nullable=True
-    )
-    intv_end_date: Mapped[Optional[datetime.datetime]] = mapped_column(db.DateTime, nullable=True)
+    intv: Mapped[Optional[int]]
+    intv_type: Mapped[Optional[str_5]]
+    intv_value: Mapped[Optional[int]]
+    intv_start_date: Mapped[Optional[datetime.datetime]]
+    intv_end_date: Mapped[Optional[datetime.datetime]]
+    ooff: Mapped[Optional[int]]
+    ooff_date: Mapped[Optional[datetime.datetime]]
 
-    ooff: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    ooff_date: Mapped[Optional[datetime.datetime]] = mapped_column(db.DateTime, nullable=True)
-
-    global_params: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-
-    sequence_tasks: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    global_params: Mapped[Optional[str_8000]]
+    sequence_tasks: Mapped[Optional[int]]
 
     task: Mapped[List["Task"]] = relationship(
         backref="project",
@@ -158,58 +154,46 @@ class Project(db.Model):
         passive_deletes=True,
     )
 
-    created: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, server_default=functions.now()
-    )
-    creator_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
-    updated: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, onupdate=functions.now()
-    )
-    updater_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    created: Mapped[Optional[timestamp]]
+    creator_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(User.id), index=True)
+    updated: Mapped[Optional[datetime.datetime]] = mapped_column(onupdate=functions.now())
+    updater_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(User.id), index=True)
 
     def __str__(self) -> str:
         """Return default string."""
         return str(self.name)
 
 
-@dataclass
 class TaskSourceType(db.Model):
     """Lookup table of task source types."""
 
     __tablename__ = "task_source_type"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str_120]]
     task: Mapped["Task"] = relationship(backref="source_type", lazy=True)
 
 
-@dataclass
 class TaskSourceQueryType(db.Model):
     """Lookup table of task query source types."""
 
     __tablename__ = "task_source_query_type"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str_120]]
     task: Mapped["Task"] = relationship(backref="query_type", lazy=True)
 
 
-@dataclass
 class TaskProcessingType(db.Model):
     """Lookup table of task query source types."""
 
     __tablename__ = "task_processing_type"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_120]]
     task: Mapped["Task"] = relationship(backref="processing_type", lazy=True)
 
 
-@dataclass
 class TaskStatus(db.Model):
     """Lookup table of task status types.
 
@@ -218,8 +202,8 @@ class TaskStatus(db.Model):
 
     __tablename__ = "task_status"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_1000]]
     task: Mapped[List["Task"]] = relationship(
         backref="status",
         lazy="dynamic",
@@ -234,7 +218,6 @@ class TaskStatus(db.Model):
     )
 
 
-@dataclass
 class Connection(db.Model):
     """Table containing all destination information."""
 
@@ -242,13 +225,13 @@ class Connection(db.Model):
 
     __tablename__ = "connection"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    description: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    address: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    primary_contact: Mapped[Optional[str]] = mapped_column(db.String(400), nullable=True)
-    primary_contact_email: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    primary_contact_phone: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_120]]
+    description: Mapped[Optional[str_120]]
+    address: Mapped[Optional[str_120]]
+    primary_contact: Mapped[Optional[str_400]]
+    primary_contact_email: Mapped[Optional[str_120]]
+    primary_contact_phone: Mapped[Optional[str_120]]
     ssh: Mapped[List["ConnectionSsh"]] = relationship(
         backref="connection",
         lazy=True,
@@ -284,7 +267,6 @@ class Connection(db.Model):
         return str(self.name)
 
 
-@dataclass
 class ConnectionSftp(db.Model):
     """Table conntaining sftp connection strings."""
 
@@ -292,16 +274,14 @@ class ConnectionSftp(db.Model):
 
     __tablename__ = "connection_sftp"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    connection_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
-    name: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    address: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    port: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    path: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    username: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    key: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
+    id: Mapped[intpk]
+    connection_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Connection.id), index=True)
+    name: Mapped[Optional[str_500]]
+    address: Mapped[Optional[str_500]]
+    port: Mapped[Optional[int]]
+    path: Mapped[Optional[str_500]]
+    username: Mapped[Optional[str_120]]
+    key: Mapped[Optional[str_8000]]
     password: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
     key_password: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
     task: Mapped["Task"] = relationship(
@@ -328,22 +308,19 @@ class ConnectionSftp(db.Model):
         return str(self.name)
 
 
-@dataclass
 class ConnectionSsh(db.Model):
-    """Table conntaining sftp connection strings."""
+    """Table conntaining ssh connection strings."""
 
     # pylint: disable=too-many-instance-attributes
 
     __tablename__ = "connection_ssh"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    connection_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
-    name: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    address: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    port: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    username: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[intpk]
+    connection_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Connection.id), index=True)
+    name: Mapped[Optional[str_500]]
+    address: Mapped[Optional[str_500]]
+    port: Mapped[Optional[int]]
+    username: Mapped[Optional[str_120]]
     password: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
     task_source: Mapped["Task"] = relationship(
         backref="source_ssh_conn",
@@ -356,7 +333,6 @@ class ConnectionSsh(db.Model):
         return str(self.name)
 
 
-@dataclass
 class ConnectionGpg(db.Model):
     """Table conntaining gpg keys."""
 
@@ -364,12 +340,10 @@ class ConnectionGpg(db.Model):
 
     __tablename__ = "connection_gpg"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    connection_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
-    name: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    key: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
+    id: Mapped[intpk]
+    connection_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Connection.id), index=True)
+    name: Mapped[Optional[str_500]]
+    key: Mapped[Optional[str_8000]]
     task_source: Mapped["Task"] = relationship(
         backref="file_gpg_conn",
         lazy=True,
@@ -381,22 +355,19 @@ class ConnectionGpg(db.Model):
         return str(self.name)
 
 
-@dataclass
 class ConnectionFtp(db.Model):
-    """Table conntaining sftp connection strings."""
+    """Table conntaining ftp connection strings."""
 
     # pylint: disable=too-many-instance-attributes
 
     __tablename__ = "connection_ftp"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    connection_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
-    name: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    address: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    path: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    username: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
+    id: Mapped[intpk]
+    connection_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Connection.id), index=True)
+    name: Mapped[Optional[str_500]]
+    address: Mapped[Optional[str_500]]
+    path: Mapped[Optional[str_500]]
+    username: Mapped[Optional[str_500]]
     password: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
     task: Mapped["Task"] = relationship(
         backref="destination_ftp_conn",
@@ -420,25 +391,22 @@ class ConnectionFtp(db.Model):
         return str(self.name)
 
 
-@dataclass
 class ConnectionSmb(db.Model):
-    """Table conntaining sftp connection strings."""
+    """Table conntaining smb connection strings."""
 
     # pylint: disable=too-many-instance-attributes
 
     __tablename__ = "connection_smb"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    connection_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    share_name: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    path: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    username: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
+    id: Mapped[intpk]
+    connection_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Connection.id), index=True)
+    name: Mapped[Optional[str_120]]
+    share_name: Mapped[Optional[str_500]]
+    path: Mapped[Optional[str_1000]]
+    username: Mapped[Optional[str_500]]
     password: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
-    server_ip: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    server_name: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
+    server_ip: Mapped[Optional[str_500]]
+    server_name: Mapped[Optional[str_500]]
     task: Mapped["Task"] = relationship(
         backref="destination_smb_conn",
         lazy=True,
@@ -461,33 +429,27 @@ class ConnectionSmb(db.Model):
         return str(self.name)
 
 
-@dataclass
 class ConnectionDatabaseType(db.Model):
     """Lookup table of task source database types."""
 
     __tablename__ = "connection_database_type"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_120]]
     database: Mapped["ConnectionDatabase"] = relationship(backref="database_type", lazy=True)
 
 
-@dataclass
 class ConnectionDatabase(db.Model):
     """List of task source databases and connection strings."""
 
     __tablename__ = "connection_database"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    type_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionDatabaseType.id), nullable=True, index=True
-    )
-    connection_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Connection.id), nullable=True, index=True
-    )
-    name: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
+    id: Mapped[intpk]
+    type_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(ConnectionDatabaseType.id))
+    connection_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Connection.id), index=True)
+    name: Mapped[Optional[str_500]]
     connection_string: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
-    timeout: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    timeout: Mapped[Optional[int]]
     task_source: Mapped["Task"] = relationship(
         backref="source_database_conn",
         lazy=True,
@@ -500,45 +462,39 @@ class ConnectionDatabase(db.Model):
         return str(self.name)
 
 
-@dataclass
 class TaskDestinationFileType(db.Model):
     """Lookup table of task destination file types."""
 
     __tablename__ = "task_destination_file_type"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
-    ext: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=False)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_120]]
+    ext: Mapped[Optional[str_120]] = mapped_column(nullable=False)
     task: Mapped["Task"] = relationship(backref="file_type", lazy=True)
 
 
-@dataclass
 class QuoteLevel(db.Model):
     """Lookup table for python quote levels."""
 
     __tablename__ = "quote_level"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(120), nullable=True)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_120]]
     task: Mapped["Task"] = relationship(backref="destination_file_quote_level", lazy=True)
 
 
-@dataclass
 class ProjectParam(db.Model):
     """Task parameters."""
 
     __tablename__ = "project_param"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    key: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    value: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-    project_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Project.id), nullable=True, index=True
-    )
-    sensitive: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
+    id: Mapped[intpk]
+    key: Mapped[Optional[str_500]]
+    value: Mapped[Optional[str_8000]]
+    project_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Project.id), index=True)
+    sensitive: Mapped[Optional[int]] = mapped_column(index=True)
 
 
-@dataclass
 class Task(db.Model):
     """Table containing task details."""
 
@@ -547,229 +503,196 @@ class Task(db.Model):
     __tablename__ = "task"
 
     # general information
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    project_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Project.id), nullable=True, index=True
-    )
-    status_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(TaskStatus.id), nullable=True, index=True
-    )
-    enabled: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    order: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    last_run: Mapped[Optional[datetime.datetime]] = mapped_column(db.DateTime, nullable=True)
-    last_run_job_id: Mapped[Optional[str]] = mapped_column(
-        db.String(30), nullable=True, index=True
-    )
-    next_run: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, nullable=True, index=True
-    )
-    created: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, server_default=functions.now(), index=True
-    )
-    creator_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_1000]]
+    project_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Project.id), index=True)
+    status_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(TaskStatus.id))
+    enabled: Mapped[Optional[int]] = mapped_column(index=True)
+    order: Mapped[Optional[int]] = mapped_column(index=True)
+    last_run: Mapped[Optional[datetime.datetime]]
+    last_run_job_id: Mapped[Optional[str_30]] = mapped_column(index=True)
+    next_run: Mapped[Optional[datetime.datetime]] = mapped_column(index=True)
+    created: Mapped[Optional[timestamp]] = mapped_column(index=True)
+    creator_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(User.id), index=True)
     updated: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, onupdate=functions.now(), index=True
+        onupdate=functions.now(), index=True
     )
-    updater_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(User.id), nullable=True, index=True
-    )
+    updater_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(User.id), index=True)
 
     """ data source """
     # db/sftp/smb/ftp
     source_type_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(TaskSourceType.id), nullable=True, index=True
+        db.ForeignKey(TaskSourceType.id), index=True
     )
 
     # source locations
 
     # git/url/code/sftp/ftp/smb/devops
     source_query_type_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(TaskSourceQueryType.id), nullable=True, index=True
+        db.ForeignKey(TaskSourceQueryType.id), index=True
     )
-    source_query_include_header: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    source_query_include_header: Mapped[Optional[int]]
 
-    source_require_sql_output: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    source_require_sql_output: Mapped[Optional[int]]
     # source git
-    source_git: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    source_git: Mapped[Optional[str_1000]]
 
     # source devops
-    source_devops: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    source_devops: Mapped[Optional[str_1000]]
 
     # source web url
-    source_url: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    source_url: Mapped[Optional[str_1000]]
 
     # source typed code
     source_code: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
 
     # cached source query
     source_cache: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
-    enable_source_cache: Mapped[Optional[int]] = mapped_column(
-        db.Integer, nullable=True, index=True
-    )
+    enable_source_cache: Mapped[Optional[int]] = mapped_column(index=True)
 
     query_smb_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSmb.id), index=True
     )
-    query_smb_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    query_smb_file: Mapped[Optional[str_1000]]
 
     query_sftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSftp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSftp.id), index=True
     )
-    query_sftp_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    query_sftp_file: Mapped[Optional[str_1000]]
 
     query_ftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionFtp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionFtp.id), index=True
     )
-    query_ftp_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    query_ftp_file: Mapped[Optional[str_1000]]
 
-    query_params: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
+    query_params: Mapped[Optional[str_8000]]
 
     # source smb sql file
-    source_smb_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    source_smb_delimiter: Mapped[Optional[str]] = mapped_column(db.String(10), nullable=True)
-    source_smb_ignore_delimiter: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    source_smb_file: Mapped[Optional[str_1000]]
+    source_smb_delimiter: Mapped[Optional[str_10]]
+    source_smb_ignore_delimiter: Mapped[Optional[int]]
     source_smb_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSmb.id), index=True
     )
 
     # source ftp sql file
-    source_ftp_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    source_ftp_delimiter: Mapped[Optional[str]] = mapped_column(db.String(10), nullable=True)
-    source_ftp_ignore_delimiter: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    source_ftp_file: Mapped[Optional[str_1000]]
+    source_ftp_delimiter: Mapped[Optional[str_10]]
+    source_ftp_ignore_delimiter: Mapped[Optional[int]]
     source_ftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionFtp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionFtp.id), index=True
     )
 
     # source sftp sql file
-    source_sftp_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    source_sftp_delimiter: Mapped[Optional[str]] = mapped_column(db.String(10), nullable=True)
-    source_sftp_ignore_delimiter: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    source_sftp_file: Mapped[Optional[str_1000]]
+    source_sftp_delimiter: Mapped[Optional[str_10]]
+    source_sftp_ignore_delimiter: Mapped[Optional[int]]
     source_sftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSftp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSftp.id), index=True
     )
 
     # source database
     source_database_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionDatabase.id), nullable=True, index=True
+        db.ForeignKey(ConnectionDatabase.id), index=True
     )
 
     source_ssh_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSsh.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSsh.id), index=True
     )
 
     """ processing script source """
 
-    processing_type_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(TaskProcessingType.id), nullable=True, index=True
-    )
+    processing_type_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(TaskProcessingType.id))
 
     processing_smb_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSmb.id), index=True
     )
-    processing_smb_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    processing_smb_file: Mapped[Optional[str_1000]]
 
     processing_sftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSftp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSftp.id), index=True
     )
-    processing_sftp_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    processing_sftp_file: Mapped[Optional[str_1000]]
 
     processing_ftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionFtp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionFtp.id), index=True
     )
-    processing_ftp_file: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    processing_ftp_file: Mapped[Optional[str_1000]]
 
-    processing_code: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-    processing_url: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    processing_git: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    processing_devops: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    processing_command: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    processing_code: Mapped[Optional[str_8000]]
+    processing_url: Mapped[Optional[str_1000]]
+    processing_git: Mapped[Optional[str_1000]]
+    processing_devops: Mapped[Optional[str_1000]]
+    processing_command: Mapped[Optional[str_1000]]
 
     """ destination """
 
     # destination file
-    destination_file_name: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    destination_file_delimiter: Mapped[Optional[str]] = mapped_column(db.String(10), nullable=True)
-    destination_ignore_delimiter: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    destination_file_line_terminator: Mapped[Optional[str]] = mapped_column(
-        db.String(10), nullable=True
-    )
+    destination_file_name: Mapped[Optional[str_1000]]
+    destination_file_delimiter: Mapped[Optional[str_10]]
+    destination_ignore_delimiter: Mapped[Optional[int]]
+    destination_file_line_terminator: Mapped[Optional[str_10]]
 
     # destination zip archive
-    destination_create_zip: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    destination_zip_name: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    destination_create_zip: Mapped[Optional[int]]
+    destination_zip_name: Mapped[Optional[str_1000]]
 
     # csv/txt/other
     destination_file_type_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(TaskDestinationFileType.id), nullable=True, index=True
+        db.ForeignKey(TaskDestinationFileType.id)
     )
 
     # save to sftp server
-    destination_sftp: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    destination_sftp_overwrite: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    destination_sftp: Mapped[Optional[int]] = mapped_column(index=True)
+    destination_sftp_overwrite: Mapped[Optional[int]]
     destination_sftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSftp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSftp.id), index=True
     )
-    destination_sftp_dont_send_empty_file: Mapped[Optional[int]] = mapped_column(
-        db.Integer, nullable=True
-    )
+    destination_sftp_dont_send_empty_file: Mapped[Optional[int]]
 
     # save to ftp server
-    destination_ftp: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    destination_ftp_overwrite: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    destination_ftp: Mapped[Optional[int]] = mapped_column(index=True)
+    destination_ftp_overwrite: Mapped[Optional[int]]
     destination_ftp_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionFtp.id), nullable=True, index=True
+        db.ForeignKey(ConnectionFtp.id), index=True
     )
-    destination_ftp_dont_send_empty_file: Mapped[Optional[int]] = mapped_column(
-        db.Integer, nullable=True
-    )
-
+    destination_ftp_dont_send_empty_file: Mapped[Optional[int]]
     # save to smb server
-    destination_smb: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    destination_smb_overwrite: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
+    destination_smb: Mapped[Optional[int]] = mapped_column(index=True)
+    destination_smb_overwrite: Mapped[Optional[int]]
     destination_smb_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionSmb.id), nullable=True, index=True
+        db.ForeignKey(ConnectionSmb.id), index=True
     )
-    destination_smb_dont_send_empty_file: Mapped[Optional[int]] = mapped_column(
-        db.Integer, nullable=True
-    )
+    destination_smb_dont_send_empty_file: Mapped[Optional[int]]
 
-    file_gpg: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    file_gpg_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(ConnectionGpg.id), nullable=True, index=True
-    )
+    file_gpg: Mapped[Optional[int]] = mapped_column(index=True)
+    file_gpg_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(ConnectionGpg.id), index=True)
 
     destination_quote_level_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(QuoteLevel.id), nullable=True, index=True
+        db.ForeignKey(QuoteLevel.id), index=True
     )
 
     """ email """
     # completion email
-    email_completion: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    email_completion_log: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    email_completion_file: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    email_completion_file_embed: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True)
-    email_completion_recipients: Mapped[Optional[str]] = mapped_column(
-        db.String(1000), nullable=True
-    )
-    email_completion_subject: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-    email_completion_message: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-    email_completion_dont_send_empty_file: Mapped[Optional[int]] = mapped_column(
-        db.Integer, nullable=True
-    )
+    email_completion: Mapped[Optional[int]] = mapped_column(index=True)
+    email_completion_log: Mapped[Optional[int]]
+    email_completion_file: Mapped[Optional[int]]
+    email_completion_file_embed: Mapped[Optional[int]]
+    email_completion_recipients: Mapped[Optional[str_1000]]
+    email_completion_subject: Mapped[Optional[str_8000]]
+    email_completion_message: Mapped[Optional[str_8000]]
+    email_completion_dont_send_empty_file: Mapped[Optional[int]]
 
     # error email
-    email_error: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
-    email_error_recipients: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
-    email_error_subject: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-    email_error_message: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
+    email_error: Mapped[Optional[int]]
+    email_error_recipients: Mapped[Optional[str_1000]]
+    email_error_subject: Mapped[Optional[str_8000]]
+    email_error_message: Mapped[Optional[str_8000]]
 
     # rerun on fail
-    max_retries: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
+    max_retries: Mapped[Optional[int]] = mapped_column(index=True)
 
-    est_duration: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
+    est_duration: Mapped[Optional[int]] = mapped_column(index=True)
 
     # tasklog link
     task: Mapped[List["TaskLog"]] = relationship(
@@ -807,55 +730,45 @@ class TaskLog(db.Model):
 
     __tablename__ = "task_log"
 
-    job_id: Mapped[Optional[int]] = mapped_column(db.String(1000), nullable=True, index=True)
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    task_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Task.id), nullable=True, index=True
-    )
-    status_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(TaskStatus.id), nullable=True, index=True
-    )
+    job_id: Mapped[Optional[str_1000]] = mapped_column(index=True)
+    id: Mapped[intpk]
+    task_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Task.id), index=True)
+    status_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(TaskStatus.id), index=True)
     message: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
     status_date: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, default=datetime.datetime.now, index=True
+        default=datetime.datetime.now, index=True
     )
-    error: Mapped[Optional[str]] = mapped_column(db.Integer, nullable=True, index=True)
+    error: Mapped[Optional[int]] = mapped_column(index=True)
 
     __table_args__ = (db.Index("ix_task_log_status_date_error", "status_date", "error"),)
 
 
-@dataclass
 class TaskFile(db.Model):
     """Table containing paths to task backup files."""
 
     __tablename__ = "task_file"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    name: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True, index=True)
-    task_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Task.id), nullable=True, index=True
-    )
-    job_id: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True, index=True)
-    size: Mapped[Optional[str]] = mapped_column(db.String(200), nullable=True, index=True)
-    path: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True, index=True)
-    file_hash: Mapped[Optional[str]] = mapped_column(db.String(1000), nullable=True)
+    id: Mapped[intpk]
+    name: Mapped[Optional[str_1000]] = mapped_column(index=True)
+    task_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Task.id), index=True)
+    job_id: Mapped[Optional[str_1000]] = mapped_column(index=True)
+    size: Mapped[Optional[str_200]] = mapped_column(index=True)
+    path: Mapped[Optional[str_1000]] = mapped_column(index=True)
+    file_hash: Mapped[Optional[str_1000]]
     created: Mapped[Optional[datetime.datetime]] = mapped_column(
-        db.DateTime, default=datetime.datetime.now, index=True
+        default=datetime.datetime.now, index=True
     )
 
     __table_args__ = (db.Index("ix_task_file_id_task_id_job_id", "id", "task_id", "job_id"),)
 
 
-@dataclass
 class TaskParam(db.Model):
     """Task parameters."""
 
     __tablename__ = "task_param"
 
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, index=True)
-    key: Mapped[Optional[str]] = mapped_column(db.String(500), nullable=True)
-    value: Mapped[Optional[str]] = mapped_column(db.String(8000), nullable=True)
-    task_id: Mapped[Optional[int]] = mapped_column(
-        db.Integer, db.ForeignKey(Task.id), nullable=True, index=True
-    )
-    sensitive: Mapped[Optional[int]] = mapped_column(db.Integer, nullable=True, index=True)
+    id: Mapped[intpk]
+    key: Mapped[Optional[str_500]]
+    value: Mapped[Optional[str_8000]]
+    task_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey(Task.id), index=True)
+    sensitive: Mapped[Optional[int]] = mapped_column(index=True)
