@@ -22,33 +22,68 @@ def run_task(task_id: int) -> Response:
     task = Task.query.filter_by(id=task_id).first()
     redis_client.delete("runner_" + str(task_id) + "_attempt")
     if task:
-        try:
-            requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task_id), timeout=60)
-            log = TaskLog(  # type: ignore[call-arg]
-                task_id=task.id,
-                status_id=7,
-                message=(current_user.full_name or "none") + ": Task manually run.",
-            )
-            db.session.add(log)
-            db.session.commit()
-            flash("Task run started.")
-        # pylint: disable=broad-except
-        except BaseException as e:
-            log = TaskLog(  # type: ignore[call-arg]
-                status_id=7,
-                error=1,
-                task_id=task_id,
-                message=(
-                    (current_user.full_name or "none")
-                    + ": Failed to manually run task. ("
-                    + str(task_id)
-                    + ")\n"
-                    + str(e)
-                ),
-            )
-            db.session.add(log)
-            db.session.commit()
-            flash("Failed to run task.")
+        # if the task is a sequence and enabled
+        # then kick off all other tasks with same rank.
+        if task.project.sequence_tasks == 1 and task.enabled == 1:
+            tasks = db.session.execute(
+                db.select(Task).filter_by(project_id=task.project_id, enabled=1, order=task.order)
+            ).scalars()
+            for tsk in tasks:
+                try:
+                    requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(tsk.id), timeout=60)
+                    log = TaskLog(  # type: ignore[call-arg]
+                        task_id=tsk.id,
+                        status_id=7,
+                        message=(current_user.full_name or "none") + ": Task manually run.",
+                    )
+                    db.session.add(log)
+                    db.session.commit()
+                    flash("Task run started.")
+                # pylint: disable=broad-except
+                except BaseException as e:
+                    log = TaskLog(  # type: ignore[call-arg]
+                        status_id=7,
+                        error=1,
+                        task_id=tsk.id,
+                        message=(
+                            (current_user.full_name or "none")
+                            + ": Failed to manually run task. ("
+                            + str(tsk.id)
+                            + ")\n"
+                            + str(e)
+                        ),
+                    )
+                    db.session.add(log)
+                    db.session.commit()
+                    flash("Failed to run task.")
+        else:
+            try:
+                requests.get(app.config["SCHEDULER_HOST"] + "/run/" + str(task_id), timeout=60)
+                log = TaskLog(  # type: ignore[call-arg]
+                    task_id=task.id,
+                    status_id=7,
+                    message=(current_user.full_name or "none") + ": Task manually run.",
+                )
+                db.session.add(log)
+                db.session.commit()
+                flash("Task run started.")
+            # pylint: disable=broad-except
+            except BaseException as e:
+                log = TaskLog(  # type: ignore[call-arg]
+                    status_id=7,
+                    error=1,
+                    task_id=task_id,
+                    message=(
+                        (current_user.full_name or "none")
+                        + ": Failed to manually run task. ("
+                        + str(task_id)
+                        + ")\n"
+                        + str(e)
+                    ),
+                )
+                db.session.add(log)
+                db.session.commit()
+                flash("Failed to run task.")
 
         return redirect(url_for("task_bp.one_task", task_id=task_id))
 
@@ -102,7 +137,6 @@ def duplicate_task(task_id: int) -> Response:
         new_task.creator_id = current_user.id
         new_task.updater_id = current_user.id
         new_task.status_id = None
-        new_task.order = None
         new_task.name = str(my_task.name or "") + " - Duplicated"
 
         db.session.add(new_task)
@@ -120,7 +154,7 @@ def duplicate_task(task_id: int) -> Response:
                 db.session.add(new_param)
                 db.session.commit()
 
-        return redirect(url_for("task_bp.one_task", task_id=new_task.id))
+        return redirect(url_for("task_edit_bp.task_edit_get", task_id=new_task.id))
 
     flash("Task does not exist.")
     return redirect(url_for("task_bp.all_tasks"))

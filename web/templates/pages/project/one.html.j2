@@ -54,7 +54,7 @@
     <article class="message is-info">
         <div class="message-body">
             {% if p.sequence_tasks == 1 %}
-                Tasks will run in sequence by rank (ascending) and then name (alpha ascending).
+                Tasks will run in sequence by rank (ascending) with tasks having same rank running at same time.
             {% else %}
                 Tasks will run in parallel.
             {% endif %}

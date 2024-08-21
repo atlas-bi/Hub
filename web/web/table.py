@@ -786,7 +786,9 @@ def project_all_tasks(project_id: int) -> Response:
         .outerjoin(TaskStatus, TaskStatus.id == Task.status_id)
         .filter(Task.project_id == project_id)
         .add_columns(*cols.values())
-        .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
+        .order_by(
+            Task.order.asc(), Task.name.asc(), text(str(cols[split_sort[0]]) + " " + split_sort[1])
+        )
     )
 
     me.append({"total": str(tasks.count() or 0)})  # runs.total

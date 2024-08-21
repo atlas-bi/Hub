@@ -172,50 +172,66 @@ class Runner:
         redis_client.delete(f"runner_{task_id}_attempt")
         task.status_id = 4
         task.est_duration = (datetime.datetime.now() - task.last_run).total_seconds()
-
         # if this is a sequence job, trigger the next job.
         if task.project.sequence_tasks == 1:
-            task_id_list = [
-                x.id
-                for x in Task.query.filter_by(enabled=1)
-                .filter_by(project_id=task.project_id)
-                .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
+            task_list = (
+                db.session.execute(
+                    db.select(Task)
+                    .filter_by(enabled=1, project_id=task.project_id)
+                    .where(Task.order > task.order)
+                    .order_by(Task.order.asc())
+                )
+                .scalars()
                 .all()
-            ]
+            )
+
+            # check if any are still running in same order.
+            runners = db.session.execute(
+                db.select(Task)
+                .filter_by(enabled=1, order=task.order, project_id=task.project_id)
+                # 4 is completed. This also filters out error tasks
+                .where(Task.status_id != 4)
+                .where(Task.id != task.id)
+            ).scalar()
+
             # potentially the task was disabled while running
             # and removed from list. when that happens we should
             # quit.
-            if task.id in task_id_list:
-                next_task_id = task_id_list[
-                    task_id_list.index(task.id) + 1 : task_id_list.index(task.id) + 2
-                ]
-                # find a way to check that next ids are the same rank then loop through them.
-                # also will need to make sure that all tasks in same rank are done before kicking off next rank job.
-                if next_task_id:
-                    # trigger next task
-                    RunnerLog(
-                        self.task,
-                        self.run_id,
-                        8,
-                        f"Triggering run of next sequence job: {next_task_id}.",
-                    )
+            # also make sure everything is completed before
+            # going on to starting next tasks.
+            if (
+                db.session.execute(db.select(Task).filter_by(enabled=1, id=task.id)).scalar()
+                and not runners
+                and task_list
+            ):
+                # get the next rank from the task_list.
+                task_sequence = task_list[0].order
 
-                    next_task = Task.query.filter_by(id=next_task_id[0]).first()
+                # kick off all the tasks in task_list that match the next rank.
+                for tsk in task_list:
+                    if tsk.order == task_sequence:
+                        # trigger next tasks
+                        RunnerLog(
+                            self.task,
+                            self.run_id,
+                            8,
+                            f"Triggering run of next sequence job: {tsk.id}.",
+                        )
 
-                    RunnerLog(
-                        next_task,
-                        None,
-                        8,
-                        f"Run triggered by previous sequence job: {task.id}.",
-                    )
+                        RunnerLog(
+                            tsk,
+                            None,
+                            8,
+                            f"Run triggered by previous sequence job: {task.id}.",
+                        )
 
-                    requests.get(
-                        app.config["RUNNER_HOST"] + "/" + str(next_task_id[0]),
-                        timeout=60,
-                    )
-
-                else:
-                    RunnerLog(self.task, self.run_id, 8, "Sequence completed!")
+                        requests.get(
+                            app.config["RUNNER_HOST"] + "/" + str(tsk.id),
+                            timeout=60,
+                        )
+            # if there isn't anything in task list, add log that sequence is completed.
+            elif not task_list:
+                RunnerLog(self.task, self.run_id, 8, "Sequence completed!")
 
         task.last_run_job_id = None
         task.last_run = datetime.datetime.now()
