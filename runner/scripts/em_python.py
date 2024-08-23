@@ -195,6 +195,7 @@ class PyProcesser:
                     "smb": "pysmb",
                     "dotenv": "python-dotenv",
                     "azure": "azure-devops",
+                    "office365": "Office365-REST-Python-Client",
                 }
 
                 # clean list
