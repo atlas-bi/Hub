@@ -9,6 +9,7 @@ run with::
    --cov --cov-append --cov-branch --cov-report=term-missing --disable-warnings
 
 """
+
 # flake8: noqa,
 # pylint: skip-file
 # check all admin links
@@ -228,7 +229,7 @@ def test_delete_task(client_fixture: fixture) -> None:
 def test_run_task(client_fixture: fixture) -> None:
     p_id, t_id = create_demo_task(db.session)
     page = client_fixture.get(f"/api/run/{t_id}")
-    assert "Connection refused" in page.json["error"]
+    assert page.json == {"message": "Scheduler: task job added!"}
     assert page.status_code == 200
 
 
@@ -241,9 +242,7 @@ def test_run_task_with_delay(client_fixture: fixture) -> None:
 
     # check that job is in scheduler
     scheduled_task = [
-        x
-        for x in atlas_scheduler.get_jobs()
-        if len(x.args) > 0 and x.args[0] == str(t_id)
+        x for x in atlas_scheduler.get_jobs() if len(x.args) > 0 and x.args[0] == str(t_id)
     ][0]
     assert (
         scheduled_task.next_run_time.replace(microsecond=0, second=0).isoformat()

@@ -10,6 +10,7 @@ from flask import current_app as app
 from flask import jsonify
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
+from werkzeug.wrappers import Response
 
 from runner import executor
 from runner.model import (
@@ -36,6 +37,7 @@ from runner.scripts.em_smtp import Smtp
 from runner.scripts.em_sqlserver import connect as sql_connect
 from runner.scripts.em_ssh import connect as ssh_connect
 from runner.scripts.task_runner import Runner
+from runner.web.filters import datetime_format
 
 web_bp = Blueprint("web_bp", __name__)
 
@@ -43,19 +45,19 @@ env = Environment(
     loader=PackageLoader("runner", "templates"),
     autoescape=select_autoescape(["html", "xml"]),
 )
-
+env.filters["datetime_format"] = datetime_format
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
 
 
 @web_bp.route("/api")
-def alive() -> dict:
+def alive() -> Response:
     """Check API status."""
     return jsonify({"status": "alive"})
 
 
 @web_bp.route("/api/send_ftp/<task_id>/<run_id>/<file_id>")
-def send_ftp(task_id: int, run_id: int, file_id: int) -> dict:
+def send_ftp(task_id: int, run_id: int, file_id: int) -> Response:
     """Send file to FPT server specified in the task.
 
     File is loaded from the backup SMB file server into a tempfile.
@@ -99,7 +101,7 @@ def send_ftp(task_id: int, run_id: int, file_id: int) -> dict:
 
 
 @web_bp.route("/api/send_sftp/<run_id>/<file_id>")
-def send_sftp(run_id: int, file_id: int) -> dict:
+def send_sftp(run_id: int, file_id: int) -> Response:
     """Send file to SFPT server specified in the task.
 
     File is loaded from the backup SMB file server into a tempfile.
@@ -146,7 +148,7 @@ def send_sftp(run_id: int, file_id: int) -> dict:
 
 
 @web_bp.route("/api/send_smb/<run_id>/<file_id>")
-def send_smb(run_id: int, file_id: int) -> dict:
+def send_smb(run_id: int, file_id: int) -> Response:
     """Send file to SMB server specified in the task.
 
     File is loaded from the backup SMB file server into a tempfile.
@@ -192,8 +194,8 @@ def send_smb(run_id: int, file_id: int) -> dict:
         return jsonify({"error": str(e)})
 
 
-@web_bp.route("/api/send_email/<task_id>/<run_id>/<file_id>")
-def send_email(run_id: int, file_id: int) -> dict:
+@web_bp.route("/api/send_email/<run_id>/<file_id>")
+def send_email(run_id: int, file_id: int) -> Response:
     """Send file to email address specified in the task.
 
     File is loaded from the backup SMB file server into a tempfile.
@@ -232,12 +234,14 @@ def send_email(run_id: int, file_id: int) -> dict:
             run_id=str(run_id),
             recipients=task.email_completion_recipients,
             short_message=f"Atlas Hub: {task.name} data emailed.",
-            subject="(Manual Send) Project: "
-            + task.project.name
-            + " / Task: "
-            + task.name,
+            subject="(Manual Send) Project: " + task.project.name + " / Task: " + task.name,
             message=template.render(
-                task=task, success=1, date=date, logs=[], org=app.config["ORG_NAME"]
+                task=task,
+                success=1,
+                date=date,
+                logs=[],
+                host=app.config["WEB_HOST"],
+                org=app.config["ORG_NAME"],
             ),
             attachments=[x.name for x in downloaded_files],
         )
@@ -250,7 +254,7 @@ def send_email(run_id: int, file_id: int) -> dict:
 
 
 @web_bp.route("/api/<task_id>")
-def run(task_id: int) -> dict:
+def run(task_id: int) -> Response:
     """Run specified task."""
     executor.submit(Runner, task_id)
 
@@ -258,7 +262,7 @@ def run(task_id: int) -> dict:
 
 
 @web_bp.route("/api/<task_id>/source_code")
-def task_get_source_code(task_id: int) -> dict:
+def task_get_source_code(task_id: int) -> Response:
     """Get source code for a task."""
     try:
         task = Task.query.filter_by(id=task_id).first()
@@ -281,7 +285,7 @@ def task_get_source_code(task_id: int) -> dict:
 
 
 @web_bp.route("/api/<task_id>/processing_code")
-def task_get_processing_git_code(task_id: int) -> dict:
+def task_get_processing_git_code(task_id: int) -> Response:
     """Get processing code for a task."""
     try:
         task = Task.query.filter_by(id=task_id).first()
@@ -299,9 +303,7 @@ def task_get_processing_git_code(task_id: int) -> dict:
             # if there is a branch we need rearrange the url.
             branch = re.findall(r"(&version[=]GB.+?)$", task.processing_devops)
             url = (
-                re.sub(
-                    (branch[0] if len(branch) > 0 else ""), "", task.processing_devops
-                )
+                re.sub((branch[0] if len(branch) > 0 else ""), "", task.processing_devops)
                 + "/"
                 + task.processing_command
                 + (branch[0] if len(branch) > 0 else "")
@@ -314,7 +316,7 @@ def task_get_processing_git_code(task_id: int) -> dict:
 
 
 @web_bp.route("/api/file/<file_id>")
-def get_task_file_download(file_id: int) -> dict:
+def get_task_file_download(file_id: int) -> Response:
     """Download file from SMB backup server."""
     my_file = TaskFile.query.filter_by(id=file_id).first()
     task = my_file.task
@@ -362,24 +364,18 @@ def database_online(database_id: int) -> str:
         database_connection = ConnectionDatabase.query.filter_by(id=database_id).first()
         if database_connection.type_id == 2:
             conn, _ = sql_connect(
-                em_decrypt(
-                    database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip(),
+                em_decrypt(database_connection.connection_string, app.config["PASS_KEY"]).strip(),
                 database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
             )
             conn.close()
         elif database_connection.type_id == 3:
             conn, _ = jdbc_connect(
-                em_decrypt(
-                    database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip(),
+                em_decrypt(database_connection.connection_string, app.config["PASS_KEY"]).strip(),
             )
             conn.close()
         else:
             conn, _ = pg_connect(
-                em_decrypt(
-                    database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip(),
+                em_decrypt(database_connection.connection_string, app.config["PASS_KEY"]).strip(),
                 database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
             )
             conn.close()

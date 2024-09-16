@@ -37,9 +37,7 @@ def schedule() -> Response:
 
     Merge two lists and put 0 where needed.
     """
-    now = datetime.datetime.now(
-        datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
-    )
+    now = datetime.datetime.now(datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo)
     tomorrow = now + datetime.timedelta(hours=24)
 
     hour_list = ["now"]
@@ -100,7 +98,7 @@ def schedule() -> Response:
 
 
 @web_bp.route("/api/add/<task_id>")
-def add_task(task_id: int) -> str:
+def add_task(task_id: int) -> Response:
     """Schedule task to run.
 
     First check for any existing schedules, remove them, then add a new schedule.

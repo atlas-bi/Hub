@@ -69,7 +69,7 @@ class Postgres:
         log = TaskLog(
             task_id=self.task.id,
             job_id=self.run_id,
-            status_id=20,
+            status_id=21,
             message=("Getting first %d query rows." % size),
         )
         db.session.add(log)

@@ -14,6 +14,7 @@ class Config:
     """All prod configuration set here. For dev there are overrides below."""
 
     # pylint: disable=too-few-public-methods
+    # ruff: noqa: RUF012
 
     ALLOWED_HOSTS = ["*", "localhost"]
 
@@ -244,7 +245,7 @@ class Config:
     """
 
     DEVOPS_URL = "https://dev.azure.com/orgname/"
-    DEVOPS_TOKEN = r"token"
+    DEVOPS_TOKEN = r"token"  # noqa: S105
 
     """
         Default SQL Connection Settings
@@ -324,6 +325,8 @@ class DevConfig(Config):
 
 
 class DemoConfig(Config):
+    """Configuration for a demo."""
+
     DEBUG = False
     DEMO = True
     AUTH_METHOD = "DEV"
@@ -348,7 +351,7 @@ class TestConfig(DevConfig):
     # pylint: disable=too-few-public-methods
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "postgresql+psycopg2://postgres@localhost/atlas_hub_scrap_test"
+        "postgresql+psycopg2://postgres@localhost/atlas_hub_scrap_test",
         # "sqlite:///../test.sqlite",
     ).replace("postgres://", "postgresql://")
 
@@ -371,9 +374,9 @@ class TestConfig(DevConfig):
 
     # docker run -p 22:22 -d emberstack/sftp --name sftp
     SFTP_SERVER_USER = "demo"
-    SFTP_SERVER_PASS = "demo"
+    SFTP_SERVER_PASS = "demo"  # noqa: S105
 
     # docker run -d --name ftpd_server -p 21:21  onekilo79/ftpd_test
     # docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e FTP_USER_NAME=demo -e FTP_USER_PASS=demo -e FTP_USER_HOME=/home/demo -e "PUBLICHOST=localhost" -e "ADDED_FLAGS=-d -d" stilliard/pure-ftpd
     FTP_SERVER_USER = "demo"
-    FTP_SERVER_PASS = "demo"
+    FTP_SERVER_PASS = "demo"  # noqa: S105

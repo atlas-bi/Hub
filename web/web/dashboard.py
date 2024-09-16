@@ -32,7 +32,7 @@ dashboard_bp = Blueprint("dashboard_bp", __name__)
 
 @dashboard_bp.route("/search")
 @login_required
-def search() -> dict:
+def search() -> Response:
     """Search data."""
     my_json = {}
 
@@ -66,9 +66,9 @@ def search() -> dict:
         .all()
     )
     for row in connections:
-        connection_json[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-        ] = " / ".join([x for x in row[1:] if x.strip()])
+        connection_json[url_for("connection_bp.one_connection", connection_id=row[0])] = (
+            " / ".join([x for x in row[1:] if x.strip()])
+        )
 
     connection_sftp = {}
     sftp_connections = db.session.query(
@@ -77,11 +77,10 @@ def search() -> dict:
         ConnectionSftp.name,
         ConnectionSftp.address,
     )
-    for row in sftp_connections.all():
+    for row2 in sftp_connections.all():
         connection_sftp[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-            + f"?s={row[1]}"
-        ] = " / ".join([x for x in row[2:] if x.strip()])
+            url_for("connection_bp.one_connection", connection_id=row2[0]) + f"?s={row2[1]}"
+        ] = " / ".join([x for x in row2[2:] if x.strip()])
     connection_ftp = {}
     ftp_connections = db.session.query(
         ConnectionFtp.connection_id,
@@ -89,20 +88,18 @@ def search() -> dict:
         ConnectionFtp.name,
         ConnectionFtp.address,
     )
-    for row in ftp_connections.all():
+    for row3 in ftp_connections.all():
         connection_ftp[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-            + f"?s={row[1]}"
-        ] = " / ".join([x for x in row[2:] if x.strip()])
+            url_for("connection_bp.one_connection", connection_id=row3[0]) + f"?s={row3[1]}"
+        ] = " / ".join([x for x in row3[2:] if x.strip()])
     connection_database = {}
     database_connections = db.session.query(
         ConnectionDatabase.connection_id, ConnectionDatabase.id, ConnectionDatabase.name
     )
-    for row in database_connections.all():
+    for row4 in database_connections.all():
         connection_database[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-            + f"?s={row[1]}"
-        ] = " / ".join([x for x in row[2:] if x.strip()])
+            url_for("connection_bp.one_connection", connection_id=row4[0]) + f"?s={row4[1]}"
+        ] = " / ".join([x for x in row4[2:] if x.strip()])
     connection_smb = {}
     smb_connections = db.session.query(
         ConnectionSmb.connection_id,
@@ -112,11 +109,10 @@ def search() -> dict:
         ConnectionSmb.server_ip,
         ConnectionSmb.share_name,
     )
-    for row in smb_connections.all():
+    for row5 in smb_connections.all():
         connection_smb[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-            + f"?s={row[1]}"
-        ] = " / ".join([x for x in row[2:] if x.strip()])
+            url_for("connection_bp.one_connection", connection_id=row5[0]) + f"?s={row5[1]}"
+        ] = " / ".join([x for x in row5[2:] if x.strip()])
     connection_ssh = {}
     ssh_connections = db.session.query(
         ConnectionSsh.connection_id,
@@ -124,20 +120,18 @@ def search() -> dict:
         ConnectionSsh.name,
         ConnectionSsh.address,
     )
-    for row in ssh_connections.all():
+    for row6 in ssh_connections.all():
         connection_ssh[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-            + f"?s={row[1]}"
-        ] = " / ".join([x for x in row[2:] if x.strip()])
+            url_for("connection_bp.one_connection", connection_id=row6[0]) + f"?s={row6[1]}"
+        ] = " / ".join([x for x in row6[2:] if x.strip()])
     connection_gpg = {}
     gpg_connections = db.session.query(
         ConnectionGpg.connection_id, ConnectionGpg.id, ConnectionGpg.name
     )
-    for row in gpg_connections.all():
+    for row7 in gpg_connections.all():
         connection_gpg[
-            url_for("connection_bp.one_connection", connection_id=row[0])
-            + f"?s={row[1]}"
-        ] = " / ".join([x for x in row[2:] if x.strip()])
+            url_for("connection_bp.one_connection", connection_id=row7[0]) + f"?s={row7[1]}"
+        ] = " / ".join([x for x in row7[2:] if x.strip()])
 
     my_json["connection"] = connection_json
     my_json["sftp connection"] = connection_sftp
@@ -226,9 +220,7 @@ def dash_orphans_delete() -> Response:
     """Button to delete any jobs without a linked tasks."""
     try:
         output = json.loads(
-            requests.get(
-                app.config["SCHEDULER_HOST"] + "/delete-orphans", timeout=60
-            ).text,
+            requests.get(app.config["SCHEDULER_HOST"] + "/delete-orphans", timeout=60).text,
         )
         msg = output["message"]
         add_user_log(msg, 0)

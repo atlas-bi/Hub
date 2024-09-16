@@ -172,48 +172,66 @@ class Runner:
         redis_client.delete(f"runner_{task_id}_attempt")
         task.status_id = 4
         task.est_duration = (datetime.datetime.now() - task.last_run).total_seconds()
-
         # if this is a sequence job, trigger the next job.
         if task.project.sequence_tasks == 1:
-            task_id_list = [
-                x.id
-                for x in Task.query.filter_by(enabled=1)
-                .filter_by(project_id=task.project_id)
-                .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
+            task_list = (
+                db.session.execute(
+                    db.select(Task)
+                    .filter_by(enabled=1, project_id=task.project_id)
+                    .where(Task.order > task.order)
+                    .order_by(Task.order.asc())
+                )
+                .scalars()
                 .all()
-            ]
+            )
+
+            # check if any are still running in same order.
+            runners = db.session.execute(
+                db.select(Task)
+                .filter_by(enabled=1, order=task.order, project_id=task.project_id)
+                # 4 is completed. This also filters out error tasks
+                .where(Task.status_id != 4)
+                .where(Task.id != task.id)
+            ).scalar()
+
             # potentially the task was disabled while running
             # and removed from list. when that happens we should
             # quit.
-            if task.id in task_id_list:
-                next_task_id = task_id_list[
-                    task_id_list.index(task.id) + 1 : task_id_list.index(task.id) + 2
-                ]
-                if next_task_id:
-                    # trigger next task
-                    RunnerLog(
-                        self.task,
-                        self.run_id,
-                        8,
-                        f"Triggering run of next sequence job: {next_task_id}.",
-                    )
+            # also make sure everything is completed before
+            # going on to starting next tasks.
+            if (
+                db.session.execute(db.select(Task).filter_by(enabled=1, id=task.id)).scalar()
+                and not runners
+                and task_list
+            ):
+                # get the next rank from the task_list.
+                task_sequence = task_list[0].order
 
-                    next_task = Task.query.filter_by(id=next_task_id[0]).first()
+                # kick off all the tasks in task_list that match the next rank.
+                for tsk in task_list:
+                    if tsk.order == task_sequence:
+                        # trigger next tasks
+                        RunnerLog(
+                            self.task,
+                            self.run_id,
+                            8,
+                            f"Triggering run of next sequence job: {tsk.id}.",
+                        )
 
-                    RunnerLog(
-                        next_task,
-                        None,
-                        8,
-                        f"Run triggered by previous sequence job: {task.id}.",
-                    )
+                        RunnerLog(
+                            tsk,
+                            None,
+                            8,
+                            f"Run triggered by previous sequence job: {task.id}.",
+                        )
 
-                    requests.get(
-                        app.config["RUNNER_HOST"] + "/" + str(next_task_id[0]),
-                        timeout=60,
-                    )
-
-                else:
-                    RunnerLog(self.task, self.run_id, 8, "Sequence completed!")
+                        requests.get(
+                            app.config["RUNNER_HOST"] + "/" + str(tsk.id),
+                            timeout=60,
+                        )
+            # if there isn't anything in task list, add log that sequence is completed.
+            elif not task_list:
+                RunnerLog(self.task, self.run_id, 8, "Sequence completed!")
 
         task.last_run_job_id = None
         task.last_run = datetime.datetime.now()
@@ -227,13 +245,9 @@ class Runner:
                 RunnerLog(self.task, self.run_id, 8, "Loading query...")
                 query = self.__get_query()
             except BaseException as e:
-                raise RunnerException(
-                    self.task, self.run_id, 8, f"Failed to load query.\n{e}"
-                )
+                raise RunnerException(self.task, self.run_id, 8, f"Failed to load query.\n{e}")
 
-            RunnerLog(
-                self.task, self.run_id, 8, "Starting query run, waiting for results..."
-            )
+            RunnerLog(self.task, self.run_id, 8, "Starting query run, waiting for results...")
 
             if external_db.database_type.id == 1:  # postgres
                 try:
@@ -243,8 +257,7 @@ class Runner:
                         connection=em_decrypt(
                             external_db.connection_string, app.config["PASS_KEY"]
                         ),
-                        timeout=external_db.timeout
-                        or app.config["DEFAULT_SQL_TIMEOUT"],
+                        timeout=external_db.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
                         directory=self.temp_path,
                     ).run(query)
 
@@ -264,8 +277,7 @@ class Runner:
                         connection=em_decrypt(
                             external_db.connection_string, app.config["PASS_KEY"]
                         ),
-                        timeout=external_db.timeout
-                        or app.config["DEFAULT_SQL_TIMEOUT"],
+                        timeout=external_db.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
                         directory=self.temp_path,
                     ).run(query)
 
@@ -306,9 +318,7 @@ class Runner:
         elif self.task.source_type_id == 2:  # smb file
             if self.task.source_smb_file:
                 RunnerLog(self.task, self.run_id, 10, "Loading data from server...")
-                file_name = self.param_loader.insert_file_params(
-                    self.task.source_smb_file
-                )
+                file_name = self.param_loader.insert_file_params(self.task.source_smb_file)
                 file_name = DateParsing(
                     task=self.task,
                     run_id=self.run_id,
@@ -327,9 +337,7 @@ class Runner:
         elif self.task.source_type_id == 3:  # sftp file
             if self.task.source_sftp_file:
                 RunnerLog(self.task, self.run_id, 9, "Loading data from server...")
-                file_name = self.param_loader.insert_file_params(
-                    self.task.source_sftp_file
-                )
+                file_name = self.param_loader.insert_file_params(self.task.source_sftp_file)
                 file_name = DateParsing(
                     task=self.task,
                     run_id=self.run_id,
@@ -348,9 +356,7 @@ class Runner:
         elif self.task.source_type_id == 4:  # ftp file
             if self.task.source_ftp_file:
                 RunnerLog(self.task, self.run_id, 13, "Loading data from server...")
-                file_name = self.param_loader.insert_file_params(
-                    self.task.source_ftp_file
-                )
+                file_name = self.param_loader.insert_file_params(self.task.source_ftp_file)
                 file_name = DateParsing(
                     task=self.task,
                     run_id=self.run_id,
@@ -390,9 +396,7 @@ class Runner:
             query = self.source_loader.source()
 
         elif self.task.source_query_type_id == 2:  # smb
-            file_name = self.param_loader.insert_file_params(
-                self.task.source_query_file
-            )
+            file_name = self.param_loader.insert_file_params(self.task.source_query_file)
             file_name = DateParsing(
                 task=self.task,
                 run_id=self.run_id,
@@ -428,10 +432,7 @@ class Runner:
         processing_script_name = self.temp_path / (self.run_id + ".py")
 
         my_file = ""
-        if (
-            self.task.processing_type_id == 1
-            and self.task.processing_smb_id is not None
-        ):
+        if self.task.processing_type_id == 1 and self.task.processing_smb_id is not None:
             file_name = self.param_loader.insert_file_params(self.task.source_smb_file)
             file_name = DateParsing(
                 task=self.task,
@@ -450,13 +451,8 @@ class Runner:
                 .name
             ).read_text("utf8")
 
-        elif (
-            self.task.processing_type_id == 2
-            and self.task.processing_sftp_id is not None
-        ):
-            file_name = self.param_loader.insert_file_params(
-                self.task.processing_sftp_file
-            )
+        elif self.task.processing_type_id == 2 and self.task.processing_sftp_id is not None:
+            file_name = self.param_loader.insert_file_params(self.task.processing_sftp_file)
             file_name = DateParsing(
                 task=self.task,
                 run_id=self.run_id,
@@ -474,13 +470,8 @@ class Runner:
                 .name
             ).read_text("utf8")
 
-        elif (
-            self.task.processing_type_id == 3
-            and self.task.processing_ftp_id is not None
-        ):
-            file_name = self.param_loader.insert_file_params(
-                self.task.processing_ftp_file
-            )
+        elif self.task.processing_type_id == 3 and self.task.processing_ftp_id is not None:
+            file_name = self.param_loader.insert_file_params(self.task.processing_ftp_file)
             file_name = DateParsing(
                 task=self.task,
                 run_id=self.run_id,
@@ -500,10 +491,7 @@ class Runner:
 
         elif self.task.processing_type_id == 4 and self.task.processing_git is not None:
             # if a dir is specified then download all files
-            if (
-                self.task.processing_command is not None
-                and self.task.processing_command != ""
-            ):
+            if self.task.processing_command is not None and self.task.processing_command != "":
                 try:
                     split_url = re.split("#|@", self.task.processing_git)
                     branch = None
@@ -518,12 +506,8 @@ class Runner:
                             base_url,
                             flags=re.IGNORECASE,
                         )
-                        .replace(
-                            "<username>", urllib.parse.quote(app.config["GIT_USERNAME"])
-                        )
-                        .replace(
-                            "<password>", urllib.parse.quote(app.config["GIT_PASSWORD"])
-                        )
+                        .replace("<username>", urllib.parse.quote(app.config["GIT_USERNAME"]))
+                        .replace("<password>", urllib.parse.quote(app.config["GIT_PASSWORD"]))
                     )
 
                     cmd = (
@@ -572,8 +556,7 @@ class Runner:
                         run_id=self.run_id,
                         cmd=cmd,
                         success_msg="Repo cloned",
-                        error_msg="Failed to clone repo: %s"
-                        % (self.task.processing_url,),
+                        error_msg="Failed to clone repo: %s" % (self.task.processing_url,),
                     ).shell()
 
                     processing_script_name = str(self.temp_path) + (
@@ -589,26 +572,16 @@ class Runner:
             else:
                 my_file = self.source_loader.web_url(self.task.processing_url)
 
-        elif (
-            self.task.processing_type_id == 6 and self.task.processing_code is not None
-        ):
+        elif self.task.processing_type_id == 6 and self.task.processing_code is not None:
             my_file = self.task.processing_code
 
-        elif (
-            self.task.processing_type_id == 7
-            and self.task.processing_devops is not None
-        ):
+        elif self.task.processing_type_id == 7 and self.task.processing_devops is not None:
             # if a dir is specified then download all files
-            if (
-                self.task.processing_command is not None
-                and self.task.processing_command != ""
-            ):
+            if self.task.processing_command is not None and self.task.processing_command != "":
                 try:
                     token = app.config["DEVOPS_TOKEN"]
                     creds = cd.BasicAuthentication("", token)
-                    connection = Connection(
-                        base_url=app.config["DEVOPS_URL"], creds=creds
-                    )
+                    connection = Connection(base_url=app.config["DEVOPS_URL"], creds=creds)
                     # Get a client (the "core" client provides access to projects, teams, etc)
                     core_client = connection.clients.get_core_client()
 
@@ -625,18 +598,14 @@ class Runner:
                         rf"\.(?:com\/{org_name[0]}\/{project[0]}\/_git)\/(.+?)\?", url
                     )
                     # need this to get the projects id
-                    projects = [
-                        i for i in get_projects_response if (i.name == project[0])
-                    ]
+                    projects = [i for i in get_projects_response if (i.name == project[0])]
                     path = re.findall(r"(path[=])\/(.+?)(&|$)", url)
 
                     # if branch is specified, we need to get that, else pass in main branch.
                     this_branch = re.findall(r"(version[=]GB)(.+?)$", url)
                     version = AttributeDict(
                         {
-                            "version": (
-                                "main" if len(this_branch) == 0 else this_branch[0][1]
-                            ),
+                            "version": ("main" if len(this_branch) == 0 else this_branch[0][1]),
                             "version_type": 0,
                             "version_options": 0,
                         }
@@ -699,9 +668,7 @@ class Runner:
 
         # pylint: disable=broad-except
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 8, f"Processing script failure:\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 8, f"Processing script failure:\n{e}")
 
         try:
             # run processing script
@@ -710,15 +677,15 @@ class Runner:
                 run_id=self.run_id,
                 directory=self.temp_path,
                 source_files=self.source_files,
-                script=self.task.processing_command or processing_script_name.name
-                if self.task.processing_type_id != 6  # source code
-                else processing_script_name.name,
+                script=(
+                    self.task.processing_command or processing_script_name.name
+                    if self.task.processing_type_id != 6  # source code
+                    else processing_script_name.name
+                ),
                 params=self.param_loader,
             ).run()
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 8, f"Processing script failure:\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 8, f"Processing script failure:\n{e}")
 
         # allow processor to rename file
         if output:
@@ -746,8 +713,8 @@ class Runner:
 
                         os.link(data_file.name, original_name)
 
-                    data_file.name = original_name  # type: ignore[misc]
-                    self.source_files.append(data_file)
+                    data_file.name = original_name
+                    self.source_files.append(data_file)  # type: ignore
 
             except BaseException as e:
                 raise RunnerException(
@@ -825,10 +792,7 @@ class Runner:
 
             # send to sftp
             if self.task.destination_sftp == 1 and self.task.destination_sftp_conn:
-                if (
-                    self.task.destination_sftp_dont_send_empty_file == 1
-                    and this_file_size == 0
-                ):
+                if self.task.destination_sftp_dont_send_empty_file == 1 and this_file_size == 0:
                     RunnerLog(
                         self.task,
                         self.run_id,
@@ -848,10 +812,7 @@ class Runner:
 
             # send to ftp
             if self.task.destination_ftp == 1 and self.task.destination_ftp_conn:
-                if (
-                    self.task.destination_ftp_dont_send_empty_file == 1
-                    and this_file_size == 0
-                ):
+                if self.task.destination_ftp_dont_send_empty_file == 1 and this_file_size == 0:
                     RunnerLog(
                         self.task,
                         self.run_id,
@@ -871,10 +832,7 @@ class Runner:
 
             # save to smb
             if self.task.destination_smb == 1 and self.task.destination_smb_conn:
-                if (
-                    self.task.destination_smb_dont_send_empty_file == 1
-                    and this_file_size == 0
-                ):
+                if self.task.destination_smb_dont_send_empty_file == 1 and this_file_size == 0:
                     RunnerLog(
                         self.task,
                         self.run_id,
@@ -911,19 +869,17 @@ class Runner:
         try:
             template = env.get_template("email/email.html.j2")
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 8, f"Failed to get email template.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 8, f"Failed to get email template.\n{e}")
 
         # success email
         if self.task.email_completion == 1 and (
-            (len(error_logs) < 1 and self.task.email_error == 1)
-            or self.task.email_error != 1
+            (len(error_logs) < 1 and self.task.email_error == 1) or self.task.email_error != 1
         ):
             RunnerLog(self.task, self.run_id, 8, "Sending completion email.")
 
             output: List[List[str]] = []
             empty = 0
+            num_lines = 0
             attachments: List[str] = []
 
             if self.task.email_completion_file == 1 and len(self.output_files) > 0:
@@ -931,16 +887,24 @@ class Runner:
                     if self.task.email_completion_file_embed == 1:
                         with open(output_file, newline="") as csvfile:
                             output.extend(list(csv.reader(csvfile)))
-
+                        with open(output_file, "r") as f:
+                            num_lines = len(f.readlines())
                     # check attachement file size if the task
                     # should not send blank files
                     if (
                         self.task.email_completion_dont_send_empty_file == 1
                         and output_file
                         # if query and data is blank, or other types and file is 0
-                        and os.path.getsize(output_file) == 0
+                        # don't attach file if it is just the header.
+                        and (
+                            os.path.getsize(output_file) == 0
+                            or (self.task.source_query_include_header == 1 and num_lines <= 1)
+                        )
                     ):
                         empty = 1
+                    # there may be multiple output files. If one isn't empty, still include it.
+                    else:
+                        empty = 0
 
                     attachments.append(output_file)
 
@@ -961,9 +925,7 @@ class Runner:
             )
 
             if self.task.email_completion_subject:
-                subject = self.param_loader.insert_file_params(
-                    self.task.email_completion_subject
-                )
+                subject = self.param_loader.insert_file_params(self.task.email_completion_subject)
                 subject = DateParsing(self.task, None, subject).string_to_date()
 
             try:
@@ -999,6 +961,4 @@ class Runner:
 
         # pylint: disable=broad-except
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 8, f"Failed to clean up job.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 8, f"Failed to clean up job.\n{e}")

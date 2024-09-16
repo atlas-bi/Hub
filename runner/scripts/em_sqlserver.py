@@ -4,6 +4,7 @@ import csv
 import itertools
 import sys
 import tempfile
+import time
 from pathlib import Path
 from typing import IO, Any, Generator, List, Optional, Tuple
 
@@ -108,24 +109,51 @@ class SqlServer:
 
         Returns a path or raises an exception.
         """
-        self.cur.execute(query)
+        # lets retry the runs if there are operational errors.
+        # such as connection reset
+        retries = 0
+        max_retries = 3
+        sleep_time = 10
+        while retries < max_retries:
+            try:
+                self.cur.execute(query)
 
-        with tempfile.NamedTemporaryFile(
-            mode="w+", newline="", delete=False, dir=self.dir
-        ) as data_file:
-            writer = csv.writer(data_file)
+                with tempfile.NamedTemporaryFile(
+                    mode="w+", newline="", delete=False, dir=self.dir
+                ) as data_file:
+                    writer = csv.writer(data_file)
 
-            if self.task.source_query_include_header:
-                writer.writerow(
-                    [i[0] for i in self.cur.description] if self.cur.description else []
+                    if self.task.source_query_include_header:
+                        writer.writerow(
+                            [i[0] for i in self.cur.description] if self.cur.description else []
+                        )
+
+                    for row in self.__rows():
+                        writer.writerow(row)
+
+                    self.__close()
+
+                    if self.task.source_require_sql_output == 1 and self.row_count == 0:
+                        raise ValueError("SQL output is required but no records returned.")
+
+                    return self.row_count, [data_file]
+
+            except pyodbc.OperationalError as err:
+                retries += 1
+                self.__close()
+                if retries >= max_retries:
+                    raise ValueError("pyodbc operationalError when trying to connect to db")
+                log = TaskLog(
+                    task_id=self.task.id,
+                    job_id=self.run_id,
+                    status_id=20,
+                    message=f"Query failed with error: {err} It will retry again. Retry {retries} out of {max_retries}",
                 )
-
-            for row in self.__rows():
-                writer.writerow(row)
-
-        self.__close()
-
-        if self.task.source_require_sql_output == 1 and self.row_count == 0:
-            raise ValueError("SQL output is required but no records returned.")
-
-        return self.row_count, [data_file]
+                db.session.add(log)
+                db.session.commit()
+                time.sleep(sleep_time)  # sleep for 10 seconds
+                sleep_time += 20
+                # reconnect
+                self.conn, self.cur = self.__connect()
+        # this should never hit but it makes mypy happy.
+        return 0, []
