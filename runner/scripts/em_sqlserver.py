@@ -113,6 +113,7 @@ class SqlServer:
         # such as connection reset
         retries = 0
         max_retries = 3
+        sleep_time = 10
         while retries < max_retries:
             try:
                 self.cur.execute(query)
@@ -140,8 +141,8 @@ class SqlServer:
             except pyodbc.OperationalError as err:
                 retries += 1
                 self.__close()
-                if retries > max_retries:
-                    raise
+                if retries >= max_retries:
+                    raise ValueError("pyodbc operationalError when trying to connect to db")
                 log = TaskLog(
                     task_id=self.task.id,
                     job_id=self.run_id,
@@ -150,7 +151,8 @@ class SqlServer:
                 )
                 db.session.add(log)
                 db.session.commit()
-                time.sleep(10)  # sleep for 10 seconds
+                time.sleep(sleep_time)  # sleep for 10 seconds
+                sleep_time += 20
                 # reconnect
                 self.conn, self.cur = self.__connect()
         # this should never hit but it makes mypy happy.
