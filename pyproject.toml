@@ -97,7 +97,7 @@ packages = [
 ]
 readme = "readme.md"
 repository = "https://github.com/atlas-bi/Hub"
-version = "2.12.4"
+version = "2.12.5"
 
 [tool.poetry.dependencies]
 Flask = "^2.0.1"
@@ -121,7 +121,7 @@ flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"
 flask-redis = "^0.4.0"
 flask-session2 = "^1.2.0"
 gevent = "^23.9.1"
-gunicorn = "^21.0.0"
+gunicorn = "^22.0.0"
 is-safe-url = "^1.0"
 jaydebeapi = "^1.2.3"
 paramiko = "^3.0.0"
