@@ -97,7 +97,7 @@ packages = [
 ]
 readme = "readme.md"
 repository = "https://github.com/atlas-bi/Hub"
-version = "2.12.4"
+version = "2.12.5"
 
 [tool.poetry.dependencies]
 Flask = "^2.0.1"
@@ -116,7 +116,7 @@ SQLAlchemy = "^2.0.20"
 SQLAlchemy-Utils = "^0.41.0"
 azure-devops = "^7.1.0-beta.3"
 bs4 = "^0.0.2"
-cryptography = "^41.0.0"
+cryptography = "^43.0.0"
 flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
 flask-redis = "^0.4.0"
 flask-session2 = "^1.2.0"
