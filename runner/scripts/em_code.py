@@ -1,6 +1,5 @@
 """Task source code handler."""
 
-
 import re
 import urllib.parse
 from typing import Optional

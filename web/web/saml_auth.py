@@ -1,6 +1,5 @@
 """SAML Login/Logout web views."""
 
-
 from flask import Blueprint, Flask, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, request, session, url_for

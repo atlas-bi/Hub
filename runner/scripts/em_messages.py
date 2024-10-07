@@ -1,6 +1,5 @@
 """Exception and logging messages."""
 
-
 import datetime
 import sys
 from dataclasses import dataclass
