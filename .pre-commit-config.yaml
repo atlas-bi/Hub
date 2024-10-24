@@ -21,7 +21,7 @@ exclude: >
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v4.6.0
   hooks:
   - id: pretty-format-json
     args: [--autofix]
@@ -41,7 +41,7 @@ repos:
   - id: black
     language_version: python3.9
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.12.0
+  rev: v2.14.0
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
@@ -50,6 +50,6 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.34.1
+  rev: v1.35.2
   hooks:
   - id: djlint-jinja
