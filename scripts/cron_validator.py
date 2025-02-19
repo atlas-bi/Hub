@@ -43,7 +43,17 @@ class CronValidator:
         self.cron_sec = str(cron_sec)
 
     def validate(self) -> None:
-        """Main method called to validate the cron values."""
+        """Main method called to validate the cron values.
+        The first if statement prevents saving of a completely blank
+        cron schedule.
+        The second if statement is validation of each cron element.
+        """
+        if (self.cron == 1 and self.cron_year == "" and self.cron_month == "" and
+            self.cron_day == "" and self.cron_week_day == "" and self.cron_hour == "" and
+            self.cron_min == "" and self.cron_sec == ""):
+            msg = f"At least one schedule element must be populated"
+            raise ValueError(msg)
+        
         if self.cron == 1:
             self._month(expr=self.cron_month, prefix="Month")
             self._day_of_month(expr=self.cron_day, prefix="Day")
