@@ -151,7 +151,7 @@ class PyProcesser:
                     + "virtualenv poetry_env && "
                     + "poetry_env/bin/pip install --disable-pip-version-check --quiet poetry && "
                     + "poetry_env/bin/poetry config --local virtualenvs.create false && "
-                    + "poetry_env/bin/poetry lock --no-update"
+                    + "poetry_env/bin/poetry lock"
                 )
 
                 Cmd(
