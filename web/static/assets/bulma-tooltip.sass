@@ -1,6 +1,7 @@
 @use '../../../node_modules/bulma/sass/utilities/initial-variables' as iv
 @use '../../../node_modules/bulma/sass/utilities/derived-variables' as dv
 @use '../../../node_modules/bulma/sass/utilities/mixins' as *
+@use 'sass:list'
 $tooltip-arrow-size: 6px !default
 $tooltip-background-color: iv.$grey-dark !default
 $tooltip-background-opacity: 0.9 !default
@@ -208,7 +209,7 @@ $tooltip-z-index: 1020 !default
 			+tooltip-multiline
 
 		@each $name, $pair in dv.$colors
-			@if length($name) > 1
+			@if list.length($name) > 1
 				$color: nth($pair, 1)
 				$color-invert: nth($pair, 2)
 				&.has-tooltip-#{$name}

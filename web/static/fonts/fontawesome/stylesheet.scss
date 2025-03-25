@@ -1,101 +1,101 @@
 @use "sass:math";
+@use '../../assets/fontawesome/_functions';
+@use '../../assets/fontawesome/_variables';
+@forward '../../assets/fontawesome/_animated';
 
-@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_functions';
-@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_variables';
-@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_mixins';
-@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_core';
-@import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_sizing';
-
-$fa-font-path: '/static/fonts/fontawesome/webfonts';
+variables.$fa-font-path: '/static/fonts/fontawesome/webfonts';
 @font-face {
   font-family: 'Font Awesome 6 Brands';
   font-style: normal;
   font-weight: 400;
-  font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-brands-400.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-brands-400.ttf') format('truetype');
+  font-display: variables.$fa-font-display;
+  src:
+    url('#{variables.$fa-font-path}/fa-brands-400.woff2') format('woff2'),
+    url('#{variables.$fa-font-path}/fa-brands-400.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 900;
-  font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype');
+  font-display: variables.$fa-font-display;
+  src:
+    url('#{variables.$fa-font-path}/fa-solid-900.woff2') format('woff2'),
+    url('#{variables.$fa-font-path}/fa-solid-900.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;
   font-weight: 400;
-  font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-regular-400.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype');
+  font-display: variables.$fa-font-display;
+  src:
+    url('#{variables.$fa-font-path}/fa-regular-400.woff2') format('woff2'),
+    url('#{variables.$fa-font-path}/fa-regular-400.ttf') format('truetype');
 }
 
 .far,
-.#{$fa-css-prefix}-regular {
+.#{variables.$fa-css-prefix}-regular {
   font-family: 'Font Awesome 6 Free';
   font-weight: 400;
 }
 
 .fas,
-.#{$fa-css-prefix}-solid {
+.#{variables.$fa-css-prefix}-solid {
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
 }
 
 .fab,
-.#{$fa-css-prefix}-brands {
+.#{variables.$fa-css-prefix}-brands {
   font-family: 'Font Awesome 6 Brands';
   font-weight: 400;
 }
 
-.#{$fa-css-prefix}-2_3x {
+.#{variables.$fa-css-prefix}-2_3x {
   font-size: 2.3em;
 }
 
 
 /* build icon list */
 $icons: (
-  magnifying-glass: $fa-var-magnifying-glass,
-  pen-to-square: $fa-var-pen-to-square,
-  trash: $fa-var-trash,
-  delete-left: $fa-var-delete-left,
-  sort: $fa-var-sort,
-  terminal: $fa-var-terminal,
-  list: $fa-var-list,
-  ban: $fa-var-ban,
-  toggle-on: $fa-var-toggle-on,
-  toggle-off: $fa-var-toggle-off,
-  circle-play: $fa-var-circle-play,
-  plus: $fa-var-plus,
-  rotate: $fa-var-rotate,
-  copy: $fa-var-copy,
-  download: $fa-var-download,
-  check: $fa-var-check,
-  circle-info: $fa-var-circle-info,
-  file-arrow-down: $fa-var-file-arrow-down,
-  angle-right: $fa-var-angle-right,
-  circle-check: $fa-var-circle-check,
-  circle-xmark: $fa-var-circle-xmark,
-  circle-notch: $fa-var-circle-notch,
-  circle-stop: $fa-var-circle-stop,
-  circle-pause: $fa-var-circle-pause,
-  circle-question: $fa-var-circle-question,
-  calendar: $fa-var-calendar,
-  arrow-up-right-from-square: $fa-var-arrow-up-right-from-square,
-  eye-slash: $fa-var-eye-slash,
-  eye: $fa-var-eye,
-  users: $fa-var-users,
-  right-to-bracket: $fa-var-right-to-bracket,
-  angle-down: $fa-var-angle-down,
-  triangle-exclamation: $fa-var-triangle-exclamation,
+  magnifying-glass: variables.$fa-var-magnifying-glass,
+  pen-to-square: variables.$fa-var-pen-to-square,
+  trash: variables.$fa-var-trash,
+  delete-left: variables.$fa-var-delete-left,
+  sort: variables.$fa-var-sort,
+  terminal: variables.$fa-var-terminal,
+  list: variables.$fa-var-list,
+  ban: variables.$fa-var-ban,
+  toggle-on: variables.$fa-var-toggle-on,
+  toggle-off: variables.$fa-var-toggle-off,
+  circle-play: variables.$fa-var-circle-play,
+  plus: variables.$fa-var-plus,
+  rotate: variables.$fa-var-rotate,
+  copy: variables.$fa-var-copy,
+  download: variables.$fa-var-download,
+  check: variables.$fa-var-check,
+  circle-info: variables.$fa-var-circle-info,
+  file-arrow-down: variables.$fa-var-file-arrow-down,
+  angle-right: variables.$fa-var-angle-right,
+  circle-check: variables.$fa-var-circle-check,
+  circle-xmark: variables.$fa-var-circle-xmark,
+  circle-notch: variables.$fa-var-circle-notch,
+  circle-stop: variables.$fa-var-circle-stop,
+  circle-pause: variables.$fa-var-circle-pause,
+  circle-question: variables.$fa-var-circle-question,
+  calendar: variables.$fa-var-calendar,
+  arrow-up-right-from-square: variables.$fa-var-arrow-up-right-from-square,
+  eye-slash: variables.$fa-var-eye-slash,
+  eye: variables.$fa-var-eye,
+  users: variables.$fa-var-users,
+  right-to-bracket: variables.$fa-var-right-to-bracket,
+  angle-down: variables.$fa-var-angle-down,
+  triangle-exclamation: variables.$fa-var-triangle-exclamation,
 );
 
 @each $key, $value in $icons {
-  .#{$fa-css-prefix}-#{$key}:before {
-    content: fa-content($value);
+  .#{variables.$fa-css-prefix}-#{$key}:before {
+    content: functions.fa-content($value);
   }
 }

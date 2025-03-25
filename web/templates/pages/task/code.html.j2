@@ -5,7 +5,7 @@
                 <p class="control">
                     <button class="button" onclick="copyQuery{{ rand }}(event)" title="copy">
                         <span class="icon">
-                            <i class="fas fa-copy"></i>
+                            <span class="fas fa-copy"></span>
                         </span>
                         <span>Copy</span>
                     </button>
@@ -13,7 +13,7 @@
                 <p class="control">
                     <button class="button" onclick="saveQuery{{ rand }}(event)" title="download">
                         <span class="icon">
-                            <i class="fas fa-download"></i>
+                            <span class="fas fa-download"></span>
                         </span>
                         <span>Download</span>
                     </button>
@@ -24,7 +24,7 @@
                            title="download"
                            href="{{ url_for('task_bp.refresh_cache', task_id=task_id) }}">
                             <span class="icon">
-                                <i class="fas fa-rotate"></i>
+                                <span class="fas fa-rotate"></span>
                             </span>
                             <span>Refresh Cache</span>
                         </a>

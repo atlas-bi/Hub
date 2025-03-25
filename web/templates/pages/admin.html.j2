@@ -14,7 +14,7 @@
                    title="Edit Project"
                    href="{{ url_for("admin_bp.reset_tasks") }}">
                     <span class="icon">
-                        <i class="fas fa-rotate"></i>
+                        <span class="fas fa-rotate"></span>
                     </span>
                     <span>Reset all tasks to completed</span>
                 </a>
@@ -24,7 +24,7 @@
                    href="{{ url_for("admin_bp.reschedule_tasks") }}"
                    title="resume all jobs">
                     <span class="icon">
-                        <i class="fas fa-calendar"></i>
+                        <span class="fas fa-calendar"></span>
                     </span>
                     <span>Reschedule Enabled Jobs</span>
                 </a>
@@ -44,7 +44,7 @@
                            href="{{ url_for("admin_bp.pause_scheduler") }}"
                            title="pause scheduler">
                             <span class="icon">
-                                <i class="fas fa-circle-pause"></i>
+                                <span class="fas fa-circle-pause"></span>
                             </span>
                             <span>Pause Scheduler</span>
                         </a>
@@ -54,7 +54,7 @@
                            href="{{ url_for("admin_bp.resume_scheduler") }}"
                            title="resume scheduler">
                             <span class="icon">
-                                <i class="fas fa-circle-play"></i>
+                                <span class="fas fa-circle-play"></span>
                             </span>
                             <span>Resume Scheduler</span>
                         </a>
@@ -65,7 +65,7 @@
                            title="kill scheduler"
                            onclick="return confirm('Are you sure? Click Restart Web Service to start again.')">
                             <span class="icon">
-                                <i class="fas fa-ban"></i>
+                                <span class="fas fa-ban"></span>
                             </span>
                             <span>Kill Scheduler</span>
                         </a>
@@ -79,7 +79,7 @@
             <li class="is-active">
                 <a title="task logs" class="tab-lnk is-active" href="#task_history">
                     <span class="icon is-small">
-                        <i class="fas fa-users" aria-hidden="true"></i>
+                        <span class="fas fa-users" aria-hidden="true"></span>
                     </span>
                     <span>User History</span>
                 </a>
@@ -87,7 +87,7 @@
             <li class="is-active">
                 <a title="task logs" class="tab-lnk active" href="#login_history">
                     <span class="icon is-small">
-                        <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
+                        <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
                     </span>
                     <span>Login History</span>
                 </a>

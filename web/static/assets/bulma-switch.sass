@@ -1,17 +1,14 @@
 @use "sass:list"
-@use "../../../node_modules/bulma/sass/utilities/controls"
-@use "../../../node_modules/bulma/sass/utilities/derived-variables"
-@use "../../../node_modules/bulma/sass/utilities/initial-variables"
-
-$switch-background: initial-variables.$grey-light !default
+@use "../../../node_modules/bulma/sass/utilities/index" as utilities
+$switch-background: utilities.$grey-light !default
 $switch-border: .1rem solid transparent !default
-$switch-background-active: derived-variables.$primary !default
-$switch-radius: initial-variables.$radius !default
-$switch-paddle-background: initial-variables.$white !default
-$switch-paddle-background-active: derived-variables.$primary !default
+$switch-background-active: utilities.$primary !default
+$switch-radius: utilities.$radius !default
+$switch-paddle-background: utilities.$white !default
+$switch-paddle-background-active: utilities.$primary !default
 $switch-paddle-offset: 0.25rem !default
 $switch-paddle-transition: all 0.25s ease-out !default
-$switch-focus: 1px dotted initial-variables.$grey-light !default
+$switch-focus: 1px dotted utilities.$grey-light !default
 
 =switch-size($size)
 	$switch-height: $size * 1.5
@@ -26,8 +23,8 @@ $switch-focus: 1px dotted initial-variables.$grey-light !default
 		align-items: center
 		justify-content: flex-start
 		font-size: $size
-		height: controls.$control-height
-		line-height: controls.$control-line-height
+		height: utilities.$control-height
+		line-height: utilities.$control-line-height
 		padding-left: $switch-width + .5
 		padding-top: .2rem
 		cursor: pointer
@@ -124,13 +121,13 @@ $switch-focus: 1px dotted initial-variables.$grey-light !default
 				height: divide($switch-height, 4)
 			&::after,
 			&:after
-				box-shadow: 0px 0px 3px initial-variables.$grey
+				box-shadow: 0 0 3px utilities.$grey
 
 	&.is-rounded
 		+ label
 			&::before,
 			&:before
-				border-radius: initial-variables.$radius-large * 4
+				border-radius: utilities.$radius-large * 4
 			&::after,
 			&:after
 				border-radius: 50%
@@ -164,55 +161,33 @@ $switch-focus: 1px dotted initial-variables.$grey-light !default
 			&:hover
 				cursor: not-allowed
 
-	+switch-size(derived-variables.$size-normal)
+	+switch-size(utilities.$size-normal)
 	&.is-small
-		+switch-size(derived-variables.$size-small)
+		+switch-size(utilities.$size-small)
 	&.is-medium
-		+switch-size(derived-variables.$size-medium)
+		+switch-size(utilities.$size-medium)
 	&.is-large
-		+switch-size(derived-variables.$size-large)
+		+switch-size(utilities.$size-large)
 
-	@each $name, $pair in derived-variables.$colors
-		@if length($name) > 1
-			$color: list.nth($pair, 1)
-			$color-invert: list.nth($pair, 2)
-			&.is-#{$name}
-				+ label
-					.switch-active
-						display: none
-					.switch-inactive
-						display: inline-block
-				&:checked
-					+ label
-						&::before,
-						&:before
-							background: $color
-						.switch-active
-							display: inline-block
-						.switch-inactive
-							display: none
-				&.is-outlined
-					&:checked
-						+ label
-							&::before,
-							&:before
-								background-color: transparent
-								border-color: $color !important
-							&::after,
-							&:after
-								background: $color
-				&.is-thin
-					&.is-outlined
-						+ label
-							&::after,
-							&:after
-								box-shadow: none
-			&.is-unchecked-#{$name}
+	@each $name, $pair in utilities.$colors
+		$color: list.nth($pair, 1)
+		&.is-#{$name}
+			+ label
+				.switch-active
+					display: none
+				.switch-inactive
+					display: inline-block
+			&:checked
 				+ label
 					&::before,
 					&:before
 						background: $color
-				&.is-outlined
+					.switch-active
+						display: inline-block
+					.switch-inactive
+						display: none
+			&.is-outlined
+				&:checked
 					+ label
 						&::before,
 						&:before
@@ -221,27 +196,28 @@ $switch-focus: 1px dotted initial-variables.$grey-light !default
 						&::after,
 						&:after
 							background: $color
+			&.is-thin
+				&.is-outlined
+					+ label
+						&::after,
+						&:after
+							box-shadow: none
+		&.is-unchecked-#{$name}
+			+ label
+				&::before,
+				&:before
+					background: $color
+			&.is-outlined
+				+ label
+					&::before,
+					&:before
+						background-color: transparent
+						border-color: $color !important
+					&::after,
+					&:after
+						background: $color
 
 .field-body
 	.switch[type="checkbox"]
 		+ label
 			margin-top: .375em
-
-@function divide($dividend, $divisor, $precision: 10)
-	$sign: if($dividend > 0 and $divisor > 0, 1, -1)
-	$dividend: abs($dividend)
-	$divisor: abs($divisor)
-	$quotient: 0
-	$remainder: $dividend
-	@if $dividend == 0
-		@return 0
-	@if $divisor == 0
-		@error "Cannot divide by 0"
-	@if $divisor == 1
-		@return $dividend
-	@while $remainder >= $divisor
-		$quotient: $quotient + 1
-		$remainder: $remainder - $divisor
-	@if $remainder > 0 and $precision > 0
-		$remainder: divide($remainder * 10, $divisor, $precision - 1) * .1
-	@return ($quotient + $remainder) * $sign

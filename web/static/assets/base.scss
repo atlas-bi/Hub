@@ -1,7 +1,11 @@
 @use 'sass:math';
 @use 'sass:meta';
-@use '../../../node_modules/@fontsource/inter/scss/mixins' as Inter;
-@use '../../../node_modules/@fontsource/rasa/scss/mixins' as Rasa;
+@use '../../../node_modules/@fontsource-utils/scss/src/mixins.scss' as
+  fontsource;
+@use '../../../node_modules/@fontsource-variable/inter/scss/metadata.scss' as
+  inter;
+@use '../../../node_modules/@fontsource-variable/rasa/scss/metadata.scss' as
+  rasa;
 @use '../../../node_modules/bulma/sass/utilities'
   with(
     $family-primary:
@@ -22,23 +26,25 @@
 @forward '../../../node_modules/bulma/sass/helpers';
 
 // Import the themes so that all CSS variables have a value
-@use '../../../node_modules/bulma/sass/themes';
+@forward '../../../node_modules/bulma/sass/index';
+@forward '../../../node_modules/bulma/sass/utilities/mixins';
 
-@import 'bulma-switch';
-@import 'bulma-tooltip';
-@import 'bulma-checkradio';
+@forward 'bulma-switch';
+@forward 'bulma-tooltip';
+@forward 'bulma-checkradio';
 /* purgecss start ignore */
-@import '../fonts/fontawesome/stylesheet';
-@import '../lib/codemirror/codemirror';
-@import '../lib/codemirror/ttcn';
-@import '../lib/codemirror/simplescrollbars';
-@import '../lib/scroll/scroll';
-@import '../lib/prism/prism';
-@import '../lib/table/table';
-@import '../lib/prism/prism_line_numbers';
-@import '../lib/flatpickr/flatpickr';
+@use '../fonts/fontawesome/stylesheet';
+@forward '../lib/codemirror/codemirror';
+@forward '../lib/codemirror/ttcn';
+@forward '../lib/codemirror/simplescrollbars';
+@forward '../lib/scroll/scroll';
+@forward '../lib/prism/prism';
+@forward '../lib/table/table';
+@forward '../lib/prism/prism_line_numbers';
+@forward '../lib/flatpickr/flatpickr';
 
-@include Inter.faces(
+@include fontsource.faces(
+  $metadata: inter.$metadata,
   $family: 'Inter',
   $subsets: latin,
   $weights: (
@@ -52,7 +58,8 @@
   $display: swap
 );
 
-@include Rasa.faces(
+@include fontsource.faces(
+  $metadata: rasa.$metadata,
   $family: 'Rasa',
   $subsets: latin,
   $weights: 600,

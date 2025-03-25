@@ -12,13 +12,13 @@ import purgecss from 'gulp-purgecss';
 import cssnano from 'cssnano';
 
 task('font:inter', function() {
-  return src('node_modules/@fontsource/inter/**/*', { removeBOM: false })
+  return src('node_modules/@fontsource-variable/inter/**/*', { removeBOM: false })
   .pipe(replace(/\.\/files\//g, '/static/fonts/inter/files/'))
   .pipe(dest('web/static/fonts/inter'))
 });
 
 task('font:rasa', function() {
-  return src('node_modules/@fontsource/rasa/**/*', { removeBOM: false })
+  return src('node_modules/@fontsource-variable/rasa/**/*', { removeBOM: false })
   .pipe(replace(/\.\/files\//g, '/static/fonts/rasa/files/'))
   .pipe(dest('web/static/fonts/rasa'))
 });

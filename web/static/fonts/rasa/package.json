@@ -1,6 +1,6 @@
 {
-  "name": "@fontsource/rasa",
-  "version": "5.1.0",
+  "name": "@fontsource-variable/rasa",
+  "version": "5.2.5",
   "description": "Self-host the Rasa font in a neatly bundled NPM package.",
   "main": "index.css",
   "publishConfig": {"access": "public"},
@@ -18,13 +18,29 @@
     "typeface",
     "variable"
   ],
+  "exports": {
+    ".": {"sass": "./index.css", "default": "./index.css"},
+    "./*": {"sass": "./*.css", "default": "./*.css"},
+    "./*.css": {"sass": "./*.css", "default": "./*.css"},
+    "/static/fonts/rasa/files/*": {"sass": "/static/fonts/rasa/files/*", "default": "/static/fonts/rasa/files/*"},
+    "/static/fonts/rasa/files/*.woff": {"sass": "/static/fonts/rasa/files/*.woff", "default": "/static/fonts/rasa/files/*.woff"},
+    "/static/fonts/rasa/files/*.woff2": {
+      "sass": "/static/fonts/rasa/files/*.woff2",
+      "default": "/static/fonts/rasa/files/*.woff2"
+    },
+    "./package.json": "./package.json",
+    "./metadata.json": "./metadata.json",
+    "./unicode.json": "./unicode.json",
+    "./scss": {"sass": "./scss/metadata.scss"}
+  },
   "author": "Google Inc.",
   "license": "OFL-1.1",
   "homepage": "https://fontsource.org/fonts/rasa",
+  "funding": "https://github.com/sponsors/ayuhito",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fontsource/font-files.git",
-    "directory": "fonts/google/rasa"
+    "url": "git+https://github.com/fontsource/font-files.git",
+    "directory": "fonts/variable/rasa"
   },
-  "publishHash": "3efb60f86d9a9b32"
+  "publishHash": "bc50f48dd1014b64"
 }

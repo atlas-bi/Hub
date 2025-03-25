@@ -214,7 +214,7 @@ def database_pass(my_string: str) -> str:
                 + 'px;cursor: text;"/>'
                 + '<a class="em-inputPlainCopy" title="copy password" data-value="'
                 + str(my_pass)
-                + '"><span class="icon is-small"><i class="fas fa-copy"></i></span></a>'
+                + '"><span class="icon is-small"><span class="fas fa-copy"></span></span></a>'
             ),
         )
     # pylint: disable=broad-except

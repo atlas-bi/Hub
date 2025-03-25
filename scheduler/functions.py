@@ -1,5 +1,6 @@
 """Scheduler Event Logging."""
 
+import datetime
 import hashlib
 import time
 
@@ -150,6 +151,7 @@ def scheduler_add_task(task_id: int) -> bool:
         hours = project.intv_value or 999 if project.intv_type == "h" else 0
         minutes = project.intv_value or 999 if project.intv_type == "m" else 0
         seconds = project.intv_value or 999 if project.intv_type == "s" else 0
+        timezone = datetime.datetime.now().astimezone().tzinfo
 
         atlas_scheduler.add_job(
             func=scheduler_task_runner,
@@ -159,6 +161,7 @@ def scheduler_add_task(task_id: int) -> bool:
             hours=hours,
             days=days,
             weeks=weeks,
+            timezone=timezone,
             start_date=project.intv_start_date,
             end_date=project.intv_end_date,
             args=[str(task_id)],

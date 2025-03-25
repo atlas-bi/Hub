@@ -60,7 +60,7 @@
                title="Edit task"
                href="{{ url_for('task_edit_bp.task_edit_get', task_id=t.id) }}">
                 <span class="icon">
-                    <i class="fas fa-pen-to-square"></i>
+                    <span class="fas fa-pen-to-square"></span>
                 </span>
                 <span>Edit</span>
             </a>
@@ -71,7 +71,7 @@
                href="{{ url_for('task_controls_bp.delete_task', task_id=t.id) }}"
                onclick="return confirm('Are you sure?')">
                 <span class="icon">
-                    <i class="fas fa-trash"></i>
+                    <span class="fas fa-trash"></span>
                 </span>
                 <span>Delete</span>
             </a>
@@ -81,7 +81,7 @@
                title="Run Task"
                href="{{ url_for('task_controls_bp.run_task', task_id=t.id) }}">
                 <span class="icon">
-                    <i class="far fa-circle-play"></i>
+                    <span class="far fa-circle-play"></span>
                 </span>
                 <span>Run</span>
             </a>
@@ -91,7 +91,7 @@
                title="Reschedule Task"
                href="{{ url_for('task_controls_bp.schedule_task', task_id=t.id) }}">
                 <span class="icon">
-                    <i class="far fa-rotate"></i>
+                    <span class="far fa-rotate"></span>
                 </span>
                 <span>Reschedule</span>
             </a>
@@ -101,7 +101,7 @@
                title="Duplicate task"
                href="{{ url_for('task_controls_bp.duplicate_task', task_id=t.id) }}">
                 <span class="icon">
-                    <i class="far fa-copy"></i>
+                    <span class="far fa-copy"></span>
                 </span>
                 <span>Duplicate</span>
             </a>
@@ -111,7 +111,7 @@
                title="Duplicate task"
                href="{{ url_for('task_controls_bp.reset_task', task_id=t.id) }}">
                 <span class="icon">
-                    <i class="fas fa-check"></i>
+                    <span class="fas fa-check"></span>
                 </span>
                 <span>Reset</span>
             </a>
@@ -121,7 +121,7 @@
                title="End retry"
                href="{{ url_for('task_controls_bp.task_endretry', task_id=t.id) }}">
                 <span class="icon">
-                    <i class="far fa-ban"></i>
+                    <span class="far fa-ban"></span>
                 </span>
                 <span>Cancel Retry</span>
             </a>
@@ -179,7 +179,7 @@
             <li class="is-active">
                 <a title="data source" class="tab-lnk" href="#details">
                     <span class="icon is-small">
-                        <i class="fas fa-circle-info" aria-hidden="true"></i>
+                        <span class="fas fa-circle-info" aria-hidden="true"></span>
                     </span>
                     <span>Details</span>
                 </a>
@@ -187,7 +187,7 @@
             <li>
                 <a title="task logs" class="tab-lnk" href="#tasklog">
                     <span class="icon is-small">
-                        <i class="fas fa-terminal" aria-hidden="true"></i>
+                        <span class="fas fa-terminal" aria-hidden="true"></span>
                     </span>
                     <span>Logs</span>
                 </a>
@@ -195,7 +195,7 @@
             <li>
                 <a title="task files" class="tab-lnk" href="#taskfile">
                     <span class="icon is-small">
-                        <i class="fas fa-file-arrow-down" aria-hidden="true"></i>
+                        <span class="fas fa-file-arrow-down" aria-hidden="true"></span>
                     </span>
                     <span>Files</span>
                 </a>

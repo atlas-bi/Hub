@@ -104,9 +104,9 @@
         '<div class="em-tableTools">' +
         '<div class="field is-grouped">' +
         '<div class="field has-addons">' +
-        '<p class="control"><button class="button em-tableReload" title="refresh"><span class="icon"><i class="fas fa-rotate"></i></span><span>Refresh</span></button></p>' +
-        '<p class="control"><button class="button em-tableCopy" title="copy table"><span class="icon"><i class="fas fa-copy"></i></span><span>Copy</span></button></p>' +
-        '<p class="control"><button class="button em-tableSave" title="download table"><span class="icon"><i class="fas fa-download"></i></span><span>Download</span></button></p>' +
+        '<p class="control"><button class="button em-tableReload" title="refresh"><span class="icon"><span class="fas fa-rotate"></span></span><span>Refresh</span></button></p>' +
+        '<p class="control"><button class="button em-tableCopy" title="copy table"><span class="icon"><span class="fas fa-copy"></span></span><span>Copy</span></button></p>' +
+        '<p class="control"><button class="button em-tableSave" title="download table"><span class="icon"><span class="fas fa-download"></span></span><span>Download</span></button></p>' +
         '</div>' +
         '<div class="field"><p class="control ml-2 mr-0 mt-2"><input id="reload-switch-' +
         ticks +
@@ -253,7 +253,7 @@
       r[++j] = "<th style='text-align:left;white-space:pre'>" + head[i];
 
       if (arr.length > 1) {
-        r[++j] = '<span class="icon"><i class="fas fa-sort"></i></span>';
+        r[++j] = '<span class="icon"><span class="fas fa-sort"></span></span>';
       }
 
       r[++j] = '</th>';

@@ -1,44 +1,45 @@
 # Fontsource Rasa
 
-[![npm (scoped)](https://img.shields.io/npm/v/@fontsource/rasa?color=brightgreen)](https://www.npmjs.com/package/@fontsource/rasa) [![Generic badge](https://img.shields.io/badge/fontsource-passing-brightgreen)](https://github.com/fontsource/fontsource) [![Monthly downloads](https://badgen.net/npm/dm/@fontsource/rasa)](https://github.com/fontsource/fontsource) [![Total downloads](https://badgen.net/npm/dt/@fontsource/rasa)](https://github.com/fontsource/fontsource) [![GitHub stars](https://img.shields.io/github/stars/fontsource/fontsource.svg?style=social&label=Star)](https://github.com/fontsource/fontsource/stargazers)
+[![npm (scoped)](https://img.shields.io/npm/v/@fontsource-variable/rasa?color=brightgreen)](https://www.npmjs.com/package/@fontsource-variable/rasa) [![Generic badge](https://img.shields.io/badge/fontsource-passing-brightgreen)](https://github.com/fontsource/fontsource) [![Monthly downloads](https://badgen.net/npm/dm/@fontsource-variable/rasa)](https://github.com/fontsource/fontsource) [![Total downloads](https://badgen.net/npm/dt/@fontsource-variable/rasa)](https://github.com/fontsource/fontsource) [![GitHub stars](https://img.shields.io/github/stars/fontsource/fontsource.svg?style=social&label=Star)](https://github.com/fontsource/fontsource/stargazers)
 
-The CSS and web font files to easily self-host the “Rasa” font. Please visit the main [Fontsource website](https://fontsource.org/fonts/rasa) to view more details on this package.
+The CSS and web font files to easily self-host the “Rasa” variable font. Please visit the main [Fontsource website](https://fontsource.org/fonts/rasa) to view more details on this package.
 
 ## Quick Installation
 
 Fontsource offers multiple methods to import the CSS, including using a bundler like Vite or using SASS. You can find full documentation [here](https://fontsource.org/docs/getting-started/introduction).
 
 ```javascript
-npm install @fontsource/rasa
+npm install @fontsource-variable/rasa
 ```
 
 Within your app entry file or site component, import it in.
 
 ```javascript
-import "@fontsource/rasa"; // Defaults to weight 400
-import "@fontsource/rasa/400.css"; // Specify weight
-import "@fontsource/rasa/400-italic.css"; // Specify weight and style
+import "@fontsource-variable/rasa"; // Defaults to wght axis
+import "@fontsource-variable/rasa/wght.css"; // Specify axis
+import "@fontsource-variable/rasa/wght-italic.css"; // Specify axis and style
 ```
 
 Supported variables:
 - Weights: `[300,400,500,600,700]`
 - Styles: `[italic,normal]`
 - Subsets: `[gujarati,latin,latin-ext,vietnamese]`
+- Axes: `[wght]`
 
-> Note: `italic` may not be supported by all fonts. To learn more about what weights and styles are supported, please visit the [Fontsource website](https://fontsource.org/fonts/rasa).
+> Note: `italic` may not be supported by all fonts. To learn more about what axes and styles are supported, please visit the [Fontsource website](https://fontsource.org/fonts/rasa).
 
 Finally, you can reference the font name in a CSS stylesheet, CSS Module, or CSS-in-JS.
 
 ```css
 body {
-  font-family: "Rasa";
+  font-family: "Rasa Variable";
 }
 ```
 
 ## Licensing
 Always make sure to read the license for each font you use. Most of the fonts in the collection use the SIL Open Font License, v1.1. Some fonts use the Apache 2 license. The Ubuntu fonts use the Ubuntu Font License v1.0.
 
-Copyright 2015 The Yrsa-Rasa Project Authors (https://github.com/rosettatype/yrsa-rasa/)
+Google Inc.
 [OFL-1.1](http://scripts.sil.org/OFL)
 
 ## Other Notes
