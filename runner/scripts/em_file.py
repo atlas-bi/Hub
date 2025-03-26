@@ -98,9 +98,9 @@ class File:
 
         return quote_levels[task_level]
 
-    def __quotechar(self) -> str:
+    def __quotechar(self) -> str | None:
         if self.__quote_level() == 3:  # quote none
-            return ""
+            return None
 
         return '"'
 
