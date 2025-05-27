@@ -3,7 +3,7 @@
     if (e.target.closest('.toggle-pass')) {
       var target = e.target.closest('.toggle-pass'),
         input = target.parentElement.parentElement.querySelector('input'),
-        icon = target.querySelector('i.fas'),
+        icon = target.querySelector('span.fas'),
         sensitive_input = target.querySelector('input');
 
       input.type = input.type === 'text' ? 'password' : 'text';
