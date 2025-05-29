@@ -684,9 +684,13 @@
       t = e.target.closest('select[name="fileType"]');
       p = t.closest('body');
       p.querySelector('.task-delimiter').style.display = 'none';
+      p.querySelector('.File-information').style.display = 'none';
 
       if (t.value === '2' || t.value === '4') {
         p.querySelector('.task-delimiter').style.removeProperty('display');
+      }
+      if (t.value != '5') {
+        p.querySelector('.File-information').style.removeProperty('display');
       }
     }
     if (typeof mySourceCodeMirror != 'undefined') mySourceCodeMirror.refresh();

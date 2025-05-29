@@ -77,6 +77,7 @@ def seed(session: SqlSession, model: Any) -> None:
         name="Other (specify in filename)",
         ext="",
     )
+    get_or_create(session, model.TaskDestinationFileType, name="None", ext="")
 
     # task status
     get_or_create(session, model.TaskStatus, name="Running")
