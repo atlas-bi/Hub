@@ -57,18 +57,6 @@
         </div>
         <div class="field">
             <label class="label">
-                Server IP Address
-                <span class="has-text-grey">*</span>
-            </label>
-            <input class="input"
-                   required
-                   type="text"
-                   name="server_ip"
-                   placeholder="10.0.0.1"
-                   value="{%- if smb -%}{{ smb.server_ip }}{%- endif -%}" />
-        </div>
-        <div class="field">
-            <label class="label">
                 Share Name
                 <span class="has-text-grey">*</span>
             </label>
@@ -82,10 +70,8 @@
         <div class="field">
             <label class="label">
                 Path
-                <span class="has-text-grey">*</span>
             </label>
             <input class="input"
-                   required
                    type="text"
                    name="path"
                    placeholder="/path/to/somewhere"

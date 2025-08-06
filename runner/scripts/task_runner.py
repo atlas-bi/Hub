@@ -40,9 +40,7 @@ from runner.scripts.em_sqlserver import SqlServer
 from runner.scripts.em_ssh import Ssh
 from runner.scripts.em_system import system_monitor
 from runner.web.filters import datetime_format
-
-sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from crypto import em_decrypt
+from scripts.crypto import em_decrypt
 
 env = Environment(
     loader=PackageLoader("runner", "templates"),
@@ -97,7 +95,7 @@ class Runner:
 
         task = Task.query.filter_by(id=task_id).first()
 
-        self.source_files: List[IO[str]]
+        self.source_files: List[IO[str]] = []
         self.output_files: List[str] = []
 
         print("starting task " + str(task.id))  # noqa: T201
@@ -141,7 +139,6 @@ class Runner:
         # load file/ run query/ etc to get some sort of data or process something.
         self.query_output_size: Optional[int] = None
         self.source_loader = SourceCode(self.task, self.run_id, self.param_loader)
-        self.source_files = []
         self.__get_source()
 
         # any data post-processing
@@ -744,10 +741,13 @@ class Runner:
                 if self.query_output_size is not None
                 else Path(this_file.name).stat().st_size
             )
-
+            original_name = self.task.destination_file_name
             # get new parameters just in case it was changed in the processing script.
             params = ParamLoader(self.task, self.run_id)
 
+            # rename the file so it will save off all the files
+            if self.task.destination_file_name and len(self.source_files) > 1:
+                self.task.destination_file_name = f"{Path(self.task.destination_file_name).stem}_{file_counter}{Path(self.task.destination_file_name).suffix}"
             # get file name. if no name specified in task setting, then use temp name.
             try:
                 file_name, file_path, file_hash = File(
@@ -852,6 +852,8 @@ class Runner:
                         overwrite=self.task.destination_smb_overwrite,
                         file_name=file_name,
                     )
+            # set the destination_file_name back to original name
+            self.task.destination_file_name = original_name
 
     def __send_email(self) -> None:
         logs = (

@@ -164,7 +164,7 @@
                         <strong>Timeout: {{ s.timeout }} (minutes)</strong>
                     </p>
                 {% endif %}
-                <pre class="box"><code class="language-bash">{{ s.connection_string|decrypt }}</code></pre>
+                <pre class="box"><code class="language-bash">{{ s.connection_string|decrypt|database_pass }}</code></pre>
             {% endfor %}
         </div>
     {% endif %}
@@ -392,9 +392,6 @@
                 <div class="content">
                     Server Name:
                     <span class="tag is-light">{{ s.server_name or "unknown" }}</span>
-                    <br />
-                    Server IP:
-                    <span class="tag is-light">{{ s.server_ip or "unknown" }}</span>
                     <br />
                     Share Name:
                     <span class="tag is-light">{{ s.share_name or "unknown" }}</span>

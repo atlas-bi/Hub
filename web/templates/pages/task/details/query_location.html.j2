@@ -82,7 +82,7 @@
                  data-src="{{ url_for('connection_bp.smb_online', smb_id=t.query_smb_conn.id) }}">
                 <div class="loader"></div>
             </div>
-            <pre class="box"><code class="language-ini">smb://{{ t.query_smb_conn.username }}:...@{{ t.query_smb_conn.server_ip }}({{ t.query_smb_conn.server_name }})/{{ t.query_smb_conn.share_name }}/{{ t.query_smb_conn.path|clean_path }}{{ t.query_smb_file }}</code></pre>
+            <pre class="box"><code class="language-ini">smb://{{ t.query_smb_conn.username }}:...@{{ t.query_smb_conn.server_name }}/{{ t.query_smb_conn.share_name }}/{{ t.query_smb_conn.path|clean_path }}{{ t.query_smb_file }}</code></pre>
         {% elif t.source_query_type_id == 5 and t.query_sftp_conn %}
             <!-- source SFTP -->
             <h3 class="title is-3">SFTP Connection</h3>

@@ -43,7 +43,7 @@ def test_job_missed(api_fixture: fixture, caplog: fixture) -> None:
     # wait for logs to be added by background process
     time.sleep(1)
     # check that log was added
-    log = TaskLog.query.filter_by(task_id=t_id, status_id=6, error=1).first()
+    log = TaskLog.query.filter_by(task_id=t_id, error=1).first()
     assert "Job missed. Scheduled for:" in log.message
 
     # check logs

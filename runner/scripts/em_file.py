@@ -9,13 +9,13 @@ from pathlib import Path
 from typing import IO, Optional, Tuple, Union
 
 import gnupg
-from crypto import em_decrypt
 from flask import current_app as app
 
 from runner.model import Task
 from runner.scripts.em_date import DateParsing
 from runner.scripts.em_messages import RunnerException, RunnerLog
 from runner.scripts.em_params import ParamLoader
+from scripts.crypto import em_decrypt
 
 # set the limit for a csv cell value to something massive.
 # this is needed when users are building xml in a sql query

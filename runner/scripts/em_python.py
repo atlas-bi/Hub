@@ -192,7 +192,7 @@ class PyProcesser:
 
                 package_map = {
                     "dateutil": "python-dateutil",
-                    "smb": "pysmb",
+                    "smbclient": "smbprotocol",
                     "dotenv": "python-dotenv",
                     "azure": "azure-devops",
                     "office365": "Office365-REST-Python-Client",

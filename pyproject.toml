@@ -44,10 +44,6 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 ignore_errors = true
-module = "*.smb_fix"
-
-[[tool.mypy.overrides]]
-ignore_errors = true
 module = "*.ldap_auth"
 
 [tool.poetry]
@@ -92,7 +88,7 @@ packages = [
 ]
 readme = "readme.md"
 repository = "https://github.com/atlas-bi/Hub"
-version = "3.1.1"
+version = "3.5.0"
 
 [tool.poetry.dependencies]
 Flask = "^3.1.1"
@@ -108,7 +104,7 @@ Flask-SQLAlchemy = "^3.1.1"
 Flask-Script = "^2.0.6"
 Flask-session = "^0.8.0"
 Jinja2 = "^3.1.6"
-SQLAlchemy = "^2.0.41"
+SQLAlchemy = "^2.0.42"
 SQLAlchemy-Utils = "^0.41.2"
 azure-devops = "^7.1.0b4"
 bs4 = "^0.0.2"
@@ -119,12 +115,11 @@ gunicorn = "^23.0.0"
 is-safe-url = "^1.0"
 jaydebeapi = "^1.2.3"
 paramiko = "^3.5.1"
-pathvalidate = "^3.2.3"
+pathvalidate = "^3.3.1"
 psutil = "^7.0.0"
 psycopg2-binary = "^2.9.10"
 pyodbc = "^5.2.0"
 pysaml2 = "^7.5.2"
-pysmb = "^1.2.11"
 python = ">=3.12.0,<4.0"
 python-dateutil = "^2.9.0.post0"
 python-gnupg = "^0.5.4"
@@ -132,35 +127,36 @@ python-ldap = "3.4.4"
 python3-saml = "^1.16.0"
 pytz-deprecation-shim = "^0.1.0"
 rcssmin = "^1.2.1"
-redis = "^5.3.0"
+redis = "^5.3.1"
 regex = "^2024.11.6"
 relative-to-now = "^1.0.0"
-requests = "^2.32.3"
+requests = "^2.32.4"
 setuptools = "^78.1.1"
+smbprotocol = "^1.15.0"
 supervisor = "^4.2.5"
 tomli = "^2.2.1"
 tomlkit = "^0.13.2"
-virtualenv = "^20.31.2"
+virtualenv = "^20.33.1"
 webassets-rollup = "^1.0.0"
 whitenoise = "^6.9.0"
-xmlsec = "^1.3.15"
+xmlsec = "^1.3.16"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
-coverage = "^7.8.2"
+coverage = "^7.10.2"
 flask-debugtoolbar = "^0.16.0"
 isort = "^6.0.1"
 mypy = "1.12.0"
 pre-commit = "^4.2.0"
-pytest = "^8.3.5"
-pytest-cov = "^6.1.1"
+pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
 radon = "^6.0.1"
-ruff = "^0.11.12"
+ruff = "^0.11.13"
 toml = "^0.10.2"
-tox = "^4.26.0"
-types-paramiko = "^3.5.0.20250516"
-types-python-dateutil = "^2.9.0.20250516"
-types-requests = "^2.32.0.20250515"
+tox = "^4.28.4"
+types-paramiko = "^3.5.0.20250801"
+types-python-dateutil = "^2.9.0.20250708"
+types-requests = "^2.32.4.20250611"
 
 [tool.pytest]
 

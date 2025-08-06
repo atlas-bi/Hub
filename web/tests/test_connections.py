@@ -425,7 +425,6 @@ def test_new_smb(client_fixture: fixture) -> None:
     data = {
         "name": "Test SMB",
         "server_name": "smbserver",
-        "server_ip": "1.2.3.4",
         "share_name": "myshare",
         "path": "nowhere/around/here",
         "username": "albany",
@@ -441,7 +440,6 @@ def test_new_smb(client_fixture: fixture) -> None:
 
     assert data["name"] in response.get_data(as_text=True)
     assert data["server_name"] in response.get_data(as_text=True)
-    assert data["server_ip"] in response.get_data(as_text=True)
     assert data["share_name"] in response.get_data(as_text=True)
     assert data["path"] in response.get_data(as_text=True)
     assert data["username"] in response.get_data(as_text=True)
@@ -458,7 +456,6 @@ def test_new_smb(client_fixture: fixture) -> None:
     data = {
         "name": "Test SMB edited",
         "server_name": "smbserver edited",
-        "server_ip": "1.2.3.5",
         "share_name": "myshareedited",
         "path": "nowhere/around/here/edited",
         "username": "albany edited",
@@ -474,7 +471,6 @@ def test_new_smb(client_fixture: fixture) -> None:
 
     assert data["name"] in response.get_data(as_text=True)
     assert data["server_name"] in response.get_data(as_text=True)
-    assert data["server_ip"] in response.get_data(as_text=True)
     assert data["share_name"] in response.get_data(as_text=True)
     assert data["path"] in response.get_data(as_text=True)
     assert data["username"] in response.get_data(as_text=True)

@@ -197,26 +197,7 @@ def clean_path(my_path: str) -> str:
 def database_pass(my_string: str) -> str:
     """Hide password in connection strings."""
     try:
-        if "PWD" in my_string:
-            my_pass = my_string.split("PWD=")[1]
-        elif "password" in my_string:
-            my_pass = my_string.split("password=")[1]
-        else:
-            my_pass = my_string.split("@")[0].split(":")[1]
-
-        return my_string.replace(
-            my_pass,
-            (
-                '<input type="password" class="em-inputPlain" disabled="true" value="'
-                + str(my_pass)
-                + '" style="width:'
-                + str(len(my_pass) * 6)
-                + 'px;cursor: text;"/>'
-                + '<a class="em-inputPlainCopy" title="copy password" data-value="'
-                + str(my_pass)
-                + '"><span class="icon is-small"><span class="fas fa-copy"></span></span></a>'
-            ),
-        )
+        return re.sub(r"(?i)(pwd|password)\s*=\s*[^;]*", r"\1=***", my_string)
     # pylint: disable=broad-except
     except BaseException:
         return my_string

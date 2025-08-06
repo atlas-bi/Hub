@@ -110,7 +110,7 @@
                  data-src="{{ url_for('connection_bp.smb_online', smb_id=t.source_smb_conn.id) }}">
                 <div class="loader"></div>
             </div>
-            <pre class="box"><code class="language-ini">smb://{{ t.source_smb_conn.username }}:...@{{ t.source_smb_conn.server_ip }}({{ t.source_smb_conn.server_name }})/{{ t.source_smb_conn.share_name }}/{{ t.source_smb_conn.path|clean_path }}{{ t.source_smb_file }}</code></pre>
+            <pre class="box"><code class="language-ini">smb://{{ t.source_smb_conn.username }}:...@{{ t.source_smb_conn.server_name }}/{{ t.source_smb_conn.share_name }}/{% if t.source_smb_conn.path|clean_path and t.source_smb_conn.path|clean_path not in t.source_smb_file%}{{ t.source_smb_conn.path|clean_path }}{% endif %}{{ t.source_smb_file }}</code></pre>
         {% elif t.source_type_id == 6 and t.source_ssh_conn %}
             <!-- source Ssh -->
             <h2 class="title is-2">Data Source - SSH Connection</h2>

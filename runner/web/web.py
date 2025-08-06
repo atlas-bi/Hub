@@ -38,6 +38,7 @@ from runner.scripts.em_sqlserver import connect as sql_connect
 from runner.scripts.em_ssh import connect as ssh_connect
 from runner.scripts.task_runner import Runner
 from runner.web.filters import datetime_format
+from scripts.crypto import em_decrypt
 
 web_bp = Blueprint("web_bp", __name__)
 
@@ -46,8 +47,6 @@ env = Environment(
     autoescape=select_autoescape(["html", "xml"]),
 )
 env.filters["datetime_format"] = datetime_format
-sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from crypto import em_decrypt
 
 
 @web_bp.route("/api")
@@ -419,7 +418,6 @@ def smb_online(smb_id: int) -> str:
             smb_connection.username,
             em_decrypt(smb_connection.password, app.config["PASS_KEY"]),
             smb_connection.server_name,
-            smb_connection.server_ip,
         )
         # we do not close smb connections. they are recycled.
         return '<span class="tag is-success is-light">Online</span>'
