@@ -9,7 +9,7 @@ import os
 import pickle
 import tempfile
 from pathlib import Path
-from typing import IO, Any, Dict, List, Optional
+from typing import IO, Dict, List, Optional
 
 from flask import current_app as app
 from pathvalidate import sanitize_filename
@@ -47,7 +47,7 @@ def connection_json(connection: Session) -> Dict:
     }
 
 
-def connect(username: str, password: str, server_name: str) -> Session:
+def connect(username: str, password: str, server_name: str, cache: dict) -> Session:
     """Connect to SMB server.
 
     Stores connection info in Redis so future sessions can reuse existing ones.
@@ -60,7 +60,7 @@ def connect(username: str, password: str, server_name: str) -> Session:
                 server=server_name,
                 username=username,
                 password=em_decrypt(password, app.config["PASS_KEY"]),
-                connection_cache={},
+                connection_cache=cache,
             )
 
             redis_client.set(
@@ -90,7 +90,7 @@ def connect(username: str, password: str, server_name: str) -> Session:
                 server=session_info["server_name"],
                 username=session_info["username"],
                 password=session_info["password"],
-                connection_cache={},
+                connection_cache=cache,
             )
         except Exception:
             conn = build_connect()
@@ -119,12 +119,13 @@ class Smb:
         self.run_id = run_id
         self.connection = connection
         self.local_temp_dir = directory
+        self.cache = {"conn": self.task.id}
 
         if self.connection is not None:
             self.share_name = str(self.connection.share_name).strip("/").strip("\\")
             self.username = self.connection.username
             self.password = self.connection.password
-            self.server_name = self.connection.server_name if self.connection else "Error"
+            self.server_name = self.connection.server_name
         else:
             # default connection for backups
             self.share_name = app.config["SMB_DEFAULT_SHARE"].strip("/").strip("\\")
@@ -150,9 +151,10 @@ class Smb:
         Because we want to use existing connection we will not close them...
         """
         return connect(
-            str(self.username),
-            str(self.password),
-            str(self.server_name),
+            username=str(self.username),
+            password=str(self.password),
+            server_name=str(self.server_name),
+            cache=self.cache,
         )
 
     def __load_file(self, full_path: str, index: int, length: int) -> IO[bytes]:
@@ -175,7 +177,7 @@ class Smb:
         with tempfile.NamedTemporaryFile(
             mode="wb", delete=False, dir=self.local_temp_dir
         ) as data_file:
-            copyfile(f"\\\\{full_path}", data_file.name, connection_cache={})
+            copyfile(f"\\\\{full_path}", data_file.name, connection_cache=self.cache)
 
         # overwrite existing file if needed.
         if local_path.exists():
@@ -190,7 +192,7 @@ class Smb:
         try:
             dir_path = Path(smb_path).parent
             file_name = Path(smb_path).name
-            return file_name in listdir(dir_path, connection_cache={})
+            return file_name in listdir(dir_path, connection_cache=self.cache)
         except SMBOSError as e:
             raise RunnerException(
                 self.task,
@@ -219,8 +221,8 @@ class Smb:
             else:
                 file_name_path = Path(file_name.strip("/")).parent
 
-            conn_path = Path((self.connection.path or "").strip("/"))
-            if str(conn_path) != "." and file_name_path.match(conn_path):
+            conn_path = (self.connection.path or "").strip("/")
+            if conn_path and file_name_path.match(conn_path):
                 file_path = str(base / Path(file_name.strip("/")))
             else:
                 file_path = str(base / conn_path / Path(file_name.strip("/")))
@@ -240,7 +242,7 @@ class Smb:
                 base_dir = f"\\\\{Path(file_path).parent if file_name.split('*')[0] else Path(file_path.split('*')[0])}"
                 file_name = str(Path(file_path).name)
                 file_list = []
-                for path, _, filenames in walk(base_dir, connection_cache={}):
+                for path, _, filenames in walk(base_dir, connection_cache=self.cache):
                     file_list += [
                         str(Path(path) / f) for f in filenames if fnmatch.fnmatch(f, file_name)
                     ]
@@ -308,7 +310,7 @@ class Smb:
 
             # makedirs will create the folders. If parent doesn't exist, it will create that also.
             try:
-                makedirs(my_dir, exist_ok=True, connection_cache={})
+                makedirs(my_dir, exist_ok=True, connection_cache=self.cache)
             except (OSError, SMBException, SMBResponseException, SMBAuthenticationError) as e:
                 raise RunnerException(
                     self.task,
@@ -328,7 +330,9 @@ class Smb:
 
             try:
 
-                copyfile(self.local_temp_dir.joinpath(file_name), smb_path, connection_cache={})
+                copyfile(
+                    self.local_temp_dir.joinpath(file_name), smb_path, connection_cache=self.cache
+                )
             except FileNotFoundError as e:
                 raise RunnerException(self.task, self.run_id, 10, f"Source file not found: {e}")
             except PermissionError as e:

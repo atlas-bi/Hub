@@ -418,6 +418,7 @@ def smb_online(smb_id: int) -> str:
             smb_connection.username,
             em_decrypt(smb_connection.password, app.config["PASS_KEY"]),
             smb_connection.server_name,
+            cache={"conn": smb_id},
         )
         # we do not close smb connections. they are recycled.
         return '<span class="tag is-success is-light">Online</span>'
