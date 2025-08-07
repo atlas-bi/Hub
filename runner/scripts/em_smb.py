@@ -6,7 +6,6 @@ and helper functions to handle connection caching and restoration via Redis.
 
 import fnmatch
 import os
-import pickle
 import tempfile
 from pathlib import Path
 from typing import IO, Dict, List, Optional
@@ -18,6 +17,7 @@ from smbclient import (
     listdir,
     makedirs,
     register_session,
+    reset_connection_cache,
     walk,
 )
 from smbclient.path import getsize
@@ -31,7 +31,6 @@ from smbprotocol.exceptions import (
 )
 from smbprotocol.session import Session
 
-from runner import redis_client
 from runner.model import ConnectionSmb, Task
 from runner.scripts.em_file import file_size
 from runner.scripts.em_messages import RunnerException, RunnerLog
@@ -47,57 +46,25 @@ def connection_json(connection: Session) -> Dict:
     }
 
 
-def connect(username: str, password: str, server_name: str, cache: dict) -> Session:
+def connect(username: str, password: str, server_name: str) -> Session:
     """Connect to SMB server.
 
-    Stores connection info in Redis so future sessions can reuse existing ones.
+    Returns the session for use in connnection_cache
     """
-    redis_key = f"smb_session_{server_name}"
-
-    def build_connect() -> Session:
-        try:
-            conn = register_session(
-                server=server_name,
-                username=username,
-                password=em_decrypt(password, app.config["PASS_KEY"]),
-                connection_cache=cache,
-            )
-
-            redis_client.set(
-                redis_key,
-                pickle.dumps(
-                    {
-                        "server_name": server_name,
-                        "username": username,
-                        "password": password,
-                    }
-                ),
-            )
-
-            return conn
-        except LogonFailure as err:
-            raise ValueError(f"Authentication failed\n{err}")
-        except SMBException as err:
-            raise ValueError(f"SMB registration failed\n{err}")
-        except Exception as err:
-            raise ValueError(f"Unexpected error during registration\n{err}")
-
-    session_data = redis_client.get(redis_key)
-    if session_data:
-        try:
-            session_info = pickle.loads(session_data)
-            conn = register_session(
-                server=session_info["server_name"],
-                username=session_info["username"],
-                password=session_info["password"],
-                connection_cache=cache,
-            )
-        except Exception:
-            conn = build_connect()
-    else:
-        conn = build_connect()
-
-    return conn
+    try:
+        sess = register_session(
+            server=server_name,
+            username=username,
+            password=em_decrypt(password, app.config["PASS_KEY"]),
+            connection_cache={},
+        )
+        return sess
+    except LogonFailure as err:
+        raise ValueError(f"Authentication failed\n{err}")
+    except SMBException as err:
+        raise ValueError(f"SMB registration failed\n{err}")
+    except Exception as err:
+        raise ValueError(f"Unexpected error during registration\n{err}")
 
 
 class Smb:
@@ -119,7 +86,6 @@ class Smb:
         self.run_id = run_id
         self.connection = connection
         self.local_temp_dir = directory
-        self.cache = {"conn": self.task.id}
 
         if self.connection is not None:
             self.share_name = str(self.connection.share_name).strip("/").strip("\\")
@@ -139,22 +105,19 @@ class Smb:
             username=app.config["SMB_USERNAME"],
             password=em_decrypt(app.config["SMB_PASSWORD"], app.config["PASS_KEY"]),
         )
-        self.conn = self.__connect()
+        self.cache = {"cache": self.__connect()}
 
     def __connect(self) -> Session:
         """Connect to SMB server.
 
-        After making a connection we save it to redis. Next time we need a connection
-        we can grab if from redis and attempt to use. If it is no longer connected
-        then reconnect.
-
-        Because we want to use existing connection we will not close them...
+        After making a connection we save the session. Next time we need a connection
+        we can grab it and attempt to use. If it is no longer connected
+        then it will reconnect.
         """
         return connect(
             username=str(self.username),
             password=str(self.password),
             server_name=str(self.server_name),
-            cache=self.cache,
         )
 
     def __load_file(self, full_path: str, index: int, length: int) -> IO[bytes]:
@@ -239,7 +202,7 @@ class Smb:
                 # walk will generate file names in a directory and everything below it.
 
                 # get the path up to the *.
-                base_dir = f"\\\\{Path(file_path).parent if file_name.split('*')[0] else Path(file_path.split('*')[0])}"
+                base_dir = f"\\\\{str(Path(file_path).parent).strip('*') if file_name.split('*')[0] else Path(file_path.split('*')[0])}"
                 file_name = str(Path(file_path).name)
                 file_list = []
                 for path, _, filenames in walk(base_dir, connection_cache=self.cache):
@@ -326,6 +289,7 @@ class Smb:
                     10,
                     "File already exists and will not be loaded",
                 )
+                self.__close()
                 return smb_path
 
             try:
@@ -359,7 +323,7 @@ class Smb:
                 10,
                 f"{file_size(uploaded_size)} uploaded to {server_name} server.",
             )
-
+            self.__close()
             return smb_path
 
         # pylint: disable=broad-except
@@ -367,3 +331,9 @@ class Smb:
             raise RunnerException(
                 self.task, self.run_id, 10, f"Failed to save file on server.\n{e}"
             )
+
+    def __close(self) -> None:
+        try:
+            reset_connection_cache(connection_cache=self.cache)
+        except BaseException as e:
+            raise RunnerException(self.task, self.run_id, 10, f"Failed to close connection.\n{e}")
