@@ -106,7 +106,6 @@ def search() -> Response:
         ConnectionSmb.id,
         ConnectionSmb.name,
         ConnectionSmb.server_name,
-        ConnectionSmb.server_ip,
         ConnectionSmb.share_name,
     )
     for row5 in smb_connections.all():

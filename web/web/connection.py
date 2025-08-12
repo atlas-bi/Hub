@@ -408,7 +408,6 @@ def new_connection_smb(connection_id: int) -> Union[Response, str]:
         connection_id=connection_id,
         name=form.get("name", "undefined", type=str),
         server_name=form.get("server_name", "", type=str).strip(),
-        server_ip=form.get("server_ip", "", type=str).strip(),
         share_name=form.get("share_name", "", type=str).strip(),
         path=form.get("path", "", type=str).strip().replace("\\", "/"),
         username=form.get("username", "", type=str).strip(),
@@ -452,7 +451,6 @@ def edit_connection_smb(connection_id: int, smb_id: int) -> Union[Response, str]
         {
             "name": form.get("name", "undefined", type=str),
             "server_name": form.get("server_name", "", type=str).strip(),
-            "server_ip": form.get("server_ip", "", type=str).strip(),
             "share_name": form.get("share_name", "", type=str).strip(),
             "path": form.get("path", "", type=str).strip().replace("\\", "/"),
             "username": form.get("username", "", type=str).strip(),

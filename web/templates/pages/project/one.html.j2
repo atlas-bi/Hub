@@ -1,201 +1,225 @@
 {% extends "layout.html.j2" %}
 
 {% block crumbs %}
-    <ul>
-        <li>
-            <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
-        </li>
-        <li>
-            <a href="{{ url_for('project_bp.user_projects', user_id=p.project_owner.id) }}">{{ p.project_owner }}'s Projects</a>
-        </li>
-        <li class="is-active">
-            <a href="" aria-current="page">{{ p }}</a>
-        </li>
-    </ul>
+  <ul>
+    <li>
+      <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
+    </li>
+    <li>
+      <a
+        href="{{ url_for('project_bp.user_projects', user_id=p.project_owner.id) }}"
+        >{{ p.project_owner }}'s Projects</a
+      >
+    </li>
+    <li class="is-active">
+      <a href="" aria-current="page">{{ p }}</a>
+    </li>
+  </ul>
 {% endblock crumbs %}
 
 {% block body %}
-    <h1 class="title is-1">{{ p }}</h1>
-    <h2 class="subtitle mb-2">{{ p.description }}</h2>
-    <small class="has-text-grey is-italic mb-4 is-block">Last edited {{ (p.updated or p.created)|datetime_format_easy }}</small>
-    <div class="field has-addons">
-        <p class="control">
-            <a class="button"
-               title="Edit Project"
-               href="{{ url_for('project_bp.edit_project_form', project_id=p.id) }}">
-                <span class="icon">
-                    <span class="fas fa-pen-to-square"></span>
-                </span>
-                <span>Edit</span>
-            </a>
-        </p>
-        <p class="control">
-            <a class="button"
-               title="Delete Project"
-               href="{{ url_for('project_bp.delete_project', project_id=p.id) }}"
-               onclick="return confirm('Are you sure you want to delete this project? All tasks and logs will also be removed.')">
-                <span class="icon">
-                    <span class="fas fa-trash"></span>
-                </span>
-                <span>Delete</span>
-            </a>
-        </p>
-        <p class="control">
-            <a class="button"
-               title="Duplicate Project"
-               href="{{ url_for('project_bp.duplicate_project', project_id=p.id) }}">
-                <span class="icon">
-                    <span class="far fa-copy"></span>
-                </span>
-                <span>Duplicate</span>
-            </a>
-        </p>
+  <h1 class="title is-1">{{ p }}</h1>
+  <h2 class="subtitle mb-2">{{ p.description }}</h2>
+  <small class="has-text-grey is-italic mb-4 is-block"
+    >Last edited {{ (p.updated or p.created)|datetime_format_easy }}</small
+  >
+  <div class="field has-addons">
+    <p class="control">
+      <a
+        class="button"
+        title="Edit Project"
+        href="{{ url_for('project_bp.edit_project_form', project_id=p.id) }}"
+      >
+        <span class="icon">
+          <span class="fas fa-pen-to-square"></span>
+        </span>
+        <span>Edit</span>
+      </a>
+    </p>
+    <p class="control">
+      <a
+        class="button"
+        title="Delete Project"
+        href="{{ url_for('project_bp.delete_project', project_id=p.id) }}"
+        onclick="return confirm('Are you sure you want to delete this project? All tasks and logs will also be removed.')"
+      >
+        <span class="icon">
+          <span class="fas fa-trash"></span>
+        </span>
+        <span>Delete</span>
+      </a>
+    </p>
+    <p class="control">
+      <a
+        class="button"
+        title="Duplicate Project"
+        href="{{ url_for('project_bp.duplicate_project', project_id=p.id) }}"
+      >
+        <span class="icon">
+          <span class="far fa-copy"></span>
+        </span>
+        <span>Duplicate</span>
+      </a>
+    </p>
+  </div>
+  <article class="message is-info">
+    <div class="message-body">
+      {% if p.sequence_tasks == 1 %}
+        Tasks will run in sequence by rank (ascending) with tasks having same
+        rank running at same time.
+      {% else %}
+        Tasks will run in parallel.
+      {% endif %}
+      {% if p.next_run %}
+        <br />
+        Next Run: {{ p.next_run }}
+      {% endif %}
     </div>
-    <article class="message is-info">
-        <div class="message-body">
-            {% if p.sequence_tasks == 1 %}
-                Tasks will run in sequence by rank (ascending) with tasks having same rank running at same time.
-            {% else %}
-                Tasks will run in parallel.
-            {% endif %}
-            {% if task.next_run %}
-                <br />
-                Next Run: {{ task.next_run }}
-            {% endif %}
-        </div>
-    </article>
-    {% if p.cron == 1 or p.intv==1 or p.ooff==1 %}
-        <div class="box">
-            <h2 class="title is-2">Schedule</h2>
-            {% if p.cron == 1 %}
-                <h3 class="title is-3">Cron Schedule - Run on specific dates/times</h3>
-                <div class="content">
-                    Run
-                    <!-- cron schedule -->
-                    <span class="em-pSection">
-                        {{ cron_desc }}
-                    </span>
-                    <!-- start / end dates -->
-                    <span class="em-pSection">
-                        {% if p.cron_start_date != None %}
-                            starting on
-                            <em>{{ p.cron_start_date }}</em>
-                            ,
-                        {% endif %}
-                    </span>
-                    <span class="em-pSection">
-                        {% if p.cron_end_date != None %}
-                            ending on
-                            <em>{{ p.cron_end_date }}</em>
-                            .
-                        {% else %}
-                            with no end date.
-                        {% endif %}
-                    </span>
-                </div>
-            {% endif %}
-            {% if p.intv == 1 %}
-                <h3 class="title is-3">
-                    Interval Schedule - Run with specific duration
-                    <em>between</em>
-                    runs
-                </h3>
-                <div class="content">
-                    {% if p.intv_type != None %}
-                        Run every
-                        <em>{{ (p.intv_value,p.intv_type)|intv_name }}</em>
-                    {% endif %}
-                    {% if p.intv_start_date != None %}
-                        starting on
-                        <em>{{ p.intv_start_date }}</em>
-                        ,
-                    {% endif %}
-                    {% if p.intv_end_date != None %}
-                        ending on
-                        <em>{{ p.intv_end_date }}</em>
-                        .
-                    {% else %}
-                        with no end date.
-                    {% endif %}
-                </div>
-            {% endif %}
-            {% if p.ooff == 1 %}
-                <h3 class="title is-3">Date Schedule - Run one time</h3>
-                <div class="content">
-                    Running on
-                    <em>{{ p.ooff_date }}.</em>
-                </div>
-            {% endif %}
-        </div>
-    {% else %}
-        <article class="message is-danger">
-            <div class="message-body">Project has no run schedule!</div>
-        </article>
-    {% endif %}
-    {% if p.params %}
-        <div class="box">
-            <h2 class="title is-2">Global Parameters</h2>
-            {% if has_secrets %}<button class="button show-params mb-0" type="button">Toggle Sensitive Values</button>{% endif %}
-            <pre class="box param-preview mb-0"><code class="language-ini">
-{%- for param in p.params -%}
-{{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{param.value|decrypt}}{% endif %}
-{%  endfor -%}
-        </code></pre>
-            <pre class="box param-real mb-0 is-hidden"><code class="language-ini">
-{%- for param in p.params -%}
-{{ param.key }}={{param.value|decrypt}}
-{%  endfor -%}
-        </code></pre>
-        </div>
-    {% endif %}
+  </article>
+  {% if p.cron == 1 or p.intv==1 or p.ooff==1 %}
     <div class="box">
-        <h2 class="title is-2">Tasks</h2>
-        <div class="field has-addons">
-            <p class="control">
-                <a class="button"
-                   title="New Task"
-                   href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id) }}">
-                    <span class="icon">
-                        <span class="fas fa-plus"></span>
-                    </span>
-                    <span>New</span>
-                </a>
-            </p>
-            <p class="control">
-                <a class="button"
-                   title="Disable Project"
-                   href="{{ url_for('project_bp.disable_all_project_tasks', project_id=p.id) }}">
-                    <span class="icon">
-                        <span class="fas fa-toggle-off"></span>
-                    </span>
-                    <span>Disable All</span>
-                </a>
-            </p>
-            <p class="control">
-                <a class="button"
-                   title="Enable Project"
-                   href="{{ url_for('project_bp.enable_all_project_tasks', project_id=p.id) }}">
-                    <span class="icon">
-                        <span class="fas fa-toggle-on"></span>
-                    </span>
-                    <span>Enable All</span>
-                </a>
-            </p>
-            <p class="control">
-                <a class="button"
-                   title="Run Project"
-                   href="{{ url_for('project_bp.run_all_project_tasks', project_id=p.id) }}">
-                    <span class="icon">
-                        <span class="far fa-circle-play"></span>
-                    </span>
-                    <span>Run All</span>
-                </a>
-            </p>
+      <h2 class="title is-2">Schedule</h2>
+      {% if p.cron == 1 %}
+        <h3 class="title is-3">Cron Schedule - Run on specific dates/times</h3>
+        <div class="content">
+          Run
+          <!-- cron schedule -->
+          <span class="em-pSection"> {{ cron_desc }} </span>
+          <!-- start / end dates -->
+          <span class="em-pSection">
+            {% if p.cron_start_date != None %}
+              starting on
+              <em>{{ p.cron_start_date }}</em>
+              ,
+            {% endif %}
+          </span>
+          <span class="em-pSection">
+            {% if p.cron_end_date != None %}
+              ending on
+              <em>{{ p.cron_end_date }}</em>
+              .
+            {% else %}
+              with no end date.
+            {% endif %}
+          </span>
         </div>
-        <div class="em-ajaxTable no-tools no-box"
-             data-theme="Exec"
-             data-src="{{ url_for('table_bp.project_all_tasks', project_id=p.id) }}">
-            <div class="loader"></div>
+      {% endif %}
+      {% if p.intv == 1 %}
+        <h3 class="title is-3">
+          Interval Schedule - Run with specific duration
+          <em>between</em>
+          runs
+        </h3>
+        <div class="content">
+          {% if p.intv_type != None %}
+            Run every
+            <em>{{ (p.intv_value,p.intv_type)|intv_name }}</em>
+          {% endif %}
+          {% if p.intv_start_date != None %}
+            starting on
+            <em>{{ p.intv_start_date }}</em>
+            ,
+          {% endif %}
+          {% if p.intv_end_date != None %}
+            ending on
+            <em>{{ p.intv_end_date }}</em>
+            .
+          {% else %}
+            with no end date.
+          {% endif %}
         </div>
+      {% endif %}
+      {% if p.ooff == 1 %}
+        <h3 class="title is-3">Date Schedule - Run one time</h3>
+        <div class="content">
+          Running on
+          <em>{{ p.ooff_date }}.</em>
+        </div>
+      {% endif %}
     </div>
+  {% else %}
+    <article class="message is-danger">
+      <div class="message-body">Project has no run schedule!</div>
+    </article>
+  {% endif %}
+  {% if p.params %}
+    <div class="box">
+      <h2 class="title is-2">Global Parameters</h2>
+      {% if has_secrets %}
+        <button class="button show-params mb-0" type="button">
+          Toggle Sensitive Values
+        </button>
+      {% endif %}
+      <pre class="box param-preview mb-0"><code class="language-ini">
+{%- for param in p.params -%}
+        {{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{ param.value|decrypt }}{% endif %}
+      {% endfor -%}
+        </code></pre>
+      <pre class="box param-real mb-0 is-hidden"><code class="language-ini">
+{%- for param in p.params -%}
+        {{ param.key }}={{ param.value|decrypt }}
+      {% endfor -%}
+        </code></pre>
+    </div>
+  {% endif %}
+  <div class="box">
+    <h2 class="title is-2">Tasks</h2>
+    <div class="field has-addons">
+      <p class="control">
+        <a
+          class="button"
+          title="New Task"
+          href="{{ url_for('task_edit_bp.task_new_get', project_id=p.id) }}"
+        >
+          <span class="icon">
+            <span class="fas fa-plus"></span>
+          </span>
+          <span>New</span>
+        </a>
+      </p>
+      <p class="control">
+        <a
+          class="button"
+          title="Disable Project"
+          href="{{ url_for('project_bp.disable_all_project_tasks', project_id=p.id) }}"
+        >
+          <span class="icon">
+            <span class="fas fa-toggle-off"></span>
+          </span>
+          <span>Disable All</span>
+        </a>
+      </p>
+      <p class="control">
+        <a
+          class="button"
+          title="Enable Project"
+          href="{{ url_for('project_bp.enable_all_project_tasks', project_id=p.id) }}"
+        >
+          <span class="icon">
+            <span class="fas fa-toggle-on"></span>
+          </span>
+          <span>Enable All</span>
+        </a>
+      </p>
+      <p class="control">
+        <a
+          class="button"
+          title="Run Project"
+          href="{{ url_for('project_bp.run_all_project_tasks', project_id=p.id) }}"
+        >
+          <span class="icon">
+            <span class="far fa-circle-play"></span>
+          </span>
+          <span>Run All</span>
+        </a>
+      </p>
+    </div>
+    <div
+      class="em-ajaxTable no-tools no-box"
+      data-theme="Exec"
+      data-src="{{ url_for('table_bp.project_all_tasks', project_id=p.id) }}"
+    >
+      <div class="loader"></div>
+    </div>
+  </div>
 {% endblock body %}

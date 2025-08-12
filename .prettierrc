@@ -6,5 +6,6 @@
     "trailingComma": "all",
     "bracketSpacing": true,
     "arrowParens": "always",
-    "semi": true
+    "semi": true,
+    "plugins": ["prettier-plugin-jinja-template"]
 }

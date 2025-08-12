@@ -79,7 +79,6 @@ def test_search(client_fixture: fixture) -> None:
         name="Test SMB",
         connection_id=conn.id,
         server_name="smbserver",
-        server_ip="1.2.3.4",
         share_name="myshare",
         path="nowhere/around/here",
         username="albany",

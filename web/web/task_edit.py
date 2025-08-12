@@ -88,8 +88,7 @@ def task_new(project_id: int) -> Union[str, Response]:
         source_smb_id=form.get("task-source-smb", None, type=int),
         source_smb_file=(form.get("sourceSmbFile", None, type=str) or "").replace("\\", "/")
         or None,
-        source_smb_ignore_delimiter=form.get("task_smb_ignore_delimiter", 0, type=int),
-        source_smb_delimiter=form.get("sourceSmbDelimiter", None, type=str),
+        source_smb_ignore_subfolders=form.get("task_smb_ignore_subfolders", None, type=int),
         source_sftp_id=form.get("task-source-sftp", None, type=int),
         source_sftp_file=form.get("sourceSftpFile", None, type=str),
         source_sftp_ignore_delimiter=form.get("task_sftp_ignore_delimiter", None, type=int),
@@ -366,8 +365,7 @@ def task_edit_post(task_id: int) -> Response:
             source_smb_id=form.get("task-source-smb", None, type=int),
             source_smb_file=(form.get("sourceSmbFile", None, type=str) or "").replace("\\", "/")
             or None,
-            source_smb_ignore_delimiter=form.get("task_smb_ignore_delimiter", 0, type=int),
-            source_smb_delimiter=form.get("sourceSmbDelimiter", None, type=str),
+            source_smb_ignore_subfolders=form.get("task_smb_ignore_subfolders", None, type=int),
             source_sftp_id=form.get("task-source-sftp", None, type=int),
             source_sftp_file=form.get("sourceSftpFile", None, type=str),
             source_sftp_ignore_delimiter=form.get("task_sftp_ignore_delimiter", None, type=int),

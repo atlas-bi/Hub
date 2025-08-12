@@ -261,7 +261,6 @@ class Config:
 
     SMB_USERNAME = "username"
     SMB_PASSWORD = "password"  # noqa: S105
-    SMB_SERVER_IP = "10.0.0.0"
     SMB_SERVER_NAME = "servername"
     SMB_DEFAULT_SHARE = "BackupShare"
 

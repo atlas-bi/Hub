@@ -1,7 +1,7 @@
 {
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "cz-conventional-changelog"
     }
   },
   "dependencies": {
@@ -31,19 +31,19 @@
   "description": "A task scheduling tool.",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.32.0",
+    "@eslint/js": "^9.33.0",
     "@fortawesome/fontawesome-free": "6.7.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "13.0.1",
     "@semantic-release/exec": "7.1.0",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "^11.0.3",
+    "@semantic-release/github": "^11.0.4",
     "@semantic-release/npm": "^12.0.2",
     "@semantic-release/release-notes-generator": "14.0.3",
     "browser-sync": "^3.0.4",
     "cssnano": "^7.1.0",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "^9.32.0",
+    "eslint": "^9.33.0",
     "globals": "^16.3.0",
     "gulp-concat": "2.6.1",
     "gulp-postcss": "10.0.0",
@@ -51,6 +51,7 @@
     "gulp-rename": "2.1.0",
     "gulp-uglify": "3.0.2",
     "prettier": "^3.6.2",
+    "prettier-plugin-jinja-template": "^2.1.0",
     "semantic-release": "^24.2.7"
   },
   "homepage": "https://atlas-hub.atlas.bi",
@@ -63,14 +64,14 @@
   },
   "scripts": {
     "build": "run-p gulp:build model:*",
-    "commit": "git add . && pre-commit run ; git add . && cz --no-verify",
+    "commit": "git add . && pre-commit run && git add . && cz --no-verify",
     "dev:browser": "browser-sync start --proxy http://127.0.0.1:4999/ --files=\"web/**\"",
     "dev:runner": "FLASK_ENV=development FLASK_DEBUG=1 FLASK_APP=runner poetry run flask run --port=5002",
     "dev:scheduler": "FLASK_ENV=development FLASK_DEBUG=1 FLASK_APP=scheduler poetry run flask run --port=5001",
     "dev:web": "FLASK_ENV=development FLASK_DEBUG=1 FLASK_APP=web FLASK_RUN_PORT=4999 poetry run flask run",
     "format": "run-s format:*",
     "format:dynamic": "poetry run tox -e reformat",
-    "format:static": "prettier --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\" --write",
+    "format:static": "prettier --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html,j2}\" --write",
     "gulp:build": "gulp build",
     "gulp:watch": "gulp watch",
     "install": "gulp build",
@@ -82,8 +83,8 @@
     "test": "run-s test:*",
     "test:eslint": "eslint \"./web/**/*.js\" --color",
     "test:lint": "poetry run tox -e lint",
-    "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\""
+    "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html,j2}\""
   },
   "type": "module",
-  "version": "3.5.2"
+  "version": "3.5.3"
 }

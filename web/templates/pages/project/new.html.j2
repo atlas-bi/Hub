@@ -1,150 +1,177 @@
 {% extends "layout.html.j2" %}
 
 {% block crumbs %}
-    <ul>
-        <li>
-            <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
-        </li>
-        <li class="is-active">
-            {% if p %}
-                <a href="" aria-current="page">Editing {{ p }}</a>
-            {% else %}
-                <a href="" aria-current="page">New Project</a>
-            {% endif %}
-        </li>
-    </ul>
+  <ul>
+    <li>
+      <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
+    </li>
+    <li class="is-active">
+      {% if p %}
+        <a href="" aria-current="page">Editing {{ p }}</a>
+      {% else %}
+        <a href="" aria-current="page">New Project</a>
+      {% endif %}
+    </li>
+  </ul>
 {% endblock crumbs %}
 
 {% block body %}
-    <h1 class="title is-1" data-docs="projects">
-        {% if p %}
-            Editing
-            <a title="open project"
-               href="{{ url_for('project_bp.one_project', project_id =p.id) }}">{{ p }}</a>
-        {% else %}
-            New Project
-        {% endif %}
-    </h1>
-    {% if error %} <article class="message is-danger"><strong>Error: </strong> {{ error }} </article>{% endif %}
-    <form method="post"
-          action="{%- if p -%}{{ url_for('project_bp.edit_project', project_id=p.id) }}{%- else -%}{{ url_for("project_bp.new_project") }}{%- endif -%}"
-          id="project-new">
-        <div class="box">
-            <div class="field">
-                <label class="label">Name</label>
-                <div class="control">
-                    <input class="input"
-                           name="project_name"
-                           autocomplete="off"
-                           required="required"
-                           value="{{ p.name }}" />
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Description</label>
-                <div class="control">
-                    <textarea class="textarea" name="project_desc">{{ p.description }}</textarea>
-                </div>
-            </div>
-            {% if p %}
+  <h1 class="title is-1" data-docs="projects">
+    {% if p %}
+      Editing
+      <a
+        title="open project"
+        href="{{ url_for('project_bp.one_project', project_id =p.id) }}"
+        >{{ p }}</a
+      >
+    {% else %}
+      New Project
+    {% endif %}
+  </h1>
+  {% if error %}
+    <article class="message is-danger">
+      <strong>Error: </strong> {{ error }}
+    </article>
+  {% endif %}
+  <form
+    method="post"
+    action="{%- if p -%}{{ url_for('project_bp.edit_project', project_id=p.id) }}{%- else -%}{{ url_for("project_bp.new_project") }}{%- endif -%}"
+    id="project-new"
+  >
+    <div class="box">
+      <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+          <input
+            class="input"
+            name="project_name"
+            autocomplete="off"
+            required="required"
+            value="{{ p.name }}"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Description</label>
+        <div class="control">
+          <textarea class="textarea" name="project_desc">
+{{ p.description }}</textarea
+          >
+        </div>
+      </div>
+      {% if p %}
+        <div class="field">
+          <input
+            class="is-checkradio is-info"
+            id="project_take_ownership"
+            type="checkbox"
+          />
+          <label for="project_take_ownership">Take Ownership of Project</label>
+          <input type="hidden" name="project_ownership" value="0" />
+        </div>
+      {% endif %}
+      <div class="field">
+        <input
+          class="is-checkradio is-info"
+          type="checkbox"
+          id="run_tasks_in_sequence"
+          {% if p.sequence_tasks == 1 %}checked="checked"{% endif %}
+        />
+        <label for="run_tasks_in_sequence">Run Tasks in Sequence</label>
+        <input
+          type="hidden"
+          name="run_tasks_in_sequence"
+          value="{{ p.sequence_tasks or 0 }}"
+        />
+      </div>
+    </div>
+    <div class="box">{% include "pages/project/cron.html.j2" %}</div>
+    <div class="box">{% include "pages/project/interval.html.j2" %}</div>
+    <div class="box">{% include "pages/project/oneoff.html.j2" %}</div>
+    <div class="box">
+      <h2 class="title is-2" data-docs="parameters">Global Parameters</h2>
+      <p class="subtitle is-6">
+        Parameters are <strong>key=value</strong> pairs, and can use
+        <strong>parse(...)</strong> with embedded
+        <a href="https://strftime.org" target="_blank" rel="noopener"
+          >strftime patterns</a
+        >
+        . Project parameters are passed to child tasks.
+      </p>
+      <section class="block" id="new-parameters">
+        {% if p.params %}
+          {% for param in p.params %}
+            <div class="field is-horizontal new-parameter">
+              <div class="field-body is-align-items-center">
                 <div class="field">
-                    <input class="is-checkradio is-info"
-                           id="project_take_ownership"
-                           type="checkbox" />
-                    <label for="project_take_ownership">Take Ownership of Project</label>
-                    <input type="hidden" name="project_ownership" value="0" />
+                  <p class="control is-expanded">
+                    <input
+                      name="param-key"
+                      class="input"
+                      type="text"
+                      placeholder="name"
+                      value="{{ param.key }}"
+                    />
+                  </p>
                 </div>
-            {% endif %}
-            <div class="field">
-                <input class="is-checkradio is-info"
-                       type="checkbox"
-                       id="run_tasks_in_sequence"
-                       {% if p.sequence_tasks == 1 %}checked="checked"{% endif %} />
-                <label for="run_tasks_in_sequence">Run Tasks in Sequence</label>
-                <input type="hidden"
-                       name="run_tasks_in_sequence"
-                       value="{{ p.sequence_tasks or 0 }}" />
-            </div>
-        </div>
-        <div class="box">
-            {% include "pages/project/cron.html.j2" %}
-
-        </div>
-        <div class="box">
-            {% include "pages/project/interval.html.j2" %}
-
-        </div>
-        <div class="box">
-            {% include "pages/project/oneoff.html.j2" %}
-
-        </div>
-        <div class="box">
-            <h2 class="title is-2" data-docs="parameters">Global Parameters</h2>
-            <p class="subtitle is-6">
-                Parameters are <strong>key=value</strong> pairs, and can use <strong>parse(...)</strong> with embedded
-                <a href="https://strftime.org" target="_blank" rel="noopener">strftime patterns</a>
-                . Project parameters are passed to child tasks.
-            </p>
-            <section class="block" id="new-parameters">
-                {% if p.params %}
-                    {% for param in p.params %}
-                        <div class="field is-horizontal new-parameter">
-                            <div class="field-body is-align-items-center">
-                                <div class="field">
-                                    <p class="control is-expanded">
-                                        <input name="param-key"
-                                               class="input"
-                                               type="text"
-                                               placeholder="name"
-                                               value="{{ param.key }}" />
-                                    </p>
-                                </div>
-                                <div class="field has-addons">
-                                    <p class="control is-expanded">
-                                        <input name="param-value"
-                                               class="input"
-                                               {% if param.sensitive == 1 %}
-                                                   type="password"
-                                               {% else %}
-                                                   type="text"
-                                               {% endif %}
-                                               placeholder="***"
-                                               value="{{ param.value|decrypt }}" />
-                                    </p>
-                                    <div class="control">
-                                        <a class="button toggle-pass "data-target="password">
-                                            <span class="icon">
-                                                <span class="fas
+                <div class="field has-addons">
+                  <p class="control is-expanded">
+                    <input
+                      name="param-value"
+                      class="input"
+                      {% if param.sensitive == 1 %}
+                        type="password"
+                      {% else %}
+                        type="text"
+                      {% endif %}
+                      placeholder="***"
+                      value="{{ param.value|decrypt }}"
+                    />
+                  </p>
+                  <div class="control">
+                    <a class="button toggle-pass " data-target="password">
+                      <span class="icon">
+                        <span
+                          class="fas
                                                           {% if param.sensitive ==1 -%}
-                                                              fa-eye{%- else -%}fa-eye-slash{%- endif -%}"></span>
-                                                <input name="param-sensitive"
-                                                       type="hidden"
-                                                       {% if param.sensitive ==1 -%}
-                                                           value="1"
-                                                       {% else %}
-                                                           value="0"
-                                                       {% endif %} />
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <p class="control mb-1 ">
-                                    <button type="button" class="delete is-large new-remove-parameter"></button>
-                                </p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </section>
-            <button type="button" class="button new-parameter">New Parameter</button>
-        </div>
-        <button class="button is-info is-fullwidth mb-5" type="submit">
-            {% if p %}
-                Save
-            {% else %}
-                Add
-            {% endif %}
-            Project
-        </button>
-    </form>
+                            fa-eye
+                          {%- else -%}
+                            fa-eye-slash
+                          {%- endif -%}"
+                        ></span>
+                        <input
+                          name="param-sensitive"
+                          type="hidden"
+                          {% if param.sensitive ==1 -%}
+                            value="1"
+                          {% else %}
+                            value="0"
+                          {% endif %}
+                        />
+                      </span>
+                    </a>
+                  </div>
+                </div>
+                <p class="control mb-1 ">
+                  <button
+                    type="button"
+                    class="delete is-large new-remove-parameter"
+                  ></button>
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </section>
+      <button type="button" class="button new-parameter">New Parameter</button>
+    </div>
+    <button class="button is-info is-fullwidth mb-5" type="submit">
+      {% if p %}
+        Save
+      {% else %}
+        Add
+      {% endif %}
+      Project
+    </button>
+  </form>
 {% endblock body %}

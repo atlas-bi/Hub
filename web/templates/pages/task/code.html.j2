@@ -1,46 +1,59 @@
 {% if code %}
-    {% with rand = code|dateHash %}
-        <div class="em-tableTools">
-            <div class="field has-addons">
-                <p class="control">
-                    <button class="button" onclick="copyQuery{{ rand }}(event)" title="copy">
-                        <span class="icon">
-                            <span class="fas fa-copy"></span>
-                        </span>
-                        <span>Copy</span>
-                    </button>
-                </p>
-                <p class="control">
-                    <button class="button" onclick="saveQuery{{ rand }}(event)" title="download">
-                        <span class="icon">
-                            <span class="fas fa-download"></span>
-                        </span>
-                        <span>Download</span>
-                    </button>
-                </p>
-                {% if cache_enabled %}
-                    <p class="control">
-                        <a class="button"
-                           title="download"
-                           href="{{ url_for('task_bp.refresh_cache', task_id=task_id) }}">
-                            <span class="icon">
-                                <span class="fas fa-rotate"></span>
-                            </span>
-                            <span>Refresh Cache</span>
-                        </a>
-                    </p>
-                {% endif %}
-            </div>
-        </div>
-        <div class="my-3 p-0 box em-codeBox line-numbers"
-             id="git_code_{{ rand }}"
-             style="height:500px">
-            <div ss-container="ss-container" class="ss-preview" style="height:100%">
-                <pre>
+  {% with rand = code|dateHash %}
+    <div class="em-tableTools">
+      <div class="field has-addons">
+        <p class="control">
+          <button
+            class="button"
+            onclick="copyQuery{{ rand }}(event)"
+            title="copy"
+          >
+            <span class="icon">
+              <span class="fas fa-copy"></span>
+            </span>
+            <span>Copy</span>
+          </button>
+        </p>
+        <p class="control">
+          <button
+            class="button"
+            onclick="saveQuery{{ rand }}(event)"
+            title="download"
+          >
+            <span class="icon">
+              <span class="fas fa-download"></span>
+            </span>
+            <span>Download</span>
+          </button>
+        </p>
+        {% if cache_enabled %}
+          <p class="control">
+            <a
+              class="button"
+              title="download"
+              href="{{ url_for('task_bp.refresh_cache', task_id=task_id) }}"
+            >
+              <span class="icon">
+                <span class="fas fa-rotate"></span>
+              </span>
+              <span>Refresh Cache</span>
+            </a>
+          </p>
+        {% endif %}
+      </div>
+    </div>
+    <div
+      class="my-3 p-0 box em-codeBox line-numbers"
+      id="git_code_{{ rand }}"
+      style="height:500px"
+    >
+      <div ss-container="ss-container" class="ss-preview" style="height:100%">
+        <pre>
 <code class="language-{{ language or 'sql' }}">{{ code }}</code>
                                                                                                 </pre>
-            </div>
-        </div>
+      </div>
+    </div>
+    {# prettier-ignore-start #}
         <script>
                  (function(){   var readyStateCheckInterval{{ rand }} = setInterval(function() {
                         if (document.readyState === "complete") {
@@ -76,5 +89,6 @@
                     }, 10);
                  })()
         </script>
-    {% endwith %}
+        {# prettier-ignore-end #}
+  {% endwith %}
 {% endif %}

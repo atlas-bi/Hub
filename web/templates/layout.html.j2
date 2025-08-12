@@ -1,126 +1,151 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html dir="ltr" lang="en-US">
+  <head>
     {% cache None %}
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <meta name="robots" content="noindex, nofollow" />
-    <meta content="Atlas Automation Hub, running tasks on schedule."
-          name="description" />
-    <meta content="Christopher Pickering" name="author" />
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <link href="{{ url_for('static', filename='apple-touch-icon.png') }}"
-          rel="apple-touch-icon"
-          sizes="180x180" />
-    <link href="{{ url_for('static', filename='favicon-32x32.png') }}"
-          rel="icon"
-          sizes="32x32"
-          type="image/png" />
-    <link href="{{ url_for('static', filename='favicon-16x16.png') }}"
-          rel="icon"
-          sizes="16x16"
-          type="image/png" />
-    <link href="{{ url_for('static', filename='site.webmanifest') }}"
-          rel="manifest" />
-    <link href="{{ url_for('static', filename='favicon.ico') }}"
-          rel="shortcut icon" />
-    {% assets "css" %}
+      <meta charset="utf-8" />
+      <meta content="width=device-width, initial-scale=1" name="viewport" />
+      <meta name="robots" content="noindex, nofollow" />
+      <meta
+        content="Atlas Automation Hub, running tasks on schedule."
+        name="description"
+      />
+      <meta content="Christopher Pickering" name="author" />
+      <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+      <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+      <link
+        href="{{ url_for('static', filename='apple-touch-icon.png') }}"
+        rel="apple-touch-icon"
+        sizes="180x180"
+      />
+      <link
+        href="{{ url_for('static', filename='favicon-32x32.png') }}"
+        rel="icon"
+        sizes="32x32"
+        type="image/png"
+      />
+      <link
+        href="{{ url_for('static', filename='favicon-16x16.png') }}"
+        rel="icon"
+        sizes="16x16"
+        type="image/png"
+      />
+      <link
+        href="{{ url_for('static', filename='site.webmanifest') }}"
+        rel="manifest"
+      />
+      <link
+        href="{{ url_for('static', filename='favicon.ico') }}"
+        rel="shortcut icon"
+      />
+      {% assets "css" %}
         <link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
-    {% endassets %}
-{% endcache %}
-<title>Atlas Automation Hub - {{ title }}</title>
-<link rel="preload"
+      {% endassets %}
+    {% endcache %}
+    <title>Atlas Automation Hub - {{ title }}</title>
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/inter/files/inter-latin-400-normal.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-<link rel="preload"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/inter/files/inter-latin-500-normal.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-<link rel="preload"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/inter/files/inter-latin-600-normal.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-<link rel="preload"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/inter/files/inter-latin-300-normal.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-<link rel="preload"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/inter/files/inter-latin-700-normal.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-<link rel="preload"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/rasa/files/rasa-latin-600-normal.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-<link rel="preload"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/fontawesome/webfonts/fa-regular-400.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-<link rel="preload"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="{{ url_for('static', filename='fonts/fontawesome/webfonts/fa-solid-900.woff2') }}"
       as="font"
       type="font/woff2"
-      crossorigin />
-{% block head %}
-{% endblock head %}
+      crossorigin
+    />
+    {% block head %}
+    {% endblock head %}
 
-{% block css %}
-{% endblock css %}
-
-<body>
+    {% block css %}
+    {% endblock css %}
+  </head>
+  <body>
     {% if config['DEMO'] and not config["TEST"] %}
-        {% include "demo.html.j2" %}
-
+      {% include "demo.html.j2" %}
     {% endif %}
     {% block body_auth %}
-        {% include "sections/head.html.j2" %}
+      {% include "sections/head.html.j2" %}
 
-        <section class="level mt-5">
-            <div class="container">
-                <nav class="breadcrumb">
-                    {% block crumbs %}
-                    {% endblock crumbs %}
-
-                </nav>
-            </div>
-        </section>
-        <div class="container" id="content">
-            {% include "sections/flashes.html.j2" %}
-
-            {% block body %}
-            {% endblock body %}
-
+      <section class="level mt-5">
+        <div class="container">
+          <nav class="breadcrumb">
+            {% block crumbs %}
+            {% endblock crumbs %}
+          </nav>
         </div>
+      </section>
+      <div class="container" id="content">
+        {% include "sections/flashes.html.j2" %}
+
+        {% block body %}
+        {% endblock body %}
+      </div>
     {% endblock body_auth %}
 
     {% block js %}
     {% endblock js %}
-
-</body>
-{% assets "scroll" %}
+  </body>
+  {% assets "scroll" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
-{% assets "codemirror" %}
+  {% endassets %}
+  {% assets "codemirror" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
-{% assets "js_search" %}
+  {% endassets %}
+  {% assets "js_search" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
-{% assets "js_flatpickr" %}
+  {% endassets %}
+  {% assets "js_flatpickr" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
-{% assets "js" %}
+  {% endassets %}
+  {% assets "js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
-{% assets "js_tables" %}
+  {% endassets %}
+  {% assets "js_tables" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
+  {% endassets %}
 </html>

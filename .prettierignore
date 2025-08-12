@@ -3,6 +3,7 @@ node_modules/*
 .mypy_cache
 .pytest_cache
 .tox
+/web/templates/sections/py_dates.*
 
 /web/static/lib/*
 !/web/static/lib/table/

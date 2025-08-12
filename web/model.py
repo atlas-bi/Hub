@@ -405,7 +405,6 @@ class ConnectionSmb(db.Model):
     path: Mapped[Optional[str_1000]]
     username: Mapped[Optional[str_500]]
     password: Mapped[Optional[str]] = mapped_column(db.Text, nullable=True)
-    server_ip: Mapped[Optional[str_500]]
     server_name: Mapped[Optional[str_500]]
     task: Mapped["Task"] = relationship(
         backref="destination_smb_conn",
@@ -569,8 +568,7 @@ class Task(db.Model):
 
     # source smb sql file
     source_smb_file: Mapped[Optional[str_1000]]
-    source_smb_delimiter: Mapped[Optional[str_10]]
-    source_smb_ignore_delimiter: Mapped[Optional[int]]
+    source_smb_ignore_subfolders: Mapped[Optional[int]]
     source_smb_id: Mapped[Optional[int]] = mapped_column(
         db.ForeignKey(ConnectionSmb.id), index=True
     )
