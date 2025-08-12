@@ -1,7 +1,6 @@
 """SMB Connection Manager.
 
-This module provides a class `Smb` to manage SMB file transfers,
-and helper functions to handle connection caching and restoration via Redis.
+This module provides a class `Smb` to manage SMB file transfers.
 """
 
 import fnmatch
@@ -259,7 +258,7 @@ class Smb:
             )
             if self.connection is not None:
                 dest_path = str(
-                    base_path / Path(self.connection.path.strip("/") or "").joinpath(file_name)
+                    base_path / Path((self.connection.path or "").strip("/")).joinpath(file_name)
                 )
             else:
                 dest_path = str(
