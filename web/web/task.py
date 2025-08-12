@@ -191,6 +191,7 @@ def task_get_source_code(task_id: int) -> str:
         code=code,
         cache_enabled=task.enable_source_cache,
         task_id=task_id,
+        language="sql",
     )
 
 
@@ -232,10 +233,7 @@ def task_get_processing_code(task_id: int) -> str:
             db.session.commit()
         code = "error."
 
-    return render_template(
-        "pages/task/code.html.j2",
-        code=code,
-    )
+    return render_template("pages/task/code.html.j2", code=code, language="python")
 
 
 @task_bp.route("/task/sftp-dest")

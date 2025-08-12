@@ -12,14 +12,16 @@
       </button>
     {% endif %}
     <pre class="box param-preview mb-0"><code class="language-ini">
-{%- for param in t.params -%}
-      {{ param.key }}={% if param.sensitive == 1 %}*******{% else %}{{ param.value|decrypt }}{% endif %}
-    {% endfor -%}
+    {% for param in t.params %}
+      {{- param.key -}}={% if param.sensitive == 1 %}*******{% else %}{{ param.value|decrypt }}{% endif %}
+    {% endfor %}
         </code></pre>
-    <pre class="box param-real mb-0 is-hidden"><code class="language-ini">
-{%- for param in t.params -%}
-      {{ param.key }}={{ param.value|decrypt }}
-    {% endfor -%}
+    <pre
+      class="box param-real mb-0 is-hidden"
+    ><code class="language-ini">
+    {% for param in t.params %}
+      {{- param.key -}}={{ param.value|decrypt }}
+    {% endfor %}
         </code></pre>
   </div>
 {% endif %}
