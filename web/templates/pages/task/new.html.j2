@@ -49,27 +49,28 @@
           <i class="fas fa-pen-to-square mr-2"></i>
           Editing: {{ t.name }}
         </span>
-        <div class="is-flex is-align-items-center" style="gap: 0.5rem;">
-          <!-- Save Button in Sticky Header -->
-          <button class="button is-small is-light" type="submit" form="task-form" style="display: flex; align-items: center; justify-content: center; padding: 0.375rem 0.75rem; line-height: 1; font-size: 0.75rem;">
-            <span class="icon is-small" style="margin-right: 0.25rem; line-height: 1;">
+        
+        <!-- Simple buttons with proper Bulma spacing -->
+        <div class="buttons">
+          <button class="button is-small is-light" type="submit" form="task-form">
+            <span class="icon is-small">
               <i class="fas fa-save"></i>
             </span>
-            <span style="line-height: 1;">Save</span>
+            <span>Save</span>
           </button>
           
-          <!-- Go to Top Button with better styling -->
-          <button class="button is-small is-light" type="button" onclick="document.querySelector('form').scrollIntoView({behavior: 'smooth'})" style="display: flex; align-items: center; justify-content: center; padding: 0.375rem 0.75rem; line-height: 1; font-size: 0.75rem; min-width: 80px;">
-            <span class="icon is-small" style="margin-right: 0.25rem; line-height: 1;">
+          <button class="button is-small is-light" type="button" onclick="document.querySelector('form').scrollIntoView({behavior: 'smooth'})">
+            <span class="icon is-small">
               <i class="fas fa-arrow-up"></i>
             </span>
-            <span style="line-height: 1;">Go to Top</span>
+            <span>Go to Top</span>
           </button>
         </div>
       </div>
     </div>
   </div>
   {% endif %}
+
 
   
   <form
