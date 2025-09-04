@@ -49,18 +49,30 @@
           <i class="fas fa-pen-to-square mr-2"></i>
           Editing: {{ t.name }}
         </span>
-        <button class="button is-small is-light" type="button" onclick="document.querySelector('form').scrollIntoView({behavior: 'smooth'})">
-          <span class="icon is-small">
-            <i class="fas fa-arrow-up"></i>
-          </span>
-          <span>Top</span>
-        </button>
+        <div class="is-flex is-align-items-center" style="gap: 0.5rem;">
+          <!-- Save Button in Sticky Header -->
+          <button class="button is-small is-light" type="submit" form="task-form">
+            <span class="icon is-small">
+              <i class="fas fa-save"></i>
+            </span>
+            <span>Save</span>
+          </button>
+          
+          <!-- Go to Top Button with better styling -->
+          <button class="button is-small is-light" type="button" onclick="document.querySelector('form').scrollIntoView({behavior: 'smooth'})" style="display: flex; align-items: center; justify-content: center; min-width: 80px;">
+            <span class="icon is-small">
+              <i class="fas fa-arrow-up"></i>
+            </span>
+            <span>Go to Top</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
   {% endif %}
   
   <form
+    id="task-form"
     class="mb-5"
     action="{%- if t -%}/task/{{ t.id }}/edit{%- else -%}/project/{{ p.id }}/task/new{%- endif -%}"
     method="post"
