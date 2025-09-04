@@ -50,8 +50,8 @@
           Editing: {{ t.name }}
         </span>
         
-        <!-- Simple buttons with proper Bulma spacing -->
-        <div class="buttons">
+        <!-- Use Bulma's native buttons container -->
+        <div class="buttons has-addons">
           <button class="button is-small is-light" type="submit" form="task-form">
             <span class="icon is-small">
               <i class="fas fa-save"></i>
@@ -70,8 +70,6 @@
     </div>
   </div>
   {% endif %}
-
-
   
   <form
     id="task-form"
