@@ -132,22 +132,25 @@
       element.target.closest('.new-parameter').remove();
     }
 
-    // toggle password visibility - THIS WAS MISSING!
-    if (element.target.closest('button.toggle-pass') || element.target.closest('a.toggle-pass')) {
+    // toggle password visibility - FIXED VERSION
+    if (element.target.closest('.toggle-pass')) {
       var toggleButton = element.target.closest('.toggle-pass');
       var parameterRow = toggleButton.closest('.new-parameter');
       var passwordInput = parameterRow.querySelector('input[name="param-value"]');
       var eyeIcon = toggleButton.querySelector('.fas');
       var sensitiveInput = toggleButton.querySelector('input[name="param-sensitive"]');
       
+      // Prevent the default action
+      element.preventDefault();
+      
       if (passwordInput.type === 'password') {
-        // Show password
+        // Show password (change to text input)
         passwordInput.type = 'text';
         eyeIcon.classList.remove('fa-eye');
         eyeIcon.classList.add('fa-eye-slash');
         sensitiveInput.value = '0';
       } else {
-        // Hide password
+        // Hide password (change to password input)
         passwordInput.type = 'password';
         eyeIcon.classList.remove('fa-eye-slash');
         eyeIcon.classList.add('fa-eye');
