@@ -19,7 +19,7 @@
         var data = JSON.parse(q.responseText);
         for (var key in data) {
           var els = Array.prototype.slice.call(
-            d.querySelectorAll('.hello_{}'.format(key)),
+            d.querySelectorAll('.hello_{}'.format(key))
           );
           for (var x = 0; x < els.length; x++) {
             els[x].innerHTML = data[key];
@@ -63,8 +63,7 @@
     let isVisible = false;
 
     function updateStickyHeader() {
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
       if (scrollTop > titleBottom + 50 && !isVisible) {
         // Show sticky header
@@ -124,13 +123,36 @@
               <button type="button" class="delete is-large new-remove-parameter"></button>
             </p>
           </div>
-        </div>`,
+        </div>`
       );
     }
 
     // remove a parameter input
     if (element.target.closest('button.new-remove-parameter')) {
       element.target.closest('.new-parameter').remove();
+    }
+
+    // toggle password visibility - THIS WAS MISSING!
+    if (element.target.closest('button.toggle-pass') || element.target.closest('a.toggle-pass')) {
+      var toggleButton = element.target.closest('.toggle-pass');
+      var parameterRow = toggleButton.closest('.new-parameter');
+      var passwordInput = parameterRow.querySelector('input[name="param-value"]');
+      var eyeIcon = toggleButton.querySelector('.fas');
+      var sensitiveInput = toggleButton.querySelector('input[name="param-sensitive"]');
+      
+      if (passwordInput.type === 'password') {
+        // Show password
+        passwordInput.type = 'text';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+        sensitiveInput.value = '0';
+      } else {
+        // Hide password
+        passwordInput.type = 'password';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+        sensitiveInput.value = '1';
+      }
     }
   });
 
