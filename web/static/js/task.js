@@ -19,7 +19,7 @@
         var data = JSON.parse(q.responseText);
         for (var key in data) {
           var els = Array.prototype.slice.call(
-            d.querySelectorAll('.hello_{}'.format(key))
+            d.querySelectorAll('.hello_{}'.format(key)),
           );
           for (var x = 0; x < els.length; x++) {
             els[x].innerHTML = data[key];
@@ -63,7 +63,8 @@
     let isVisible = false;
 
     function updateStickyHeader() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
 
       if (scrollTop > titleBottom + 50 && !isVisible) {
         // Show sticky header
@@ -123,7 +124,7 @@
               <button type="button" class="delete is-large new-remove-parameter"></button>
             </p>
           </div>
-        </div>`
+        </div>`,
       );
     }
 

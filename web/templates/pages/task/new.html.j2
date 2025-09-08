@@ -39,33 +39,46 @@
   </h1>
   <!-- Sticky header that appears when scrolling -->
   {% if t %}
-  <div id="sticky-task-header" class="has-background-info has-text-white px-4 py-3">
-    <div class="container">
-      <div class="is-flex is-align-items-center is-justify-content-space-between">
-        <span class="has-text-weight-semibold">
-          <i class="fas fa-pen-to-square mr-2"></i>
-          Editing: {{ t.name }}
-        </span>
-        
-        <!-- Use Bulma's native buttons container -->
-        <div class="buttons has-addons">
-          <button class="button is-small is-light" type="submit" form="task-form">
-            <span class="icon is-small">
-              <i class="fas fa-save"></i>
-            </span>
-            <span>Save</span>
-          </button>
-          
-          <button class="button is-small is-light" type="button" onclick="document.querySelector('form').scrollIntoView({behavior: 'smooth'})">
-            <span class="icon is-small">
-              <i class="fas fa-arrow-up"></i>
-            </span>
-            <span>Go to Top</span>
-          </button>
+    <div
+      id="sticky-task-header"
+      class="has-background-info has-text-white px-4 py-3"
+    >
+      <div class="container">
+        <div
+          class="is-flex is-align-items-center is-justify-content-space-between"
+        >
+          <span class="has-text-weight-semibold">
+            <i class="fas fa-pen-to-square mr-2"></i>
+            Editing: {{ t.name }}
+          </span>
+
+          <!-- Use Bulma's native buttons container -->
+          <div class="buttons has-addons">
+            <button
+              class="button is-small is-light"
+              type="submit"
+              form="task-form"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-save"></i>
+              </span>
+              <span>Save</span>
+            </button>
+
+            <button
+              class="button is-small is-light"
+              type="button"
+              onclick="document.querySelector('form').scrollIntoView({behavior: 'smooth'})"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-arrow-up"></i>
+              </span>
+              <span>Go to Top</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   {% endif %}
   <form
     id="task-form"
@@ -81,7 +94,7 @@
         Add Task
       {% endif %}
     </button>
-    
+
     <div class="box">
       <div class="field">
         <label class="label">Name</label>
