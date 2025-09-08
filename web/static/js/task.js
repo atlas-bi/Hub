@@ -19,10 +19,12 @@
         var data = JSON.parse(q.responseText);
         for (var key in data) {
           var els = Array.prototype.slice.call(
-            d.querySelectorAll('.hello_{}'.format(key))
+            d.querySelectorAll('.hello_{}'.format(key)),
           );
+
           for (var x = 0; x < els.length; x++) {
             els[x].innerHTML = data[key];
+
             if (key === 'status') {
               els[x].classList.remove('is-danger');
               els[x].classList.remove('is-success');
@@ -44,14 +46,13 @@
       };
     }
   }
-
   if (task_id) {
     setInterval(function () {
       taskHello(task_id.getAttribute('task_id'));
     }, 3000);
   }
 
-  // Sticky header functionality for task editing pages
+  // NEW: Sticky header functionality for task editing pages
   function initStickyTaskHeader() {
     const stickyHeader = document.getElementById('sticky-task-header');
     if (!stickyHeader) return; // Only run if sticky header exists
@@ -100,66 +101,52 @@
       document.querySelector('#new-parameters').insertAdjacentHTML(
         'beforeend',
         `<div class="field is-horizontal new-parameter">
-          <div class="field-body is-align-items-center">
-            <div class="field">
-              <p class="control is-expanded">
-                <input name="param-key" class="input" type="text" placeholder="name">
-              </p>
-            </div>
-            <div class="field has-addons">
-              <p class="control is-expanded">
-                <input name="param-value" class="input" type="text" placeholder="***">
-              </p>
-              <div class="control">
-                <a class="button toggle-pass" data-target="password">
-                  <span class="icon">
-                    <span class="fas fa-eye-slash"></span>
-                    <input name="param-sensitive" type="hidden" value="0">
-                  </span>
-                </a>
-              </div>
-            </div>
-            <p class="control mb-1">
-              <button type="button" class="delete is-large new-remove-parameter"></button>
-            </p>
-          </div>
-        </div>`
+                    <div class="field-body is-align-items-center">
+                        <div class="field">
+                            <p class="control is-expanded">
+                                <input name="param-key" class="input" type="text" placeholder="name">
+                            </p>
+                        </div>
+                        <div class="field has-addons">
+                            <p class="control is-expanded">
+                                <input name="param-value" class="input" type="text" placeholder="***">
+                            </p>
+                            <div class="control">
+                                <a class="button toggle-pass "data-target="password">
+                                    <span class="icon">
+                                        <span class="fas fa-eye-slash"></span>
+                                        <input name="param-sensitive" type="hidden"/>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="control mb-1 ">
+                            <button type="button" class="delete is-large new-remove-parameter"></button>
+                        </p>
+                    </div>
+                </div>`,
       );
-    }
-
-    // remove a parameter input
-    if (element.target.closest('button.new-remove-parameter')) {
+    } else if (element.target.closest('button.new-remove-parameter')) {
       element.target.closest('.new-parameter').remove();
-    }
+    } else if (element.target.closest('button.show-params')) {
+      var prev = document.querySelector('.param-preview');
+      var real = document.querySelector('.param-real');
 
-    // toggle password visibility - FIXED VERSION
-    if (element.target.closest('.toggle-pass')) {
-      var toggleButton = element.target.closest('.toggle-pass');
-      var parameterRow = toggleButton.closest('.new-parameter');
-      var passwordInput = parameterRow.querySelector('input[name="param-value"]');
-      var eyeIcon = toggleButton.querySelector('.fas');
-      var sensitiveInput = toggleButton.querySelector('input[name="param-sensitive"]');
-      
-      // Prevent the default action
-      element.preventDefault();
-      
-      if (passwordInput.type === 'password') {
-        // Show password (change to text input)
-        passwordInput.type = 'text';
-        eyeIcon.classList.remove('fa-eye');
-        eyeIcon.classList.add('fa-eye-slash');
-        sensitiveInput.value = '0';
+      if (prev.classList.contains('is-hidden')) {
+        prev.classList.remove('is-hidden');
       } else {
-        // Hide password (change to password input)
-        passwordInput.type = 'password';
-        eyeIcon.classList.remove('fa-eye-slash');
-        eyeIcon.classList.add('fa-eye');
-        sensitiveInput.value = '1';
+        prev.classList.add('is-hidden');
+      }
+
+      if (real.classList.contains('is-hidden')) {
+        real.classList.remove('is-hidden');
+      } else {
+        real.classList.add('is-hidden');
       }
     }
   });
 
-  // Initialize sticky header when DOM is ready
+  // NEW: Initialize sticky header when DOM is ready
   document.addEventListener('DOMContentLoaded', function () {
     initStickyTaskHeader();
   });
