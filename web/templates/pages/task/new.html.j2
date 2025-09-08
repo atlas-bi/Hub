@@ -1,5 +1,4 @@
 {% extends "layout.html.j2" %}
-
 {% block crumbs %}
   <ul>
     <li>
@@ -25,7 +24,6 @@
     </li>
   </ul>
 {% endblock crumbs %}
-
 {% block body %}
   <h1 class="title is-1" data-docs="tasks">
     {% if t %}
@@ -39,10 +37,9 @@
       New Task
     {% endif %}
   </h1>
-  
   <!-- Sticky header that appears when scrolling -->
   {% if t %}
-  <div id="sticky-task-header" class="sticky-header has-background-info has-text-white px-4 py-3" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; opacity: 0; transform: translateY(-100%); transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  <div id="sticky-task-header" class="has-background-info has-text-white px-4 py-3">
     <div class="container">
       <div class="is-flex is-align-items-center is-justify-content-space-between">
         <span class="has-text-weight-semibold">
@@ -70,7 +67,6 @@
     </div>
   </div>
   {% endif %}
-  
   <form
     id="task-form"
     class="mb-5"
@@ -206,7 +202,6 @@
     {% include "pages/task/new/query_location.html.j2" %}
     {% include "pages/task/new/processing.html.j2" %}
     {% include "pages/task/new/destination.html.j2" %}
-
     <button class="button is-info is-fullwidth" type="submit">
       {% if t %}
         Save Task
@@ -215,49 +210,4 @@
       {% endif %}
     </button>
   </form>
-  
-  {% if t %}
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const stickyHeader = document.getElementById('sticky-task-header');
-      const mainTitle = document.querySelector('h1.title');
-      const titleBottom = mainTitle.offsetTop + mainTitle.offsetHeight;
-      
-      let isVisible = false;
-      
-      function updateStickyHeader() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > titleBottom + 50 && !isVisible) {
-          // Show sticky header
-          stickyHeader.style.opacity = '1';
-          stickyHeader.style.transform = 'translateY(0)';
-          isVisible = true;
-        } else if (scrollTop <= titleBottom + 50 && isVisible) {
-          // Hide sticky header
-          stickyHeader.style.opacity = '0';
-          stickyHeader.style.transform = 'translateY(-100%)';
-          isVisible = false;
-        }
-      }
-      
-      // Throttled scroll event for better performance
-      let ticking = false;
-      function onScroll() {
-        if (!ticking) {
-          requestAnimationFrame(function() {
-            updateStickyHeader();
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }
-      
-      window.addEventListener('scroll', onScroll);
-      
-      // Initial check
-      updateStickyHeader();
-    });
-  </script>
-  {% endif %}
 {% endblock body %}
