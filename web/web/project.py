@@ -3,6 +3,8 @@
 import datetime
 from typing import Optional, Union
 
+from cron_descriptor import ExpressionDescriptor
+from cron_validator import CronValidator
 from crypto import em_encrypt
 from flask import Blueprint
 from flask import current_app as app
@@ -42,9 +44,7 @@ def all_projects() -> Union[Response, str]:
             .group_by(User.full_name, User.id)
             .all()
         )
-        return render_template(
-            "pages/project/all.html.j2", title="Projects", owners=owners
-        )
+        return render_template("pages/project/all.html.j2", title="Projects", owners=owners)
     return redirect(url_for("project_bp.new_project_form"))
 
 
@@ -96,6 +96,19 @@ def one_project(project_id: int) -> Union[str, Response]:
             .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[attr-defined, union-attr]
             .first()
         )
+        try:
+            desc = ExpressionDescriptor(
+                cron_year=me.cron_year,
+                cron_month=me.cron_month,
+                cron_week=me.cron_week,
+                cron_day=me.cron_day,
+                cron_week_day=me.cron_week_day,
+                cron_hour=me.cron_hour,
+                cron_min=me.cron_min,
+                cron_sec=me.cron_sec,
+            ).get_full_description()
+        except ValueError as e:
+            desc = e
 
         return render_template(
             "pages/project/one.html.j2",
@@ -103,6 +116,7 @@ def one_project(project_id: int) -> Union[str, Response]:
             has_secrets=any(p.sensitive == 1 for p in me.params),
             title=me.name,
             task=first_task,
+            cron_desc=desc,
         )
 
     flash("The project does not exist.")
@@ -116,9 +130,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
     me = Project.query.filter_by(id=project_id).first()
 
     if me:
-        return render_template(
-            "pages/project/new.html.j2", p=me, title="Editing " + me.name
-        )
+        return render_template("pages/project/new.html.j2", p=me, title="Editing " + me.name)
 
     flash("The project does not exist.")
     return redirect(url_for("project_bp.all_projects"))
@@ -126,17 +138,47 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
 
 @project_bp.route("/project/<project_id>/edit", methods=["POST"])
 @login_required
-def edit_project(project_id: int) -> Response:
+def edit_project(project_id: int) -> Union[str, Response]:
     """Save project edits."""
     cache.clear()
-
+    error = None
     project = get_or_create(db.session, Project, id=project_id)
 
     # get filter query for update
     me = Project.query.filter_by(id=project.id)
-
+    me2 = Project.query.filter_by(id=project_id).first()
     form = request.form
+    cron = form.get("project_cron", 0, type=int)
+    cron_year = form.get("project_cron_year", None, type=str)
+    cron_month = form.get("project_cron_mnth", None, type=str)
+    cron_week = form.get("project_cron_week", None, type=str)
+    cron_day = form.get("project_cron_day", None, type=str)
+    cron_week_day = form.get("project_cron_wday", None, type=str)
+    cron_hour = form.get("project_cron_hour", None, type=str)
+    cron_min = form.get("project_cron_min", None, type=str)
+    cron_sec = form.get("project_cron_sec", None, type=str)
+    if cron == 1:
+        try:
+            CronValidator(
+                cron=cron,
+                cron_year=cron_year,
+                cron_month=cron_month,
+                cron_week=cron_week,
+                cron_day=cron_day,
+                cron_week_day=cron_week_day,
+                cron_hour=cron_hour,
+                cron_min=cron_min,
+                cron_sec=cron_sec,
+            ).validate()
 
+        except ValueError as e:
+            error = str(e)
+            return render_template(
+                "pages/project/new.html.j2",
+                p=me2,
+                title="Editing " + me2.name,
+                error=error,
+            )
     # pylint: disable=R1735
     me.update(
         dict(  # noqa: C408
@@ -149,25 +191,21 @@ def edit_project(project_id: int) -> Response:
             ),
             updater_id=current_user.id,
             sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
-            cron=form.get("project_cron", 0, type=int),
-            cron_year=form.get("project_cron_year", None, type=int),
-            cron_month=form.get("project_cron_mnth", None, type=int),
-            cron_week=form.get("project_cron_week", None, type=int),
-            cron_day=form.get("project_cron_day", None, type=int),
-            cron_week_day=form.get("project_cron_wday", None, type=int),
-            cron_hour=form.get("project_cron_hour", None, type=int),
-            cron_min=form.get("project_cron_min", None, type=int),
-            cron_sec=form.get("project_cron_sec", None, type=int),
-            cron_start_date=form_to_date(
-                form.get("project_cron_sdate", None, type=str)
-            ),
+            cron=cron,
+            cron_year=cron_year,
+            cron_month=cron_month,
+            cron_week=cron_week,
+            cron_day=cron_day,
+            cron_week_day=cron_week_day,
+            cron_hour=cron_hour,
+            cron_min=cron_min,
+            cron_sec=cron_sec,
+            cron_start_date=form_to_date(form.get("project_cron_sdate", None, type=str)),
             cron_end_date=form_to_date(form.get("project_cron_edate", None, type=str)),
             intv=form.get("project_intv", 0, type=int),
             intv_value=form.get("project_intv_value", None, type=int),
             intv_type=form.get("project_intv_intv", None, type=str),
-            intv_start_date=form_to_date(
-                form.get("project_intv_sdate", None, type=str)
-            ),
+            intv_start_date=form_to_date(form.get("project_intv_sdate", None, type=str)),
             intv_end_date=form_to_date(form.get("project_intv_edate", None, type=str)),
             ooff=form.get("project_ooff", 0, type=int),
             ooff_date=form_to_date(form.get("project_ooff_date", None, type=str)),
@@ -220,10 +258,43 @@ def new_project_form() -> str:
 
 @project_bp.route("/project/new", methods=["POST"])
 @login_required
-def new_project() -> Response:
+def new_project() -> Union[str, Response]:
     """Save a new project."""
     cache.clear()
+    error = None
     form = request.form
+    cron = form.get("project_cron", 0, type=int)
+    cron_year = form.get("project_cron_year", None, type=str)
+    cron_month = form.get("project_cron_mnth", None, type=str)
+    cron_week = form.get("project_cron_week", None, type=str)
+    cron_day = form.get("project_cron_day", None, type=str)
+    cron_week_day = form.get("project_cron_wday", None, type=str)
+    cron_hour = form.get("project_cron_hour", None, type=str)
+    cron_min = form.get("project_cron_min", None, type=str)
+    cron_sec = form.get("project_cron_sec", None, type=str)
+
+    if cron == 1:
+        try:
+            CronValidator(
+                cron=cron,
+                cron_year=cron_year,
+                cron_month=cron_month,
+                cron_week=cron_week,
+                cron_day=cron_day,
+                cron_week_day=cron_week_day,
+                cron_hour=cron_hour,
+                cron_min=cron_min,
+                cron_sec=cron_sec,
+            ).validate()
+
+        except ValueError as e:
+            error = str(e)
+            return render_template(
+                "pages/project/new.html.j2",
+                p=Project.query.filter_by(id=0).first(),
+                title="New Project",
+                error=error,
+            )
 
     # create project
     me = Project(
@@ -233,15 +304,15 @@ def new_project() -> Response:
         creator_id=current_user.id,
         updater_id=current_user.id,
         sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
-        cron=form.get("project_cron", 0, type=int),
-        cron_year=form.get("project_cron_year", None, type=int),
-        cron_month=form.get("project_cron_mnth", None, type=int),
-        cron_week=form.get("project_cron_week", None, type=int),
-        cron_day=form.get("project_cron_day", None, type=int),
-        cron_week_day=form.get("project_cron_wday", None, type=int),
-        cron_hour=form.get("project_cron_hour", None, type=int),
-        cron_min=form.get("project_cron_min", None, type=int),
-        cron_sec=form.get("project_cron_sec", None, type=int),
+        cron=cron,
+        cron_year=cron_year,
+        cron_month=cron_month,
+        cron_week=cron_week,
+        cron_day=cron_day,
+        cron_week_day=cron_week_day,
+        cron_hour=cron_hour,
+        cron_min=cron_min,
+        cron_sec=cron_sec,
         cron_start_date=form_to_date(form.get("project_cron_sdate", None, type=str)),
         cron_end_date=form_to_date(form.get("project_cron_edate", None, type=str)),
         intv=form.get("project_intv", 0, type=int),
@@ -319,15 +390,11 @@ def delete_project(project_id: int) -> Response:
     db.session.commit()
 
     # delete tasks
-    db.session.query(Task).filter(Task.project_id == project_id).delete(
-        synchronize_session=False
-    )
+    db.session.query(Task).filter(Task.project_id == project_id).delete(synchronize_session=False)
     db.session.commit()
 
     # delete params
-    ProjectParam.query.filter_by(project_id=project_id).delete(
-        synchronize_session=False
-    )
+    ProjectParam.query.filter_by(project_id=project_id).delete(synchronize_session=False)
     db.session.commit()
 
     # delete project
@@ -419,9 +486,7 @@ def duplicate_project(project_id: int) -> Response:
                         db.session.add(new_param)
                         db.session.commit()
 
-        return redirect(
-            url_for("project_bp.one_project", project_id=my_project_copy.id)
-        )
+        return redirect(url_for("project_bp.one_project", project_id=my_project_copy.id))
 
     flash("Project does not exist.")
     return redirect(url_for("project_bp.all_projects"))

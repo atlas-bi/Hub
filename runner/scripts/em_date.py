@@ -20,7 +20,6 @@ allowed on
     years
 """
 
-
 import calendar
 import datetime
 import re
@@ -157,11 +156,7 @@ class DateParsing:
             .replace("firstday", "1")
             .replace(
                 "lastday",
-                str(
-                    calendar.monthrange(date_from_string.year, date_from_string.month)[
-                        1
-                    ]
-                ),
+                str(calendar.monthrange(date_from_string.year, date_from_string.month)[1]),
             )
         )
 
@@ -185,9 +180,7 @@ class DateParsing:
             return None
 
         try:
-            parameters = [
-                x.group() for x in re.finditer(r"%[a-zA-Z]", self.date_string)
-            ]
+            parameters = [x.group() for x in re.finditer(r"%[a-zA-Z]", self.date_string)]
 
             parts = []
             # split into parts
@@ -206,9 +199,7 @@ class DateParsing:
                     date_string = param + split_parts[2]
 
                     # update remaining parameters
-                    parameters = [
-                        x.group() for x in re.finditer(r"%[a-zA-Z]", date_string)
-                    ]
+                    parameters = [x.group() for x in re.finditer(r"%[a-zA-Z]", date_string)]
                     param = get_repeating_part(parameters)
 
                 # need to add on the last part, if there are no more duplicate params.
@@ -223,6 +214,4 @@ class DateParsing:
             return self.date_string
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 17, f"Failed to parse date string.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 17, f"Failed to parse date string.\n{e}")

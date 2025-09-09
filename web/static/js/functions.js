@@ -24,7 +24,7 @@
       `<a class="is-pulled-right has-text-info" href="https://atlas.bi/docs/hub/` +
       doc_links[x].getAttribute('data-docs') +
       `" target="_blank" rel="noopener"><span class="icon">
-    <i class="far fa-circle-question"></i>
+    <span class="far fa-circle-question"></span>
   </span></a>`;
   }
 })();

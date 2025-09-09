@@ -12,7 +12,6 @@ run with::
 
 """
 
-
 from pytest import fixture
 
 from web.extensions import db
@@ -80,7 +79,6 @@ def test_search(client_fixture: fixture) -> None:
         name="Test SMB",
         connection_id=conn.id,
         server_name="smbserver",
-        server_ip="1.2.3.4",
         share_name="myshare",
         path="nowhere/around/here",
         username="albany",
@@ -144,9 +142,7 @@ def test_orphaned_delete(client_fixture: fixture) -> None:
     response = client_fixture.get("/dash/orphans/delete", follow_redirects=True)
     assert response.status_code == 200
 
-    assert "Failed to delete orphans. Scheduler offline." in response.get_data(
-        as_text=True
-    )
+    assert "Failed to delete orphans. Scheduler offline." in response.get_data(as_text=True)
 
 
 def test_errored_run(client_fixture: fixture) -> None:

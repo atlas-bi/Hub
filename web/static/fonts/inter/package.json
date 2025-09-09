@@ -1,6 +1,6 @@
 {
-  "name": "@fontsource/inter",
-  "version": "5.0.3",
+  "name": "@fontsource-variable/inter",
+  "version": "5.2.6",
   "description": "Self-host the Inter font in a neatly bundled NPM package.",
   "main": "index.css",
   "publishConfig": {"access": "public"},
@@ -18,13 +18,30 @@
     "typeface",
     "variable"
   ],
+  "exports": {
+    ".": {"sass": "./index.css", "default": "./index.css"},
+    "./LICENSE": "./LICENSE",
+    "./*": {"sass": "./*.css", "default": "./*.css"},
+    "./*.css": {"sass": "./*.css", "default": "./*.css"},
+    "/static/fonts/inter/files/*": {"sass": "/static/fonts/inter/files/*", "default": "/static/fonts/inter/files/*"},
+    "/static/fonts/inter/files/*.woff": {"sass": "/static/fonts/inter/files/*.woff", "default": "/static/fonts/inter/files/*.woff"},
+    "/static/fonts/inter/files/*.woff2": {
+      "sass": "/static/fonts/inter/files/*.woff2",
+      "default": "/static/fonts/inter/files/*.woff2"
+    },
+    "./package.json": "./package.json",
+    "./metadata.json": "./metadata.json",
+    "./unicode.json": "./unicode.json",
+    "./scss": {"sass": "./scss/metadata.scss"}
+  },
   "author": "Google Inc.",
   "license": "OFL-1.1",
   "homepage": "https://fontsource.org/fonts/inter",
+  "funding": "https://github.com/sponsors/ayuhito",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fontsource/font-files.git",
-    "directory": "fonts/google/inter"
+    "url": "git+https://github.com/fontsource/font-files.git",
+    "directory": "fonts/variable/inter"
   },
-  "publishHash": "f30be48934c43ab4"
+  "publishHash": "f7aa6aea83271740"
 }

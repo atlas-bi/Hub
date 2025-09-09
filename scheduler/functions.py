@@ -1,5 +1,6 @@
 """Scheduler Event Logging."""
 
+import datetime
 import hashlib
 import time
 
@@ -125,14 +126,14 @@ def scheduler_add_task(task_id: int) -> bool:
         atlas_scheduler.add_job(
             func=scheduler_task_runner,
             trigger="cron",
-            second=project.cron_sec,
-            minute=project.cron_min,
-            hour=project.cron_hour,
-            year=project.cron_year,
-            month=project.cron_month,
-            week=project.cron_week,
-            day=project.cron_day,
-            day_of_week=project.cron_week_day,
+            second=project.cron_sec if project.cron_sec else None,
+            minute=project.cron_min if project.cron_min else None,
+            hour=project.cron_hour if project.cron_hour else None,
+            year=project.cron_year if project.cron_year else None,
+            month=project.cron_month if project.cron_month else None,
+            week=project.cron_week if project.cron_week else None,
+            day=project.cron_day if project.cron_day else None,
+            day_of_week=project.cron_week_day if project.cron_week_day else None,
             start_date=project.cron_start_date,
             end_date=project.cron_end_date,
             args=[str(task_id)],
@@ -150,6 +151,7 @@ def scheduler_add_task(task_id: int) -> bool:
         hours = project.intv_value or 999 if project.intv_type == "h" else 0
         minutes = project.intv_value or 999 if project.intv_type == "m" else 0
         seconds = project.intv_value or 999 if project.intv_type == "s" else 0
+        timezone = datetime.datetime.now().astimezone().tzinfo
 
         atlas_scheduler.add_job(
             func=scheduler_task_runner,
@@ -159,6 +161,7 @@ def scheduler_add_task(task_id: int) -> bool:
             hours=hours,
             days=days,
             weeks=weeks,
+            timezone=timezone,
             start_date=project.intv_start_date,
             end_date=project.intv_end_date,
             args=[str(task_id)],

@@ -1,0 +1,2196 @@
+@use 'variables';
+
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-glass {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-martini-glass-empty }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-envelope-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-envelope-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-envelope }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-star }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-remove {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-xmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-close {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-xmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gear {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-gear }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-trash-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-trash-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-trash-can }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-home {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-house }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-clock-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-clock-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-clock }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-down {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-down {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-up {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-up {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-play-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-play-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-play }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-repeat {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-rotate-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-rotate-right {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-rotate-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-refresh {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrows-rotate }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-list-alt {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-list-alt {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-rectangle-list }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dedent {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-outdent }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-video-camera {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-video }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-picture-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-picture-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-image }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-photo {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-photo {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-image }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-image {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-image {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-image }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-map-marker {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-location-dot }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pencil-square-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pencil-square-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-pen-to-square }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-edit {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-edit {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-pen-to-square }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-share-square-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-share-from-square }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-check-square-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-check-square-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-check }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrows {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-up-down-left-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-times-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-times-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-xmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-check-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-check-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-check }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-mail-forward {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-share }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-expand {
+  #{$fa-icon-property}: unquote(
+    '"#{ $fa-var-up-right-and-down-left-from-center }"'
+  );
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-compress {
+  #{$fa-icon-property}: unquote(
+    '"#{ $fa-var-down-left-and-up-right-to-center }"'
+  );
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-eye {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-eye-slash {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-warning {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-triangle-exclamation }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-calendar-days }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrows-v {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-up-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrows-h {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-left-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bar-chart {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-chart-column }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bar-chart-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-chart-column }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-twitter-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-twitter-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-twitter }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-facebook }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gears {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-gears }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thumbs-o-up {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thumbs-o-up {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-thumbs-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thumbs-o-down {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thumbs-o-down {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-thumbs-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-heart-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-heart-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-heart }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sign-out {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-right-from-bracket }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-linkedin-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-linkedin-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-linkedin }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thumb-tack {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-thumbtack }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-external-link {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-up-right-from-square }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sign-in {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-right-to-bracket }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-github-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-github-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-github }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-lemon-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-lemon-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-lemon }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-square-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-square-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bookmark-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bookmark-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bookmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-twitter {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-facebook-f }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook-f {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook-f {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-facebook-f }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-github {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-credit-card {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-feed {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-rss }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hdd-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hdd-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hard-drive }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-right {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-right {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-point-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-left {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-left {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-point-left }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-up {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-up {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-point-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-down {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-o-down {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-point-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-globe {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-earth-americas }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-tasks {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bars-progress }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrows-alt {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-maximize }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-group {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-users }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-chain {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-link }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cut {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-scissors }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-files-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-files-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-copy }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-floppy-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-floppy-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-floppy-disk }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-save {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-save {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-floppy-disk }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-navicon {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bars }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-reorder {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bars }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-magic {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-wand-magic-sparkles }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pinterest {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pinterest-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pinterest-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-pinterest }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-google-plus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-google-plus-g }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-money {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-money-bill-1 }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-unsorted {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-sort }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-desc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-sort-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-asc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-sort-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-linkedin {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-linkedin {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-linkedin-in }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-rotate-left {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-rotate-left }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-legal {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-gavel }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-tachometer {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-gauge-high }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dashboard {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-gauge-high }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-comment-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-comment-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-comment }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-comments-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-comments-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-comments }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-flash {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bolt }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-clipboard {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-paste }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-lightbulb-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-lightbulb-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-lightbulb }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-exchange {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-right-left }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cloud-download {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-cloud-arrow-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cloud-upload {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-cloud-arrow-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bell-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bell-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bell }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cutlery {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-utensils }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-text-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-text-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-lines }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-building-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-building-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-building }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hospital-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hospital-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hospital }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-tablet {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-tablet-screen-button }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-mobile {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-mobile-screen-button }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-mobile-phone {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-mobile-screen-button }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-mail-reply {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-reply }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-github-alt {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-folder-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-folder-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-folder }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-folder-open-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-folder-open-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-folder-open }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-smile-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-smile-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-face-smile }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-frown-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-frown-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-face-frown }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-meh-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-meh-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-face-meh }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-keyboard-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-keyboard-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-keyboard }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-flag-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-flag-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-flag }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-mail-reply-all {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-reply-all }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-half-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-half-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-star-half-stroke }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-half-empty {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-half-empty {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-star-half-stroke }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-half-full {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-star-half-full {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-star-half-stroke }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-code-fork {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-code-branch }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-chain-broken {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-link-slash }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-unlink {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-link-slash }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-calendar }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-maxcdn {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-html5 {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-css3 {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-unlock-alt {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-unlock }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-minus-square-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-minus-square-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-minus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-level-up {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-turn-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-level-down {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-turn-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pencil-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-pen }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-external-link-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-up-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-compass {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-down {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-down {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-down {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-down {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-down }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-up {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-up {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-up {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-up {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-up }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-right {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-right {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-right {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-right {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-eur {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-euro-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-euro {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-euro-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gbp {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-sterling-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-usd {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-dollar-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dollar {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-dollar-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-inr {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-indian-rupee-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-rupee {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-indian-rupee-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-jpy {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-yen-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cny {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-yen-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-rmb {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-yen-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yen {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-yen-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-rub {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-ruble-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ruble {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-ruble-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-rouble {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-ruble-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-krw {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-won-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-won {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-won-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-btc {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bitcoin {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bitcoin {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-btc }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-text {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-lines }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-alpha-asc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-down-a-z }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-alpha-desc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-down-z-a }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-amount-asc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-down-short-wide }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-amount-desc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-down-wide-short }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-numeric-asc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-down-1-9 }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sort-numeric-desc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-arrow-down-9-1 }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-youtube-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-youtube-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-youtube }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-youtube {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-xing {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-xing-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-xing-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-xing }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-youtube-play {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-youtube-play {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-youtube }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dropbox {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-stack-overflow {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-instagram {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-flickr {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-adn {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bitbucket {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bitbucket-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bitbucket-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bitbucket }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-tumblr {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-tumblr-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-tumblr-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-tumblr }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-long-arrow-down {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-down-long }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-long-arrow-up {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-up-long }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-long-arrow-left {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-left-long }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-long-arrow-right {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-right-long }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-apple {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-windows {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-android {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-linux {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dribbble {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-skype {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-foursquare {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-trello {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gratipay {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gittip {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gittip {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-gratipay }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sun-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sun-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-sun }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-moon-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-moon-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-moon }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vk {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-weibo {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-renren {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pagelines {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-stack-exchange {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-right {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-right {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-right }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-left {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-arrow-circle-o-left {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-left }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-left {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-caret-square-o-left {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-left }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-left {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-toggle-left {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-caret-left }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dot-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dot-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-dot }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vimeo-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vimeo-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-vimeo }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-try {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-turkish-lira-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-turkish-lira {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-turkish-lira-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-plus-square-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-plus-square-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-plus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-slack {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wordpress {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-openid {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-institution {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-building-columns }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bank {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-building-columns }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-mortar-board {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-graduation-cap }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yahoo {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-reddit {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-reddit-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-reddit-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-reddit }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-stumbleupon-circle {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-stumbleupon {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-delicious {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-digg {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pied-piper-pp {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pied-piper-alt {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-drupal {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-joomla {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-behance {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-behance-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-behance-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-behance }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-steam {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-steam-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-steam-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-steam }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-automobile {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-car }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cab {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-taxi }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-spotify {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-deviantart {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-soundcloud {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-pdf-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-pdf-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-pdf }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-word-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-word-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-word }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-excel-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-excel-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-excel }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-powerpoint-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-powerpoint-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-powerpoint }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-image-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-image-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-image }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-photo-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-photo-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-image }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-picture-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-picture-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-image }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-archive-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-archive-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-zipper }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-zip-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-zip-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-zipper }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-audio-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-audio-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-audio }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-sound-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-sound-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-audio }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-video-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-video-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-video }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-movie-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-movie-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-video }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-code-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-file-code-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-file-code }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vine {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-codepen {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-jsfiddle {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-life-bouy {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-life-ring }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-life-buoy {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-life-ring }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-life-saver {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-life-ring }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-support {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-life-ring }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-circle-o-notch {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-notch }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-rebel {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ra {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ra {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-rebel }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-resistance {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-resistance {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-rebel }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-empire {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ge {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ge {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-empire }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-git-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-git-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-git }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-git {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hacker-news {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-y-combinator-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-y-combinator-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hacker-news }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yc-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yc-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hacker-news }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-tencent-weibo {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-qq {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-weixin {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wechat {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wechat {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-weixin }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-send {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-paper-plane }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-paper-plane-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-paper-plane-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-paper-plane }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-send-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-send-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-paper-plane }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-circle-thin {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-circle-thin {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-header {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-heading }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-futbol-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-futbol-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-futbol }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-soccer-ball-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-soccer-ball-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-futbol }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-slideshare {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-twitch {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yelp {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-newspaper-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-newspaper-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-newspaper }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-paypal {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-wallet {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-visa {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-mastercard {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-discover {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-amex {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-paypal {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-stripe {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bell-slash-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bell-slash-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bell-slash }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-trash {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-trash-can }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-copyright {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-eyedropper {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-eye-dropper }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-area-chart {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-chart-area }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pie-chart {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-chart-pie }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-line-chart {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-chart-line }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-lastfm {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-lastfm-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-lastfm-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-lastfm }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ioxhost {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-angellist {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-closed-captioning }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ils {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-shekel-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-shekel {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-shekel-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sheqel {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-shekel-sign }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-buysellads {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-connectdevelop {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-dashcube {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-forumbee {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-leanpub {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sellsy {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-shirtsinbulk {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-simplybuilt {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-skyatlas {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-diamond {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-diamond {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-gem }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-transgender {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-mars-and-venus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-intersex {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-mars-and-venus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-transgender-alt {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-transgender }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook-official {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-facebook-official {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-facebook }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pinterest-p {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-whatsapp {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hotel {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bed }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-viacoin {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-medium {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-y-combinator {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yc {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yc {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-y-combinator }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-optin-monster {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-opencart {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-expeditedssl {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-battery-4 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-battery-full }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-battery {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-battery-full }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-battery-3 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-battery-three-quarters }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-battery-2 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-battery-half }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-battery-1 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-battery-quarter }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-battery-0 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-battery-empty }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-object-group {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-object-ungroup {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sticky-note-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-sticky-note-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-note-sticky }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-jcb {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-cc-diners-club {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-clone {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hourglass-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hourglass }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hourglass-1 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hourglass-start }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hourglass-2 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hourglass-half }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hourglass-3 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hourglass-end }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-rock-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-rock-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-back-fist }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-grab-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-grab-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-back-fist }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-paper-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-paper-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-stop-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-stop-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-scissors-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-scissors-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-scissors }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-lizard-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-lizard-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-lizard }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-spock-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-spock-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-spock }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-pointer-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-pointer-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-pointer }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-peace-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hand-peace-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hand-peace }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-registered {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-creative-commons {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gg {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gg-circle {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-odnoklassniki {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-odnoklassniki-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-odnoklassniki-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-odnoklassniki }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-get-pocket {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wikipedia-w {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-safari {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-chrome {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-firefox {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-opera {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-internet-explorer {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-television {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-tv }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-contao {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-500px {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-amazon {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-plus-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-plus-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-calendar-plus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-minus-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-minus-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-calendar-minus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-times-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-times-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-calendar-xmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-check-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-calendar-check-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-calendar-check }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-map-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-map-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-map }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-commenting {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-comment-dots }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-commenting-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-commenting-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-comment-dots }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-houzz {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vimeo {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vimeo {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-vimeo-v }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-black-tie {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-fonticons {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-reddit-alien {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-edge {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-credit-card-alt {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-credit-card }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-codiepie {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-modx {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-fort-awesome {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-usb {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-product-hunt {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-mixcloud {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-scribd {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pause-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pause-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-pause }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-stop-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-stop-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-stop }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bluetooth {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bluetooth-b {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-gitlab {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wpbeginner {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wpforms {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-envira {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wheelchair-alt {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wheelchair-alt {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-accessible-icon }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-question-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-question-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-question }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-volume-control-phone {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-phone-volume }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-asl-interpreting {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hands-asl-interpreting }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-deafness {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-ear-deaf }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-hard-of-hearing {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-ear-deaf }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-glide {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-glide-g {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-signing {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-hands }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-viadeo {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-viadeo-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-viadeo-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-viadeo }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-snapchat {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-snapchat-ghost {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-snapchat-ghost {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-snapchat }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-snapchat-square {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-snapchat-square {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-square-snapchat }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-pied-piper {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-first-order {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-yoast {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-themeisle {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus-official {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus-official {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-google-plus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus-circle {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-google-plus-circle {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-google-plus }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-font-awesome {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-fa {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-fa {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-font-awesome }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-handshake-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-handshake-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-handshake }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-envelope-open-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-envelope-open-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-envelope-open }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-linode {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-address-book-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-address-book-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-address-book }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vcard {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-address-card }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-address-card-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-address-card-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-address-card }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vcard-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-vcard-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-address-card }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-user-circle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-user-circle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-circle-user }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-user-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-user-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-user }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-id-badge {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-drivers-license {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-id-card }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-id-card-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-id-card-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-id-card }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-drivers-license-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-drivers-license-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-id-card }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-quora {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-free-code-camp {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-telegram {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thermometer-4 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-temperature-full }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thermometer {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-temperature-full }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thermometer-3 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-temperature-three-quarters }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thermometer-2 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-temperature-half }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thermometer-1 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-temperature-quarter }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-thermometer-0 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-temperature-empty }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bathtub {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bath }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-s15 {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-bath }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-window-maximize {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-window-restore {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-times-rectangle {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-rectangle-xmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-window-close-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-window-close-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-rectangle-xmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-times-rectangle-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-times-rectangle-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-rectangle-xmark }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-bandcamp {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-grav {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-etsy {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-imdb {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-ravelry {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-eercast {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-eercast {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-sellcast }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-snowflake-o {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-snowflake-o {
+  #{$fa-icon-property}: unquote('"#{ $fa-var-snowflake }"');
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-superpowers {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-wpexplorer {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+.#{variables.$fa-css-prefix}.#{variables.$fa-css-prefix}-meetup {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}

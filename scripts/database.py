@@ -1,3 +1,5 @@
+"""Initial creation and seed of the database."""
+
 from typing import Any
 
 from sqlalchemy.orm import Session as SqlSession
@@ -43,9 +45,7 @@ def seed(session: SqlSession, model: Any) -> None:
     get_or_create(session, model.TaskSourceType, name="SSH Command")
 
     # task processing type
-    get_or_create(
-        session, model.TaskProcessingType, name="Network File (SMB Connection)"
-    )
+    get_or_create(session, model.TaskProcessingType, name="Network File (SMB Connection)")
     get_or_create(session, model.TaskProcessingType, name="File (SFTP Connection)")
     get_or_create(session, model.TaskProcessingType, name="File (FTP Connection)")
     get_or_create(session, model.TaskProcessingType, name="Git URL")
@@ -58,28 +58,26 @@ def seed(session: SqlSession, model: Any) -> None:
     get_or_create(session, model.TaskSourceQueryType, name="File Path (SMB Connection)")
     get_or_create(session, model.TaskSourceQueryType, name="Other URL (no auth)")
     get_or_create(session, model.TaskSourceQueryType, name="Source Code")
-    get_or_create(
-        session, model.TaskSourceQueryType, name="File Path (SFTP Connection)"
-    )
+    get_or_create(session, model.TaskSourceQueryType, name="File Path (SFTP Connection)")
     get_or_create(session, model.TaskSourceQueryType, name="File Path (FTP Connection)")
     get_or_create(session, model.TaskSourceQueryType, name="Devops")
 
     # database type
     get_or_create(session, model.ConnectionDatabaseType, name="Postgres")
     get_or_create(session, model.ConnectionDatabaseType, name="SQL Sever")
+    get_or_create(session, model.ConnectionDatabaseType, name="Jdbc")
 
     # file types
     get_or_create(session, model.TaskDestinationFileType, name="CSV (.csv)", ext="csv")
     get_or_create(session, model.TaskDestinationFileType, name="Text (.txt)", ext="txt")
-    get_or_create(
-        session, model.TaskDestinationFileType, name="Excel (.csv)", ext="csv"
-    )
+    get_or_create(session, model.TaskDestinationFileType, name="Excel (.csv)", ext="csv")
     get_or_create(
         session,
         model.TaskDestinationFileType,
         name="Other (specify in filename)",
         ext="",
     )
+    get_or_create(session, model.TaskDestinationFileType, name="None", ext="")
 
     # task status
     get_or_create(session, model.TaskStatus, name="Running")
@@ -103,3 +101,4 @@ def seed(session: SqlSession, model: Any) -> None:
     get_or_create(session, model.TaskStatus, name="SSH")
     get_or_create(session, model.TaskStatus, name="SQL Server")
     get_or_create(session, model.TaskStatus, name="Postgres")
+    get_or_create(session, model.TaskStatus, name="Jdbc")

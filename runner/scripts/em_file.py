@@ -9,13 +9,13 @@ from pathlib import Path
 from typing import IO, Optional, Tuple, Union
 
 import gnupg
-from crypto import em_decrypt
 from flask import current_app as app
 
 from runner.model import Task
 from runner.scripts.em_date import DateParsing
 from runner.scripts.em_messages import RunnerException, RunnerLog
 from runner.scripts.em_params import ParamLoader
+from scripts.crypto import em_decrypt
 
 # set the limit for a csv cell value to something massive.
 # this is needed when users are building xml in a sql query
@@ -98,9 +98,9 @@ class File:
 
         return quote_levels[task_level]
 
-    def __quotechar(self) -> str:
+    def __quotechar(self) -> str | None:
         if self.__quote_level() == 3:  # quote none
-            return ""
+            return None
 
         return '"'
 
@@ -109,10 +109,7 @@ class File:
 
         returns [filename, filepath] of final file.
         """
-        if (
-            self.task.destination_file_name is None
-            or self.task.destination_file_name == ""
-        ):
+        if self.task.destination_file_name is None or self.task.destination_file_name == "":
             RunnerLog(
                 self.task,
                 self.run_id,
@@ -120,19 +117,14 @@ class File:
                 f"No filename specified, {Path(self.data_file.name).name} will be used.",
             )
 
-        if (
-            self.task.destination_file_name != ""
-            and self.task.destination_file_name is not None
-        ):
+        if self.task.destination_file_name != "" and self.task.destination_file_name is not None:
             # insert params
             self.file_name = self.params.insert_file_params(
                 self.task.destination_file_name.strip()
             )
 
             # parse python dates
-            self.file_name = DateParsing(
-                self.task, self.run_id, self.file_name
-            ).string_to_date()
+            self.file_name = DateParsing(self.task, self.run_id, self.file_name).string_to_date()
 
         else:
             self.file_name = Path(self.data_file.name).name
@@ -200,8 +192,7 @@ class File:
                         )
                         for row in reader:
                             new_row = [
-                                (x.strip('"').strip("'") if isinstance(x, str) else x)
-                                for x in row
+                                (x.strip('"').strip("'") if isinstance(x, str) else x) for x in row
                             ]
 
                             if (
@@ -212,9 +203,7 @@ class File:
                                 self.task.destination_file_line_terminator is not None
                                 and self.task.destination_file_line_terminator != ""
                             ):
-                                new_row.append(
-                                    self.task.destination_file_line_terminator
-                                )
+                                new_row.append(self.task.destination_file_line_terminator)
 
                             wrtr.writerow(new_row)
 
@@ -228,8 +217,7 @@ class File:
                         )
                         for row in reader:
                             new_row = [
-                                (x.strip('"').strip("'") if isinstance(x, str) else x)
-                                for x in row
+                                (x.strip('"').strip("'") if isinstance(x, str) else x) for x in row
                             ]
                             wrtr.writerow(new_row)
 
@@ -300,9 +288,7 @@ class File:
                     break
                 self.file_hash.update(chunk)
 
-        RunnerLog(
-            self.task, self.run_id, 11, f"File md5 hash: {self.file_hash.hexdigest()}"
-        )
+        RunnerLog(self.task, self.run_id, 11, f"File md5 hash: {self.file_hash.hexdigest()}")
 
         # create zip
         if self.task.destination_create_zip == 1:
@@ -329,8 +315,6 @@ class File:
             self.file_name = self.zip_name
             self.file_path = str(Path(self.base_path).joinpath(self.zip_name))
 
-            RunnerLog(
-                self.task, self.run_id, 11, f"ZIP archive created.\n{self.file_path}"
-            )
+            RunnerLog(self.task, self.run_id, 11, f"ZIP archive created.\n{self.file_path}")
 
         return self.file_name, self.file_path, self.file_hash.hexdigest()

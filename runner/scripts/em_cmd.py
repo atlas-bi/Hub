@@ -1,6 +1,5 @@
 """Functions used to run system commands."""
 
-
 import os
 import re
 import subprocess
@@ -36,9 +35,7 @@ class Cmd:
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            out_bytes = subprocess.check_output(
-                self.cmd, stderr=subprocess.STDOUT, shell=True
-            )
+            out_bytes = subprocess.check_output(self.cmd, stderr=subprocess.STDOUT, shell=True)
             out = out_bytes.decode("utf-8")
 
             if "Error" in out:

@@ -11,6 +11,7 @@ run with::
 
 
 """
+
 import json
 import time
 
@@ -69,7 +70,7 @@ def test_scheduler_valid_task(client_fixture: fixture) -> None:
     assert page.request.path == url_for("task_bp.one_task", task_id=t_id)
     assert "Scheduling task." in page.get_data(as_text=True)
     # failure message will be in executor.
-    # time.sleep(1)
+    time.sleep(1)
     executor = client_fixture.get(url_for("executors_bp.executor_status"))
 
     assert b"Failed to schedule" in executor.data

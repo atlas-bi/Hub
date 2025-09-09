@@ -11,7 +11,6 @@ run with::
 
 """
 
-
 from pytest import fixture
 
 from runner.extensions import db

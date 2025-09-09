@@ -28,13 +28,7 @@ exclude = '''
       | node_modules
     )/
     '''
-max_line_length = 99
-
-[tool.djlint]
-blank_line_after_tag = "load,extends,include,endblock"
-format_attribute_template_tags = true
-ignore = "H011,H021,H023,H031"
-profile = "jinja"
+line-length = 99
 
 [tool.isort]
 profile = "black"
@@ -50,10 +44,6 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 ignore_errors = true
-module = "*.smb_fix"
-
-[[tool.mypy.overrides]]
-ignore_errors = true
 module = "*.ldap_auth"
 
 [tool.poetry]
@@ -66,7 +56,8 @@ authors = [
   "Christopher Pickering <cpickering@rhc.net>",
   "Dan Ryan",
   "Richard Schissler",
-  "Eric Shultz"
+  "Eric Shultz",
+  "Payton Snider III"
 ]
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
@@ -97,81 +88,75 @@ packages = [
 ]
 readme = "readme.md"
 repository = "https://github.com/atlas-bi/Hub"
-version = "2.12.3"
+version = "3.5.3"
 
 [tool.poetry.dependencies]
-Flask = "^2.0.1"
-Flask-APScheduler = "^1.12.2"
-Flask-Assets = "^2.0"
-Flask-Caching = "^2.0.0"
-Flask-Compress = "1.14"
+Flask = "^3.1.1"
+Flask-APScheduler = "^1.13.1"
+Flask-Assets = "^2.1.0"
+Flask-Caching = "^2.3.1"
+Flask-Compress = "1.17"
 Flask-Executor = "^1.0.0"
-Flask-HTMLmin = "^2.1.0"
-Flask-Login = "^0.6.0"
-Flask-Migrate = "^4.0.0"
+Flask-HTMLmin = "^3.0.0"
+Flask-Login = "^0.6.3"
+Flask-Migrate = "^4.1.0"
 Flask-SQLAlchemy = "^3.1.1"
 Flask-Script = "^2.0.6"
-Jinja2 = "^3.0.1"
-SQLAlchemy = "^2.0.20"
-SQLAlchemy-Utils = "^0.41.0"
-azure-devops = "^7.1.0b3"
-bs4 = "^0.0.1"
-cryptography = "^41.0.0"
-flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
+Flask-session = "^0.8.0"
+Jinja2 = "^3.1.6"
+SQLAlchemy = "^2.0.43"
+SQLAlchemy-Utils = "^0.41.2"
+azure-devops = "^7.1.0b4"
+bs4 = "^0.0.2"
+cryptography = "^43.0.3"
 flask-redis = "^0.4.0"
-flask-session2 = "^1.2.0"
-gevent = "^23.9.1"
-gunicorn = "^21.0.0"
+gevent = "^24.11.1"
+gunicorn = "^23.0.0"
 is-safe-url = "^1.0"
 jaydebeapi = "^1.2.3"
-paramiko = "^3.0.0"
-pathvalidate = "^3.0.0"
-psutil = "^5.8.0"
-psycopg2-binary = "^2.9.1"
-pyodbc = "^4.0.31"
-pysaml2 = "^7.0.1"
-pysmb = "^1.2.7"
-python = ">=3.8.1,<4.0"
-python-dateutil = "^2.8.2"
-python-gnupg = "^0.5.0"
-python-ldap = "^3.3.1"
-python3-saml = "^1.12.0"
-pytz-deprecation-shim = "^0.1.0-post.0"
-rcssmin = "^1.0.6"
-redis = "^5.0.0"
-regex = "^2023.0.0"
+paramiko = "^3.5.1"
+pathvalidate = "^3.3.1"
+psutil = "^7.0.0"
+psycopg2-binary = "^2.9.10"
+pyodbc = "^5.2.0"
+pysaml2 = "^7.5.2"
+python = ">=3.12.0,<4.0"
+python-dateutil = "^2.9.0.post0"
+python-gnupg = "^0.5.4"
+python-ldap = "3.4.4"
+python3-saml = "^1.16.0"
+pytz-deprecation-shim = "^0.1.0"
+rcssmin = "^1.2.1"
+redis = "^5.3.1"
+regex = "^2024.11.6"
 relative-to-now = "^1.0.0"
-requests = "^2.26.0"
-setuptools = "^68.0.0"
-sqlalchemy2-stubs = "^0.0.2-alpha.32"
-supervisor = "^4.2.2"
-tomli = "^2.0.1"
-tomlkit = "^0.12.0"
-virtualenv = "^20.7.2"
+requests = "^2.32.4"
+setuptools = "^78.1.1"
+smbprotocol = "^1.15.0"
+supervisor = "^4.2.5"
+tomli = "^2.2.1"
+tomlkit = "^0.13.2"
+virtualenv = "^20.33.1"
 webassets-rollup = "^1.0.0"
-whitenoise = "^6.2.0"
-xmlsec = "^1.3.11"
+whitenoise = "^6.9.0"
+xmlsec = "^1.3.16"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.0.0"
-coverage = "^7.0.0"
-djlint = "^1.19.17"
-flask-debugtoolbar = "^0.13.1"
-isort = "^5.10.1"
-mypy = "0.991"
-pre-commit = "^3.0.0"
-pytest = "^7.2.0"
-pytest-cov = "^4.0.0"
-radon = "^6.0.0"
-ruff = "^0.0.289"
+black = "^25.1.0"
+coverage = "^7.10.3"
+flask-debugtoolbar = "^0.16.0"
+isort = "^6.0.1"
+mypy = "1.12.0"
+pre-commit = "^4.3.0"
+pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
+radon = "^6.0.1"
+ruff = "^0.11.13"
 toml = "^0.10.2"
-tox = "^4.0.8"
-types-flask = "^1.1.6"
-types-jinja2 = "^2.11.9"
-types-paramiko = "^2.12.0.1"
-types-python-dateutil = "^2.8.19.4"
-types-redis = "^4.3.21.6"
-types-requests = "^2.28.11.5"
+tox = "^4.28.4"
+types-paramiko = "^3.5.0.20250801"
+types-python-dateutil = "^2.9.0.20250809"
+types-requests = "^2.32.4.20250809"
 
 [tool.pytest]
 
@@ -181,11 +166,13 @@ filterwarnings = "always"
 testpaths = "tests"
 
 [tool.ruff]
-extend-exclude = ['test*', 'ldap_auth*']
-ignore = ['RUF015', 'B034', 'PLR1714', 'S602', 'S605', 'D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108']
+extend-exclude = ['test*', 'ldap_auth*', 'migrations*']
+
+[tool.ruff.lint]
+ignore = ['RUF015', 'B034', 'PLR1714', 'S602', 'S605', 'D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108', 'S507']
 select = ['F', 'E', 'W', 'N', 'D', 'S', 'B', 'C4', 'T20', 'Q', 'SIM', 'ERA', 'PL', 'RUF']
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "runner/scripts/em_python.py" = ['SIM114']
 
 [tool.setuptools_scm]

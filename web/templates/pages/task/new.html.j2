@@ -1,140 +1,226 @@
 {% extends "layout.html.j2" %}
-
 {% block crumbs %}
-    <ul>
-        <li>
-            <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
-        </li>
-        <li>
-            <a href="{{ url_for('project_bp.user_projects', user_id=p.project_owner.id) }}">{{ p.project_owner }}'s Projects</a>
-        </li>
-        <li>
-            <a href="{{ url_for('project_bp.one_project', project_id=p.id) }}">{{ p }}</a>
-        </li>
-        <li class="is-active">
-            {% if t %}
-                <a href="#" aria-current="page">Editing {{ t }}</a>
-            {% else %}
-                <a href="#" aria-current="page">New Task</a>
-            {% endif %}
-        </li>
-    </ul>
+  <ul>
+    <li>
+      <a href="{{ url_for("project_bp.all_projects") }}">All Projects</a>
+    </li>
+    <li>
+      <a
+        href="{{ url_for('project_bp.user_projects', user_id=p.project_owner.id) }}"
+        >{{ p.project_owner }}'s Projects</a
+      >
+    </li>
+    <li>
+      <a href="{{ url_for('project_bp.one_project', project_id=p.id) }}"
+        >{{ p }}</a
+      >
+    </li>
+    <li class="is-active">
+      {% if t %}
+        <a href="#" aria-current="page">Editing {{ t }}</a>
+      {% else %}
+        <a href="#" aria-current="page">New Task</a>
+      {% endif %}
+    </li>
+  </ul>
 {% endblock crumbs %}
-
 {% block body %}
-    <h1 class="title is-1" data-docs="tasks">
-        {% if t %}
-            Editing
-            <a title="open task"
-               href="{{ url_for('task_bp.one_task', task_id=t.id) }}">{{ t.name }}</a>
-        {% else %}
-            New Task
-        {% endif %}
-    </h1>
-    <form class="mb-5"
-          action="{%- if t -%} /task/{{ t.id }}/edit {%- else -%} /project/{{ p.id }}/task/new {%- endif -%}"
-          method="post">
-        <div class="box">
-            <div class="field">
-                <label class="label">Name</label>
-                <div class="control">
-                    <input class="input"
-                           name="name"
-                           autocomplete="off"
-                           required="required"
-                           value="{{ t.name }}" />
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Max Retry Attempts</label>
-                <div class="control">
-                    <input class="input"
-                           type="number"
-                           name="task-retry"
-                           value="{%- if t and t.max_retries is not none -%} {{ t.max_retries }} {%- else -%} 1 {%- endif -%}" />
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Run Rank - if project is set to run task in series this field is used to order the task.</label>
-                <div class="control">
-                    <input class="input"
-                           type="number"
-                           name="task-rank"
-                           value="{%- if t and t.order is not none -%}{{ t.order }}{%- endif -%}" />
-                </div>
-            </div>
-        </div>
-        <div class="box">
-            <h2 class="title is-2" data-docs="parameters">Task Parameters</h2>
-            <p class="subtitle is-6">
-                Parameters are <strong>key=value</strong> pairs, and can use <strong>parse(...)</strong> with embedded
-                <a target="_blank" rel="noopener" href="https://strftime.org">strftime patterns</a>
-                . Task parameters override project parameters.
-            </p>
-            <section class="block" id="new-parameters">
-                {% if t.params %}
-                    {% for param in t.params %}
-                        <div class="field is-horizontal new-parameter">
-                            <div class="field-body is-align-items-center">
-                                <div class="field">
-                                    <p class="control is-expanded">
-                                        <input name="param-key"
-                                               class="input"
-                                               type="text"
-                                               placeholder="name"
-                                               value="{{ param.key }}" />
-                                    </p>
-                                </div>
-                                <div class="field has-addons">
-                                    <p class="control is-expanded">
-                                        <input name="param-value"
-                                               class="input"
-                                               {% if param.sensitive == 1 %}
-                                                   type="password"
-                                               {% else %}
-                                                   type="text"
-                                               {% endif %}
-                                               placeholder="***"
-                                               value="{{ param.value|decrypt }}" />
-                                    </p>
-                                    <div class="control">
-                                        <a class="button toggle-pass "data-target="password">
-                                            <span class="icon">
-                                                <i class="fas
-                                                          {% if param.sensitive ==1 -%}
-                                                              fa-eye{%- else -%}fa-eye-slash{%- endif -%}"></i>
-                                                <input name="param-sensitive"
-                                                       type="hidden"
-                                                       {% if param.sensitive ==1 -%}
-                                                           value="1"
-                                                       {% else %}
-                                                           value="0"
-                                                       {% endif %} />
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <p class="control mb-1 ">
-                                    <button type="button" class="delete is-large new-remove-parameter"></button>
-                                </p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </section>
-            <button type="button" class="button new-parameter">New Parameter</button>
-        </div>
-        {% include "pages/task/new/data_source.html.j2" %}
-        {% include "pages/task/new/query_location.html.j2" %}
-        {% include "pages/task/new/processing.html.j2" %}
-        {% include "pages/task/new/destination.html.j2" %}
+  <h1 class="title is-1" data-docs="tasks">
+    {% if t %}
+      Editing
+      <a
+        title="open task"
+        href="{{ url_for('task_bp.one_task', task_id=t.id) }}"
+        >{{ t.name }}</a
+      >
+    {% else %}
+      New Task
+    {% endif %}
+  </h1>
+  <!-- Sticky header that appears when scrolling -->
+  {% if t %}
+    <div
+      id="sticky-task-header"
+      class="has-background-info has-text-white px-4 py-3"
+    >
+      <div class="container">
+        <div
+          class="is-flex is-align-items-center is-justify-content-space-between"
+        >
+          <span class="has-text-weight-semibold">
+            <i class="fas fa-pen-to-square mr-2"></i>
+            Editing: {{ t.name }}
+          </span>
 
-        <button class="button is-info is-fullwidth" type="submit">
-            {% if t %}
-                Save Task
-            {% else %}
-                Add Task
-            {% endif %}
-        </button>
-    </form>
+          <!-- Use Bulma's native buttons container -->
+          <div class="buttons has-addons">
+            <button
+              class="button is-small is-light"
+              type="submit"
+              form="task-form"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-save"></i>
+              </span>
+              <span>Save</span>
+            </button>
+
+            <button
+              class="button is-small is-light"
+              type="button"
+              onclick="document.querySelector('form').scrollIntoView({behavior: 'smooth'})"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-arrow-up"></i>
+              </span>
+              <span>Go to Top</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <form
+    id="task-form"
+    class="mb-5"
+    action="{%- if t -%}/task/{{ t.id }}/edit{%- else -%}/project/{{ p.id }}/task/new{%- endif -%}"
+    method="post"
+  >
+    <!-- Top Save Button -->
+    <button class="button is-info is-fullwidth mb-5" type="submit">
+      {% if t %}
+        Save Task
+      {% else %}
+        Add Task
+      {% endif %}
+    </button>
+
+    <div class="box">
+      <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+          <input
+            class="input"
+            name="name"
+            autocomplete="off"
+            required="required"
+            value="{{ t.name }}"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Max Retry Attempts</label>
+        <div class="control">
+          <input
+            class="input"
+            type="number"
+            name="task-retry"
+            value="{%- if t and t.max_retries is not none -%}{{ t.max_retries }}{%- else -%}1{%- endif -%}"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label"
+          >Run Rank - if project is set to run task in series this field is used
+          to order the task.</label
+        >
+        <div class="control">
+          <input
+            class="input"
+            type="number"
+            name="task-rank"
+            value="{%- if t and t.order is not none -%}{{ t.order }}{%- endif -%}"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <h2 class="title is-2" data-docs="parameters">Task Parameters</h2>
+      <p class="subtitle is-6">
+        Parameters are <strong>key=value</strong> pairs, and can use
+        <strong>parse(...)</strong> with embedded
+        <a target="_blank" rel="noopener" href="https://strftime.org"
+          >strftime patterns</a
+        >
+        . Task parameters override project parameters.
+      </p>
+      <section class="block" id="new-parameters">
+        {% if t.params %}
+          {% for param in t.params %}
+            <div class="field is-horizontal new-parameter">
+              <div class="field-body is-align-items-center">
+                <div class="field">
+                  <p class="control is-expanded">
+                    <input
+                      name="param-key"
+                      class="input"
+                      type="text"
+                      placeholder="name"
+                      value="{{ param.key }}"
+                    />
+                  </p>
+                </div>
+                <div class="field has-addons">
+                  <p class="control is-expanded">
+                    <input
+                      name="param-value"
+                      class="input"
+                      {% if param.sensitive == 1 %}
+                        type="password"
+                      {% else %}
+                        type="text"
+                      {% endif %}
+                      placeholder="***"
+                      value="{{ param.value|decrypt }}"
+                    />
+                  </p>
+                  <div class="control">
+                    <a class="button toggle-pass " data-target="password">
+                      <span class="icon">
+                        <span
+                          class="fas
+                                                          {% if param.sensitive ==1 -%}
+                            fa-eye
+                          {%- else -%}
+                            fa-eye-slash
+                          {%- endif -%}"
+                        ></span>
+                        <input
+                          name="param-sensitive"
+                          type="hidden"
+                          {% if param.sensitive ==1 -%}
+                            value="1"
+                          {% else %}
+                            value="0"
+                          {% endif %}
+                        />
+                      </span>
+                    </a>
+                  </div>
+                </div>
+                <p class="control mb-1 ">
+                  <button
+                    type="button"
+                    class="delete is-large new-remove-parameter"
+                  ></button>
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </section>
+      <button type="button" class="button new-parameter">New Parameter</button>
+    </div>
+    {% include "pages/task/new/data_source.html.j2" %}
+    {% include "pages/task/new/query_location.html.j2" %}
+    {% include "pages/task/new/processing.html.j2" %}
+    {% include "pages/task/new/destination.html.j2" %}
+    <button class="button is-info is-fullwidth" type="submit">
+      {% if t %}
+        Save Task
+      {% else %}
+        Add Task
+      {% endif %}
+    </button>
+  </form>
 {% endblock body %}

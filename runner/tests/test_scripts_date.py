@@ -11,7 +11,6 @@ run with::
 
 """
 
-
 import calendar
 import datetime
 
@@ -404,9 +403,7 @@ def test_complex_patterns(client_fixture: fixture) -> None:
 
     my_date_string = DateParsing(task, None, "%m-6-%d-30-%Y+1-lastday").string_to_date()
 
-    new_date = datetime.datetime.now() + relativedelta.relativedelta(
-        months=-6, days=-30, years=1
-    )
+    new_date = datetime.datetime.now() + relativedelta.relativedelta(months=-6, days=-30, years=1)
 
     last_day = calendar.monthrange(
         int(new_date.strftime("%Y")),
@@ -418,13 +415,9 @@ def test_complex_patterns(client_fixture: fixture) -> None:
         task, None, "%m-6-%d-30-%Y+1-lastday_something_cool_%m+6-%d+30-%Y-1-lastday"
     ).string_to_date()
 
-    new_date = datetime.datetime.now() + relativedelta.relativedelta(
-        months=-6, days=-30, years=1
-    )
+    new_date = datetime.datetime.now() + relativedelta.relativedelta(months=-6, days=-30, years=1)
 
-    last_day = calendar.monthrange(
-        int(new_date.strftime("%Y")), int(new_date.strftime("%m"))
-    )[1]
+    last_day = calendar.monthrange(int(new_date.strftime("%Y")), int(new_date.strftime("%m")))[1]
 
     second_new_date = datetime.datetime.now() + relativedelta.relativedelta(
         months=6, days=30, years=-1
@@ -436,6 +429,4 @@ def test_complex_patterns(client_fixture: fixture) -> None:
 
     assert my_date_string == new_date.strftime("%m-%d-%Y-") + str(
         last_day
-    ) + "_something_cool_" + second_new_date.strftime("%m-%d-%Y-") + str(
-        second_last_day
-    )
+    ) + "_something_cool_" + second_new_date.strftime("%m-%d-%Y-") + str(second_last_day)

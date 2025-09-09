@@ -1,5 +1,7 @@
 {% if installed_version == upgrade_version %}
-    <span class="tag is-success is-large">up-to-date</span>
+  <span class="tag is-success is-large">up-to-date</span>
 {% elif upgrade_version %}
-    <span class="tag is-warning is-large">update available! {{ installed_version }} > {{ upgrade_version }}</span>
+  <span class="tag is-warning is-large"
+    >update available! {{ installed_version }} > {{ upgrade_version }}</span
+  >
 {% endif %}

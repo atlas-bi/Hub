@@ -1,30 +1,30 @@
 {% extends "layout.html.j2" %}
 
 {% block body_auth %}
-    {% with messages = get_flashed_messages() %}
-        <div class="container mt-5">
-            <div class="columns is-centered mt-5">
-                <div class="column is-4 mt-5 box">
-                    {% if messages %}
-                        <article class="message is-danger">
-                            <div class="message-body">
-                                <span class="icon">
-                                    <i class="fas fa-triangle-exclamation"></i>
-                                </span>
-                                {% for message in messages %}{{ message }}{% endfor %}
-                            </div>
-                        </article>
-                    {% endif %}
-                    <article class="message is-danger">
-                        <div class="message-body">
-                            <span class="icon">
-                                <i class="fas fa-triangle-exclamation"></i>
-                            </span>
-                            You are not authorized to access this site.
-                        </div>
-                    </article>
-                </div>
+  {% with messages = get_flashed_messages() %}
+    <div class="container mt-5">
+      <div class="columns is-centered mt-5">
+        <div class="column is-4 mt-5 box">
+          {% if messages %}
+            <article class="message is-danger">
+              <div class="message-body">
+                <span class="icon">
+                  <span class="fas fa-triangle-exclamation"></span>
+                </span>
+                {% for message in messages %}{{ message }}{% endfor %}
+              </div>
+            </article>
+          {% endif %}
+          <article class="message is-danger">
+            <div class="message-body">
+              <span class="icon">
+                <span class="fas fa-triangle-exclamation"></span>
+              </span>
+              You are not authorized to access this site.
             </div>
+          </article>
         </div>
-    {% endwith %}
+      </div>
+    </div>
+  {% endwith %}
 {% endblock body_auth %}

@@ -35,7 +35,7 @@
   }
   var projectGlobalParams = d.querySelector('textarea[name="globalParams"]');
   if (projectGlobalParams) {
-    // eslint-disable-next-line no-undef,no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     var myprojectGlobalParams = CodeMirror.fromTextArea(projectGlobalParams, {
       theme: 'ttcn',
       mode: 'sql',
@@ -51,7 +51,7 @@
   }
   var projectTaskParams = d.querySelector('textarea[name="taskParams"]');
   if (projectTaskParams) {
-    // eslint-disable-next-line no-undef,no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     var myprojectTaskParams = CodeMirror.fromTextArea(projectTaskParams, {
       theme: 'ttcn',
       mode: 'sql',
@@ -684,9 +684,13 @@
       t = e.target.closest('select[name="fileType"]');
       p = t.closest('body');
       p.querySelector('.task-delimiter').style.display = 'none';
+      p.querySelector('.File-information').style.display = 'none';
 
       if (t.value === '2' || t.value === '4') {
         p.querySelector('.task-delimiter').style.removeProperty('display');
+      }
+      if (t.value != '5') {
+        p.querySelector('.File-information').style.removeProperty('display');
       }
     }
     if (typeof mySourceCodeMirror != 'undefined') mySourceCodeMirror.refresh();
@@ -725,6 +729,7 @@
       weekNumbers: true,
       time_24hr: true,
     });
+    /*eslint no-unused-vars: ["error", { "caughtErrors": "none" }]*/
   } catch (e) {
     // nothing
   }

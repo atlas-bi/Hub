@@ -1,4 +1,5 @@
 """Setyp pytest."""
+
 import os
 import sys
 from pathlib import Path
@@ -134,7 +135,7 @@ def create_demo_task(session, year: int = 2025, sequence: int = 0) -> Tuple[int,
         name="Project 1 " + str(datetime.now()),
         cron=1,
         cron_min="1",
-        cron_start_date=datetime(year, 1, 1, tzinfo=timezone.utc),
+        cron_start_date=datetime(year, 1, 1),
         sequence_tasks=sequence,
         intv=1,
         intv_type="w",
@@ -147,7 +148,7 @@ def create_demo_task(session, year: int = 2025, sequence: int = 0) -> Tuple[int,
         session,
         Task,
         name="Task 1 " + str(project.id),
-        source_type_id=6,
+        source_type_id=1,
         source_code="""select getdate()""",
         project_id=project.id,
         source_query_type_id=4,

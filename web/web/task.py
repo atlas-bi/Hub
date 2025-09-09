@@ -191,6 +191,7 @@ def task_get_source_code(task_id: int) -> str:
         code=code,
         cache_enabled=task.enable_source_cache,
         task_id=task_id,
+        language="sql",
     )
 
 
@@ -232,10 +233,7 @@ def task_get_processing_code(task_id: int) -> str:
             db.session.commit()
         code = "error."
 
-    return render_template(
-        "pages/task/code.html.j2",
-        code=code,
-    )
+    return render_template("pages/task/code.html.j2", code=code, language="python")
 
 
 @task_bp.route("/task/sftp-dest")
@@ -243,11 +241,7 @@ def task_get_processing_code(task_id: int) -> str:
 def task_sftp_dest() -> str:
     """Template to add sftp destination to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionSftp.query.filter_by(connection_id=org)
-        .order_by(ConnectionSftp.name)
-        .all()
-    )
+    dest = ConnectionSftp.query.filter_by(connection_id=org).order_by(ConnectionSftp.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -263,11 +257,7 @@ def task_sftp_dest() -> str:
 def task_gpg_file() -> str:
     """Template to add gpg encryption to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionGpg.query.filter_by(connection_id=org)
-        .order_by(ConnectionGpg.name)
-        .all()
-    )
+    dest = ConnectionGpg.query.filter_by(connection_id=org).order_by(ConnectionGpg.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -283,11 +273,7 @@ def task_gpg_file() -> str:
 def task_sftp_source() -> str:
     """Template to add sftp source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionSftp.query.filter_by(connection_id=org)
-        .order_by(ConnectionSftp.name)
-        .all()
-    )
+    dest = ConnectionSftp.query.filter_by(connection_id=org).order_by(ConnectionSftp.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -303,11 +289,7 @@ def task_sftp_source() -> str:
 def task_ssh_source() -> str:
     """Template to add ssh source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionSsh.query.filter_by(connection_id=org)
-        .order_by(ConnectionSsh.name)
-        .all()
-    )
+    dest = ConnectionSsh.query.filter_by(connection_id=org).order_by(ConnectionSsh.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -323,11 +305,7 @@ def task_ssh_source() -> str:
 def task_sftp_query() -> str:
     """Template to add sftp query source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionSftp.query.filter_by(connection_id=org)
-        .order_by(ConnectionSftp.name)
-        .all()
-    )
+    dest = ConnectionSftp.query.filter_by(connection_id=org).order_by(ConnectionSftp.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -343,11 +321,7 @@ def task_sftp_query() -> str:
 def task_sftp_processing() -> str:
     """Template to add sftp processing source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionSftp.query.filter_by(connection_id=org)
-        .order_by(ConnectionSftp.name)
-        .all()
-    )
+    dest = ConnectionSftp.query.filter_by(connection_id=org).order_by(ConnectionSftp.name).all()
 
     org = Connection.query.filter_by(id=org).first()
 
@@ -364,11 +338,7 @@ def task_sftp_processing() -> str:
 def task_ftp_dest() -> str:
     """Template to add ftp destination to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionFtp.query.filter_by(connection_id=org)
-        .order_by(ConnectionFtp.name)
-        .all()
-    )
+    dest = ConnectionFtp.query.filter_by(connection_id=org).order_by(ConnectionFtp.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -381,11 +351,7 @@ def task_ftp_dest() -> str:
 def task_ftp_source() -> str:
     """Template to add ftp source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionFtp.query.filter_by(connection_id=org)
-        .order_by(ConnectionFtp.name)
-        .all()
-    )
+    dest = ConnectionFtp.query.filter_by(connection_id=org).order_by(ConnectionFtp.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -401,11 +367,7 @@ def task_ftp_source() -> str:
 def task_ftp_processing() -> str:
     """Template to add ftp processing source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionFtp.query.filter_by(connection_id=org)
-        .order_by(ConnectionFtp.name)
-        .all()
-    )
+    dest = ConnectionFtp.query.filter_by(connection_id=org).order_by(ConnectionFtp.name).all()
     org = Connection.query.filter_by(id=org).first()
     return render_template(
         "pages/task/processing/ftp_processing.html.j2",
@@ -420,11 +382,7 @@ def task_ftp_processing() -> str:
 def task_ftp_query() -> str:
     """Template to add ftp query source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionFtp.query.filter_by(connection_id=org)
-        .order_by(ConnectionFtp.name)
-        .all()
-    )
+    dest = ConnectionFtp.query.filter_by(connection_id=org).order_by(ConnectionFtp.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -440,11 +398,7 @@ def task_ftp_query() -> str:
 def task_smb_source() -> str:
     """Template to add smb source to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionSmb.query.filter_by(connection_id=org)
-        .order_by(ConnectionSmb.name)
-        .all()
-    )
+    dest = ConnectionSmb.query.filter_by(connection_id=org).order_by(ConnectionSmb.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -460,11 +414,7 @@ def task_smb_source() -> str:
 def task_smb_dest() -> str:
     """Template to add smb destination to a task."""
     org = request.args.get("org", default=1, type=int)
-    dest = (
-        ConnectionSmb.query.filter_by(connection_id=org)
-        .order_by(ConnectionSmb.name)
-        .all()
-    )
+    dest = ConnectionSmb.query.filter_by(connection_id=org).order_by(ConnectionSmb.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -477,11 +427,7 @@ def task_smb_dest() -> str:
 def task_smb_query() -> str:
     """Template to add smb query source to a task."""
     org = request.args.get("org", default=1, type=int)
-    query = (
-        ConnectionSmb.query.filter_by(connection_id=org)
-        .order_by(ConnectionSmb.name)
-        .all()
-    )
+    query = ConnectionSmb.query.filter_by(connection_id=org).order_by(ConnectionSmb.name).all()
     org = Connection.query.filter_by(id=org).first()
 
     return render_template(
@@ -498,9 +444,7 @@ def task_smb_processing() -> str:
     """Template to add smb processing source to a task."""
     org = request.args.get("org", default=1, type=int)
     processing = (
-        ConnectionSmb.query.filter_by(connection_id=org)
-        .order_by(ConnectionSmb.name)
-        .all()
+        ConnectionSmb.query.filter_by(connection_id=org).order_by(ConnectionSmb.name).all()
     )
     org = Connection.query.filter_by(id=org).first()
 

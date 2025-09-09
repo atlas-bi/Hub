@@ -52,6 +52,49 @@
     }, 3000);
   }
 
+  // NEW: Sticky header functionality for task editing pages
+  function initStickyTaskHeader() {
+    const stickyHeader = document.getElementById('sticky-task-header');
+    if (!stickyHeader) return; // Only run if sticky header exists
+
+    const mainTitle = document.querySelector('h1.title');
+    if (!mainTitle) return;
+
+    const titleBottom = mainTitle.offsetTop + mainTitle.offsetHeight;
+    let isVisible = false;
+
+    function updateStickyHeader() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop > titleBottom + 50 && !isVisible) {
+        // Show sticky header
+        stickyHeader.classList.add('is-visible');
+        isVisible = true;
+      } else if (scrollTop <= titleBottom + 50 && isVisible) {
+        // Hide sticky header
+        stickyHeader.classList.remove('is-visible');
+        isVisible = false;
+      }
+    }
+
+    // Throttled scroll event for better performance
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(function () {
+          updateStickyHeader();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll);
+
+    // Initial check
+    updateStickyHeader();
+  }
+
   document.addEventListener('click', function (element) {
     // add a parameter input
     if (element.target.closest('button.new-parameter')) {
@@ -71,7 +114,7 @@
                             <div class="control">
                                 <a class="button toggle-pass "data-target="password">
                                     <span class="icon">
-                                        <i class="fas fa-eye-slash"></i>
+                                        <span class="fas fa-eye-slash"></span>
                                         <input name="param-sensitive" type="hidden"/>
                                     </span>
                                 </a>
@@ -101,5 +144,10 @@
         real.classList.add('is-hidden');
       }
     }
+  });
+
+  // NEW: Initialize sticky header when DOM is ready
+  document.addEventListener('DOMContentLoaded', function () {
+    initStickyTaskHeader();
   });
 })();

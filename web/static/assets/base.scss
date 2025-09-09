@@ -1,7 +1,50 @@
-@use '../../../node_modules/@fontsource/inter/scss/mixins' as Inter;
-@use '../../../node_modules/@fontsource/rasa/scss/mixins' as Rasa;
+@use 'sass:math';
+@use 'sass:meta';
+@use '../../../node_modules/@fontsource-utils/scss/src/mixins.scss' as
+  fontsource;
+@use '../../../node_modules/@fontsource-variable/inter/scss/metadata.scss' as
+  inter;
+@use '../../../node_modules/@fontsource-variable/rasa/scss/metadata.scss' as
+  rasa;
+@use '../../../node_modules/bulma/sass/utilities'
+  with(
+    $family-primary:
+      'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Lucida Sans Unicode, Lucida Grande, Arial, sans-serif',
+    $cssvars-prefix: ''
+  );
+@use '../../../node_modules/bulma/sass/elements' with (
+  $title-family: 'Rasa, Georgia, Times New Roman, serif'
+);
+@forward '../../../node_modules/bulma/sass/base';
+@use '../../../node_modules/bulma/sass/components' with (
+  $breadcrumb-item-active-color: #363636
+);
 
-@include Inter.faces(
+@forward '../../../node_modules/bulma/sass/layout';
+@forward '../../../node_modules/bulma/sass/form';
+@forward '../../../node_modules/bulma/sass/grid';
+@forward '../../../node_modules/bulma/sass/helpers';
+
+// Import the themes so that all CSS variables have a value
+@forward '../../../node_modules/bulma/sass/index';
+@forward '../../../node_modules/bulma/sass/utilities/mixins';
+
+@forward 'bulma-switch';
+@forward 'bulma-tooltip';
+@forward 'bulma-checkradio';
+/* purgecss start ignore */
+@use '../fonts/fontawesome/stylesheet';
+@forward '../lib/codemirror/codemirror';
+@forward '../lib/codemirror/ttcn';
+@forward '../lib/codemirror/simplescrollbars';
+@forward '../lib/scroll/scroll';
+@forward '../lib/prism/prism';
+@forward '../lib/table/table';
+@forward '../lib/prism/prism_line_numbers';
+@forward '../lib/flatpickr/flatpickr';
+
+@include fontsource.faces(
+  $metadata: inter.$metadata,
   $family: 'Inter',
   $subsets: latin,
   $weights: (
@@ -15,48 +58,14 @@
   $display: swap
 );
 
-@include Rasa.faces(
+@include fontsource.faces(
+  $metadata: rasa.$metadata,
   $family: 'Rasa',
   $subsets: latin,
   $weights: 600,
   $directory: '/static/fonts/rasa/files',
   $display: swap
 );
-
-$title-family: 'Rasa', 'Georgia', 'Times New Roman', serif;
-
-$family-sans-serif:
-  'Inter',
-  -apple-system,
-  'BlinkMacSystemFont',
-  'Segoe UI',
-  'Roboto',
-  'Helvetica Neue',
-  'Lucida Sans Unicode',
-  'Lucida Grande',
-  'Arial',
-  sans-serif,
-  'Apple Color Emoji',
-  'Segoe UI Emoji',
-  'Segoe UI Symbol';
-
-@import '../../../node_modules/bulma-checkradio/src/sass';
-@import '../../../node_modules/bulma/bulma';
-
-@import '../../../node_modules/bulma-switch/src/sass';
-@import '../../../node_modules/bulma-tooltip/src/sass';
-
-/* purgecss start ignore */
-@import '../fonts/fontawesome/stylesheet';
-@import '../lib/codemirror/codemirror';
-@import '../lib/codemirror/ttcn';
-@import '../lib/codemirror/simplescrollbars';
-@import '../lib/scroll/scroll';
-@import '../lib/prism/prism';
-@import '../lib/table/table';
-@import '../lib/prism/prism_line_numbers';
-@import '../lib/flatpickr/flatpickr';
-@import '../lib/table/table';
 
 .column {
   min-width: 0px;
@@ -79,25 +88,25 @@ $family-sans-serif:
   }
   a.navbar-item {
     &:hover {
-      color: $grey-darker;
+      color: utilities.$grey-darker;
     }
   }
   .has-dropdown {
     .navbar-link {
       &:hover {
-        color: $grey-darker;
+        color: utilities.$grey-darker;
       }
     }
   }
 }
 
-@media screen and (min-width: $desktop) {
+@media screen and (min-width: utilities.$desktop) {
   .atlas-navbar .navbar-start {
     padding-top: 0 !important;
   }
 }
 
-@media screen and (min-width: $desktop) {
+@media screen and (min-width: utilities.$desktop) {
   .hide-desktop {
     display: none !important;
   }
@@ -116,13 +125,13 @@ $family-sans-serif:
   min-width: max(50vw, 100%);
   max-width: 800px;
   display: none;
-  border-radius: $radius;
+  border-radius: utilities.$radius;
   z-index: 999999;
   max-height: calc(100vh - 145px);
   overflow-y: auto;
 }
 
-@media screen and (min-width: $desktop) {
+@media screen and (min-width: utilities.$desktop) {
   #search-results {
     min-width: max(30vw, 100%);
   }
@@ -135,8 +144,7 @@ $family-sans-serif:
 #search-results:active,
 #search-results.search-focus {
   display: block;
-  box-shadow: $shadow;
-  border: 1px solid $border;
+  border: 1px solid utilities.$border;
 }
 
 #search-results .panel-block:first-of-type {
@@ -163,8 +171,8 @@ $family-sans-serif:
 }
 
 #search-results em {
-  background-color: $info-light;
-  color: $info;
+  background-color: rgb(239, 245, 251);
+  color: rgb(62, 142, 208);
 }
 
 /*** tabs ***/
@@ -279,7 +287,7 @@ input.transparent {
     content: attr(data-attr);
     position: absolute;
     bottom: -30px;
-    background: $white;
+    background: utilities.$white;
     right: 0;
     left: 0;
   }
@@ -287,7 +295,7 @@ input.transparent {
 .em-ScaleBar {
   height: 1px;
   width: 100%;
-  background: $grey-light;
+  background: utilities.$grey-light;
   position: relative;
   margin-bottom: 50px;
   &::before {
@@ -295,9 +303,9 @@ input.transparent {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: $white;
+    background: utilities.$white;
     padding-right: 10px;
-    color: $grey-dark;
+    color: utilities.$grey-dark;
   }
   &:last-of-type {
     background: transparent;
@@ -322,4 +330,22 @@ article.message a {
 .em-ajaxContent.is-inline div {
   display: inline-block;
 }
+/* sticky task header */
+#sticky-task-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* purgecss end ignore */
