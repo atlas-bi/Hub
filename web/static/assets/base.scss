@@ -330,4 +330,22 @@ article.message a {
 .em-ajaxContent.is-inline div {
   display: inline-block;
 }
+/* sticky task header */
+#sticky-task-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* purgecss end ignore */
