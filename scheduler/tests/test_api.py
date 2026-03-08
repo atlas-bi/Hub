@@ -90,7 +90,7 @@ def test_add_task(client_fixture: fixture) -> None:
     # depending on timezone results will vary (redis has no tz.)
     assert (
         scheduled_task.next_run_time.isoformat()
-        == datetime(2025, 1, 1, 0, 1).replace(tzinfo=tzlocal()).isoformat()
+        == datetime(2030, 1, 1, 0, 1).replace(tzinfo=tzlocal()).isoformat()
     )
 
     assert "cron[minute='1']" in str(scheduled_task.trigger)
