@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] #, macos-latest]
-        python-version: [3.8, 3.9, '3.10'] # 3.11 doesn't support lxml yet.
+        python-version: [3.9, '3.10'] # 3.8 EOL Oct 2024, dropped by Poetry 2.x; 3.11 doesn't support lxml yet.
       fail-fast: true
 
     services:
