@@ -20,7 +20,6 @@ migrations file - so flask-migrations think it has already applied the migration
 
 """
 
-
 import datetime
 from dataclasses import dataclass
 from typing import Optional

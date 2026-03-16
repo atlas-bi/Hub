@@ -100,7 +100,7 @@ def intv_name(data: Tuple[int, str]) -> str:
 
     where increment is w, d, h, m or s.
     """
-    (incrememt, period) = data
+    incrememt, period = data
 
     my_dict = {"w": "week", "d": "day", "h": "hour", "m": "minute", "s": "second"}
     period = my_dict.get(period, "")
