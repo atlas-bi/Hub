@@ -765,53 +765,64 @@ def new_connection_database(connection_id: int) -> Union[Response, str]:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/ssh/<ssh_id>/status")
+@connection_bp.route("/connection/ssh/<int:ssh_id>/status")
 @login_required
 def ssh_online(ssh_id: int) -> str:
     """Check if connection is online."""
     try:
-        return requests.get(f"{app.config['RUNNER_HOST']}/ssh/{ssh_id}/status", timeout=60).text
-    except BaseException as e:
-        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+        requests.get(f"{app.config['RUNNER_HOST']}/ssh/{ssh_id}/status", timeout=60).raise_for_status()
+        return '<span class="tag is-success is-light">Online</span>'
+    except BaseException:
+        return '<span class="tag is-danger is-light">Offline</span>'
 
 
-@connection_bp.route("/connection/database/<database_id>/status")
+@connection_bp.route("/connection/database/<int:database_id>/status")
 @login_required
 def database_online(database_id: int) -> str:
     """Check if connection is online."""
     try:
-        return requests.get(
+        requests.get(
             f"{app.config['RUNNER_HOST']}/database/{database_id}/status", timeout=60
-        ).text
-    except BaseException as e:
-        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+        ).raise_for_status()
+        return '<span class="tag is-success is-light">Online</span>'
+    except BaseException:
+        return '<span class="tag is-danger is-light">Offline</span>'
 
 
-@connection_bp.route("/connection/sftp/<sftp_id>/status")
+@connection_bp.route("/connection/sftp/<int:sftp_id>/status")
 @login_required
 def sftp_online(sftp_id: int) -> str:
     """Check if connection is online."""
     try:
-        return requests.get(f"{app.config['RUNNER_HOST']}/sftp/{sftp_id}/status", timeout=60).text
-    except BaseException as e:
-        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+        requests.get(
+            f"{app.config['RUNNER_HOST']}/sftp/{sftp_id}/status", timeout=60
+        ).raise_for_status()
+        return '<span class="tag is-success is-light">Online</span>'
+    except BaseException:
+        return '<span class="tag is-danger is-light">Offline</span>'
 
 
-@connection_bp.route("/connection/ftp/<ftp_id>/status")
+@connection_bp.route("/connection/ftp/<int:ftp_id>/status")
 @login_required
 def ftp_online(ftp_id: int) -> str:
     """Check if connection is online."""
     try:
-        return requests.get(f"{app.config['RUNNER_HOST']}/ftp/{ftp_id}/status", timeout=60).text
-    except BaseException as e:
-        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+        requests.get(
+            f"{app.config['RUNNER_HOST']}/ftp/{ftp_id}/status", timeout=60
+        ).raise_for_status()
+        return '<span class="tag is-success is-light">Online</span>'
+    except BaseException:
+        return '<span class="tag is-danger is-light">Offline</span>'
 
 
-@connection_bp.route("/connection/smb/<smb_id>/status")
+@connection_bp.route("/connection/smb/<int:smb_id>/status")
 @login_required
 def smb_online(smb_id: int) -> str:
     """Check if connection is online."""
     try:
-        return requests.get(f"{app.config['RUNNER_HOST']}/smb/{smb_id}/status", timeout=60).text
-    except BaseException as e:
-        return f'<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{e}">Offline</span>'
+        requests.get(
+            f"{app.config['RUNNER_HOST']}/smb/{smb_id}/status", timeout=60
+        ).raise_for_status()
+        return '<span class="tag is-success is-light">Online</span>'
+    except BaseException:
+        return '<span class="tag is-danger is-light">Offline</span>'
