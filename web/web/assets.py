@@ -3,7 +3,6 @@
 CSS assets are compiles from scss to css with gulp. Webassets combines the output css and versions them nicely.
 """
 
-
 from flask_assets import Bundle
 from webassets.filter import register_filter
 from webassets_rollup import Rollup

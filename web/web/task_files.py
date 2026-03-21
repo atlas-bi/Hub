@@ -198,9 +198,7 @@ def one_task_file_download(file_id: int) -> Response:
         )
 
         source_file = json.loads(
-            requests.get(
-                "%s/file/%s" % (app.config["RUNNER_HOST"], file_id), timeout=60
-            ).text,
+            requests.get("%s/file/%s" % (app.config["RUNNER_HOST"], file_id), timeout=60).text,
         ).get("message")
 
         def stream_and_remove_file() -> Generator:
@@ -210,9 +208,7 @@ def one_task_file_download(file_id: int) -> Response:
         # check if it is a zip
 
         if zipfile.is_zipfile(source_file):
-            return send_file(
-                source_file, as_attachment=True, attachment_filename=my_file.name
-            )
+            return send_file(source_file, as_attachment=True, attachment_filename=my_file.name)
 
         # otherwise, stream it.
         # pylint: disable=R1732

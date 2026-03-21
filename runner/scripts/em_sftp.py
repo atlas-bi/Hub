@@ -1,6 +1,5 @@
 """SFTP connection manager."""
 
-
 import csv
 import fnmatch
 import os
@@ -39,9 +38,11 @@ def connection_key(connection: ConnectionSftp) -> Optional[paramiko.pkey.PKey]:
 
             key = paramiko.RSAKey.from_private_key_file(
                 key_file.name,
-                password=em_decrypt(connection.key_password, app.config["PASS_KEY"])
-                if connection.key_password
-                else None,
+                password=(
+                    em_decrypt(connection.key_password, app.config["PASS_KEY"])
+                    if connection.key_password
+                    else None
+                ),
             )
 
     return key
@@ -81,9 +82,11 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
                     transport.auth_publickey(connection.username, key, event=None)
                     transport.auth_password(
                         connection.username,
-                        em_decrypt(connection.password, app.config["PASS_KEY"])
-                        if connection.password
-                        else "",
+                        (
+                            em_decrypt(connection.password, app.config["PASS_KEY"])
+                            if connection.password
+                            else ""
+                        ),
                         event=None,
                     )
 
@@ -147,9 +150,7 @@ class Sftp:
         except ValueError as e:
             raise RunnerException(self.task, self.run_id, 9, str(e))
 
-    def _walk(
-        self, directory: str
-    ) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
+    def _walk(self, directory: str) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
         dirs = []
         nondirs = []
 
@@ -185,14 +186,9 @@ class Sftp:
                         break
                     yield data
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", delete=False, dir=self.dir
-        ) as data_file:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, dir=self.dir) as data_file:
             for data in load_data(sftp_file):
-                if (
-                    self.task.source_sftp_ignore_delimiter != 1
-                    and self.task.source_sftp_delimiter
-                ):
+                if self.task.source_sftp_ignore_delimiter != 1 and self.task.source_sftp_delimiter:
                     my_delimiter = self.task.source_sftp_delimiter or ","
 
                     csv_reader = csv.reader(
@@ -280,9 +276,7 @@ class Sftp:
             self.conn.chdir(self.__clean_path(self.connection.path or "/"))
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 9, f"Failed to change path.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 9, f"Failed to change path.\n{e}")
 
         if overwrite != 1:
             try:
@@ -343,6 +337,4 @@ class Sftp:
             self.transport.close()
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 9, f"Failed to close connection.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 9, f"Failed to close connection.\n{e}")

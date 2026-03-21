@@ -1,4 +1,5 @@
 """EM Web Custom CLI."""
+
 import sys
 from pathlib import Path
 
