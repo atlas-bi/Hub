@@ -35,8 +35,11 @@ class Cmd:
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            out_bytes = subprocess.check_output(self.cmd, stderr=subprocess.STDOUT, shell=True)
-            out = out_bytes.decode("utf-8")
+            out = subprocess.check_output(  # noqa: S603
+                ["/bin/bash", "-lc", self.cmd],
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
 
             if "Error" in out:
                 RunnerLog(
@@ -66,7 +69,7 @@ class Cmd:
             return out
 
         except subprocess.CalledProcessError as e:
-            out = e.output.decode("utf-8")
+            out = e.output if isinstance(e.output, str) else e.output.decode("utf-8")
             RunnerLog(
                 self.task,
                 self.run_id,
@@ -106,7 +109,11 @@ class Cmd:
     def run(self) -> str:
         """Run input command as a subprocess command."""
         try:
-            out = os.popen(self.cmd + " 2>&1").read()
+            out = subprocess.check_output(  # noqa: S603
+                ["/bin/bash", "-lc", self.cmd + " 2>&1"],
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
 
             if "Error" in out:
                 RunnerLog(

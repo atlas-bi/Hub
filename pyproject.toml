@@ -187,6 +187,7 @@ select = ['F', 'E', 'W', 'N', 'D', 'S', 'B', 'C4', 'T20', 'Q', 'SIM', 'ERA', 'PL
 
 [tool.ruff.per-file-ignores]
 "runner/scripts/em_python.py" = ['SIM114']
+"runner/scripts/em_cmd.py" = ['S603']
 
 [tool.setuptools_scm]
 local_scheme = "dirty-tag"
