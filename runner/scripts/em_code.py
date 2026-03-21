@@ -387,11 +387,20 @@ class SourceCode:
 
         # only needed for mssql
         if self.task.source_type_id == 1 and self.db_type == "mssql":
-            query = re.sub(
-                re.compile(r"^[;\s]*use\b[^\n;]*;?[ \t]*$", flags=re.IGNORECASE | re.MULTILINE),
-                "",
-                query,
-            )
+            lines = query.splitlines(keepends=True)
+            cleaned_lines = []
+            for line in lines:
+                stripped = line.lstrip(" ;\t").strip().lower()
+                if (
+                    stripped.startswith("use ")
+                    or stripped == "use"
+                    or stripped.startswith("use\t")
+                ):
+                    continue
+                if stripped == "go":
+                    continue
+                cleaned_lines.append(line)
+            query = "".join(cleaned_lines)
 
             # add no count
             query = "SET NOCOUNT ON;\n" + query
@@ -401,12 +410,5 @@ class SourceCode:
 
             query = "SET STATISTICS IO OFF;\n" + query
             query = "SET STATISTICS TIME OFF;\n" + query
-
-            # remove " go"
-            query = re.sub(
-                re.compile(r"^[;\s]*go\b[;\s]*$", flags=re.IGNORECASE | re.MULTILINE),
-                r"",
-                query,
-            )
 
         return self.params.insert_query_params(query)
