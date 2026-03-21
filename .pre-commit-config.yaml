@@ -36,18 +36,21 @@ repos:
     exclude: migrations* | docs*
     additional_dependencies: [toml]
 - repo: https://github.com/psf/black
-  rev: 23.12.1
+  rev: 24.10.0
   hooks:
   - id: black
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.12.0
+  rev: v2.14.0
   hooks:
   - id: pretty-format-toml
     args: [--autofix]
+    additional_dependencies: [setuptools]
   - id: pretty-format-ini
     args: [--autofix]
+    additional_dependencies: [setuptools]
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
+    additional_dependencies: [setuptools]
 - repo: https://github.com/Riverside-Healthcare/djLint
   rev: v1.34.1
   hooks:
