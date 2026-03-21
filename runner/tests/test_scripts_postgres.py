@@ -48,7 +48,7 @@ def test_connection_failure(client_fixture: fixture) -> None:
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     with pytest.raises(ValueError) as e:
-        pg = Postgres(task, None, str(task.source_database_conn.connection_string), 90, temp_dir)
+        Postgres(task, None, str(task.source_database_conn.connection_string), 90, temp_dir)
         assert "Failed to connect to database" in e
         assert 'missing "=" after "asdf"' in e
 

@@ -172,6 +172,15 @@ def tasklog_userevents() -> Response:
     for log in logs.limit(10).offset(page * 10).all():
         log = dict(zip(cols.keys(), log))
 
+        status_date_value = log["Status Date"]
+        if status_date_value and isinstance(status_date_value, datetime.datetime):
+            status_date = datetime.datetime.strftime(
+                status_date_value,
+                "%a, %b %-d, %Y %H:%M:%S.%f",
+            )
+        else:
+            status_date = status_date_value if status_date_value else "None"
+
         me.append(
             {
                 "Task Name": (
@@ -190,14 +199,7 @@ def tasklog_userevents() -> Response:
                     if log["Job Id"]
                     else ""
                 ),
-                "Status Date": (
-                    datetime.datetime.strftime(
-                        log["Status Date"],
-                        "%a, %b %-d, %Y %H:%M:%S.%f",
-                    )
-                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
-                    else (log["Status Date"] if log["Status Date"] else "None")
-                ),
+                "Status Date": status_date,
                 "Message": log["Message"],
                 "class": "error" if log["Status Id"] == 2 or log["Error"] == 1 else "",
             }
@@ -407,6 +409,18 @@ def connection_tasks(connection_id: int) -> Response:
     for task in tasks.limit(10).offset(page * 10).all():
         task = dict(zip(cols.keys(), task))
 
+        last_run_value = task["Last Run"]
+        if last_run_value and isinstance(last_run_value, datetime.datetime):
+            last_run = datetime.datetime.strftime(last_run_value, "%a, %b %-d, %Y %H:%M:%S")
+        else:
+            last_run = last_run_value if last_run_value else "Never"
+
+        next_run_value = task["Next Run"]
+        if next_run_value and isinstance(next_run_value, datetime.datetime):
+            next_run = datetime.datetime.strftime(next_run_value, "%a, %b %-d, %Y %H:%M:%S")
+        else:
+            next_run = next_run_value if next_run_value else "None"
+
         me.append(
             {
                 "Task Name": '<a  href="/task/'
@@ -429,18 +443,10 @@ def connection_tasks(connection_id: int) -> Response:
                     if task["Enabled"] == 1
                     else "<a  href=/task/" + str(task["Task Id"]) + "/enable>Enable</a>"
                 ),
-                "Last Run": (
-                    datetime.datetime.strftime(task["Last Run"], "%a, %b %-d, %Y %H:%M:%S")
-                    if task["Last Run"] and isinstance(task["Last Run"], datetime.datetime)
-                    else (task["Last Run"] if task["Last Run"] else "Never")
-                ),
+                "Last Run": last_run,
                 "Run Now": "<a  href='/task/" + str(task["Task Id"]) + "/run'>Run Now</a>",
                 "Status": task["Status"] if task["Status"] else "None",
-                "Next Run": (
-                    datetime.datetime.strftime(task["Next Run"], "%a, %b %-d, %Y %H:%M:%S")
-                    if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
-                    else (task["Next Run"] if task["Next Run"] else "None")
-                ),
+                "Next Run": next_run,
                 "class": (
                     "error"
                     if task["Status Id"] == 2 or (not task["Next Run"] and task["Enabled"] == 1)
@@ -824,7 +830,7 @@ def project_all_tasks(project_id: int) -> Response:
                     if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                     else (task["Next Run"] if task["Next Run"] else "")
                 ),
-                "Run Rank": (task["Run Rank"] if "Run Rank" in task else None),
+                "Run Rank": task.get("Run Rank"),
             }
         )
 
@@ -941,6 +947,15 @@ def dash_log() -> Response:
     for log in logs.limit(10).offset(page * 10).all():
         log = dict(zip(cols.keys(), log))
 
+        status_date_value = log["Status Date"]
+        if status_date_value and isinstance(status_date_value, datetime.datetime):
+            status_date = datetime.datetime.strftime(
+                status_date_value,
+                "%a, %b %-d, %Y %H:%M:%S.%f",
+            )
+        else:
+            status_date = status_date_value if status_date_value else "None"
+
         me.append(
             {
                 "Task Name": (
@@ -964,14 +979,7 @@ def dash_log() -> Response:
                     if log["Owner"]
                     else "N/A"
                 ),
-                "Status Date": (
-                    datetime.datetime.strftime(
-                        log["Status Date"],
-                        "%a, %b %-d, %Y %H:%M:%S.%f",
-                    )
-                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
-                    else (log["Status Date"] if log["Status Date"] else "None")
-                ),
+                "Status Date": status_date,
                 "my_date_sort": log["Status Date"],
                 "Status": log["Status"] if log["Status"] else "None",
                 "Message": (
