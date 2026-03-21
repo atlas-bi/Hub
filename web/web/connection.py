@@ -770,7 +770,9 @@ def new_connection_database(connection_id: int) -> Union[Response, str]:
 def ssh_online(ssh_id: int) -> str:
     """Check if connection is online."""
     try:
-        requests.get(f"{app.config['RUNNER_HOST']}/ssh/{ssh_id}/status", timeout=60).raise_for_status()
+        requests.get(
+            f"{app.config['RUNNER_HOST']}/ssh/{ssh_id}/status", timeout=60
+        ).raise_for_status()
         return '<span class="tag is-success is-light">Online</span>'
     except BaseException:
         return '<span class="tag is-danger is-light">Offline</span>'
