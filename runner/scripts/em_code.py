@@ -29,6 +29,28 @@ class AttributeDict(dict):
 class SourceCode:
     """Group of functions used to get various type of source code for task runner."""
 
+    @staticmethod
+    def _parse_gitlab_url(url: str) -> tuple[str, str, str]:
+        parsed = urllib.parse.urlparse(url)
+        path = parsed.path or ""
+
+        if "/-/" not in path:
+            raise ValueError("Invalid GitLab URL")
+
+        project_path, rest = path.split("/-/", 1)
+        project_path = project_path.lstrip("/")
+        rest_parts = [p for p in rest.split("/") if p]
+        if len(rest_parts) < 3:
+            raise ValueError("Invalid GitLab URL")
+
+        kind = rest_parts[0]
+        if kind not in {"raw", "blob"}:
+            raise ValueError("Invalid GitLab URL")
+
+        branch = rest_parts[1]
+        file_path = "/".join(rest_parts[2:])
+        return project_path, branch, file_path
+
     def __init__(
         self,
         task: Task,
@@ -171,20 +193,10 @@ class SourceCode:
         if url:
             try:
                 # convert the "raw" url into an api url
-                branch = urllib.parse.quote(
-                    urllib.parse.unquote(re.findall(r"\/(?:raw|blob)\/(.+?)\/", url)[0]),
-                    safe="",
-                )
-
-                project = urllib.parse.quote(
-                    urllib.parse.unquote(re.findall(r"\.(?:com|net|org)\/(.+?)\/-", url)[0]),
-                    safe="",
-                )
-
-                file_path = urllib.parse.quote(
-                    urllib.parse.unquote(re.findall(r"\/(?:raw|blob)\/.+?\/(.+?)$", url)[0]),
-                    safe="",
-                )
+                project_raw, branch_raw, file_path_raw = self._parse_gitlab_url(url)
+                branch = urllib.parse.quote(urllib.parse.unquote(branch_raw), safe="")
+                project = urllib.parse.quote(urllib.parse.unquote(project_raw), safe="")
+                file_path = urllib.parse.quote(urllib.parse.unquote(file_path_raw), safe="")
 
                 api_url = "%sapi/v4/projects/%s/repository/files/%s/raw?ref=%s" % (
                     app.config["GIT_URL"],
@@ -376,12 +388,7 @@ class SourceCode:
         # only needed for mssql
         if self.task.source_type_id == 1 and self.db_type == "mssql":
             query = re.sub(
-                re.compile(r"(^;?\s*;?)\buse\b\s+.+", flags=re.IGNORECASE | re.MULTILINE),
-                "",
-                query,
-            )
-            query = re.sub(
-                re.compile(r"(^;?\s*;?)\buse\b\s+.+?;", flags=re.IGNORECASE | re.MULTILINE),
+                re.compile(r"^[;\s]*use\b[^\n;]*;?[ \t]*$", flags=re.IGNORECASE | re.MULTILINE),
                 "",
                 query,
             )
@@ -397,7 +404,7 @@ class SourceCode:
 
             # remove " go"
             query = re.sub(
-                re.compile(r"^;?\s*?;?\bgo\b\s*?;?", flags=re.IGNORECASE | re.MULTILINE),
+                re.compile(r"^[;\s]*go\b[;\s]*$", flags=re.IGNORECASE | re.MULTILINE),
                 r"",
                 query,
             )
