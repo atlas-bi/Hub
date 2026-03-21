@@ -171,7 +171,8 @@ def delete_connection_sftp(connection_id: int, sftp_id: int) -> Response:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/sftp/<sftp_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/sftp/<sftp_id>/edit", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/sftp/<sftp_id>/edit", methods=["POST"])
 @login_required
 def edit_connection_sftp(connection_id: int, sftp_id: int) -> Union[Response, str]:
     """Edit a SFTP connection."""
@@ -227,7 +228,8 @@ def edit_connection_sftp(connection_id: int, sftp_id: int) -> Union[Response, st
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/sftp/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/sftp/new", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/sftp/new", methods=["POST"])
 @login_required
 def new_connection_sftp(connection_id: int) -> Union[str, Response]:
     """Create a SFTP connection."""
@@ -294,7 +296,8 @@ def delete_connection_ssh(connection_id: int, ssh_id: int) -> Response:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ssh/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ssh/new", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/ssh/new", methods=["POST"])
 @login_required
 def new_connection_ssh(connection_id: int) -> Union[str, Response]:
     """Create a SSH connection."""
@@ -334,7 +337,8 @@ def new_connection_ssh(connection_id: int) -> Union[str, Response]:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/edit", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/edit", methods=["POST"])
 @login_required
 def edit_connection_ssh(connection_id: int, ssh_id: int) -> Union[Response, str]:
     """Edit a SSH connection."""
@@ -391,7 +395,8 @@ def delete_connection_smb(connection_id: int, smb_id: int) -> Response:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/smb/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/smb/new", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/smb/new", methods=["POST"])
 @login_required
 def new_connection_smb(connection_id: int) -> Union[Response, str]:
     """Create a SMB connection."""
@@ -433,7 +438,8 @@ def new_connection_smb(connection_id: int) -> Union[Response, str]:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/smb/<smb_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/smb/<smb_id>/edit", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/smb/<smb_id>/edit", methods=["POST"])
 @login_required
 def edit_connection_smb(connection_id: int, smb_id: int) -> Union[Response, str]:
     """Edit a SMB connection."""
@@ -493,7 +499,8 @@ def delete_connection_ftp(connection_id: int, ftp_id: int) -> Response:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ftp/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ftp/new", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/ftp/new", methods=["POST"])
 @login_required
 def new_connection_ftp(connection_id: int) -> Union[Response, str]:
     """Create a FTP connection."""
@@ -533,7 +540,8 @@ def new_connection_ftp(connection_id: int) -> Union[Response, str]:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/edit", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/edit", methods=["POST"])
 @login_required
 def edit_connection_ftp(connection_id: int, ftp_id: int) -> Union[Response, str]:
     """Edit a FTP connection."""
@@ -591,7 +599,8 @@ def delete_connection_gpg(connection_id: int, gpg_id: int) -> Response:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>gpg/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>gpg/new", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>gpg/new", methods=["POST"])
 @login_required
 def new_connection_gpg(connection_id: int) -> Union[Response, str]:
     """Create a GPG connection."""
@@ -628,7 +637,8 @@ def new_connection_gpg(connection_id: int) -> Union[Response, str]:
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/edit", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/edit", methods=["POST"])
 @login_required
 def edit_connection_gpg(connection_id: int, gpg_id: int) -> Union[str, Response]:
     """Edit a GPG connection."""
@@ -681,9 +691,8 @@ def delete_connection_database(connection_id: int, database_id: int) -> Response
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route(
-    "/connection/<connection_id>/database/<database_id>/edit", methods=["GET", "POST"]
-)
+@connection_bp.route("/connection/<connection_id>/database/<database_id>/edit", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/database/<database_id>/edit", methods=["POST"])
 @login_required
 def edit_connection_database(connection_id: int, database_id: int) -> Union[Response, str]:
     """Edit a database connection."""
@@ -727,7 +736,8 @@ def edit_connection_database(connection_id: int, database_id: int) -> Union[Resp
     return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/database/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/database/new", methods=["GET"])
+@connection_bp.route("/connection/<connection_id>/database/new", methods=["POST"])
 @login_required
 def new_connection_database(connection_id: int) -> Union[Response, str]:
     """Create a database connection."""
