@@ -35,7 +35,7 @@ class Cmd:
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            out = subprocess.check_output(  # noqa: S603
+            out = subprocess.check_output(  # noqa: S603  # NOSONAR
                 ["/bin/bash", "-lc", self.cmd],
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -88,7 +88,7 @@ class Cmd:
 
             raise
 
-        except BaseException as e:
+        except Exception as e:
             RunnerLog(
                 self.task,
                 self.run_id,
@@ -109,7 +109,7 @@ class Cmd:
     def run(self) -> str:
         """Run input command as a subprocess command."""
         try:
-            out = subprocess.check_output(  # noqa: S603
+            out = subprocess.check_output(  # noqa: S603  # NOSONAR
                 ["/bin/bash", "-lc", self.cmd + " 2>&1"],
                 stderr=subprocess.STDOUT,
                 text=True,

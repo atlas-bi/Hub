@@ -31,6 +31,11 @@ sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 connection_bp = Blueprint("connection_bp", __name__)
 
 
+ONLINE_TAG = '<span class="tag is-success is-light">Online</span>'
+OFFLINE_TAG = '<span class="tag is-danger is-light">Offline</span>'
+ONE_CONNECTION_ENDPOINT = "connection_bp.one_connection"
+
+
 @connection_bp.route("/connection")
 @login_required
 def all_connections() -> str:
@@ -92,7 +97,7 @@ def edit_connection(connection_id: int) -> Union[str, Response]:
     db.session.add(log)
     db.session.commit()
     flash("Connection edited.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/new", methods=["POST", "GET"])
@@ -127,7 +132,7 @@ def new_connection() -> Union[str, Response]:
     db.session.add(log)
     db.session.commit()
     flash("Connection added.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=me.id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=me.id))
 
 
 @connection_bp.route("/connection/<connection_id>/delete", methods=["GET"])
@@ -168,7 +173,7 @@ def delete_connection_sftp(connection_id: int, sftp_id: int) -> Response:
     db.session.commit()
     flash("Connection deleted.")
 
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/sftp/<sftp_id>/edit", methods=["GET"])
@@ -225,7 +230,7 @@ def edit_connection_sftp(connection_id: int, sftp_id: int) -> Union[Response, st
     db.session.commit()
 
     flash("Connection updated.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/sftp/new", methods=["GET"])
@@ -277,7 +282,7 @@ def new_connection_sftp(connection_id: int) -> Union[str, Response]:
     db.session.commit()
 
     flash("Connection added.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/delete", methods=["GET"])
@@ -293,7 +298,7 @@ def delete_connection_ssh(connection_id: int, ssh_id: int) -> Response:
     db.session.add(log)
     db.session.commit()
     flash("Connection deleted.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/ssh/new", methods=["GET"])
@@ -334,7 +339,7 @@ def new_connection_ssh(connection_id: int) -> Union[str, Response]:
     db.session.commit()
 
     flash("Connection added.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/edit", methods=["GET"])
@@ -375,7 +380,7 @@ def edit_connection_ssh(connection_id: int, ssh_id: int) -> Union[Response, str]
     db.session.add(log)
     db.session.commit()
     flash("Connection updated.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/smb/<smb_id>/delete", methods=["GET"])
@@ -392,7 +397,7 @@ def delete_connection_smb(connection_id: int, smb_id: int) -> Response:
     db.session.commit()
 
     flash("Connection deleted.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/smb/new", methods=["GET"])
@@ -435,7 +440,7 @@ def new_connection_smb(connection_id: int) -> Union[Response, str]:
     db.session.commit()
 
     flash("Connection added.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/smb/<smb_id>/edit", methods=["GET"])
@@ -479,7 +484,7 @@ def edit_connection_smb(connection_id: int, smb_id: int) -> Union[Response, str]
     db.session.add(log)
     db.session.commit()
     flash("Connection updated.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/delete", methods=["GET"])
@@ -496,7 +501,7 @@ def delete_connection_ftp(connection_id: int, ftp_id: int) -> Response:
     db.session.commit()
 
     flash("Connection deleted.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/ftp/new", methods=["GET"])
@@ -537,7 +542,7 @@ def new_connection_ftp(connection_id: int) -> Union[Response, str]:
     db.session.commit()
 
     flash("Connection added.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/edit", methods=["GET"])
@@ -580,7 +585,7 @@ def edit_connection_ftp(connection_id: int, ftp_id: int) -> Union[Response, str]
     db.session.commit()
 
     flash("Connection updated.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/delete", methods=["GET"])
@@ -596,7 +601,7 @@ def delete_connection_gpg(connection_id: int, gpg_id: int) -> Response:
     db.session.add(log)
     db.session.commit()
     flash("Connection deleted.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>gpg/new", methods=["GET"])
@@ -634,7 +639,7 @@ def new_connection_gpg(connection_id: int) -> Union[Response, str]:
     db.session.commit()
 
     flash("Connection added.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/edit", methods=["GET"])
@@ -673,7 +678,7 @@ def edit_connection_gpg(connection_id: int, gpg_id: int) -> Union[str, Response]
     db.session.add(log)
     db.session.commit()
     flash("Connection updated.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/database/<database_id>/delete", methods=["GET"])
@@ -688,7 +693,7 @@ def delete_connection_database(connection_id: int, database_id: int) -> Response
     )
     db.session.add(log)
     db.session.commit()
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/database/<database_id>/edit", methods=["GET"])
@@ -733,7 +738,7 @@ def edit_connection_database(connection_id: int, database_id: int) -> Union[Resp
     db.session.commit()
 
     flash("Changes saved.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
 @connection_bp.route("/connection/<connection_id>/database/new", methods=["GET"])
@@ -772,10 +777,10 @@ def new_connection_database(connection_id: int) -> Union[Response, str]:
     db.session.add(log)
     db.session.commit()
     flash("Connection added.")
-    return redirect(url_for("connection_bp.one_connection", connection_id=connection_id))
+    return redirect(url_for(ONE_CONNECTION_ENDPOINT, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/ssh/<int:ssh_id>/status")
+@connection_bp.route("/connection/ssh/<int:ssh_id>/status", methods=["GET"])
 @login_required
 def ssh_online(ssh_id: int) -> str:
     """Check if connection is online."""
@@ -783,12 +788,12 @@ def ssh_online(ssh_id: int) -> str:
         requests.get(
             f"{app.config['RUNNER_HOST']}/ssh/{ssh_id}/status", timeout=60
         ).raise_for_status()
-        return '<span class="tag is-success is-light">Online</span>'
-    except BaseException:
-        return '<span class="tag is-danger is-light">Offline</span>'
+        return ONLINE_TAG
+    except requests.RequestException:
+        return OFFLINE_TAG
 
 
-@connection_bp.route("/connection/database/<int:database_id>/status")
+@connection_bp.route("/connection/database/<int:database_id>/status", methods=["GET"])
 @login_required
 def database_online(database_id: int) -> str:
     """Check if connection is online."""
@@ -796,12 +801,12 @@ def database_online(database_id: int) -> str:
         requests.get(
             f"{app.config['RUNNER_HOST']}/database/{database_id}/status", timeout=60
         ).raise_for_status()
-        return '<span class="tag is-success is-light">Online</span>'
-    except BaseException:
-        return '<span class="tag is-danger is-light">Offline</span>'
+        return ONLINE_TAG
+    except requests.RequestException:
+        return OFFLINE_TAG
 
 
-@connection_bp.route("/connection/sftp/<int:sftp_id>/status")
+@connection_bp.route("/connection/sftp/<int:sftp_id>/status", methods=["GET"])
 @login_required
 def sftp_online(sftp_id: int) -> str:
     """Check if connection is online."""
@@ -809,12 +814,12 @@ def sftp_online(sftp_id: int) -> str:
         requests.get(
             f"{app.config['RUNNER_HOST']}/sftp/{sftp_id}/status", timeout=60
         ).raise_for_status()
-        return '<span class="tag is-success is-light">Online</span>'
-    except BaseException:
-        return '<span class="tag is-danger is-light">Offline</span>'
+        return ONLINE_TAG
+    except requests.RequestException:
+        return OFFLINE_TAG
 
 
-@connection_bp.route("/connection/ftp/<int:ftp_id>/status")
+@connection_bp.route("/connection/ftp/<int:ftp_id>/status", methods=["GET"])
 @login_required
 def ftp_online(ftp_id: int) -> str:
     """Check if connection is online."""
@@ -822,12 +827,12 @@ def ftp_online(ftp_id: int) -> str:
         requests.get(
             f"{app.config['RUNNER_HOST']}/ftp/{ftp_id}/status", timeout=60
         ).raise_for_status()
-        return '<span class="tag is-success is-light">Online</span>'
-    except BaseException:
-        return '<span class="tag is-danger is-light">Offline</span>'
+        return ONLINE_TAG
+    except requests.RequestException:
+        return OFFLINE_TAG
 
 
-@connection_bp.route("/connection/smb/<int:smb_id>/status")
+@connection_bp.route("/connection/smb/<int:smb_id>/status", methods=["GET"])
 @login_required
 def smb_online(smb_id: int) -> str:
     """Check if connection is online."""
@@ -835,6 +840,6 @@ def smb_online(smb_id: int) -> str:
         requests.get(
             f"{app.config['RUNNER_HOST']}/smb/{smb_id}/status", timeout=60
         ).raise_for_status()
-        return '<span class="tag is-success is-light">Online</span>'
-    except BaseException:
-        return '<span class="tag is-danger is-light">Offline</span>'
+        return ONLINE_TAG
+    except requests.RequestException:
+        return OFFLINE_TAG

@@ -29,23 +29,25 @@ class AttributeDict(dict):
 class SourceCode:
     """Group of functions used to get various type of source code for task runner."""
 
+    INVALID_GITLAB_URL = "Invalid GitLab URL"
+
     @staticmethod
     def _parse_gitlab_url(url: str) -> tuple[str, str, str]:
         parsed = urllib.parse.urlparse(url)
         path = parsed.path or ""
 
         if "/-/" not in path:
-            raise ValueError("Invalid GitLab URL")
+            raise ValueError(SourceCode.INVALID_GITLAB_URL)
 
         project_path, rest = path.split("/-/", 1)
         project_path = project_path.lstrip("/")
         rest_parts = [p for p in rest.split("/") if p]
         if len(rest_parts) < 3:
-            raise ValueError("Invalid GitLab URL")
+            raise ValueError(SourceCode.INVALID_GITLAB_URL)
 
         kind = rest_parts[0]
         if kind not in {"raw", "blob"}:
-            raise ValueError("Invalid GitLab URL")
+            raise ValueError(SourceCode.INVALID_GITLAB_URL)
 
         branch = rest_parts[1]
         file_path = "/".join(rest_parts[2:])
