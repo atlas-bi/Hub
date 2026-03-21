@@ -149,16 +149,10 @@ class LDAP:
         except ldap.LDAPError:
             return
 
-    def get_object_details(self, user=None, group=None, query_filter=None, dn_only=False):
-        """Return a ``dict`` with the object's (user or group) details.
-
-        :param str user: Username of the user object you want details for.
-        :param str group: Name of the group object you want details for.
-        :param str query_filter: If included, will be used to query object.
-        :param bool dn_only: If we should only retrieve the object's distinguished name or not.
-        """
+    def _build_object_query(self, user, group, query_filter, dn_only):
         query = None
         fields = None
+
         if user is not None:
             if not dn_only:
                 fields = self.app.config["LDAP_USER_FIELDS"]
@@ -170,32 +164,53 @@ class LDAP:
                     user,
                 ),
             )
+
         elif group is not None:
             if not dn_only:
                 fields = self.app.config["LDAP_GROUP_FIELDS"]
             query_filter = query_filter or self.app.config["LDAP_GROUP_OBJECT_FILTER"]
             query = ldap_filter.filter_format(query_filter, (group,))
+
+        return query, fields
+
+    def _extract_dn(self, records):
+        if self.app.config["LDAP_OPENLDAP"]:
+            return records[0][0]
+
+        objects_dn_key = self.app.config["LDAP_OBJECTS_DN"]
+        if objects_dn_key in records[0][1]:
+            dn = records[0][1][objects_dn_key]
+            return dn[0]
+
+        return None
+
+    @staticmethod
+    def _record_to_dict(records):
+        result = {}
+        for key, value in list(records[0][1].items()):
+            result[key] = value
+        return result
+
+    def get_object_details(self, user=None, group=None, query_filter=None, dn_only=False):
+        """Return a ``dict`` with the object's (user or group) details.
+
+        :param str user: Username of the user object you want details for.
+        :param str group: Name of the group object you want details for.
+        :param str query_filter: If included, will be used to query object.
+        :param bool dn_only: If we should only retrieve the object's distinguished name or not.
+        """
+        query, fields = self._build_object_query(user, group, query_filter, dn_only)
         conn = self.bind
         try:
             records = conn.search_s(
                 self.app.config["LDAP_BASE_DN"], ldap.SCOPE_SUBTREE, query, fields
             )
             conn.unbind_s()
-            result = {}
             if records:
                 if dn_only:
-                    if self.app.config["LDAP_OPENLDAP"]:
-                        if records:
-                            return records[0][0]
-                    else:
-                        if self.app.config["LDAP_OBJECTS_DN"] in records[0][1]:
-                            # pylint: disable=C0103
-                            dn = records[0][1][self.app.config["LDAP_OBJECTS_DN"]]
-                            return dn[0]
-                for key, value in list(records[0][1].items()):
-                    result[key] = value
+                    return self._extract_dn(records)
 
-                return result
+                return self._record_to_dict(records)
         except ldap.LDAPError as e:
             raise LDAPException(self.error(e.args)) from e
 

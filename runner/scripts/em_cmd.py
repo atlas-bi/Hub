@@ -130,8 +130,26 @@ class Cmd:
 
             return out
 
-        # pylint: disable=broad-except
-        except BaseException as e:
+        except subprocess.CalledProcessError as e:
+            out = e.output if isinstance(e.output, str) else e.output.decode("utf-8")
+            RunnerLog(
+                self.task,
+                self.run_id,
+                17,
+                self.error_msg
+                + (("\n" + out) if out != "" else "")
+                + "\n"
+                + re.sub(
+                    r"(?<=:)([^:]+?)(?=@)",
+                    "*****",
+                    str(e),
+                    flags=re.IGNORECASE | re.MULTILINE,
+                ),
+                1,
+            )
+            raise
+
+        except Exception as e:
             RunnerLog(
                 self.task,
                 self.run_id,

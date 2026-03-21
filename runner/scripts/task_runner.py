@@ -6,6 +6,7 @@ import hashlib
 import logging
 import os
 import re
+import shlex
 import shutil
 import sys
 import tempfile
@@ -481,6 +482,14 @@ class Runner:
                     if len(split_url) > 0:
                         branch = "#".join(split_url[1:])
 
+                    if branch and not re.fullmatch(r"[A-Za-z0-9._/-]+", branch):
+                        raise RunnerException(
+                            self.task,
+                            self.run_id,
+                            8,
+                            "Invalid branch name.",
+                        )
+
                     url = (
                         re.sub(
                             r"(https?://)(.+?)",
@@ -492,11 +501,19 @@ class Runner:
                         .replace("<password>", urllib.parse.quote(app.config["GIT_PASSWORD"]))
                     )
 
+                    if re.search(r"\s", url):
+                        raise RunnerException(
+                            self.task,
+                            self.run_id,
+                            8,
+                            "Invalid repository URL.",
+                        )
+
                     cmd = (
-                        "$(which git) clone -q --depth 1 "
-                        + (f" -b {branch} " if branch else "")
-                        + '--recurse-submodules --shallow-submodules %s "%s"'
-                        % (url, str(self.temp_path))
+                        "git clone -q --depth 1 "
+                        + (f" -b {shlex.quote(branch)} " if branch else "")
+                        + "--recurse-submodules --shallow-submodules "
+                        + f"{shlex.quote(url)} {shlex.quote(str(self.temp_path))}"
                     )
 
                     Cmd(
@@ -526,11 +543,27 @@ class Runner:
                     if len(split_url) > 0:
                         branch = "#".join(split_url[1:])
 
+                    if branch and not re.fullmatch(r"[A-Za-z0-9._/-]+", branch):
+                        raise RunnerException(
+                            self.task,
+                            self.run_id,
+                            8,
+                            "Invalid branch name.",
+                        )
+
+                    if re.search(r"\s", url):
+                        raise RunnerException(
+                            self.task,
+                            self.run_id,
+                            8,
+                            "Invalid repository URL.",
+                        )
+
                     cmd = (
-                        "$(which git) clone -q --depth 1 "
-                        + (f" -b {branch} " if branch else "")
-                        + '--recurse-submodules --shallow-submodules %s "%s"'
-                        % (url, str(self.temp_path))
+                        "git clone -q --depth 1 "
+                        + (f" -b {shlex.quote(branch)} " if branch else "")
+                        + "--recurse-submodules --shallow-submodules "
+                        + f"{shlex.quote(url)} {shlex.quote(str(self.temp_path))}"
                     )
 
                     Cmd(
