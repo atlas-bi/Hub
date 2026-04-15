@@ -34,6 +34,7 @@ Database model should be cloned from `web` before running app.
     cp web/model.py scheduler/
 
 """
+
 import logging
 import os
 

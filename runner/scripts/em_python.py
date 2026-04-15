@@ -1,6 +1,5 @@
 """Python script runner."""
 
-
 import ast
 import datetime
 import sys

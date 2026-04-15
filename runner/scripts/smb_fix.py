@@ -1,4 +1,5 @@
 """Update to an older version of https://github.com/miketeo/pysmb. Waiting for next release."""
+
 # flake8: noqa
 # type: ignore
 # mypy: ignore-errors

@@ -2,6 +2,7 @@
 
 Modification of Flask-SimpleLDAP script by https://github.com/alexferl/flask-simpleldap.
 """
+
 # mypy: ignore-errors
 import re
 
