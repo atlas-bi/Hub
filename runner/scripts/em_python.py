@@ -1,6 +1,5 @@
 """Python script runner."""
 
-
 import ast
 import datetime
 import sys
@@ -181,22 +180,15 @@ class PyProcesser:
             else:
                 # find all scripts in dir, but not in venv
                 paths = list(
-                    set(Path(self.job_path).rglob("*.py"))
-                    - set(Path(self.env_path).rglob("*.py"))
+                    set(Path(self.job_path).rglob("*.py")) - set(Path(self.env_path).rglob("*.py"))
                 )
 
                 for this_file in paths:
                     with open(this_file, "r") as my_file:
                         for line in my_file:
-                            imports.extend(
-                                re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line)
-                            )
-                            imports.extend(
-                                re.findall(r"^\s*?from\K\s+[^\.].+?(?=import)", line)
-                            )
-                            imports.extend(
-                                re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line)
-                            )
+                            imports.extend(re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line))
+                            imports.extend(re.findall(r"^\s*?from\K\s+[^\.].+?(?=import)", line))
+                            imports.extend(re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line))
 
                 package_map = {
                     "dateutil": "python-dateutil",
@@ -207,11 +199,7 @@ class PyProcesser:
 
                 # clean list
                 imports = [
-                    str(
-                        package_map.get(
-                            x.strip().split(".")[0], x.strip().split(".")[0]
-                        )
-                    )
+                    str(package_map.get(x.strip().split(".")[0], x.strip().split(".")[0]))
                     for x in imports
                     if x.strip() != ""
                 ]
@@ -239,11 +227,7 @@ class PyProcesser:
                     this_out.strip()
                     for this_out in list(
                         chain.from_iterable(
-                            [
-                                g.split(" ")
-                                for g in built_in_packages.split("\n")
-                                if g != ""
-                            ]
+                            [g.split(" ") for g in built_in_packages.split("\n") if g != ""]
                         )
                     )
                     if this_out.strip() != ""
@@ -251,9 +235,7 @@ class PyProcesser:
 
                 # remove default python packages from list
                 imports = [
-                    x.strip()
-                    for x in imports
-                    if x not in cleaned_built_in_packages and x.strip()
+                    x.strip() for x in imports if x not in cleaned_built_in_packages and x.strip()
                 ]
 
                 # try to install
@@ -271,9 +253,7 @@ class PyProcesser:
                         + " with command: "
                         + "\n"
                         + cmd,
-                        error_msg="Failed to install imports with command: "
-                        + "\n"
-                        + cmd,
+                        error_msg="Failed to install imports with command: " + "\n" + cmd,
                     ).shell()
 
         except BaseException as e:
@@ -298,8 +278,7 @@ class PyProcesser:
                         "connection_string": em_decrypt(
                             external_db.connection_string, app.config["PASS_KEY"]
                         ),
-                        "timeout": external_db.timeout
-                        or app.config["DEFAULT_SQL_TIMEOUT"],
+                        "timeout": external_db.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
                     }
 
                 elif external_db.database_type.id == 2:  # mssql
@@ -307,8 +286,7 @@ class PyProcesser:
                         "connection_string": em_decrypt(
                             external_db.connection_string, app.config["PASS_KEY"]
                         ),
-                        "timeout": external_db.timeout
-                        or app.config["DEFAULT_SQL_TIMEOUT"],
+                        "timeout": external_db.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
                     }
             elif self.task.source_type_id == 2:  # smb file
                 connection = em_smb.connection_json(self.task.source_smb_conn)
@@ -371,19 +349,13 @@ class PyProcesser:
                 "source_type_id": clean_string(self.task.source_type_id),
                 "source_database_id": clean_string(self.task.source_database_id),
                 "source_query_type_id": clean_string(self.task.source_query_type_id),
-                "source_query_include_header": clean_string(
-                    self.task.source_query_include_header
-                ),
+                "source_query_include_header": clean_string(self.task.source_query_include_header),
                 "source_git": clean_string(self.task.source_git),
                 "source_devops": clean_string(self.task.source_devops),
                 "source_url": clean_string(self.task.source_url),
-                "source_require_sql_output": clean_string(
-                    self.task.source_require_sql_output
-                ),
+                "source_require_sql_output": clean_string(self.task.source_require_sql_output),
                 "enable_source_cache": clean_string(self.task.enable_source_cache),
-                "destination_file_delimiter": clean_string(
-                    self.task.destination_file_delimiter
-                ),
+                "destination_file_delimiter": clean_string(self.task.destination_file_delimiter),
                 "destination_file_name": clean_string(self.task.destination_file_name),
                 "destination_ignore_delimiter": clean_string(
                     self.task.destination_ignore_delimiter
@@ -391,35 +363,21 @@ class PyProcesser:
                 "destination_file_line_terminator": clean_string(
                     self.task.destination_file_line_terminator
                 ),
-                "destination_quote_level_id": clean_string(
-                    self.task.destination_quote_level_id
-                ),
-                "destination_create_zip": clean_string(
-                    self.task.destination_create_zip
-                ),
+                "destination_quote_level_id": clean_string(self.task.destination_quote_level_id),
+                "destination_create_zip": clean_string(self.task.destination_create_zip),
                 "destination_zip_name": clean_string(self.task.destination_zip_name),
-                "destination_file_type_id": clean_string(
-                    self.task.destination_file_type_id
-                ),
+                "destination_file_type_id": clean_string(self.task.destination_file_type_id),
                 "email_completion": clean_string(self.task.email_completion),
                 "email_completion_log": clean_string(self.task.email_completion_log),
                 "email_completion_file": clean_string(self.task.email_completion_file),
-                "email_completion_file_embed": clean_string(
-                    self.task.email_completion_file_embed
-                ),
+                "email_completion_file_embed": clean_string(self.task.email_completion_file_embed),
                 "email_completion_dont_send_empty_file": clean_string(
                     self.task.email_completion_dont_send_empty_file
                 ),
-                "email_completion_recipients": clean_string(
-                    self.task.email_completion_recipients
-                ),
-                "email_completion_message": clean_string(
-                    self.task.email_completion_message
-                ),
+                "email_completion_recipients": clean_string(self.task.email_completion_recipients),
+                "email_completion_message": clean_string(self.task.email_completion_message),
                 "email_error": clean_string(self.task.email_error),
-                "email_error_recipients": clean_string(
-                    self.task.email_error_recipients
-                ),
+                "email_error_recipients": clean_string(self.task.email_error_recipients),
                 "email_error_message": clean_string(self.task.email_error_message),
                 "max_retries": clean_string(self.task.max_retries),
                 "est_duration": clean_string(self.task.est_duration),

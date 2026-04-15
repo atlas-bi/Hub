@@ -232,10 +232,7 @@ def send_email(run_id: int, file_id: int) -> dict:
             run_id=str(run_id),
             recipients=task.email_completion_recipients,
             short_message=f"Atlas Hub: {task.name} data emailed.",
-            subject="(Manual Send) Project: "
-            + task.project.name
-            + " / Task: "
-            + task.name,
+            subject="(Manual Send) Project: " + task.project.name + " / Task: " + task.name,
             message=template.render(
                 task=task, success=1, date=date, logs=[], org=app.config["ORG_NAME"]
             ),
@@ -299,9 +296,7 @@ def task_get_processing_git_code(task_id: int) -> dict:
             # if there is a branch we need rearrange the url.
             branch = re.findall(r"(&version[=]GB.+?)$", task.processing_devops)
             url = (
-                re.sub(
-                    (branch[0] if len(branch) > 0 else ""), "", task.processing_devops
-                )
+                re.sub((branch[0] if len(branch) > 0 else ""), "", task.processing_devops)
                 + "/"
                 + task.processing_command
                 + (branch[0] if len(branch) > 0 else "")
@@ -362,24 +357,18 @@ def database_online(database_id: int) -> str:
         database_connection = ConnectionDatabase.query.filter_by(id=database_id).first()
         if database_connection.type_id == 2:
             conn, _ = sql_connect(
-                em_decrypt(
-                    database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip(),
+                em_decrypt(database_connection.connection_string, app.config["PASS_KEY"]).strip(),
                 database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
             )
             conn.close()
         elif database_connection.type_id == 3:
             conn, _ = jdbc_connect(
-                em_decrypt(
-                    database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip(),
+                em_decrypt(database_connection.connection_string, app.config["PASS_KEY"]).strip(),
             )
             conn.close()
         else:
             conn, _ = pg_connect(
-                em_decrypt(
-                    database_connection.connection_string, app.config["PASS_KEY"]
-                ).strip(),
+                em_decrypt(database_connection.connection_string, app.config["PASS_KEY"]).strip(),
                 database_connection.timeout or app.config["DEFAULT_SQL_TIMEOUT"],
             )
             conn.close()

@@ -28,7 +28,7 @@ exclude = '''
       | node_modules
     )/
     '''
-max_line_length = 99
+line-length = 99
 
 [tool.djlint]
 blank_line_after_tag = "load,extends,include,endblock"

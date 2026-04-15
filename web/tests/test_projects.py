@@ -11,6 +11,7 @@ run with::
 
 
 """
+
 import time
 from datetime import datetime
 
@@ -37,9 +38,7 @@ def test_projects_home(client_fixture: fixture) -> None:
 
     # if we have a project, we should go to the project list page
     p_id, t_id = create_demo_task(db.session)
-    page = client_fixture.get(
-        url_for("project_bp.all_projects"), follow_redirects=False
-    )
+    page = client_fixture.get(url_for("project_bp.all_projects"), follow_redirects=False)
     assert page.status_code == 200
     assert page.request.path == url_for("project_bp.all_projects")
     assert "Projects" in page.get_data(as_text=True)
