@@ -117,9 +117,7 @@ class LDAP:
         """
         conn = self.initialize
         try:
-            conn.simple_bind_s(
-                self.app.config["LDAP_USERNAME"], self.app.config["LDAP_PASSWORD"]
-            )
+            conn.simple_bind_s(self.app.config["LDAP_USERNAME"], self.app.config["LDAP_PASSWORD"])
             return conn
         except ldap.LDAPError as e:
             raise LDAPException(self.error(e.args)) from e
@@ -145,17 +143,13 @@ class LDAP:
             return
         try:
             conn = self.initialize
-            _user_dn = (
-                user_dn.decode("utf-8") if isinstance(user_dn, bytes) else user_dn
-            )
+            _user_dn = user_dn.decode("utf-8") if isinstance(user_dn, bytes) else user_dn
             conn.simple_bind_s(_user_dn, password)
             return self.get_object_details(user=username)  # True
         except ldap.LDAPError:
             return
 
-    def get_object_details(
-        self, user=None, group=None, query_filter=None, dn_only=False
-    ):
+    def get_object_details(self, user=None, group=None, query_filter=None, dn_only=False):
         """Return a ``dict`` with the object's (user or group) details.
 
         :param str user: Username of the user object you want details for.
@@ -243,20 +237,15 @@ class LDAP:
             conn.unbind_s()
             if records:
                 if self.app.config["LDAP_OPENLDAP"]:
-                    group_member_filter = self.app.config[
-                        "LDAP_GROUP_MEMBER_FILTER_FIELD"
-                    ]
+                    group_member_filter = self.app.config["LDAP_GROUP_MEMBER_FILTER_FIELD"]
                     groups = [
-                        (record[1][group_member_filter][0]).decode("utf-8")
-                        for record in records
+                        (record[1][group_member_filter][0]).decode("utf-8") for record in records
                     ]
                     return groups
 
                 if self.app.config["LDAP_USER_GROUPS_FIELD"] in records[0][1]:
                     groups = records[0][1][self.app.config["LDAP_USER_GROUPS_FIELD"]]
-                    result = [
-                        re.findall(b"(?:cn=|CN=)(.*?),", group)[0] for group in groups
-                    ]
+                    result = [re.findall(b"(?:cn=|CN=)(.*?),", group)[0] for group in groups]
                     return [x.decode("utf-8") for x in result]
         except ldap.LDAPError as e:
             raise LDAPException(self.error(e.args)) from e

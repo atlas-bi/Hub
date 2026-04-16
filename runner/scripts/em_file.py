@@ -109,10 +109,7 @@ class File:
 
         returns [filename, filepath] of final file.
         """
-        if (
-            self.task.destination_file_name is None
-            or self.task.destination_file_name == ""
-        ):
+        if self.task.destination_file_name is None or self.task.destination_file_name == "":
             RunnerLog(
                 self.task,
                 self.run_id,
@@ -120,19 +117,14 @@ class File:
                 f"No filename specified, {Path(self.data_file.name).name} will be used.",
             )
 
-        if (
-            self.task.destination_file_name != ""
-            and self.task.destination_file_name is not None
-        ):
+        if self.task.destination_file_name != "" and self.task.destination_file_name is not None:
             # insert params
             self.file_name = self.params.insert_file_params(
                 self.task.destination_file_name.strip()
             )
 
             # parse python dates
-            self.file_name = DateParsing(
-                self.task, self.run_id, self.file_name
-            ).string_to_date()
+            self.file_name = DateParsing(self.task, self.run_id, self.file_name).string_to_date()
 
         else:
             self.file_name = Path(self.data_file.name).name
@@ -201,8 +193,7 @@ class File:
                         )
                         for row in reader:
                             new_row = [
-                                (x.strip('"').strip("'") if isinstance(x, str) else x)
-                                for x in row
+                                (x.strip('"').strip("'") if isinstance(x, str) else x) for x in row
                             ]
 
                             if (
@@ -213,9 +204,7 @@ class File:
                                 self.task.destination_file_line_terminator is not None
                                 and self.task.destination_file_line_terminator != ""
                             ):
-                                new_row.append(
-                                    self.task.destination_file_line_terminator
-                                )
+                                new_row.append(self.task.destination_file_line_terminator)
 
                             wrtr.writerow(new_row)
 
@@ -229,8 +218,7 @@ class File:
                         )
                         for row in reader:
                             new_row = [
-                                (x.strip('"').strip("'") if isinstance(x, str) else x)
-                                for x in row
+                                (x.strip('"').strip("'") if isinstance(x, str) else x) for x in row
                             ]
                             wrtr.writerow(new_row)
 
@@ -301,9 +289,7 @@ class File:
                     break
                 self.file_hash.update(chunk)
 
-        RunnerLog(
-            self.task, self.run_id, 11, f"File md5 hash: {self.file_hash.hexdigest()}"
-        )
+        RunnerLog(self.task, self.run_id, 11, f"File md5 hash: {self.file_hash.hexdigest()}")
 
         # create zip
         if self.task.destination_create_zip == 1:
@@ -330,8 +316,6 @@ class File:
             self.file_name = self.zip_name
             self.file_path = str(Path(self.base_path).joinpath(self.zip_name))
 
-            RunnerLog(
-                self.task, self.run_id, 11, f"ZIP archive created.\n{self.file_path}"
-            )
+            RunnerLog(self.task, self.run_id, 11, f"ZIP archive created.\n{self.file_path}")
 
         return self.file_name, self.file_path, self.file_hash.hexdigest()

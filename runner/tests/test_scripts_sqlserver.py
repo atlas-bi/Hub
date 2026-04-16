@@ -48,9 +48,7 @@ def test_connection_failure(client_fixture: fixture) -> None:
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     with pytest.raises(ValueError) as e:
-        pg = SqlServer(
-            task, None, str(task.source_database_conn.connection_string), 90, temp_dir
-        )
+        pg = SqlServer(task, None, str(task.source_database_conn.connection_string), 90, temp_dir)
         assert "Failed to connection to database." in e
         assert "Neither DSN nor SERVER keyword supplied" in e
 

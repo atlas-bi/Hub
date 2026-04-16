@@ -242,9 +242,7 @@ def test_run_task_with_delay(client_fixture: fixture) -> None:
 
     # check that job is in scheduler
     scheduled_task = [
-        x
-        for x in atlas_scheduler.get_jobs()
-        if len(x.args) > 0 and x.args[0] == str(t_id)
+        x for x in atlas_scheduler.get_jobs() if len(x.args) > 0 and x.args[0] == str(t_id)
     ][0]
     assert (
         scheduled_task.next_run_time.replace(microsecond=0, second=0).isoformat()
