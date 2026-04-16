@@ -15,4 +15,4 @@ jobs:
     - name: ✔️ Codespell
       uses: codespell-project/actions-codespell@master
       with:
-        skip: package-lock.json, *.lock
+        skip: pnpm-lock.yaml, uv.lock

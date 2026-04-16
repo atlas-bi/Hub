@@ -42,11 +42,12 @@ COPY web ./web
 COPY runner ./runner
 COPY scheduler ./scheduler
 COPY scripts ./scripts
-COPY config.py pyproject.toml package.json gulpfile.mjs rollup.config.mjs babel.config.js ./
+COPY config.py pyproject.toml package.json pnpm-lock.yaml gulpfile.mjs rollup.config.mjs babel.config.js ./
 
 RUN cp web/model.py scheduler/ && cp web/model.py runner/ \
  && apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm \
- && npm install \
+ && corepack enable \
+ && pnpm install --frozen-lockfile \
  && flask assets build \
  && flask cli reset_db && flask db upgrade && flask cli seed && flask cli seed_demo
 
@@ -63,13 +64,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 ARG DATABASE_URL \
     REDIS_URL
 
-RUN apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm
+RUN apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm \
+ && corepack enable
 
 WORKDIR /app
 
 COPY --from=assets app ./
 
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 EXPOSE $PORT
 CMD (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

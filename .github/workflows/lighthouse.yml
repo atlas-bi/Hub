@@ -76,8 +76,7 @@ jobs:
 
     - name: 🔦 Run Lighthouse
       run: |
-        npm install -g @lhci/cli@0.9.x
-        lhci autorun
+        pnpm dlx @lhci/cli@0.9.x autorun
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432

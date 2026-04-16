@@ -71,10 +71,16 @@ flask cli seed
 flask cli seed_demo
 ```
 
-Finally, use the npm script to start up the website
+If you are developing on Apple Silicon macOS, `uv sync` may need `ant` available when building the `jaydebeapi` / `jpype1` path from source:
 
 ```bash
-npm start
+brew install ant
+```
+
+Finally, use the pnpm script to start up the website
+
+```bash
+pnpm start
 ```
 
 ## :test_tube: Testing
@@ -99,7 +105,7 @@ Atlas Hub is built for linux and only takes [three commands](https://www.atlas.b
 
 Contributions are welcome! Please open an [issue](https://github.com/atlas-bi/Hub/issues) describing an issue or feature.
 
-This repository uses commitizen. Commit code changes for pr's with `npm run commit`.
+This repository uses commitizen. Commit code changes for PRs with `pnpm commit`.
 
 
 ## :trophy: Credits

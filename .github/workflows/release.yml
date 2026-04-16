@@ -27,18 +27,13 @@ jobs:
       with:
         node-version: 18
 
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+
     - name: 📥 Download deps
-      uses: bahmutov/npm-install@v1
-      with:
-        useLockFile: false
-
-    - name: 🐍 Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    - name: 🎶 Setup Poetry
-      uses: snok/install-poetry@v1
+      run: pnpm install --frozen-lockfile
 
     - name: 🚀 Semantic Release
       uses: cycjimmy/semantic-release-action@v3
