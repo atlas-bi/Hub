@@ -71,12 +71,6 @@ flask cli seed
 flask cli seed_demo
 ```
 
-If you are developing on Apple Silicon macOS, `uv sync` may need `ant` available when building the `jaydebeapi` / `jpype1` path from source:
-
-```bash
-brew install ant
-```
-
 Finally, use the pnpm script to start up the website
 
 ```bash

@@ -73,6 +73,7 @@ dependencies = [
   "is-safe-url>=1.0,<2.0",
   "jaydebeapi>=1.2.3,<2.0.0",
   "jpype1>=1.5.1,<2.0.0",
+  "legacy-cgi>=2.6.4; python_version >= '3.13'",
   "paramiko>=3.0.0,<4.0.0",
   "pathvalidate>=3.0.0,<4.0.0",
   "psutil>=5.8.0,<6.0.0",
@@ -146,7 +147,7 @@ exclude = '''
       | node_modules
     )/
     '''
-max_line_length = 99
+line-length = 99
 
 [tool.djlint]
 blank_line_after_tag = "load,extends,include,endblock"
@@ -211,6 +212,9 @@ version_scheme = "post-release"
 
 [tool.uv]
 default-groups = ["dev"]
+
+[tool.uv.extra-build-dependencies]
+htmlmin = ["legacy-cgi>=2.6.4; python_version >= '3.13'"]
 
 [tool.uv.sources]
 flask-assets = {git = "https://github.com/christopherpickering/flask-assets.git"}
