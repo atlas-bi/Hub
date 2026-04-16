@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] #, macos-latest]
-        python-version: [3.8, 3.9, '3.10'] # 3.11 doesn't support lxml yet.
+        python-version: [3.9, '3.10'] # 3.8 EOL Oct 2024, dropped by Poetry 2.x; 3.11 doesn't support lxml yet.
       fail-fast: true
 
     services:
@@ -39,13 +39,13 @@ jobs:
 
     steps:
     - name: 💾 Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: 🧹 Cleanup apt list
       uses: christopherpickering/no-azure-action@v1.1.0
 
     - name: ⎔ Setup node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18
 
@@ -55,12 +55,14 @@ jobs:
         useLockFile: false
 
     - name: 🐍 Setup python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: 🎶 Setup Poetry
       uses: snok/install-poetry@v1
+      with:
+        version: 2.2.1
 
     - name: 📥 Install
       run: |
@@ -85,7 +87,7 @@ jobs:
         REDIS_PORT: 6379
 
     - name: 📤 Upload Coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml

@@ -1,6 +1,5 @@
 """Admin web views."""
 
-
 import json
 import platform
 from pathlib import Path
