@@ -1,6 +1,7 @@
 """Task web views."""
 
 import json
+import re
 from typing import Union
 
 import requests
@@ -184,7 +185,6 @@ def task_get_source_code(task_id: int) -> str:
             db.session.add(log)
             db.session.commit()
         code = "error."
-
     task = Task.query.filter_by(id=task_id).first()
     return render_template(
         "pages/task/code.html.j2",

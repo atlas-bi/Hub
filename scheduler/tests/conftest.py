@@ -1,4 +1,5 @@
 """Setyp pytest."""
+
 import os
 import sys
 from pathlib import Path
@@ -125,7 +126,7 @@ def bad_demo_task(*kwards: Any, **args: Any) -> int:
     return 1 + 1
 
 
-def create_demo_task(session, year: int = 2025, sequence: int = 0) -> Tuple[int, int]:
+def create_demo_task(session, year: int = 2030, sequence: int = 0) -> Tuple[int, int]:
     """Create demo project and task."""
     # create a project
     project = get_or_create(

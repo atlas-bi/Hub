@@ -1,6 +1,5 @@
 """Functions used to run system commands."""
 
-
 import os
 import re
 import subprocess
