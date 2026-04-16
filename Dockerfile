@@ -5,21 +5,18 @@ FROM python:3.11-alpine3.15 as python_install
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_NO_INTERACTION=1
+    UV_PROJECT_ENVIRONMENT="/app/.venv"
 
-ENV PATH="$POETRY_HOME/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 
 RUN apk update \
     && apk add --no-cache build-base gcc libxml2-dev libxslt-dev musl-dev libressl libffi-dev libressl-dev xmlsec-dev xmlsec unixodbc-dev openldap-dev
 
 WORKDIR /app
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml uv.lock ./
 
-RUN wget -O - https://install.python-poetry.org | python3 - \
- && chmod 755 ${POETRY_HOME}/bin/poetry \
- && poetry install --no-root --only main
+RUN wget -qO- https://astral.sh/uv/install.sh | sh \
+ && /root/.local/bin/uv sync --frozen --no-dev
 
 # build assets
 FROM python:3.11-alpine3.15 as assets
