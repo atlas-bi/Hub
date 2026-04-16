@@ -57,7 +57,7 @@ Possibilities are almost unlimited....
 Atlas Hub can be run locally. We use pyenv and poetry to manage the project dependencies. Assuming you will too -
 
 ```bash
-pyenv local 3.9.0
+pyenv local 3.10.0
 poetry install
 npm install
 
@@ -89,7 +89,7 @@ docker run -p 23:22 -d emberstack/sftp --name sftp
 docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e FTP_USER_NAME=demo -e FTP_USER_PASS=demo -e FTP_USER_HOME=/home/demo -e "PUBLICHOST=localhost" -e "ADDED_FLAGS=-d -d" stilliard/pure-ftpd
 ```
 
-Final, simply run the tests with `tox`.
+Final, simply run the tests with `poetry run tox`.
 
 ## :rocket: Install
 
