@@ -38,8 +38,7 @@ class Cmd:
 
     @staticmethod
     def _build_cmd(cmd: str) -> Union[List[str], str]:
-        """
-        Return a safe argv list, or ['/bin/sh', '-c', cmd] for shell metacharacters.
+        """Return a safe argv list, or ['/bin/sh', '-c', cmd] for shell metacharacters.
 
         Using an explicit argv list with shell=False avoids shell=True entirely.
         """
