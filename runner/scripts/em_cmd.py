@@ -38,7 +38,8 @@ class Cmd:
 
     @staticmethod
     def _build_cmd(cmd: str) -> Union[List[str], str]:
-        """Return a safe argv list, or ['/bin/sh', '-c', cmd] for shell metacharacters.
+        """
+        Return a safe argv list, or ['/bin/sh', '-c', cmd] for shell metacharacters.
 
         Using an explicit argv list with shell=False avoids shell=True entirely.
         """
@@ -51,7 +52,10 @@ class Cmd:
         try:
             cmd_arg = self._build_cmd(self.cmd)
             out_bytes = subprocess.check_output(
-                cmd_arg, stderr=subprocess.STDOUT, shell=False, env=self.env  # noqa: S603
+                cmd_arg,
+                stderr=subprocess.STDOUT,
+                shell=False,  # noqa: S603  # nosec B603
+                env=self.env,
             )
             out = out_bytes.decode("utf-8")
 
@@ -126,7 +130,7 @@ class Cmd:
             cmd_arg = self._build_cmd(self.cmd)
             result = subprocess.run(
                 cmd_arg,
-                shell=False,  # noqa: S603
+                shell=False,  # noqa: S603  # nosec B603
                 capture_output=True,
                 check=False,
                 text=True,
