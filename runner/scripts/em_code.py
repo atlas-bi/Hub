@@ -376,12 +376,12 @@ class SourceCode:
         # only needed for mssql
         if self.task.source_type_id == 1 and self.db_type == "mssql":
             query = re.sub(
-                re.compile(r"(^;?\s*;?)\buse\b\s+.+", flags=re.IGNORECASE | re.MULTILINE),
+                re.compile(r"(^;?\s*;?)\buse\b\s+\S.*", flags=re.IGNORECASE | re.MULTILINE),
                 "",
                 query,
             )
             query = re.sub(
-                re.compile(r"^;?\s{0,10};?\buse\b\s+[^;]+;", flags=re.IGNORECASE | re.MULTILINE),
+                re.compile(r"^;?\s{0,10};?\buse\b\s+\S[^;]*;", flags=re.IGNORECASE | re.MULTILINE),
                 "",
                 query,
             )

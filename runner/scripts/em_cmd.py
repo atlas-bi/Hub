@@ -4,10 +4,12 @@ import os
 import re
 import shlex
 import subprocess
-from typing import Optional
+from typing import List, Optional, Union
 
 from runner.model import Task
 from runner.scripts.em_messages import RunnerLog
+
+_SHELL_META = re.compile(r"[|&;<>$`\\!]")
 
 
 class Cmd:
@@ -35,17 +37,21 @@ class Cmd:
         self.run_id = run_id
 
     @staticmethod
-    def _needs_shell(cmd: str) -> bool:
-        """Return True only when cmd contains shell metacharacters requiring shell interpretation."""
-        return bool(re.search(r"[|&;<>$`\\!]", cmd))
+    def _build_cmd(cmd: str) -> Union[List[str], str]:
+        """Return a safe argv list, or ['/bin/sh', '-c', cmd] for shell metacharacters.
+
+        Using an explicit argv list with shell=False avoids shell=True entirely.
+        """
+        if _SHELL_META.search(cmd):
+            return ["/bin/sh", "-c", cmd]
+        return shlex.split(cmd)
 
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            use_shell = self._needs_shell(self.cmd)
-            cmd_arg = self.cmd if use_shell else shlex.split(self.cmd)
+            cmd_arg = self._build_cmd(self.cmd)
             out_bytes = subprocess.check_output(
-                cmd_arg, stderr=subprocess.STDOUT, shell=use_shell, env=self.env  # noqa: S603
+                cmd_arg, stderr=subprocess.STDOUT, shell=False, env=self.env  # noqa: S603
             )
             out = out_bytes.decode("utf-8")
 
@@ -117,11 +123,10 @@ class Cmd:
     def run(self) -> str:
         """Run input command as a subprocess command."""
         try:
-            use_shell = self._needs_shell(self.cmd)
-            cmd_arg = self.cmd if use_shell else shlex.split(self.cmd)
+            cmd_arg = self._build_cmd(self.cmd)
             result = subprocess.run(
                 cmd_arg,
-                shell=use_shell,  # noqa: S603
+                shell=False,  # noqa: S603
                 capture_output=True,
                 check=False,
                 text=True,
