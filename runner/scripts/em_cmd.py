@@ -2,6 +2,7 @@
 
 import os
 import re
+import shlex
 import subprocess
 from typing import Optional
 
@@ -33,11 +34,18 @@ class Cmd:
         self.error_msg = error_msg
         self.run_id = run_id
 
+    @staticmethod
+    def _needs_shell(cmd: str) -> bool:
+        """Return True only when cmd contains shell metacharacters requiring shell interpretation."""
+        return bool(re.search(r"[|&;<>$`\\!]", cmd))
+
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            out_bytes = subprocess.check_output(  # noqa: S602
-                self.cmd, stderr=subprocess.STDOUT, shell=True, env=self.env
+            use_shell = self._needs_shell(self.cmd)
+            cmd_arg = self.cmd if use_shell else shlex.split(self.cmd)
+            out_bytes = subprocess.check_output(
+                cmd_arg, stderr=subprocess.STDOUT, shell=use_shell, env=self.env  # noqa: S603
             )
             out = out_bytes.decode("utf-8")
 
@@ -109,7 +117,17 @@ class Cmd:
     def run(self) -> str:
         """Run input command as a subprocess command."""
         try:
-            out = os.popen(self.cmd + " 2>&1").read()
+            use_shell = self._needs_shell(self.cmd)
+            cmd_arg = self.cmd if use_shell else shlex.split(self.cmd)
+            result = subprocess.run(
+                cmd_arg,
+                shell=use_shell,  # noqa: S603
+                capture_output=True,
+                check=False,
+                text=True,
+                env=self.env,
+            )
+            out = result.stdout + result.stderr
 
             if "Error" in out:
                 RunnerLog(

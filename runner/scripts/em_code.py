@@ -182,7 +182,7 @@ class SourceCode:
                 )
 
                 file_path = urllib.parse.quote(
-                    urllib.parse.unquote(re.findall(r"\/(?:raw|blob)\/.+?\/(.+)$", url)[0]),
+                    urllib.parse.unquote(re.findall(r"\/(?:raw|blob)\/[^/]+\/(.+)$", url)[0]),
                     safe="",
                 )
 
@@ -381,7 +381,7 @@ class SourceCode:
                 query,
             )
             query = re.sub(
-                re.compile(r"(^;?\s*;?)\buse\b\s+[^;]+;", flags=re.IGNORECASE | re.MULTILINE),
+                re.compile(r"^;?\s{0,10};?\buse\b\s+[^;]+;", flags=re.IGNORECASE | re.MULTILINE),
                 "",
                 query,
             )

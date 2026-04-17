@@ -834,26 +834,27 @@ def new_connection_database(connection_id: int) -> Response:
 
 
 _OFFLINE_SPAN = '<span class="has-tooltip-arrow has-tooltip-right has-tooltip-multiline tag is-danger is-light" data-tooltip="{}">Offline</span>'
+_CONNECTION_NOT_FOUND = "Connection not found"
 
 
-@connection_bp.route("/connection/ssh/<int:ssh_id>/status")
+@connection_bp.route("/connection/ssh/<int:ssh_id>/status", methods=["GET"])
 @login_required
 def ssh_online(ssh_id: int) -> str:
     """Check if connection is online."""
     if not ConnectionSsh.query.get(ssh_id):
-        return _OFFLINE_SPAN.format("Connection not found")
+        return _OFFLINE_SPAN.format(_CONNECTION_NOT_FOUND)
     try:
         return requests.get(f"{app.config['RUNNER_HOST']}/ssh/{ssh_id}/status", timeout=60).text
     except BaseException as e:
         return _OFFLINE_SPAN.format(html.escape(str(e)))
 
 
-@connection_bp.route("/connection/database/<int:database_id>/status")
+@connection_bp.route("/connection/database/<int:database_id>/status", methods=["GET"])
 @login_required
 def database_online(database_id: int) -> str:
     """Check if connection is online."""
     if not ConnectionDatabase.query.get(database_id):
-        return _OFFLINE_SPAN.format("Connection not found")
+        return _OFFLINE_SPAN.format(_CONNECTION_NOT_FOUND)
     try:
         return requests.get(
             f"{app.config['RUNNER_HOST']}/database/{database_id}/status", timeout=60
@@ -862,36 +863,36 @@ def database_online(database_id: int) -> str:
         return _OFFLINE_SPAN.format(html.escape(str(e)))
 
 
-@connection_bp.route("/connection/sftp/<int:sftp_id>/status")
+@connection_bp.route("/connection/sftp/<int:sftp_id>/status", methods=["GET"])
 @login_required
 def sftp_online(sftp_id: int) -> str:
     """Check if connection is online."""
     if not ConnectionSftp.query.get(sftp_id):
-        return _OFFLINE_SPAN.format("Connection not found")
+        return _OFFLINE_SPAN.format(_CONNECTION_NOT_FOUND)
     try:
         return requests.get(f"{app.config['RUNNER_HOST']}/sftp/{sftp_id}/status", timeout=60).text
     except BaseException as e:
         return _OFFLINE_SPAN.format(html.escape(str(e)))
 
 
-@connection_bp.route("/connection/ftp/<int:ftp_id>/status")
+@connection_bp.route("/connection/ftp/<int:ftp_id>/status", methods=["GET"])
 @login_required
 def ftp_online(ftp_id: int) -> str:
     """Check if connection is online."""
     if not ConnectionFtp.query.get(ftp_id):
-        return _OFFLINE_SPAN.format("Connection not found")
+        return _OFFLINE_SPAN.format(_CONNECTION_NOT_FOUND)
     try:
         return requests.get(f"{app.config['RUNNER_HOST']}/ftp/{ftp_id}/status", timeout=60).text
     except BaseException as e:
         return _OFFLINE_SPAN.format(html.escape(str(e)))
 
 
-@connection_bp.route("/connection/smb/<int:smb_id>/status")
+@connection_bp.route("/connection/smb/<int:smb_id>/status", methods=["GET"])
 @login_required
 def smb_online(smb_id: int) -> str:
     """Check if connection is online."""
     if not ConnectionSmb.query.get(smb_id):
-        return _OFFLINE_SPAN.format("Connection not found")
+        return _OFFLINE_SPAN.format(_CONNECTION_NOT_FOUND)
     try:
         return requests.get(f"{app.config['RUNNER_HOST']}/smb/{smb_id}/status", timeout=60).text
     except BaseException as e:
