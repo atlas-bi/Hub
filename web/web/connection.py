@@ -60,19 +60,23 @@ def one_connection(connection_id: int) -> str:
     )
 
 
-@connection_bp.route("/connection/<connection_id>/edit", methods=["POST", "GET"])
+@connection_bp.route("/connection/<connection_id>/edit", methods=["GET"])
 @login_required
-def edit_connection(connection_id: int) -> Union[str, Response]:
+def edit_connection_form(connection_id: int) -> str:
+    """Show edit form for a connection."""
+    connection = Connection.query.filter_by(id=connection_id).first_or_404()
+    return render_template(
+        "pages/connection/new.html.j2",
+        connection=connection,
+        title=f"Editing connection {connection}",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/edit", methods=["POST"])
+@login_required
+def edit_connection(connection_id: int) -> Response:
     """Edit a connection."""
     connection = Connection.query.filter_by(id=connection_id).first_or_404()
-
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/new.html.j2",
-            connection=connection,
-            title=f"Editing connection {connection}",
-        )
-
     form = request.form
     my_connection = Connection.query.filter_by(id=connection.id)
     my_connection.update(
@@ -98,16 +102,17 @@ def edit_connection(connection_id: int) -> Union[str, Response]:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/new", methods=["POST", "GET"])
+@connection_bp.route("/connection/new", methods=["GET"])
 @login_required
-def new_connection() -> Union[str, Response]:
-    """Add a new connection."""
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/new.html.j2",
-            title="New connection",
-        )
+def new_connection_form() -> str:
+    """Show form to add a new connection."""
+    return render_template("pages/connection/new.html.j2", title="New connection")
 
+
+@connection_bp.route("/connection/new", methods=["POST"])
+@login_required
+def new_connection() -> Response:
+    """Add a new connection."""
     form = request.form
 
     me = Connection(
@@ -174,19 +179,24 @@ def delete_connection_sftp(connection_id: int, sftp_id: int) -> Response:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/sftp/<sftp_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/sftp/<sftp_id>/edit", methods=["GET"])
 @login_required
-def edit_connection_sftp(connection_id: int, sftp_id: int) -> Union[Response, str]:
+def edit_connection_sftp_form(connection_id: int, sftp_id: int) -> str:
+    """Show edit form for a SFTP connection."""
+    sftp = ConnectionSftp.query.filter_by(id=sftp_id, connection_id=connection_id).first_or_404()
+    return render_template(
+        "pages/connection/sftp_edit.html.j2",
+        sftp=sftp,
+        connection=sftp.connection,
+        title=f"Editing Connection {sftp.connection}",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/sftp/<sftp_id>/edit", methods=["POST"])
+@login_required
+def edit_connection_sftp(connection_id: int, sftp_id: int) -> Response:
     """Edit a SFTP connection."""
     sftp = ConnectionSftp.query.filter_by(id=sftp_id, connection_id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/sftp_edit.html.j2",
-            sftp=sftp,
-            connection=sftp.connection,
-            title=f"Editing Connection {sftp.connection}",
-        )
-
     form = request.form
     this_sftp = ConnectionSftp.query.filter_by(id=sftp.id)
     this_sftp.update(
@@ -230,17 +240,22 @@ def edit_connection_sftp(connection_id: int, sftp_id: int) -> Union[Response, st
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/sftp/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/sftp/new", methods=["GET"])
 @login_required
-def new_connection_sftp(connection_id: int) -> Union[str, Response]:
-    """Create a SFTP connection."""
+def new_connection_sftp_form(connection_id: int) -> str:
+    """Show form to create a SFTP connection."""
     connection = Connection.query.filter_by(id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/sftp_edit.html.j2",
-            connection=connection,
-            title="New SFTP Connection",
-        )
+    return render_template(
+        "pages/connection/sftp_edit.html.j2",
+        connection=connection,
+        title="New SFTP Connection",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/sftp/new", methods=["POST"])
+@login_required
+def new_connection_sftp(connection_id: int) -> Response:
+    """Create a SFTP connection."""
     form = request.form
 
     sftp = ConnectionSftp(
@@ -297,17 +312,22 @@ def delete_connection_ssh(connection_id: int, ssh_id: int) -> Response:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ssh/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ssh/new", methods=["GET"])
 @login_required
-def new_connection_ssh(connection_id: int) -> Union[str, Response]:
-    """Create a SSH connection."""
+def new_connection_ssh_form(connection_id: int) -> str:
+    """Show form to create a SSH connection."""
     connection = Connection.query.filter_by(id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/ssh_edit.html.j2",
-            connection=connection,
-            title="New SSH Connection",
-        )
+    return render_template(
+        "pages/connection/ssh_edit.html.j2",
+        connection=connection,
+        title="New SSH Connection",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/ssh/new", methods=["POST"])
+@login_required
+def new_connection_ssh(connection_id: int) -> Response:
+    """Create a SSH connection."""
     form = request.form
 
     ssh = ConnectionSsh(
@@ -337,19 +357,24 @@ def new_connection_ssh(connection_id: int) -> Union[str, Response]:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/edit", methods=["GET"])
 @login_required
-def edit_connection_ssh(connection_id: int, ssh_id: int) -> Union[Response, str]:
+def edit_connection_ssh_form(connection_id: int, ssh_id: int) -> str:
+    """Show edit form for a SSH connection."""
+    ssh = ConnectionSsh.query.filter_by(id=ssh_id, connection_id=connection_id).first_or_404()
+    return render_template(
+        "pages/connection/ssh_edit.html.j2",
+        ssh=ssh,
+        connection=ssh.connection,
+        title=f"Editing Connection {ssh.connection}",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/ssh/<ssh_id>/edit", methods=["POST"])
+@login_required
+def edit_connection_ssh(connection_id: int, ssh_id: int) -> Response:
     """Edit a SSH connection."""
     ssh = ConnectionSsh.query.filter_by(id=ssh_id, connection_id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/ssh_edit.html.j2",
-            ssh=ssh,
-            connection=ssh.connection,
-            title=f"Editing Connection {ssh.connection}",
-        )
-
     form = request.form
     this_ssh = ConnectionSsh.query.filter_by(id=ssh.id)
     this_ssh.update(
@@ -394,17 +419,22 @@ def delete_connection_smb(connection_id: int, smb_id: int) -> Response:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/smb/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/smb/new", methods=["GET"])
 @login_required
-def new_connection_smb(connection_id: int) -> Union[Response, str]:
-    """Create a SMB connection."""
+def new_connection_smb_form(connection_id: int) -> str:
+    """Show form to create a SMB connection."""
     connection = Connection.query.filter_by(id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/smb_edit.html.j2",
-            connection=connection,
-            title="New SMB Connection",
-        )
+    return render_template(
+        "pages/connection/smb_edit.html.j2",
+        connection=connection,
+        title="New SMB Connection",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/smb/new", methods=["POST"])
+@login_required
+def new_connection_smb(connection_id: int) -> Response:
+    """Create a SMB connection."""
     form = request.form
 
     smb = ConnectionSmb(
@@ -436,19 +466,24 @@ def new_connection_smb(connection_id: int) -> Union[Response, str]:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/smb/<smb_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/smb/<smb_id>/edit", methods=["GET"])
 @login_required
-def edit_connection_smb(connection_id: int, smb_id: int) -> Union[Response, str]:
+def edit_connection_smb_form(connection_id: int, smb_id: int) -> str:
+    """Show edit form for a SMB connection."""
+    smb = ConnectionSmb.query.filter_by(id=smb_id, connection_id=connection_id).first_or_404()
+    return render_template(
+        "pages/connection/smb_edit.html.j2",
+        smb=smb,
+        connection=smb.connection,
+        title=f"Editing Connection {smb.connection}",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/smb/<smb_id>/edit", methods=["POST"])
+@login_required
+def edit_connection_smb(connection_id: int, smb_id: int) -> Response:
     """Edit a SMB connection."""
     smb = ConnectionSmb.query.filter_by(id=smb_id, connection_id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/smb_edit.html.j2",
-            smb=smb,
-            connection=smb.connection,
-            title=f"Editing Connection {smb.connection}",
-        )
-
     form = request.form
     this_smb = ConnectionSmb.query.filter_by(id=smb.id)
     this_smb.update(
@@ -496,17 +531,22 @@ def delete_connection_ftp(connection_id: int, ftp_id: int) -> Response:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ftp/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ftp/new", methods=["GET"])
 @login_required
-def new_connection_ftp(connection_id: int) -> Union[Response, str]:
-    """Create a FTP connection."""
+def new_connection_ftp_form(connection_id: int) -> str:
+    """Show form to create a FTP connection."""
     connection = Connection.query.filter_by(id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/ftp_edit.html.j2",
-            connection=connection,
-            title="New FTP Connection",
-        )
+    return render_template(
+        "pages/connection/ftp_edit.html.j2",
+        connection=connection,
+        title="New FTP Connection",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/ftp/new", methods=["POST"])
+@login_required
+def new_connection_ftp(connection_id: int) -> Response:
+    """Create a FTP connection."""
     form = request.form
 
     ftp = ConnectionFtp(
@@ -536,19 +576,24 @@ def new_connection_ftp(connection_id: int) -> Union[Response, str]:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/edit", methods=["GET"])
 @login_required
-def edit_connection_ftp(connection_id: int, ftp_id: int) -> Union[Response, str]:
+def edit_connection_ftp_form(connection_id: int, ftp_id: int) -> str:
+    """Show edit form for a FTP connection."""
+    ftp = ConnectionFtp.query.filter_by(id=ftp_id, connection_id=connection_id).first_or_404()
+    return render_template(
+        "pages/connection/ftp_edit.html.j2",
+        ftp=ftp,
+        connection=ftp.connection,
+        title=f"Editing Connection {ftp.connection}",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/ftp/<ftp_id>/edit", methods=["POST"])
+@login_required
+def edit_connection_ftp(connection_id: int, ftp_id: int) -> Response:
     """Edit a FTP connection."""
     ftp = ConnectionFtp.query.filter_by(id=ftp_id, connection_id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/ftp_edit.html.j2",
-            ftp=ftp,
-            connection=ftp.connection,
-            title=f"Editing Connection {ftp.connection}",
-        )
-
     form = request.form
     this_ftp = ConnectionFtp.query.filter_by(id=ftp.id)
     this_ftp.update(
@@ -594,17 +639,22 @@ def delete_connection_gpg(connection_id: int, gpg_id: int) -> Response:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>gpg/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>gpg/new", methods=["GET"])
 @login_required
-def new_connection_gpg(connection_id: int) -> Union[Response, str]:
-    """Create a GPG connection."""
+def new_connection_gpg_form(connection_id: int) -> str:
+    """Show form to create a GPG connection."""
     connection = Connection.query.filter_by(id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/gpg_edit.html.j2",
-            connection=connection,
-            title="New GPG Connection",
-        )
+    return render_template(
+        "pages/connection/gpg_edit.html.j2",
+        connection=connection,
+        title="New GPG Connection",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>gpg/new", methods=["POST"])
+@login_required
+def new_connection_gpg(connection_id: int) -> Response:
+    """Create a GPG connection."""
     form = request.form
 
     gpg = ConnectionGpg(
@@ -631,19 +681,24 @@ def new_connection_gpg(connection_id: int) -> Union[Response, str]:
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/edit", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/edit", methods=["GET"])
 @login_required
-def edit_connection_gpg(connection_id: int, gpg_id: int) -> Union[str, Response]:
+def edit_connection_gpg_form(connection_id: int, gpg_id: int) -> str:
+    """Show edit form for a GPG connection."""
+    gpg = ConnectionGpg.query.filter_by(id=gpg_id, connection_id=connection_id).first_or_404()
+    return render_template(
+        "pages/connection/gpg_edit.html.j2",
+        gpg=gpg,
+        connection=gpg.connection,
+        title=f"Editing Connection {gpg.connection}",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/gpg/<gpg_id>/edit", methods=["POST"])
+@login_required
+def edit_connection_gpg(connection_id: int, gpg_id: int) -> Response:
     """Edit a GPG connection."""
     gpg = ConnectionGpg.query.filter_by(id=gpg_id, connection_id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/gpg_edit.html.j2",
-            gpg=gpg,
-            connection=gpg.connection,
-            title=f"Editing Connection {gpg.connection}",
-        )
-
     form = request.form
     this_gpg = ConnectionGpg.query.filter_by(id=gpg.id)
     this_gpg.update(
@@ -684,24 +739,29 @@ def delete_connection_database(connection_id: int, database_id: int) -> Response
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route(
-    "/connection/<connection_id>/database/<database_id>/edit", methods=["GET", "POST"]
-)
+@connection_bp.route("/connection/<connection_id>/database/<database_id>/edit", methods=["GET"])
 @login_required
-def edit_connection_database(connection_id: int, database_id: int) -> Union[Response, str]:
+def edit_connection_database_form(connection_id: int, database_id: int) -> str:
+    """Show edit form for a database connection."""
+    database = ConnectionDatabase.query.filter_by(
+        id=database_id, connection_id=connection_id
+    ).first_or_404()
+    return render_template(
+        "pages/connection/database_edit.html.j2",
+        database=database,
+        connection=database.connection,
+        database_types=ConnectionDatabaseType.query.all(),
+        title=f"Editing Database Connection {database.connection}",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/database/<database_id>/edit", methods=["POST"])
+@login_required
+def edit_connection_database(connection_id: int, database_id: int) -> Response:
     """Edit a database connection."""
     database = ConnectionDatabase.query.filter_by(
         id=database_id, connection_id=connection_id
     ).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/database_edit.html.j2",
-            database=database,
-            connection=database.connection,
-            database_types=ConnectionDatabaseType.query.all(),
-            title=f"Editing Database Connection {database.connection}",
-        )
-
     form = request.form
     this_database = ConnectionDatabase.query.filter_by(id=database.id)
     this_database.update(
@@ -730,18 +790,23 @@ def edit_connection_database(connection_id: int, database_id: int) -> Union[Resp
     return redirect(url_for(ONE_CONNECTION, connection_id=connection_id))
 
 
-@connection_bp.route("/connection/<connection_id>/database/new", methods=["GET", "POST"])
+@connection_bp.route("/connection/<connection_id>/database/new", methods=["GET"])
 @login_required
-def new_connection_database(connection_id: int) -> Union[Response, str]:
-    """Create a database connection."""
+def new_connection_database_form(connection_id: int) -> str:
+    """Show form to create a database connection."""
     connection = Connection.query.filter_by(id=connection_id).first_or_404()
-    if request.method == "GET":
-        return render_template(
-            "pages/connection/database_edit.html.j2",
-            connection=connection,
-            database_types=ConnectionDatabaseType.query.all(),
-            title="New Database Connection",
-        )
+    return render_template(
+        "pages/connection/database_edit.html.j2",
+        connection=connection,
+        database_types=ConnectionDatabaseType.query.all(),
+        title="New Database Connection",
+    )
+
+
+@connection_bp.route("/connection/<connection_id>/database/new", methods=["POST"])
+@login_required
+def new_connection_database(connection_id: int) -> Response:
+    """Create a database connection."""
     form = request.form
     database = ConnectionDatabase(
         connection_id=connection_id,
