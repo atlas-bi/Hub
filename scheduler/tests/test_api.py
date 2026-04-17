@@ -48,7 +48,7 @@ def test_schedule(client_fixture: fixture) -> None:
     t = Task.query.get(t_id)
     assert t.enabled == 1
 
-    p_id, t_id = create_demo_task(db.session, 2021)
+    p_id, t_id = create_demo_task(db.session, 2030)
 
     page = client_fixture.get(f"/api/add/{t_id}")
     assert page.json == {"message": "Scheduler: task job added!"}
