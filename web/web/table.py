@@ -41,6 +41,9 @@ from web.model import (
     User,
 )
 
+_TASK_HREF_DQ = '<a  href="/task/'
+_TASK_HREF_SQ = "<a href='/task/"
+
 table_bp = Blueprint("table_bp", __name__)
 
 
@@ -175,7 +178,7 @@ def tasklog_userevents() -> Response:
         me.append(
             {
                 "Task Name": (
-                    '<a  href="/task/' + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
+                    _TASK_HREF_DQ + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
                     if log["Task Name"]
                     else "N/A"
                 ),
@@ -409,7 +412,7 @@ def connection_tasks(connection_id: int) -> Response:
 
         me.append(
             {
-                "Task Name": '<a  href="/task/'
+                "Task Name": _TASK_HREF_DQ
                 + str(task["Task Id"])
                 + '">'
                 + task["Task Name"]
@@ -818,7 +821,7 @@ def project_all_tasks(project_id: int) -> Response:
             {
                 "Name": f'<div class="field has-addons">{enabled}{status_icon}<a  href="/task/{task["Task Id"]}">{task["Name"]}</a></div>',
                 "Last Run": (relative_to_now(task["Last Run"]) if task["Last Run"] else ""),
-                "Run Now": "<a href='/task/" + str(task["Task Id"]) + "/run'>Run Now</a>",
+                "Run Now": _TASK_HREF_SQ + str(task["Task Id"]) + "/run'>Run Now</a>",
                 "Next Run": (
                     datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
                     if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
@@ -944,7 +947,7 @@ def dash_log() -> Response:
         me.append(
             {
                 "Task Name": (
-                    '<a  href="/task/' + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
+                    _TASK_HREF_DQ + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
                     if log["Task Name"]
                     else "N/A"
                 ),
@@ -1044,7 +1047,7 @@ def dash_error_log() -> Response:
         me.append(
             {
                 "Task Name": (
-                    '<a  href="/task/' + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
+                    _TASK_HREF_DQ + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
                     if log["Task Name"]
                     else "N/A"
                 ),
@@ -1155,7 +1158,7 @@ def one_task_files(task_id: int) -> Response:
                     "md5 Hash": my_file["md5 Hash"],
                     "Action": (
                         (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
@@ -1164,7 +1167,7 @@ def one_task_files(task_id: int) -> Response:
                             else ""
                         )
                         + (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
@@ -1173,7 +1176,7 @@ def one_task_files(task_id: int) -> Response:
                             else ""
                         )
                         + (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
@@ -1182,7 +1185,7 @@ def one_task_files(task_id: int) -> Response:
                             else ""
                         )
                         + (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])

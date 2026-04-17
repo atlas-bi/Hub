@@ -23,10 +23,11 @@ class Cmd:
     ) -> None:
         """Set system path and variables."""
         self.task = task
-        self.cmd = (
-            "PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-            + " export PATH && "
-            + cmd
+        self.cmd = cmd
+        self.env = os.environ.copy()
+        self.env["PATH"] = (
+            "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+            + self.env.get("PATH", "")
         )
         self.success_msg = success_msg
         self.error_msg = error_msg
@@ -35,7 +36,9 @@ class Cmd:
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            out_bytes = subprocess.check_output(self.cmd, stderr=subprocess.STDOUT, shell=True)
+            out_bytes = subprocess.check_output(  # noqa: S602
+                self.cmd, stderr=subprocess.STDOUT, shell=True, env=self.env
+            )
             out = out_bytes.decode("utf-8")
 
             if "Error" in out:
