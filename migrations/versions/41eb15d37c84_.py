@@ -8,7 +8,6 @@ Create Date: 2024-02-13 20:17:23.622449
 import sqlalchemy as sa
 from alembic import op
 
-
 # revision identifiers, used by Alembic.
 revision = "41eb15d37c84"
 down_revision = "e075a9d31b1a"
@@ -17,6 +16,7 @@ depends_on = None
 
 
 def upgrade() -> None:
+    """Allow cron expression strings in project cron fields."""
     with op.batch_alter_table("project", schema=None) as batch_op:
         for column in CRON_COLUMNS:
             batch_op.alter_column(
@@ -28,6 +28,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    """Restore project cron fields to integer columns."""
     with op.batch_alter_table("project", schema=None) as batch_op:
         for column in reversed(CRON_COLUMNS):
             batch_op.alter_column(
