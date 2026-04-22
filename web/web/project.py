@@ -23,6 +23,8 @@ from .executors import disable_project
 
 project_bp = Blueprint("project_bp", __name__)
 
+_NEW_PROJECT_TEMPLATE = "pages/project/new.html.j2"
+
 
 def form_to_date(date_string: Optional[str]) -> Optional[datetime.datetime]:
     """Convert optional date string to date."""
@@ -150,7 +152,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
     me = Project.query.filter_by(id=project_id).first()
 
     if me:
-        return render_template("pages/project/new.html.j2", p=me, title="Editing " + me.name)
+        return render_template(_NEW_PROJECT_TEMPLATE, p=me, title="Editing " + me.name)
 
     flash("The project does not exist.")
     return redirect(url_for("project_bp.all_projects"))
@@ -158,7 +160,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
 
 @project_bp.route("/project/<project_id>/edit", methods=["POST"])
 @login_required
-def edit_project(project_id: int) -> Response:
+def edit_project(project_id: int) -> Union[Response, str]:
     """Save project edits."""
     cache.clear()
 
@@ -172,7 +174,7 @@ def edit_project(project_id: int) -> Response:
         cron_values = _validate_cron_form()
     except ValueError as e:
         return render_template(
-            "pages/project/new.html.j2",
+            _NEW_PROJECT_TEMPLATE,
             p=me.first(),
             title="Editing " + me.first().name,
             error=str(e),
@@ -241,7 +243,7 @@ def edit_project(project_id: int) -> Response:
 def new_project_form() -> str:
     """Create a new project page."""
     return render_template(
-        "pages/project/new.html.j2",
+        _NEW_PROJECT_TEMPLATE,
         p=Project.query.filter_by(id=0).first(),
         title="New Project",
     )
@@ -249,7 +251,7 @@ def new_project_form() -> str:
 
 @project_bp.route("/project/new", methods=["POST"])
 @login_required
-def new_project() -> Response:
+def new_project() -> Union[Response, str]:
     """Save a new project."""
     cache.clear()
     form = request.form
@@ -257,7 +259,7 @@ def new_project() -> Response:
         cron_values = _validate_cron_form()
     except ValueError as e:
         return render_template(
-            "pages/project/new.html.j2",
+            _NEW_PROJECT_TEMPLATE,
             p=Project.query.filter_by(id=0).first(),
             title="New Project",
             error=str(e),
