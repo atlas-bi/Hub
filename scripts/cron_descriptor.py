@@ -9,7 +9,6 @@ import re
 
 
 class ExpressionDescriptor:
-
     """
     Converts a Cron Expression into a human readable string
     """
@@ -33,9 +32,7 @@ class ExpressionDescriptor:
         self.cron_month = "*" if cron_month is None or cron_month == "" else cron_month
         self.cron_week = "*" if cron_week is None or cron_week == "" else cron_week
         self.cron_day = "*" if cron_day is None or cron_day == "" else cron_day
-        self.cron_week_day = (
-            "*" if cron_week_day is None or cron_week_day == "" else cron_week_day
-        )
+        self.cron_week_day = "*" if cron_week_day is None or cron_week_day == "" else cron_week_day
         self.cron_hour = "0" if cron_hour is None or cron_hour == "" else cron_hour
         self.cron_min = "0" if cron_min is None or cron_min == "" else cron_min
         self.cron_sec = "0" if cron_sec is None or cron_sec == "" else cron_sec
@@ -53,9 +50,7 @@ class ExpressionDescriptor:
         def remove_adjacent_duplicates(sentence):
             """remove duplicate words that might pop up such as week week"""
             words = sentence.split()
-            unique_words = [
-                words[0]
-            ]  # Initialize unique words list with the first word
+            unique_words = [words[0]]  # Initialize unique words list with the first word
             for word in words[1:]:
                 if (
                     word != unique_words[-1]
@@ -76,7 +71,9 @@ class ExpressionDescriptor:
             description = f"{description[0].upper()}{description[1:]}"
 
         except Exception as e:
-            description = f"An error occurred when generating the expression description.  error is {e}"
+            description = (
+                f"An error occurred when generating the expression description.  error is {e}"
+            )
 
             raise ValueError(description) from e
 
@@ -98,11 +95,12 @@ class ExpressionDescriptor:
         if (
             any(exp in minute_expression for exp in self._special_characters) is False
             and any(exp in hour_expression for exp in self._special_characters) is False
-            and any(exp in seconds_expression for exp in self._special_characters)
-            is False
+            and any(exp in seconds_expression for exp in self._special_characters) is False
         ):
             # specific time of day (i.e. 10 14)
-            description = f"At {self.format_time(hour_expression, minute_expression, seconds_expression)} "
+            description = (
+                f"At {self.format_time(hour_expression, minute_expression, seconds_expression)} "
+            )
 
         elif (
             seconds_expression == ""
@@ -118,8 +116,7 @@ class ExpressionDescriptor:
             seconds_expression == ""
             and "," in hour_expression
             and "-" not in hour_expression
-            and any(exp in minute_expression for exp in self._special_characters)
-            is False
+            and any(exp in minute_expression for exp in self._special_characters) is False
         ):
             # hours list with single minute (o.e. 30 6,14,16)
             hour_parts = hour_expression.split(",")
@@ -183,9 +180,7 @@ class ExpressionDescriptor:
             lambda s: s,
             lambda s: f"every {s} minutes",
             lambda s: "minutes {0} through {1} past the hour",
-            lambda s: ""
-            if s == "0" and self.cron_sec == ""
-            else "at {0} minutes past the hour",
+            lambda s: "" if s == "0" and self.cron_sec == "" else "at {0} minutes past the hour",
             lambda s: ", {0} through {1}",
         )
 
@@ -385,11 +380,7 @@ class ExpressionDescriptor:
                     if i < len(segments) - 1:
                         description_content += " "
 
-                if (
-                    i > 0
-                    and len(segments) > 1
-                    and (i == len(segments) - 1 or len(segments) == 2)
-                ):
+                if i > 0 and len(segments) > 1 and (i == len(segments) - 1 or len(segments) == 2):
                     description_content += " and "
                 description_content += self.get_segment_description(
                     seg,
@@ -405,14 +396,12 @@ class ExpressionDescriptor:
                 description_content = description_content.replace("of the month", "")
 
             description = get_description_format(expression).format(description_content)
-        elif " " in expression and not any(
-            ext in expression for ext in ["/", "-", ","]
-        ):
+        elif " " in expression and not any(ext in expression for ext in ["/", "-", ","]):
             daypart = expression.split()
-            if len(daypart) > 1 and daypart[1].lower() in map(
-                str.lower, calendar.day_abbr
-            ):
-                expression = f"{daypart[0]} {calendar.day_name[self._cron_days[daypart[1].upper()]]}"
+            if len(daypart) > 1 and daypart[1].lower() in map(str.lower, calendar.day_abbr):
+                expression = (
+                    f"{daypart[0]} {calendar.day_name[self._cron_days[daypart[1].upper()]]}"
+                )
             description = get_description_format(expression).format(
                 get_single_item_description(expression)
             )
@@ -464,9 +453,7 @@ class ExpressionDescriptor:
         between_segments = between_expression.split("-")
         between_segment_1_description = get_single_item_description(between_segments[0])
         between_segment_2_description = get_single_item_description(between_segments[1])
-        between_segment_2_description = between_segment_2_description.replace(
-            ":00", ":59"
-        )
+        between_segment_2_description = between_segment_2_description.replace(":00", ":59")
 
         between_description_format = get_between_description_format(between_expression)
         description += between_description_format.format(
