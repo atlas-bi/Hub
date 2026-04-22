@@ -25,7 +25,7 @@ module.exports = {
     //   },
     // },
     collect: {
-      startServerCommand: "export FLASK_ENV=test && export FLASK_DEBUG=False && export FLASK_APP=web && export FLASK_RUN_PORT=4998 && poetry run flask run",
+      startServerCommand: "export FLASK_ENV=test && export FLASK_DEBUG=False && export FLASK_APP=web && export FLASK_RUN_PORT=4998 && uv run flask run",
       url: [
         'http://localhost:4998',
         'http://localhost:4998/admin',

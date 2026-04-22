@@ -5,21 +5,18 @@ FROM python:3.11-alpine3.15 as python_install
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_NO_INTERACTION=1
+    UV_PROJECT_ENVIRONMENT="/app/.venv"
 
-ENV PATH="$POETRY_HOME/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 
 RUN apk update \
     && apk add --no-cache build-base gcc libxml2-dev libxslt-dev musl-dev libressl libffi-dev libressl-dev xmlsec-dev xmlsec unixodbc-dev openldap-dev
 
 WORKDIR /app
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml uv.lock ./
 
-RUN wget -O - https://install.python-poetry.org | python3 - \
- && chmod 755 ${POETRY_HOME}/bin/poetry \
- && poetry install --no-root --only main
+RUN wget -qO- https://astral.sh/uv/install.sh | sh \
+ && /root/.local/bin/uv sync --frozen --no-dev
 
 # build assets
 FROM python:3.11-alpine3.15 as assets
@@ -42,11 +39,12 @@ COPY web ./web
 COPY runner ./runner
 COPY scheduler ./scheduler
 COPY scripts ./scripts
-COPY config.py pyproject.toml package.json gulpfile.mjs rollup.config.mjs babel.config.js ./
+COPY config.py pyproject.toml package.json pnpm-lock.yaml gulpfile.mjs rollup.config.mjs babel.config.js ./
 
 RUN cp web/model.py scheduler/ && cp web/model.py runner/ \
  && apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm \
- && npm install \
+ && corepack enable \
+ && pnpm install --frozen-lockfile \
  && flask assets build \
  && flask cli reset_db && flask db upgrade && flask cli seed && flask cli seed_demo
 
@@ -63,13 +61,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 ARG DATABASE_URL \
     REDIS_URL
 
-RUN apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm
+RUN apk update && apk add --no-cache openldap-dev unixodbc-dev nodejs npm \
+ && corepack enable
 
 WORKDIR /app
 
 COPY --from=assets app ./
 
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 EXPOSE $PORT
 CMD (FLASK_APP=scheduler && flask run --port=5001 &) && (FLASK_APP=runner && flask run --port=5002 &) && flask run --host=0.0.0.0 --port=$PORT

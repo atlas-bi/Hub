@@ -54,12 +54,12 @@ Possibilities are almost unlimited....
 
 ## :runner: Start It Up
 
-Atlas Hub can be run locally. We use pyenv and poetry to manage the project dependencies. Assuming you will too -
+Atlas Hub can be run locally. We use pyenv, uv, and pnpm to manage the project dependencies. Assuming you will too -
 
 ```bash
 pyenv local 3.10.0
-poetry install
-npm install
+uv sync --group dev
+pnpm install
 
 # have you already created a database "atlas_hub_dev" and updated the config files?
 FLASK_APP=web
@@ -71,10 +71,10 @@ flask cli seed
 flask cli seed_demo
 ```
 
-Finally, use the npm script to start up the website
+Finally, use the pnpm script to start up the website
 
 ```bash
-npm start
+pnpm start
 ```
 
 ## :test_tube: Testing
@@ -89,7 +89,7 @@ docker run -p 23:22 -d emberstack/sftp --name sftp
 docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e FTP_USER_NAME=demo -e FTP_USER_PASS=demo -e FTP_USER_HOME=/home/demo -e "PUBLICHOST=localhost" -e "ADDED_FLAGS=-d -d" stilliard/pure-ftpd
 ```
 
-Final, simply run the tests with `poetry run tox`.
+Final, simply run the tests with `uv run tox`.
 
 ## :rocket: Install
 
@@ -99,7 +99,7 @@ Atlas Hub is built for linux and only takes [three commands](https://www.atlas.b
 
 Contributions are welcome! Please open an [issue](https://github.com/atlas-bi/Hub/issues) describing an issue or feature.
 
-This repository uses commitizen. Commit code changes for pr's with `npm run commit`.
+This repository uses commitizen. Commit code changes for PRs with `pnpm commit`.
 
 
 ## :trophy: Credits

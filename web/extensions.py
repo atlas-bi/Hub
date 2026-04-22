@@ -22,6 +22,7 @@ from flask_migrate import Migrate
 from flask_redis import FlaskRedis
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 
 cache = Cache()
 compress = Compress()
@@ -34,6 +35,7 @@ sess = Session()
 
 
 web_assets = Environment()
+csrf = CSRFProtect()
 login_manager = LoginManager()
 
 logging.basicConfig(level=logging.WARNING)

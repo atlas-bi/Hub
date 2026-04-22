@@ -9,7 +9,7 @@ from webassets_rollup import Rollup
 
 from web import web_assets
 
-register_filter(Rollup)
+register_filter(Rollup)  # type: ignore[no-untyped-call]
 
 
 # font

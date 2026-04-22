@@ -105,16 +105,14 @@ def login() -> Union[str, Response]:
                 .lower()
             )
             user.email = (
-                ldap_details.get(app.config["LDAP_ATTR_MAP"]["email"])[0]
-                .decode("utf-8")
-                .lower()
+                ldap_details.get(app.config["LDAP_ATTR_MAP"]["email"])[0].decode("utf-8").lower()
             )
-            user.full_name = ldap_details.get(app.config["LDAP_ATTR_MAP"]["full_name"])[
+            user.full_name = ldap_details.get(app.config["LDAP_ATTR_MAP"]["full_name"])[0].decode(
+                "utf-8"
+            )
+            user.first_name = ldap_details.get(app.config["LDAP_ATTR_MAP"]["first_name"])[
                 0
             ].decode("utf-8")
-            user.first_name = ldap_details.get(
-                app.config["LDAP_ATTR_MAP"]["first_name"]
-            )[0].decode("utf-8")
 
             db.session.add(user)
             db.session.commit()
