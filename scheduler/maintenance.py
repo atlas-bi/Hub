@@ -7,7 +7,7 @@ from pathlib import Path
 
 import psutil
 from flask import current_app as app
-from sqlalchemy import update
+from sqlalchemy import and_, or_, update
 
 from scheduler.extensions import atlas_scheduler, db
 from scheduler.model import Task
@@ -28,8 +28,10 @@ def job_sync() -> None:
             db.session.execute(
                 update(Task)
                 .where(
-                    Task.enabled == 0
-                    and (Task.next_run is not None or Task.est_duration is not None)
+                    and_(
+                        Task.enabled == 0,
+                        or_(Task.next_run != None, Task.est_duration != None),  # noqa: E711
+                    )
                 )
                 .values(next_run=None, est_duration=None)
             )
