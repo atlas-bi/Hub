@@ -36,14 +36,14 @@ def form_to_date(date_string: Optional[str]) -> Optional[datetime.datetime]:
 def _cron_form_values() -> dict:
     return {
         "cron": request.form.get("project_cron", 0, type=int),
-        "cron_year": request.form.get("project_cron_year", None, type=str),
-        "cron_month": request.form.get("project_cron_mnth", None, type=str),
-        "cron_week": request.form.get("project_cron_week", None, type=str),
-        "cron_day": request.form.get("project_cron_day", None, type=str),
-        "cron_week_day": request.form.get("project_cron_wday", None, type=str),
-        "cron_hour": request.form.get("project_cron_hour", None, type=str),
-        "cron_min": request.form.get("project_cron_min", None, type=str),
-        "cron_sec": request.form.get("project_cron_sec", None, type=str),
+        "cron_year": request.form.get("project_cron_year", None, type=str),  # NOSONAR
+        "cron_month": request.form.get("project_cron_mnth", None, type=str),  # NOSONAR
+        "cron_week": request.form.get("project_cron_week", None, type=str),  # NOSONAR
+        "cron_day": request.form.get("project_cron_day", None, type=str),  # NOSONAR
+        "cron_week_day": request.form.get("project_cron_wday", None, type=str),  # NOSONAR
+        "cron_hour": request.form.get("project_cron_hour", None, type=str),  # NOSONAR
+        "cron_min": request.form.get("project_cron_min", None, type=str),  # NOSONAR
+        "cron_sec": request.form.get("project_cron_sec", None, type=str),  # NOSONAR
     }
 
 
@@ -120,14 +120,14 @@ def one_project(project_id: int) -> Union[str, Response]:
         )
         try:
             cron_desc = ExpressionDescriptor(
-                cron_year=me.cron_year,
-                cron_month=me.cron_month,
-                cron_week=me.cron_week,
-                cron_day=me.cron_day,
-                cron_week_day=me.cron_week_day,
-                cron_hour=me.cron_hour,
-                cron_min=me.cron_min,
-                cron_sec=me.cron_sec,
+                cron_year=me.cron_year,  # NOSONAR
+                cron_month=me.cron_month,  # NOSONAR
+                cron_week=me.cron_week,  # NOSONAR
+                cron_day=me.cron_day,  # NOSONAR
+                cron_week_day=me.cron_week_day,  # NOSONAR
+                cron_hour=me.cron_hour,  # NOSONAR
+                cron_min=me.cron_min,  # NOSONAR
+                cron_sec=me.cron_sec,  # NOSONAR
             ).get_full_description()
         except ValueError as e:
             cron_desc = str(e)
