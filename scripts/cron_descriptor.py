@@ -5,7 +5,7 @@ from typing import Callable, Optional
 
 
 class ExpressionDescriptor:
-    """Convert project cron fields into a readable description."""
+    """Convert project cron fields into a readable description."""  # noqa: D203
 
     def __init__(
         self,

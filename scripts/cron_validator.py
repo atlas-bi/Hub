@@ -6,7 +6,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 
 class CronValidator:
-    """Validate project cron fields with APScheduler's cron parser."""
+    """Validate project cron fields with APScheduler's cron parser."""  # noqa: D203
 
     def __init__(
         self,
