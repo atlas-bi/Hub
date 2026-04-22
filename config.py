@@ -357,6 +357,7 @@ class TestConfig(DevConfig):
     DEMO = True
     TEST = True
     ASSETS_DEBUG = False
+    WTF_CSRF_ENABLED = False
     AUTH_METHOD = "DEV"
     DEBUG = False
     from apscheduler.executors.pool import ThreadPoolExecutor

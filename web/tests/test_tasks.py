@@ -91,9 +91,7 @@ def test_one_task(client_fixture: fixture) -> None:
     # check valid task
     _, t_id = create_demo_task(db.session)
 
-    page = client_fixture.get(
-        url_for("task_bp.one_task", task_id=t_id), follow_redirects=False
-    )
+    page = client_fixture.get(url_for("task_bp.one_task", task_id=t_id), follow_redirects=False)
     assert page.status_code == 200
 
 

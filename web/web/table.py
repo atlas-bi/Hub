@@ -41,6 +41,9 @@ from web.model import (
     User,
 )
 
+_TASK_HREF_DQ = '<a  href="/task/'
+_TASK_HREF_SQ = "<a href='/task/"
+
 table_bp = Blueprint("table_bp", __name__)
 
 
@@ -116,13 +119,10 @@ def project_list(my_type: str = "all") -> Response:
         me.append(
             {
                 "Name": f'{status_icon}<a  href="/project/{proj["Project Id"]}">{proj["Name"]}</a>',
-                "Last Run": (
-                    relative_to_now(proj["Last Run"]) if proj["Last Run"] else ""
-                ),
+                "Last Run": (relative_to_now(proj["Last Run"]) if proj["Last Run"] else ""),
                 "Next Run": (
                     datetime.datetime.strftime(proj["Next Run"], " %m/%-d/%y %H:%M")
-                    if proj["Next Run"]
-                    and isinstance(proj["Next Run"], datetime.datetime)
+                    if proj["Next Run"] and isinstance(proj["Next Run"], datetime.datetime)
                     else (proj["Next Run"] if proj["Next Run"] else "None")
                 ),
                 "Tasks": str((proj["Tasks"] or 0)),
@@ -178,11 +178,7 @@ def tasklog_userevents() -> Response:
         me.append(
             {
                 "Task Name": (
-                    '<a  href="/task/'
-                    + str(log["Task Id"])
-                    + '">'
-                    + log["Task Name"]
-                    + "</a>"
+                    _TASK_HREF_DQ + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
                     if log["Task Name"]
                     else "N/A"
                 ),
@@ -202,8 +198,7 @@ def tasklog_userevents() -> Response:
                         log["Status Date"],
                         "%a, %b %-d, %Y %H:%M:%S.%f",
                     )
-                    if log["Status Date"]
-                    and isinstance(log["Status Date"], datetime.datetime)
+                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
                     else (log["Status Date"] if log["Status Date"] else "None")
                 ),
                 "Message": log["Message"],
@@ -258,8 +253,7 @@ def user_auth() -> Response:
                         log["Login Date"],
                         "%a, %b %-d, %Y %H:%M:%S.%f",
                     )
-                    if log["Login Date"]
-                    and isinstance(log["Login Date"], datetime.datetime)
+                    if log["Login Date"] and isinstance(log["Login Date"], datetime.datetime)
                     else (log["Login Date"] if log["Login Date"] else "None")
                 ),
                 "Action": log["Login Type"] if log["Login Type"] else "None",
@@ -418,7 +412,7 @@ def connection_tasks(connection_id: int) -> Response:
 
         me.append(
             {
-                "Task Name": '<a  href="/task/'
+                "Task Name": _TASK_HREF_DQ
                 + str(task["Task Id"])
                 + '">'
                 + task["Task Name"]
@@ -439,29 +433,20 @@ def connection_tasks(connection_id: int) -> Response:
                     else "<a  href=/task/" + str(task["Task Id"]) + "/enable>Enable</a>"
                 ),
                 "Last Run": (
-                    datetime.datetime.strftime(
-                        task["Last Run"], "%a, %b %-d, %Y %H:%M:%S"
-                    )
-                    if task["Last Run"]
-                    and isinstance(task["Last Run"], datetime.datetime)
+                    datetime.datetime.strftime(task["Last Run"], "%a, %b %-d, %Y %H:%M:%S")
+                    if task["Last Run"] and isinstance(task["Last Run"], datetime.datetime)
                     else (task["Last Run"] if task["Last Run"] else "Never")
                 ),
-                "Run Now": "<a  href='/task/"
-                + str(task["Task Id"])
-                + "/run'>Run Now</a>",
+                "Run Now": "<a  href='/task/" + str(task["Task Id"]) + "/run'>Run Now</a>",
                 "Status": task["Status"] if task["Status"] else "None",
                 "Next Run": (
-                    datetime.datetime.strftime(
-                        task["Next Run"], "%a, %b %-d, %Y %H:%M:%S"
-                    )
-                    if task["Next Run"]
-                    and isinstance(task["Next Run"], datetime.datetime)
+                    datetime.datetime.strftime(task["Next Run"], "%a, %b %-d, %Y %H:%M:%S")
+                    if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                     else (task["Next Run"] if task["Next Run"] else "None")
                 ),
                 "class": (
                     "error"
-                    if task["Status Id"] == 2
-                    or (not task["Next Run"] and task["Enabled"] == 1)
+                    if task["Status Id"] == 2 or (not task["Next Run"] and task["Enabled"] == 1)
                     else ""
                 ),
             }
@@ -475,8 +460,7 @@ def connection_tasks(connection_id: int) -> Response:
 def table_jobs_orphans() -> Response:
     """Get a table of any jobs without a linked task."""
     active_tasks = [
-        x[0]
-        for x in db.session.query().select_from(Task).add_columns(text("task.id")).all()
+        x[0] for x in db.session.query().select_from(Task).add_columns(text("task.id")).all()
     ]
 
     page = request.args.get("p", default=1, type=int)
@@ -496,9 +480,7 @@ def table_jobs_orphans() -> Response:
             if int(job["id"]) not in active_tasks:
                 table.append(
                     {
-                        "Action": "<a  href='/task/"
-                        + job["id"]
-                        + "/delete'>Delete</a>",
+                        "Action": "<a  href='/task/" + job["id"] + "/delete'>Delete</a>",
                         "Name": job["name"],
                         "Id": job["id"],
                         "Next Run": job["next_run_time"],
@@ -571,9 +553,7 @@ def dash_tasks(task_type: str) -> Response:
     elif task_type == "scheduled":
         try:
             ids = json.loads(
-                requests.get(
-                    app.config["SCHEDULER_HOST"] + "/scheduled", timeout=60
-                ).text
+                requests.get(app.config["SCHEDULER_HOST"] + "/scheduled", timeout=60).text
             )
             tasks = tasks.filter(and_(Task.id.in_(ids), Task.enabled == 1))  # type: ignore[attr-defined, union-attr]
         except (
@@ -637,16 +617,11 @@ def dash_tasks(task_type: str) -> Response:
                     if task["Owner Id"]
                     else ""
                 ),
-                "Last Run": (
-                    relative_to_now(task["Last Run"]) if task["Last Run"] else "Never"
-                ),
-                "Started": (
-                    relative_to_now(task["Last Run"]) if task["Last Run"] else "Never"
-                ),
+                "Last Run": (relative_to_now(task["Last Run"]) if task["Last Run"] else "Never"),
+                "Started": (relative_to_now(task["Last Run"]) if task["Last Run"] else "Never"),
                 "Next Run": (
                     datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
-                    if task["Next Run"]
-                    and isinstance(task["Next Run"], datetime.datetime)
+                    if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                     else (task["Next Run"] if task["Next Run"] else "None")
                 ),
                 "Actions": (
@@ -766,11 +741,7 @@ def task_list(my_type: str) -> Response:
 
         if my_type == "all":
             data["Owner"] = (
-                "<a href='project/user/"
-                + str(task["Owner Id"])
-                + "' >"
-                + task["Owner"]
-                + "</a>"
+                "<a href='project/user/" + str(task["Owner Id"]) + "' >" + task["Owner"] + "</a>"
                 if task["Owner"]
                 else ""
             )
@@ -849,16 +820,11 @@ def project_all_tasks(project_id: int) -> Response:
         me.append(
             {
                 "Name": f'<div class="field has-addons">{enabled}{status_icon}<a  href="/task/{task["Task Id"]}">{task["Name"]}</a></div>',
-                "Last Run": (
-                    relative_to_now(task["Last Run"]) if task["Last Run"] else ""
-                ),
-                "Run Now": "<a href='/task/"
-                + str(task["Task Id"])
-                + "/run'>Run Now</a>",
+                "Last Run": (relative_to_now(task["Last Run"]) if task["Last Run"] else ""),
+                "Run Now": _TASK_HREF_SQ + str(task["Task Id"]) + "/run'>Run Now</a>",
                 "Next Run": (
                     datetime.datetime.strftime(task["Next Run"], "%m/%-d/%y %H:%M")
-                    if task["Next Run"]
-                    and isinstance(task["Next Run"], datetime.datetime)
+                    if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                     else (task["Next Run"] if task["Next Run"] else "")
                 ),
                 "Run Rank": (task["Run Rank"] if "Run Rank" in task else None),
@@ -968,11 +934,7 @@ def dash_log() -> Response:
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'
-        }
-    ]
+    me = [{"head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'}]
     me.append({"total": str(logs.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
     me.append({"page_size": str(10)})
@@ -985,11 +947,7 @@ def dash_log() -> Response:
         me.append(
             {
                 "Task Name": (
-                    '<a  href="/task/'
-                    + str(log["Task Id"])
-                    + '">'
-                    + log["Task Name"]
-                    + "</a>"
+                    _TASK_HREF_DQ + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
                     if log["Task Name"]
                     else "N/A"
                 ),
@@ -1005,11 +963,7 @@ def dash_log() -> Response:
                     else "N/A"
                 ),
                 "Owner": (
-                    "<a href='project/user/"
-                    + str(log["Owner Id"])
-                    + "' >"
-                    + log["Owner"]
-                    + "</a>"
+                    "<a href='project/user/" + str(log["Owner Id"]) + "' >" + log["Owner"] + "</a>"
                     if log["Owner"]
                     else "N/A"
                 ),
@@ -1018,8 +972,7 @@ def dash_log() -> Response:
                         log["Status Date"],
                         "%a, %b %-d, %Y %H:%M:%S.%f",
                     )
-                    if log["Status Date"]
-                    and isinstance(log["Status Date"], datetime.datetime)
+                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
                     else (log["Status Date"] if log["Status Date"] else "None")
                 ),
                 "my_date_sort": log["Status Date"],
@@ -1081,11 +1034,7 @@ def dash_error_log() -> Response:
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'
-        }
-    ]
+    me = [{"head": '["Task Name", "Project Name", "Owner", "Status", "Status Date", "Message"]'}]
     me.append({"total": str(logs.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
     me.append({"page_size": str(10)})
@@ -1098,11 +1047,7 @@ def dash_error_log() -> Response:
         me.append(
             {
                 "Task Name": (
-                    '<a  href="/task/'
-                    + str(log["Task Id"])
-                    + '">'
-                    + log["Task Name"]
-                    + "</a>"
+                    _TASK_HREF_DQ + str(log["Task Id"]) + '">' + log["Task Name"] + "</a>"
                     if log["Task Name"]
                     else "N/A"
                 ),
@@ -1118,11 +1063,7 @@ def dash_error_log() -> Response:
                     else "N/A"
                 ),
                 "Owner": (
-                    "<a href='project/user/"
-                    + str(log["Owner Id"])
-                    + "' >"
-                    + log["Owner"]
-                    + "</a>"
+                    "<a href='project/user/" + str(log["Owner Id"]) + "' >" + log["Owner"] + "</a>"
                     if log["Owner"]
                     else "N/A"
                 ),
@@ -1131,8 +1072,7 @@ def dash_error_log() -> Response:
                         log["Status Date"],
                         "%a, %b %-d, %Y %H:%M:%S.%f",
                     )
-                    if log["Status Date"]
-                    and isinstance(log["Status Date"], datetime.datetime)
+                    if log["Status Date"] and isinstance(log["Status Date"], datetime.datetime)
                     else (log["Status Date"] if log["Status Date"] else "None")
                 ),
                 "my_date_sort": log["Status Date"],
@@ -1183,11 +1123,7 @@ def one_task_files(task_id: int) -> Response:
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["File Name", "Run Id", "Created", "md5 Hash", "File Size", "Action"]'
-        }
-    ]
+    me = [{"head": '["File Name", "Run Id", "Created", "md5 Hash", "File Size", "Action"]'}]
     me.append({"total": str(my_files.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
     me.append({"page_size": str(10)})
@@ -1215,15 +1151,14 @@ def one_task_files(task_id: int) -> Response:
                             my_file["Created"],
                             "%a, %b %-d, %Y %H:%M:%S.%f",
                         )
-                        if my_file["Created"]
-                        and isinstance(my_file["Created"], datetime.datetime)
+                        if my_file["Created"] and isinstance(my_file["Created"], datetime.datetime)
                         else (my_file["Created"] if my_file["Created"] else "N/A")
                     ),
                     "File Size": my_file["File Size"],
                     "md5 Hash": my_file["md5 Hash"],
                     "Action": (
                         (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
@@ -1232,7 +1167,7 @@ def one_task_files(task_id: int) -> Response:
                             else ""
                         )
                         + (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
@@ -1241,7 +1176,7 @@ def one_task_files(task_id: int) -> Response:
                             else ""
                         )
                         + (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
@@ -1250,13 +1185,12 @@ def one_task_files(task_id: int) -> Response:
                             else ""
                         )
                         + (
-                            "<a href='/task/"
+                            _TASK_HREF_SQ
                             + str(task_id)
                             + "/file/"
                             + str(my_file["File Id"])
                             + "/sendEmail' >Send to Email</a><br />"
-                            if task.email_completion == 1
-                            and task.email_completion_file == 1
+                            if task.email_completion == 1 and task.email_completion_file == 1
                             else ""
                         )
                         + (

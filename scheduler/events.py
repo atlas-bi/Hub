@@ -54,9 +54,7 @@ def job_missed(event: JobEvent) -> None:
         if re.match(r"^\d+-\d+-.+?$", event.job_id):
             _, task_id = event.job_id.split("-")[:2]
 
-            ex_time = (
-                datetime.datetime.now(datetime.timezone.utc) - event.scheduled_run_time
-            )
+            ex_time = datetime.datetime.now(datetime.timezone.utc) - event.scheduled_run_time
 
             if Task.query.filter_by(id=task_id).first():
                 log = TaskLog(
@@ -85,10 +83,7 @@ def job_error(event: JobEvent) -> None:
 
             # only add logs for valid tasks
             if task:
-                ex_time = (
-                    datetime.datetime.now(datetime.timezone.utc)
-                    - event.scheduled_run_time
-                )
+                ex_time = datetime.datetime.now(datetime.timezone.utc) - event.scheduled_run_time
 
                 log = TaskLog(
                     task_id=task_id,
@@ -122,10 +117,7 @@ def job_executed(event: JobExecutionEvent) -> None:
 
             # only log valid tasks
             if task:
-                ex_time = (
-                    datetime.datetime.now(datetime.timezone.utc)
-                    - event.scheduled_run_time
-                )
+                ex_time = datetime.datetime.now(datetime.timezone.utc) - event.scheduled_run_time
 
                 log = TaskLog(
                     task_id=task_id,

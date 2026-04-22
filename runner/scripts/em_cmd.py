@@ -2,11 +2,14 @@
 
 import os
 import re
+import shlex
 import subprocess
-from typing import Optional
+from typing import List, Optional, Union
 
 from runner.model import Task
 from runner.scripts.em_messages import RunnerLog
+
+_SHELL_META = re.compile(r"[|&;<>$`\\!]")
 
 
 class Cmd:
@@ -23,20 +26,32 @@ class Cmd:
     ) -> None:
         """Set system path and variables."""
         self.task = task
-        self.cmd = (
-            "PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-            + " export PATH && "
-            + cmd
+        self.cmd = cmd
+        self.env = os.environ.copy()
+        self.env["PATH"] = (
+            "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+            + self.env.get("PATH", "")
         )
         self.success_msg = success_msg
         self.error_msg = error_msg
         self.run_id = run_id
 
+    @staticmethod
+    def _build_cmd(cmd: str) -> Union[List[str], str]:
+        """Build a safe argv list; wraps shell metacharacter commands in /bin/sh -c."""
+        if _SHELL_META.search(cmd):
+            return ["/bin/sh", "-c", cmd]
+        return shlex.split(cmd)
+
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
+            cmd_arg = self._build_cmd(self.cmd)
             out_bytes = subprocess.check_output(
-                self.cmd, stderr=subprocess.STDOUT, shell=True
+                cmd_arg,
+                stderr=subprocess.STDOUT,
+                shell=False,  # noqa: S603  # nosec B603
+                env=self.env,
             )
             out = out_bytes.decode("utf-8")
 
@@ -108,7 +123,16 @@ class Cmd:
     def run(self) -> str:
         """Run input command as a subprocess command."""
         try:
-            out = os.popen(self.cmd + " 2>&1").read()
+            cmd_arg = self._build_cmd(self.cmd)
+            result = subprocess.run(
+                cmd_arg,
+                shell=False,  # noqa: S603  # nosec B603
+                capture_output=True,
+                check=False,
+                text=True,
+                env=self.env,
+            )
+            out = result.stdout + result.stderr
 
             if "Error" in out:
                 RunnerLog(

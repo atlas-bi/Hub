@@ -285,9 +285,7 @@ def test_job_removed(api_fixture: fixture, caplog: fixture) -> None:
     for record in caplog.records:
         assert record.levelname not in ["CRITICAL", "ERROR"]
 
-    log = TaskLog.query.filter_by(
-        task_id=t_id, status_id=6, message="Job removed."
-    ).first()
+    log = TaskLog.query.filter_by(task_id=t_id, status_id=6, message="Job removed.").first()
     assert log is not None
     caplog.clear()
     # try invalid task_id
@@ -307,9 +305,7 @@ def test_job_removed(api_fixture: fixture, caplog: fixture) -> None:
     for record in caplog.records:
         assert record.levelname not in ["CRITICAL", "ERROR"]
 
-    log = TaskLog.query.filter_by(
-        task_id=t_id, status_id=6, message="Job removed."
-    ).first()
+    log = TaskLog.query.filter_by(task_id=t_id, status_id=6, message="Job removed.").first()
     assert log is None
     caplog.clear()
 
@@ -327,9 +323,7 @@ def test_job_removed(api_fixture: fixture, caplog: fixture) -> None:
     for record in caplog.records:
         assert record.levelname not in ["CRITICAL", "ERROR"]
 
-    log = TaskLog.query.filter_by(
-        task_id=t_id, status_id=6, message="Job removed."
-    ).first()
+    log = TaskLog.query.filter_by(task_id=t_id, status_id=6, message="Job removed.").first()
     assert log is None
 
 
