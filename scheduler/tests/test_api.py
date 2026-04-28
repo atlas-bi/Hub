@@ -26,7 +26,7 @@ from pytest import fixture
 
 from scheduler.extensions import atlas_scheduler, db
 from scheduler.functions import scheduler_task_runner
-from scheduler.model import Project, Task, User
+from scheduler.model import Project, Task, TaskLog, User
 
 from . import get_or_create
 from .conftest import create_demo_task, demo_task
@@ -232,6 +232,8 @@ def test_scheduler_task_runner_removes_orphaned_job(client_fixture: fixture) -> 
     page = client_fixture.get(f"/api/add/{t_id}")
     assert page.json == {"message": "Scheduler: task job added!"}
 
+    TaskLog.query.filter_by(task_id=t_id).delete()
+    db.session.commit()
     Task.query.filter_by(id=t_id).delete()
     db.session.commit()
 
