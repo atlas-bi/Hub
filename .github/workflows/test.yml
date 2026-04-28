@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] #, macos-latest]
-        python-version: [3.9, '3.10'] # 3.8 EOL Oct 2024, dropped by Poetry 2.x; 3.11 doesn't support lxml yet.
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
       fail-fast: true
 
     services:
@@ -39,35 +39,34 @@ jobs:
 
     steps:
     - name: 💾 Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: 🧹 Cleanup apt list
       uses: christopherpickering/no-azure-action@v1.1.0
 
     - name: ⎔ Setup node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: 18
 
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v4
+
     - name: 📥 Download deps
-      uses: bahmutov/npm-install@v1
-      with:
-        useLockFile: false
+      run: pnpm install --frozen-lockfile
 
     - name: 🐍 Setup python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: 🎶 Setup Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: 2.2.1
+    - name: 🪐 Setup uv
+      uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e
 
     - name: 📥 Install
       run: |
         sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
-        poetry install -vvv
+        uv sync --frozen --group dev
       env:
         PYTHONWARNINGS: ignore
 
@@ -78,7 +77,7 @@ jobs:
         docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e FTP_USER_NAME=demo -e FTP_USER_PASS=demo -e FTP_USER_HOME=/home/demo -e "PUBLICHOST=localhost" -e "ADDED_FLAGS=-d -d" stilliard/pure-ftpd
 
     - name: 🧪 Run Test
-      run: poetry run tox
+      run: uv run tox
       env:
         POSTGRES_HOST: localhost
         POSTGRES_PORT: 5432
@@ -87,7 +86,7 @@ jobs:
         REDIS_PORT: 6379
 
     - name: 📤 Upload Coverage
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml

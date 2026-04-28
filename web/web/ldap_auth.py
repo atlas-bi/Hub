@@ -117,9 +117,7 @@ class LDAP:
         """
         conn = self.initialize
         try:
-            conn.simple_bind_s(
-                self.app.config["LDAP_USERNAME"], self.app.config["LDAP_PASSWORD"]
-            )
+            conn.simple_bind_s(self.app.config["LDAP_USERNAME"], self.app.config["LDAP_PASSWORD"])
             return conn
         except ldap.LDAPError as e:
             raise LDAPException(self.error(e.args)) from e
@@ -145,17 +143,40 @@ class LDAP:
             return
         try:
             conn = self.initialize
-            _user_dn = (
-                user_dn.decode("utf-8") if isinstance(user_dn, bytes) else user_dn
-            )
+            _user_dn = user_dn.decode("utf-8") if isinstance(user_dn, bytes) else user_dn
             conn.simple_bind_s(_user_dn, password)
             return self.get_object_details(user=username)  # True
         except ldap.LDAPError:
             return
 
-    def get_object_details(
-        self, user=None, group=None, query_filter=None, dn_only=False
-    ):
+    def _build_object_query(self, user, group, query_filter, dn_only):
+        """Build LDAP query and fields for user or group lookup."""
+        fields = None
+        if user is not None:
+            if not dn_only:
+                fields = self.app.config["LDAP_USER_FIELDS"]
+            query_filter = query_filter or self.app.config["LDAP_USER_OBJECT_FILTER"]
+            query = ldap_filter.filter_format(query_filter, (user, user))
+        elif group is not None:
+            if not dn_only:
+                fields = self.app.config["LDAP_GROUP_FIELDS"]
+            query_filter = query_filter or self.app.config["LDAP_GROUP_OBJECT_FILTER"]
+            query = ldap_filter.filter_format(query_filter, (group,))
+        else:
+            query = None
+        return query, fields
+
+    def _extract_dn(self, records):
+        """Extract distinguished name from LDAP records."""
+        if self.app.config["LDAP_OPENLDAP"]:
+            return records[0][0] if records else None
+        if self.app.config["LDAP_OBJECTS_DN"] in records[0][1]:
+            # pylint: disable=C0103
+            dn = records[0][1][self.app.config["LDAP_OBJECTS_DN"]]
+            return dn[0]
+        return None
+
+    def get_object_details(self, user=None, group=None, query_filter=None, dn_only=False):
         """Return a ``dict`` with the object's (user or group) details.
 
         :param str user: Username of the user object you want details for.
@@ -163,45 +184,18 @@ class LDAP:
         :param str query_filter: If included, will be used to query object.
         :param bool dn_only: If we should only retrieve the object's distinguished name or not.
         """
-        query = None
-        fields = None
-        if user is not None:
-            if not dn_only:
-                fields = self.app.config["LDAP_USER_FIELDS"]
-            query_filter = query_filter or self.app.config["LDAP_USER_OBJECT_FILTER"]
-            query = ldap_filter.filter_format(
-                query_filter,
-                (
-                    user,
-                    user,
-                ),
-            )
-        elif group is not None:
-            if not dn_only:
-                fields = self.app.config["LDAP_GROUP_FIELDS"]
-            query_filter = query_filter or self.app.config["LDAP_GROUP_OBJECT_FILTER"]
-            query = ldap_filter.filter_format(query_filter, (group,))
+        query, fields = self._build_object_query(user, group, query_filter, dn_only)
         conn = self.bind
         try:
             records = conn.search_s(
                 self.app.config["LDAP_BASE_DN"], ldap.SCOPE_SUBTREE, query, fields
             )
             conn.unbind_s()
-            result = {}
-            if records:
-                if dn_only:
-                    if self.app.config["LDAP_OPENLDAP"]:
-                        if records:
-                            return records[0][0]
-                    else:
-                        if self.app.config["LDAP_OBJECTS_DN"] in records[0][1]:
-                            # pylint: disable=C0103
-                            dn = records[0][1][self.app.config["LDAP_OBJECTS_DN"]]
-                            return dn[0]
-                for key, value in list(records[0][1].items()):
-                    result[key] = value
-
-                return result
+            if not records:
+                return {}
+            if dn_only:
+                return self._extract_dn(records)
+            return dict(records[0][1].items())
         except ldap.LDAPError as e:
             raise LDAPException(self.error(e.args)) from e
 
@@ -243,20 +237,15 @@ class LDAP:
             conn.unbind_s()
             if records:
                 if self.app.config["LDAP_OPENLDAP"]:
-                    group_member_filter = self.app.config[
-                        "LDAP_GROUP_MEMBER_FILTER_FIELD"
-                    ]
+                    group_member_filter = self.app.config["LDAP_GROUP_MEMBER_FILTER_FIELD"]
                     groups = [
-                        (record[1][group_member_filter][0]).decode("utf-8")
-                        for record in records
+                        (record[1][group_member_filter][0]).decode("utf-8") for record in records
                     ]
                     return groups
 
                 if self.app.config["LDAP_USER_GROUPS_FIELD"] in records[0][1]:
                     groups = records[0][1][self.app.config["LDAP_USER_GROUPS_FIELD"]]
-                    result = [
-                        re.findall(b"(?:cn=|CN=)(.*?),", group)[0] for group in groups
-                    ]
+                    result = [re.findall(b"(?:cn=|CN=)(.*?),", group)[0] for group in groups]
                     return [x.decode("utf-8") for x in result]
         except ldap.LDAPError as e:
             raise LDAPException(self.error(e.args)) from e

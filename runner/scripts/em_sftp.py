@@ -150,9 +150,7 @@ class Sftp:
         except ValueError as e:
             raise RunnerException(self.task, self.run_id, 9, str(e))
 
-    def _walk(
-        self, directory: str
-    ) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
+    def _walk(self, directory: str) -> Generator[Tuple[str, List[Any], List[str]], None, None]:
         dirs = []
         nondirs = []
 
@@ -188,14 +186,9 @@ class Sftp:
                         break
                     yield data
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", delete=False, dir=self.dir
-        ) as data_file:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False, dir=self.dir) as data_file:
             for data in load_data(sftp_file):
-                if (
-                    self.task.source_sftp_ignore_delimiter != 1
-                    and self.task.source_sftp_delimiter
-                ):
+                if self.task.source_sftp_ignore_delimiter != 1 and self.task.source_sftp_delimiter:
                     my_delimiter = self.task.source_sftp_delimiter or ","
 
                     csv_reader = csv.reader(
@@ -283,9 +276,7 @@ class Sftp:
             self.conn.chdir(self.__clean_path(self.connection.path or "/"))
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 9, f"Failed to change path.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 9, f"Failed to change path.\n{e}")
 
         if overwrite != 1:
             try:
@@ -346,6 +337,4 @@ class Sftp:
             self.transport.close()
 
         except BaseException as e:
-            raise RunnerException(
-                self.task, self.run_id, 9, f"Failed to close connection.\n{e}"
-            )
+            raise RunnerException(self.task, self.run_id, 9, f"Failed to close connection.\n{e}")

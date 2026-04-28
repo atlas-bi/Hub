@@ -6,6 +6,7 @@ from pathlib import Path
 from web.extensions import (
     cache,
     compress,
+    csrf,
     db,
     executor,
     htmlmin,
@@ -81,6 +82,7 @@ def create_app() -> Flask:
     compress.init_app(app)
 
     # auth
+    csrf.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = app.config["LOGIN_VIEW"]
     login_manager.login_message = app.config["LOGIN_MESSAGE"]
