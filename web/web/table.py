@@ -393,13 +393,9 @@ def connection_tasks(connection_id: int) -> Response:
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )
 
-    me = [
-        {
-            "head": '["Task Name", "Project Name",\
+    me = [{"head": '["Task Name", "Project Name",\
                 "Status", "Connection", "Enabled",\
-                "Last Run", "Next Run"]'
-        }
-    ]
+                "Last Run", "Next Run"]'}]
 
     me.append({"total": str(tasks.count() or 0)})  # runs.total
     me.append({"page": str(page)})  # page
