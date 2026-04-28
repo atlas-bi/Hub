@@ -39,7 +39,7 @@ jobs:
         python-version: '3.10'
 
     - name: 🚀 Semantic Release
-      uses: cycjimmy/semantic-release-action@v3
+      uses: cycjimmy/semantic-release-action@v6.0.0
       id: semantic
       with:
         semantic_version: 18
