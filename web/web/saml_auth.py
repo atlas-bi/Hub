@@ -51,8 +51,10 @@ def idp_initiated() -> Response:
 
         groups = identity.get(app.config["SAML_ATTR_MAP"]["groups"]) or []
 
-        if "REQUIRED_GROUPS" in app.config and app.config["REQUIRED_GROUPS"] and not bool(
-            set(app.config["REQUIRED_GROUPS"]) & set(groups)
+        if (
+            "REQUIRED_GROUPS" in app.config
+            and app.config["REQUIRED_GROUPS"]
+            and not bool(set(app.config["REQUIRED_GROUPS"]) & set(groups))
         ):
             session.pop("_flashes", None)
 
