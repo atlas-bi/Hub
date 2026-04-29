@@ -6,7 +6,6 @@
   "commitMessagePrefix": "chore(deps)",
   "extends": [
     "config:base",
-    "group:allNonMajor",
     ":separateMultipleMajorReleases",
     ":ignoreUnstable",
     ":enableVulnerabilityAlertsWithLabel(security)",
@@ -24,29 +23,40 @@
   ],
   "packageRules": [
     {
-      "automerge": true,
-      "matchUpdateTypes": [
-        "pin",
-        "digest",
-        "minor",
-        "patch"
-      ]
+      "matchUpdateTypes": ["pin", "digest", "patch"],
+      "automerge": true
     },
     {
-      "automerge": true,
-      "matchDepTypes": [
-        "devDependencies"
-      ]
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
-      "automerge": true,
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm non-major",
+      "automerge": false
+    },
+    {
+      "matchManagers": ["pip_requirements", "poetry"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "python non-major",
+      "automerge": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "automerge": true
+    },
+    {
       "extends": "packages:linters",
-      "groupName": "linters"
+      "groupName": "linters",
+      "automerge": true
     },
     {
-      "automerge": true,
       "extends": "packages:test",
-      "groupName": "test packages"
+      "groupName": "test packages",
+      "automerge": true
     }
   ],
   "pre-commit": {
