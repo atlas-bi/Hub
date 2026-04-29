@@ -23,40 +23,62 @@
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["pin", "digest", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchUpdateTypes": [
+        "pin",
+        "digest",
+        "patch"
+      ]
     },
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     },
     {
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false,
       "groupName": "npm non-major",
-      "automerge": false
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     },
     {
-      "matchManagers": ["pip_requirements", "poetry"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false,
       "groupName": "python non-major",
-      "automerge": false
+      "matchManagers": [
+        "pip_requirements",
+        "poetry"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     },
     {
-      "matchManagers": ["github-actions"],
+      "automerge": true,
       "groupName": "github actions",
-      "automerge": true
+      "matchManagers": [
+        "github-actions"
+      ]
     },
     {
+      "automerge": true,
       "extends": "packages:linters",
-      "groupName": "linters",
-      "automerge": true
+      "groupName": "linters"
     },
     {
+      "automerge": true,
       "extends": "packages:test",
-      "groupName": "test packages",
-      "automerge": true
+      "groupName": "test packages"
     }
   ],
   "pre-commit": {
