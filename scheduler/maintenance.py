@@ -13,6 +13,18 @@ from scheduler.extensions import atlas_scheduler, db
 from scheduler.model import Task
 
 
+def delete_orphaned_jobs() -> int:
+    """Remove scheduler jobs whose task rows no longer exist."""
+    removed = 0
+
+    for job in atlas_scheduler.get_jobs():
+        if job.args and Task.query.filter_by(id=int(job.args[0])).count() == 0:
+            job.remove()
+            removed += 1
+
+    return removed
+
+
 @atlas_scheduler.task(
     "interval",
     id="job_sync",
@@ -42,6 +54,24 @@ def job_sync() -> None:
                 for job in scheduler_jobs:
                     if job.args and str(job.args[0]) == str(task.id):
                         job.remove()
+
+    # pylint: disable=broad-except
+    except BaseException as e:
+        print(str(e))  # noqa: T201
+
+
+@atlas_scheduler.task(
+    "interval",
+    id="job_clean_orphans",
+    minutes=5,
+    max_instances=1,
+    start_date="2000-01-01 12:19:00",
+)
+def job_clean_orphans() -> None:
+    """Job to remove orphaned scheduler entries."""
+    try:
+        with atlas_scheduler.app.app_context():
+            delete_orphaned_jobs()
 
     # pylint: disable=broad-except
     except BaseException as e:

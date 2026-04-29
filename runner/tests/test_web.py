@@ -35,3 +35,8 @@ from runner.model import Project, Task
 def test_alive(client_fixture: fixture) -> None:
     page = client_fixture.get("/api")
     assert page.json == {"status": "alive"}
+
+
+def test_run_missing_task(client_fixture: fixture) -> None:
+    page = client_fixture.get("/api/999999")
+    assert page.json == {"error": "Task 999999 not found."}

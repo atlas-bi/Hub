@@ -25,7 +25,8 @@ from flask import g, helpers
 from pytest import fixture
 
 from scheduler.extensions import atlas_scheduler, db
-from scheduler.model import Project, Task, User
+from scheduler.functions import scheduler_task_runner
+from scheduler.model import Project, Task, TaskLog, User
 
 from . import get_or_create
 from .conftest import create_demo_task, demo_task
@@ -223,6 +224,22 @@ def test_delete_task(client_fixture: fixture) -> None:
     # delete a non-existing job.. all deletions are successful
     page = client_fixture.get(f"/api/delete/asdf")
     assert page.json == {"error": "Invalid job."}
+    assert page.status_code == 200
+
+
+def test_scheduler_task_runner_removes_orphaned_job(client_fixture: fixture) -> None:
+    p_id, t_id = create_demo_task(db.session)
+    page = client_fixture.get(f"/api/add/{t_id}")
+    assert page.json == {"message": "Scheduler: task job added!"}
+
+    TaskLog.query.filter_by(task_id=t_id).delete()
+    db.session.commit()
+    Task.query.filter_by(id=t_id).delete()
+    db.session.commit()
+
+    scheduler_task_runner(t_id)
+
+    assert atlas_scheduler.get_job(f"{p_id}-{t_id}-cron") is None
     assert page.status_code == 200
 
 

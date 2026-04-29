@@ -469,7 +469,7 @@ def table_jobs_orphans() -> Response:
 
     page -= 1
 
-    me = [{"head": '["Action", "Name", "Id", "Next Run Time", "Args"]'}]
+    me = [{"head": '["Name", "Id", "Next Run Time", "Args"]'}]
 
     table = []
 
@@ -480,7 +480,6 @@ def table_jobs_orphans() -> Response:
             if int(job["id"]) not in active_tasks:
                 table.append(
                     {
-                        "Action": "<a  href='/task/" + job["id"] + "/delete'>Delete</a>",
                         "Name": job["name"],
                         "Id": job["id"],
                         "Next Run": job["next_run_time"],

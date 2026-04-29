@@ -15,6 +15,7 @@ from scheduler.functions import (
     scheduler_delete_task,
     scheduler_task_runner,
 )
+from scheduler.maintenance import delete_orphaned_jobs
 from scheduler.model import Task
 
 web_bp = Blueprint("web_bp", __name__)
@@ -52,7 +53,7 @@ def schedule() -> Response:
 
     for job in atlas_scheduler.get_jobs():
         if (
-            job.id in ["job_sync", "temp_clean"]
+            job.id in ["job_sync", "job_clean_orphans", "temp_clean"]
             or not hasattr(job, "next_run_time")
             or job.next_run_time is None
             and job.args
@@ -260,8 +261,6 @@ def get_scheduled_jobs() -> Response:
 @web_bp.route("/api/delete-orphans")
 def delete_orphans() -> Response:
     """Delete all orphaned jobs."""
-    for job in atlas_scheduler.get_jobs():
-        if job.args and Task.query.filter_by(id=int(job.args[0])).count() == 0:
-            job.remove()
+    delete_orphaned_jobs()
 
     return jsonify({"message": "Scheduler: orphans deleted!"})

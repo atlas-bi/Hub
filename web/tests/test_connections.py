@@ -11,8 +11,15 @@ run with::
 
 """
 
+from unittest.mock import Mock
+
 from bs4 import BeautifulSoup
 from pytest import fixture
+
+from web import db
+from web.model import ConnectionDatabase, Task
+
+from .conftest import create_demo_task
 
 
 def test_connections_home(client_fixture: fixture) -> None:
@@ -177,6 +184,62 @@ def test_new_database(client_fixture: fixture) -> None:
         url,
         follow_redirects=True,
     )
+
+
+def test_delete_database_disables_referencing_tasks(client_fixture: fixture, monkeypatch) -> None:
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    response = client_fixture.post(
+        "/connection/new",
+        data={
+            "name": "Test Connection",
+            "description": "description",
+            "address": "outer space",
+            "contact": "joe",
+            "email": "no@thin.g",
+            "phone": "411",
+        },
+        headers=headers,
+        follow_redirects=True,
+    )
+
+    soup = BeautifulSoup(response.data, features="lxml")
+    new_database_url = soup.find("a", attrs={"title": "New Database"})["href"]
+    response = client_fixture.get(new_database_url, follow_redirects=True)
+
+    soup = BeautifulSoup(response.data, features="lxml")
+    form_url = soup.find("form", attrs={"method": "post"})["action"]
+    client_fixture.post(
+        form_url,
+        data={
+            "name": "Test Database",
+            "database_type": "1",
+            "connection_string": "outer space",
+        },
+        headers=headers,
+        follow_redirects=True,
+    )
+
+    database = ConnectionDatabase.query.filter_by(name="Test Database").first()
+    _, task_id = create_demo_task(db.session)
+    task = Task.query.filter_by(id=task_id).first()
+    task.source_database_id = database.id
+    task.source_type_id = 1
+    task.enabled = 1
+    db.session.commit()
+
+    monkeypatch.setattr("web.web.connection.requests.get", Mock())
+
+    client_fixture.get(
+        f"/connection/{database.connection_id}/database/{database.id}/delete",
+        follow_redirects=True,
+    )
+
+    db.session.expire_all()
+    task = Task.query.filter_by(id=task_id).first()
+    assert task.source_database_id is None
+    assert task.source_type_id is None
+    assert task.enabled == 0
 
 
 def test_new_sftp(client_fixture: fixture) -> None:
