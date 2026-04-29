@@ -44,7 +44,7 @@ wheels = [
 
 [[package]]
 name = "atlas-hub"
-version = "2.12.9"
+version = "2.12.10"
 source = { editable = "." }
 dependencies = [
     { name = "azure-devops" },
@@ -201,7 +201,7 @@ dev = [
     { name = "tox-uv", specifier = ">=1.0.0,<2.0.0" },
     { name = "types-flask", specifier = ">=1.1.6,<2.0.0" },
     { name = "types-jinja2", specifier = ">=2.11.9,<3.0.0" },
-    { name = "types-paramiko", specifier = ">=2.12.0.1,<3.0.0" },
+    { name = "types-paramiko", specifier = ">=4.0.0.20260408,<4.1.0" },
     { name = "types-python-dateutil", specifier = ">=2.8.19.4,<3.0.0" },
     { name = "types-redis", specifier = ">=4.3.21.6,<5.0.0" },
     { name = "types-requests", specifier = ">=2.28.11.5,<3.0.0" },
@@ -2843,14 +2843,14 @@ wheels = [
 
 [[package]]
 name = "types-paramiko"
-version = "2.12.0.3"
+version = "4.0.0.20260408"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b3/00/f6ae97307498562fecc2cc4d033f8845a3d10596db0f7dde9e6655813d3e/types-paramiko-2.12.0.3.tar.gz", hash = "sha256:3a79232382bcc7ed140f53d865feaec35188fd2ee105efdbf325200736e01aa2", size = 21127, upload-time = "2023-01-18T09:18:58.114Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/f5/2a556b03ba264508b6bc6a65131500265f210ff3ebf5d76dbe51b53c3979/types_paramiko-4.0.0.20260408.tar.gz", hash = "sha256:978191a2e11064fa4c7f9ada0fccf49159a17beb98b780310dd2c2d2b4106063", size = 29116, upload-time = "2026-04-08T04:35:04.631Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c7/f4/e90ce2857a004c1942f2935b2c807147c8cd74ec9e6c9eb9252c75115b83/types_paramiko-2.12.0.3-py3-none-any.whl", hash = "sha256:a8b224e8a93cc0ffb60f67516890e49977ea0d3f5811c605238e71d9c49a152d", size = 32187, upload-time = "2023-01-18T09:18:56.506Z" },
+    { url = "https://files.pythonhosted.org/packages/d9/e2/cf451598a6a8820139d021b2be08a836b9b905d744bcc73b72172e7e10b3/types_paramiko-4.0.0.20260408-py3-none-any.whl", hash = "sha256:350bf53edb4eb88181be68854d598e1cc3a8764fe905d49913025b86e831adbc", size = 38816, upload-time = "2026-04-08T04:35:03.503Z" },
 ]
 
 [[package]]
