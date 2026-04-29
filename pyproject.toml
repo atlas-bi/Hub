@@ -66,7 +66,7 @@ dependencies = [
   "azure-devops>=7.1.0b3,<8.0.0",
   "bs4>=0.0.2,<0.0.3",
   "cffi>=2.0.0,<3.0.0",
-  "cryptography>=43.0.0,<44.0.0",
+  "cryptography>=47.0.0,<47.1.0",
   "flask-assets",
   "flask-redis>=0.4.0,<0.5.0",
   "flask-session2>=1.2.0,<2.0.0",
@@ -116,7 +116,7 @@ maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
 requires-python = ">=3.9,<4.0"
-version = "2.12.9"
+version = "2.12.10"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
