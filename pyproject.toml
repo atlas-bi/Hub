@@ -115,7 +115,7 @@ license = "GPL-3.0-or-later"
 maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 version = "2.12.9"
 
 [project.urls]
