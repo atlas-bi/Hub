@@ -44,7 +44,7 @@ wheels = [
 
 [[package]]
 name = "atlas-hub"
-version = "2.12.9"
+version = "2.12.10"
 source = { editable = "." }
 dependencies = [
     { name = "azure-devops" },
@@ -147,7 +147,7 @@ requires-dist = [
     { name = "flask-sqlalchemy", specifier = ">=3.1.1,<4.0.0" },
     { name = "flask-wtf", specifier = ">=1.2.0,<2.0.0" },
     { name = "gevent", specifier = ">=23.9.1,<26" },
-    { name = "gunicorn", specifier = ">=22.0.0,<23.0.0" },
+    { name = "gunicorn", specifier = ">=25.3.0,<25.4.0" },
     { name = "is-safe-url", specifier = ">=1.0,<2.0" },
     { name = "jaydebeapi", specifier = ">=1.2.3,<2.0.0" },
     { name = "jinja2", specifier = ">=3.0.1,<4.0.0" },
@@ -1279,14 +1279,14 @@ wheels = [
 
 [[package]]
 name = "gunicorn"
-version = "22.0.0"
+version = "25.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "packaging" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/88/e2f93c5738a4c1f56a458fc7a5b1676fc31dcdbb182bef6b40a141c17d66/gunicorn-22.0.0.tar.gz", hash = "sha256:4a0b436239ff76fb33f11c07a16482c521a7e09c1ce3cc293c2330afe01bec63", size = 3639760, upload-time = "2024-04-16T22:58:19.218Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/f4/e78fa054248fab913e2eab0332c6c2cb07421fca1ce56d8fe43b6aef57a4/gunicorn-25.3.0.tar.gz", hash = "sha256:f74e1b2f9f76f6cd1ca01198968bd2dd65830edc24b6e8e4d78de8320e2fe889", size = 634883, upload-time = "2026-03-27T00:00:26.092Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/29/97/6d610ae77b5633d24b69c2ff1ac3044e0e565ecbd1ec188f02c45073054c/gunicorn-22.0.0-py3-none-any.whl", hash = "sha256:350679f91b24062c86e386e198a15438d53a7a8207235a78ba1b53df4c4378d9", size = 84443, upload-time = "2024-04-16T22:58:15.233Z" },
+    { url = "https://files.pythonhosted.org/packages/43/c8/8aaf447698c4d59aa853fd318eed300b5c9e44459f242ab8ead6c9c09792/gunicorn-25.3.0-py3-none-any.whl", hash = "sha256:cacea387dab08cd6776501621c295a904fe8e3b7aae9a1a3cbb26f4e7ed54660", size = 208403, upload-time = "2026-03-27T00:00:27.386Z" },
 ]
 
 [[package]]
