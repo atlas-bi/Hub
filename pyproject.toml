@@ -4,7 +4,7 @@ requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
-  "black>=24.0.0,<25.0.0",
+  "black>=26.3.1,<26.4.0",
   "coverage>=7.0.0,<8.0.0",
   "djlint>=1.19.17,<2.0.0",
   "flask-debugtoolbar>=0.14.0,<0.15.0",
@@ -116,7 +116,7 @@ maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
 requires-python = ">=3.9,<4.0"
-version = "2.12.9"
+version = "2.12.10"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
