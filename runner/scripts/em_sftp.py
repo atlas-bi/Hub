@@ -8,6 +8,7 @@ import sys
 import tempfile
 import time
 import warnings
+from contextlib import suppress
 from pathlib import Path
 from stat import S_ISDIR
 from typing import IO, Any, Dict, Generator, List, Optional, Tuple
@@ -63,16 +64,15 @@ def connection_json(connection: ConnectionSftp) -> Dict:
 def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
     """Connect to sftp server."""
     try:
-        # there is no timeout in paramiko so...
-        # continue to attemp to login during time limit
-        # if we are getting timeout exceptions
-        timeout = time.time() + 60 * 3  # 2 mins from now
-        while True:
+        last_error = None
+        for _ in range(3):
             try:
                 transport = paramiko.Transport(
-                    f"{connection.address}:{(connection.port or 22)}",
+                    (str(connection.address), int(connection.port or 22)),
                     disabled_algorithms={"pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]},
                 )
+                transport.banner_timeout = 10
+                transport.auth_timeout = 10
 
                 key = connection_key(connection)
 
@@ -105,18 +105,20 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
                 if conn is None:
                     raise ValueError("Failed to create connection.")
 
-                break
-            except (paramiko.ssh_exception.AuthenticationException, EOFError) as e:
-                # pylint: disable=no-else-continue
-                if str(e) == "Authentication timeout." and time.time() <= timeout:
-                    time.sleep(10)  # wait 10 sec before retrying
-                    continue
-                elif time.time() > timeout:
-                    raise ValueError("Connection timeout.")
+                return (transport, conn)
+            except (
+                EOFError,
+                OSError,
+                paramiko.ssh_exception.AuthenticationException,
+                paramiko.ssh_exception.SSHException,
+            ) as error:
+                with suppress(BaseException):
+                    transport.close()
+                last_error = error
+                time.sleep(1)
+                continue
 
-                raise ValueError(f"Connection failed.\n{e}")
-
-        return (transport, conn)
+        raise ValueError(f"Connection failed.\n{last_error}")
 
     except BaseException as e:
         raise ValueError(f"Connection failed.\n{e}")
