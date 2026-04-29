@@ -10,6 +10,7 @@ from flask import current_app as app
 from flask import jsonify
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
+from werkzeug.wrappers import Response
 
 from runner import executor
 from runner.model import (
@@ -247,8 +248,11 @@ def send_email(run_id: int, file_id: int) -> dict:
 
 
 @web_bp.route("/api/<task_id>")
-def run(task_id: int) -> dict:
+def run(task_id: int) -> Response:
     """Run specified task."""
+    if not Task.query.filter_by(id=task_id).first():
+        return jsonify({"error": f"Task {task_id} not found."})
+
     executor.submit(Runner, task_id)
 
     return jsonify({"message": "runner completed."})

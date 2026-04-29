@@ -41,6 +41,10 @@ def scheduler_task_runner(task_id: int) -> None:
             # triggered.. then we will have the
             # job saved in an errored state.
             task = Task.query.filter_by(id=task_id).first()
+            if not task:
+                scheduler_delete_task(task_id)
+                print(f"Task {task_id} not found. Removed orphaned scheduler job.")  # noqa: T201
+                return
             task.status_id = 2
             db.session.commit()
 

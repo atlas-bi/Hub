@@ -3,7 +3,7 @@
 import html
 import sys
 from pathlib import Path
-from typing import Union
+from typing import Any, Iterable, Union, cast
 
 import requests
 from crypto import em_encrypt
@@ -23,6 +23,7 @@ from web.model import (
     ConnectionSftp,
     ConnectionSmb,
     ConnectionSsh,
+    Task,
     TaskLog,
 )
 
@@ -32,6 +33,230 @@ sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 connection_bp = Blueprint("connection_bp", __name__)
 
 ONE_CONNECTION = "connection_bp.one_connection"
+
+
+def _in_filter(column: Any, ids: Iterable[int]) -> Any:
+    """Build an IN filter with a cast that keeps mypy quiet on SQLAlchemy models."""
+    return cast(Any, column).in_(list(ids))
+
+
+def _unschedule_tasks(task_ids: set[int]) -> None:
+    """Disable and unschedule tasks that reference a deleted connection."""
+    if not task_ids:
+        return
+
+    Task.query.filter(_in_filter(Task.id, task_ids)).update(
+        {"enabled": 0}, synchronize_session=False
+    )
+    db.session.commit()
+
+    for task_id in task_ids:
+        try:
+            requests.get(f"{app.config['SCHEDULER_HOST']}/delete/{task_id}", timeout=10)
+        except requests.RequestException:
+            continue
+
+
+def _apply_task_cleanup(cleanups: list[tuple[Any, dict[str, Any]]]) -> set[int]:
+    """Apply bulk task cleanup queries and return affected task ids."""
+    task_ids: set[int] = set()
+
+    for query, updates in cleanups:
+        current_task_ids = {task_id for task_id, in query.with_entities(Task.id).all()}
+        if not current_task_ids:
+            continue
+
+        task_ids.update(current_task_ids)
+        query.update(updates, synchronize_session=False)
+
+    if task_ids:
+        db.session.commit()
+        _unschedule_tasks(task_ids)
+
+    return task_ids
+
+
+def _cleanup_database_tasks(database_ids: list[int]) -> set[int]:
+    """Clear task references to deleted database connections."""
+    if not database_ids:
+        return set()
+
+    return _apply_task_cleanup(
+        [
+            (
+                Task.query.filter(_in_filter(Task.source_database_id, database_ids)),
+                {"source_database_id": None, "source_type_id": None},
+            )
+        ]
+    )
+
+
+def _cleanup_sftp_tasks(sftp_ids: list[int]) -> set[int]:
+    """Clear task references to deleted SFTP connections."""
+    if not sftp_ids:
+        return set()
+
+    return _apply_task_cleanup(
+        [
+            (
+                Task.query.filter(_in_filter(Task.source_sftp_id, sftp_ids)),
+                {
+                    "source_sftp_id": None,
+                    "source_sftp_file": None,
+                    "source_sftp_delimiter": None,
+                    "source_sftp_ignore_delimiter": None,
+                    "source_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.query_sftp_id, sftp_ids)),
+                {
+                    "query_sftp_id": None,
+                    "query_sftp_file": None,
+                    "source_query_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.processing_sftp_id, sftp_ids)),
+                {
+                    "processing_sftp_id": None,
+                    "processing_sftp_file": None,
+                    "processing_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.destination_sftp_id, sftp_ids)),
+                {
+                    "destination_sftp_id": None,
+                    "destination_sftp": 0,
+                    "destination_sftp_overwrite": None,
+                    "destination_sftp_dont_send_empty_file": None,
+                },
+            ),
+        ]
+    )
+
+
+def _cleanup_ssh_tasks(ssh_ids: list[int]) -> set[int]:
+    """Clear task references to deleted SSH connections."""
+    if not ssh_ids:
+        return set()
+
+    return _apply_task_cleanup(
+        [
+            (
+                Task.query.filter(_in_filter(Task.source_ssh_id, ssh_ids)),
+                {"source_ssh_id": None, "source_type_id": None},
+            )
+        ]
+    )
+
+
+def _cleanup_ftp_tasks(ftp_ids: list[int]) -> set[int]:
+    """Clear task references to deleted FTP connections."""
+    if not ftp_ids:
+        return set()
+
+    return _apply_task_cleanup(
+        [
+            (
+                Task.query.filter(_in_filter(Task.source_ftp_id, ftp_ids)),
+                {
+                    "source_ftp_id": None,
+                    "source_ftp_file": None,
+                    "source_ftp_delimiter": None,
+                    "source_ftp_ignore_delimiter": None,
+                    "source_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.query_ftp_id, ftp_ids)),
+                {
+                    "query_ftp_id": None,
+                    "query_ftp_file": None,
+                    "source_query_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.processing_ftp_id, ftp_ids)),
+                {
+                    "processing_ftp_id": None,
+                    "processing_ftp_file": None,
+                    "processing_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.destination_ftp_id, ftp_ids)),
+                {
+                    "destination_ftp_id": None,
+                    "destination_ftp": 0,
+                    "destination_ftp_overwrite": None,
+                    "destination_ftp_dont_send_empty_file": None,
+                },
+            ),
+        ]
+    )
+
+
+def _cleanup_smb_tasks(smb_ids: list[int]) -> set[int]:
+    """Clear task references to deleted SMB connections."""
+    if not smb_ids:
+        return set()
+
+    return _apply_task_cleanup(
+        [
+            (
+                Task.query.filter(_in_filter(Task.source_smb_id, smb_ids)),
+                {
+                    "source_smb_id": None,
+                    "source_smb_file": None,
+                    "source_smb_delimiter": None,
+                    "source_smb_ignore_delimiter": None,
+                    "source_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.query_smb_id, smb_ids)),
+                {
+                    "query_smb_id": None,
+                    "query_smb_file": None,
+                    "source_query_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.processing_smb_id, smb_ids)),
+                {
+                    "processing_smb_id": None,
+                    "processing_smb_file": None,
+                    "processing_type_id": None,
+                },
+            ),
+            (
+                Task.query.filter(_in_filter(Task.destination_smb_id, smb_ids)),
+                {
+                    "destination_smb_id": None,
+                    "destination_smb": 0,
+                    "destination_smb_overwrite": None,
+                    "destination_smb_dont_send_empty_file": None,
+                },
+            ),
+        ]
+    )
+
+
+def _cleanup_gpg_tasks(gpg_ids: list[int]) -> set[int]:
+    """Clear task references to deleted GPG connections."""
+    if not gpg_ids:
+        return set()
+
+    return _apply_task_cleanup(
+        [
+            (
+                Task.query.filter(_in_filter(Task.file_gpg_id, gpg_ids)),
+                {"file_gpg_id": None, "file_gpg": 0},
+            )
+        ]
+    )
 
 
 @connection_bp.route("/connection")
@@ -142,6 +367,25 @@ def new_connection() -> Response:
 @login_required
 def delete_connection(connection_id: int) -> Response:
     """Delete a connection."""
+    _cleanup_sftp_tasks(
+        [row.id for row in ConnectionSftp.query.filter_by(connection_id=connection_id).all()]
+    )
+    _cleanup_gpg_tasks(
+        [row.id for row in ConnectionGpg.query.filter_by(connection_id=connection_id).all()]
+    )
+    _cleanup_ftp_tasks(
+        [row.id for row in ConnectionFtp.query.filter_by(connection_id=connection_id).all()]
+    )
+    _cleanup_smb_tasks(
+        [row.id for row in ConnectionSmb.query.filter_by(connection_id=connection_id).all()]
+    )
+    _cleanup_ssh_tasks(
+        [row.id for row in ConnectionSsh.query.filter_by(connection_id=connection_id).all()]
+    )
+    _cleanup_database_tasks(
+        [row.id for row in ConnectionDatabase.query.filter_by(connection_id=connection_id).all()]
+    )
+
     ConnectionSftp.query.filter_by(connection_id=connection_id).delete()
     ConnectionGpg.query.filter_by(connection_id=connection_id).delete()
     ConnectionFtp.query.filter_by(connection_id=connection_id).delete()
@@ -165,6 +409,7 @@ def delete_connection(connection_id: int) -> Response:
 @login_required
 def delete_connection_sftp(connection_id: int, sftp_id: int) -> Response:
     """Delete a SFTP connection."""
+    _cleanup_sftp_tasks([sftp_id])
     ConnectionSftp.query.filter_by(connection_id=connection_id, id=sftp_id).delete()
     db.session.commit()
 
@@ -300,6 +545,7 @@ def new_connection_sftp(connection_id: int) -> Response:
 @login_required
 def delete_connection_ssh(connection_id: int, ssh_id: int) -> Response:
     """Delete a SSH connection."""
+    _cleanup_ssh_tasks([ssh_id])
     ConnectionSsh.query.filter_by(connection_id=connection_id, id=ssh_id).delete()
     db.session.commit()
     log = TaskLog(
@@ -406,6 +652,7 @@ def edit_connection_ssh(connection_id: int, ssh_id: int) -> Response:
 @login_required
 def delete_connection_smb(connection_id: int, smb_id: int) -> Response:
     """Delete a SMB connection."""
+    _cleanup_smb_tasks([smb_id])
     ConnectionSmb.query.filter_by(connection_id=connection_id, id=smb_id).delete()
     db.session.commit()
     log = TaskLog(
@@ -518,6 +765,7 @@ def edit_connection_smb(connection_id: int, smb_id: int) -> Response:
 @login_required
 def delete_connection_ftp(connection_id: int, ftp_id: int) -> Response:
     """Delete a FPT connection."""
+    _cleanup_ftp_tasks([ftp_id])
     ConnectionFtp.query.filter_by(connection_id=connection_id, id=ftp_id).delete()
     db.session.commit()
     log = TaskLog(
@@ -627,6 +875,7 @@ def edit_connection_ftp(connection_id: int, ftp_id: int) -> Response:
 @login_required
 def delete_connection_gpg(connection_id: int, gpg_id: int) -> Response:
     """Delete a GPG connection."""
+    _cleanup_gpg_tasks([gpg_id])
     ConnectionGpg.query.filter_by(connection_id=connection_id, id=gpg_id).delete()
     db.session.commit()
     log = TaskLog(
@@ -728,6 +977,7 @@ def edit_connection_gpg(connection_id: int, gpg_id: int) -> Response:
 @login_required
 def delete_connection_database(connection_id: int, database_id: int) -> Response:
     """Delete a database connection."""
+    _cleanup_database_tasks([database_id])
     ConnectionDatabase.query.filter_by(connection_id=connection_id, id=database_id).delete()
     db.session.commit()
     log = TaskLog(
