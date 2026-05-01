@@ -193,6 +193,9 @@ module = "*.smb_fix"
 ignore_errors = true
 module = "*.ldap_auth"
 
+[tool.pydocstyle]
+add-ignore = ["D203", "D213"]
+
 [tool.pytest]
 
 [tool.pytest.ini_options]
