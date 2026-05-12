@@ -157,9 +157,6 @@ format_attribute_template_tags = true
 ignore = "H011,H021,H023,H031"
 profile = "jinja"
 
-[tool.poetry]
-package-mode = false
-
 [tool.hatch.build]
 exclude = [
   "/.git",
@@ -195,6 +192,9 @@ module = "*.smb_fix"
 [[tool.mypy.overrides]]
 ignore_errors = true
 module = "*.ldap_auth"
+
+[tool.poetry]
+package-mode = false
 
 [tool.pytest]
 
