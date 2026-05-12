@@ -41,6 +41,12 @@ jobs:
     - name: 🔧 Setup uv
       uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
 
+    - name: 📥 Install OS deps
+      run: |
+        sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
+      env:
+        PYTHONWARNINGS: ignore
+
     - name: 🚀 Semantic Release
       uses: cycjimmy/semantic-release-action@v6.0.0
       id: semantic
