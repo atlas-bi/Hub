@@ -30,7 +30,7 @@ repos:
   - id: check-yaml
   - id: end-of-file-fixer
 - repo: https://github.com/PyCQA/isort
-  rev: 5.13.2
+  rev: 7.0.0
   hooks:
   - id: isort
     exclude: migrations* | docs*
