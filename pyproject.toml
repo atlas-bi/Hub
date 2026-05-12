@@ -71,7 +71,7 @@ dependencies = [
   "flask-redis>=0.4.0,<0.5.0",
   "flask-session2>=1.2.0,<2.0.0",
   "gevent>=23.9.1,<26",
-  "gunicorn>=22.0.0,<23.0.0",
+  "gunicorn>=25.3.0,<25.4.0",
   "is-safe-url>=1.0,<2.0",
   "jaydebeapi>=1.2.3,<2.0.0",
   "jpype1>=1.5.1,<2.0.0",
@@ -115,8 +115,8 @@ license = "GPL-3.0-or-later"
 maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
-requires-python = ">=3.9,<4.0"
-version = "2.12.5a2"
+requires-python = ">=3.10,<4.0"
+version = "2.12.10"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
@@ -192,6 +192,9 @@ module = "*.smb_fix"
 [[tool.mypy.overrides]]
 ignore_errors = true
 module = "*.ldap_auth"
+
+[tool.poetry]
+package-mode = false
 
 [tool.pytest]
 
