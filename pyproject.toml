@@ -52,7 +52,7 @@ dependencies = [
   "Flask-APScheduler>=1.12.2,<2.0.0",
   "Flask-Assets>=2.0,<3.0",
   "Flask-Caching>=2.0.0,<3.0.0",
-  "Flask-Compress==1.14",
+  "Flask-Compress==1.24",
   "Flask-Executor>=1.0.0,<2.0.0",
   "Flask-HTMLmin>=2.1.0,<3.0.0",
   "Flask-Login>=0.6.0,<0.7.0",
@@ -116,7 +116,7 @@ maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
 requires-python = ">=3.10,<4.0"
-version = "2.12.11"
+version = "2.12.12"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
