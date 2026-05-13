@@ -116,7 +116,7 @@ maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
 requires-python = ">=3.10,<4.0"
-version = "2.12.11"
+version = "2.12.5a3"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
