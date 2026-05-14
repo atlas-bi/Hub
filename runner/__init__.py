@@ -35,9 +35,9 @@ Database model should be cloned from `web` before running app.
 
 """
 
-from importlib import import_module
 import logging
 import os
+from importlib import import_module
 
 from flask import Flask
 

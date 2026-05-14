@@ -42,9 +42,9 @@ Database model should be cloned from `web` before running app.
 """
 
 import contextlib
-from importlib import import_module
 import logging
 import os
+from importlib import import_module
 
 from apscheduler.schedulers import SchedulerAlreadyRunningError
 from flask import Flask, jsonify, make_response

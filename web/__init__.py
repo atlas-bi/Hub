@@ -1,11 +1,9 @@
 """Web Startup."""
 
-from importlib import import_module
 import os
 import sys
+from importlib import import_module
 from pathlib import Path
-
-from flask import Flask, render_template  # isort:skip
 
 from web.extensions import (
     cache,
@@ -20,6 +18,8 @@ from web.extensions import (
     sess,
     web_assets,
 )
+
+from flask import Flask, render_template  # isort:skip
 
 sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
 sys.path.append(str(Path(__file__).parents[2]))

@@ -1,7 +1,7 @@
 """EM Web Custom CLI."""
 
-from importlib import import_module
 import sys
+from importlib import import_module
 from pathlib import Path
 
 from flask import Blueprint
