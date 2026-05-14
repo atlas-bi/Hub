@@ -55,8 +55,7 @@ def schedule() -> Response:
         if (
             job.id in ["job_sync", "job_clean_orphans", "temp_clean"]
             or not hasattr(job, "next_run_time")
-            or job.next_run_time is None
-            and job.args
+            or (job.next_run_time is None and job.args)
         ):
             continue
 

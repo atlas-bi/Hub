@@ -1,6 +1,7 @@
 """EM Web Custom CLI."""
 
 import sys
+from importlib import import_module
 from pathlib import Path
 
 from flask import Blueprint
@@ -19,31 +20,6 @@ cli_bp = Blueprint("cli", __name__)
 def create_db() -> None:
     """Add command to create the test database."""
     if app.config["ENV"] in ["test", "development"]:
-        # pylint: disable=W0611
-        from web.model import (  # noqa: F401
-            Connection,
-            ConnectionDatabase,
-            ConnectionDatabaseType,
-            ConnectionFtp,
-            ConnectionGpg,
-            ConnectionSftp,
-            ConnectionSmb,
-            ConnectionSsh,
-            Login,
-            LoginType,
-            Project,
-            QuoteLevel,
-            Task,
-            TaskDestinationFileType,
-            TaskFile,
-            TaskLog,
-            TaskProcessingType,
-            TaskSourceQueryType,
-            TaskSourceType,
-            TaskStatus,
-            User,
-        )
-
         db.drop_all()
         db.session.commit()
 
@@ -70,15 +46,15 @@ def db_seed() -> None:
     poetry run flask --app=web cli seed
     """
     sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
-    from database import seed
+    database_module = import_module("database")
 
-    seed(db.session, model)
+    database_module.seed(db.session, model)
 
 
 @cli_bp.cli.command("seed_demo")
 @with_appcontext
 def db_seed_demo() -> None:
     """Add command to seed the database for a demo."""
-    from .seed import seed_demo
+    seed_demo = import_module("web.seed").seed_demo
 
     seed_demo()

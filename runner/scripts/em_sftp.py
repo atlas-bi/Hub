@@ -203,7 +203,7 @@ class Sftp:
                 else:
                     data_file.write(data)
 
-            original_name = str(self.dir.joinpath(file_name.split("/")[-1]))
+            original_name = str(self.dir.joinpath(file_name.rsplit("/", 1)[-1]))
             if os.path.islink(original_name):
                 os.unlink(original_name)
             elif os.path.isfile(original_name):
@@ -241,7 +241,7 @@ class Sftp:
                 RunnerLog(self.task, self.run_id, 9, "Searching for matching files...")
 
                 # get the path up to the *
-                base_dir = str(Path(file_name.split("*")[0]).parent)
+                base_dir = str(Path(file_name.split("*", 1)[0]).parent)
 
                 file_list = []
                 for _, _, walk_file_list in self._walk(base_dir):
