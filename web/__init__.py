@@ -1,7 +1,11 @@
 """Web Startup."""
 
+from importlib import import_module
+import os
 import sys
 from pathlib import Path
+
+from flask import Flask, render_template  # isort:skip
 
 from web.extensions import (
     cache,
@@ -17,12 +21,61 @@ from web.extensions import (
     web_assets,
 )
 
-from flask import Flask, render_template  # isort:skip
-
 sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
 sys.path.append(str(Path(__file__).parents[2]))
 from error_print import full_stack  # isort:skip
-import os
+
+
+def _load_config(env: str) -> object:
+    config_name = {
+        "development": "DevConfig",
+        "demo": "DemoConfig",
+        "test": "TestConfig",
+    }.get(env, "Config")
+
+    for module_name in ("config_cust", "config"):
+        try:
+            module = import_module(module_name)
+            return getattr(module, config_name)()
+        except (AttributeError, ImportError):
+            continue
+
+    raise ImportError(f"Unable to load configuration for env {env!r}.")
+
+
+def _register_blueprints(app: Flask) -> object:
+    cli_module = import_module("web.cli")
+    assets_module = import_module("web.web.assets")
+    admin_module = import_module("web.web.admin")
+    auth_module = import_module("web.web.auth")
+    connection_module = import_module("web.web.connection")
+    dashboard_module = import_module("web.web.dashboard")
+    executors_module = import_module("web.web.executors")
+    filters_module = import_module("web.web.filters")
+    project_module = import_module("web.web.project")
+    saml_auth_module = import_module("web.web.saml_auth")
+    table_module = import_module("web.web.table")
+    task_module = import_module("web.web.task")
+    task_controls_module = import_module("web.web.task_controls")
+    task_edit_module = import_module("web.web.task_edit")
+    task_files_module = import_module("web.web.task_files")
+
+    app.register_blueprint(saml_auth_module.login_bp)
+    app.register_blueprint(admin_module.admin_bp)
+    app.register_blueprint(auth_module.auth_bp)
+    app.register_blueprint(connection_module.connection_bp)
+    app.register_blueprint(project_module.project_bp)
+    app.register_blueprint(task_module.task_bp)
+    app.register_blueprint(task_controls_module.task_controls_bp)
+    app.register_blueprint(task_edit_module.task_edit_bp)
+    app.register_blueprint(task_files_module.task_files_bp)
+    app.register_blueprint(dashboard_module.dashboard_bp)
+    app.register_blueprint(table_module.table_bp)
+    app.register_blueprint(executors_module.executors_bp)
+    app.register_blueprint(filters_module.filters_bp)
+    app.register_blueprint(cli_module.cli_bp)
+
+    return assets_module
 
 
 def create_app() -> Flask:
@@ -31,52 +84,15 @@ def create_app() -> Flask:
     app = Flask(__name__)
 
     app.config["ENV"] = os.environ.get("FLASK_ENV", "production")
+    app.config.from_object(_load_config(app.config["ENV"]))
 
-    if app.config["ENV"] == "development":
-        try:
-            from config_cust import DevConfig as DevConfigCust
-
-            app.config.from_object(DevConfigCust())
-        except ImportError:
-            from config import DevConfig
-
-            app.config.from_object(DevConfig())
-
-    elif app.config["ENV"] == "demo":
-        try:
-            from config_cust import DemoConfig as DemoConfigCust
-
-            app.config.from_object(DemoConfigCust())
-        except ImportError:
-            from config import DemoConfig
-
-            app.config.from_object(DemoConfig())
-
-        from whitenoise import WhiteNoise
-
-        app.wsgi_app = WhiteNoise(app.wsgi_app, root="web/static/", prefix="static/")  # type: ignore[assignment]
-
-    elif app.config["ENV"] == "test":
-        try:
-            from config_cust import (
-                TestConfig as TestConfigCust,  # type: ignore[attr-defined]
-            )
-
-            app.config.from_object(TestConfigCust())
-        except ImportError:
-            from config import TestConfig
-
-            app.config.from_object(TestConfig())
-
-    else:
-        try:
-            from config_cust import Config as ConfigCust
-
-            app.config.from_object(ConfigCust())
-        except ImportError:
-            from config import Config
-
-            app.config.from_object(Config())
+    if app.config["ENV"] == "demo":
+        white_noise = import_module("whitenoise")
+        app.wsgi_app = white_noise.WhiteNoise(  # type: ignore[assignment]
+            app.wsgi_app,
+            root="web/static/",
+            prefix="static/",
+        )
 
     web_assets.init_app(app)
     compress.init_app(app)
@@ -107,44 +123,11 @@ def create_app() -> Flask:
     htmlmin.init_app(app)
 
     with app.app_context():
-        # pylint: disable=W0611
-        from web import cli
-        from web.web import assets  # noqa: F401
-        from web.web import (
-            admin,
-            auth,
-            connection,
-            dashboard,
-            executors,
-            filters,
-            project,
-            saml_auth,
-            table,
-            task,
-            task_controls,
-            task_edit,
-            task_files,
-        )
-
-        app.register_blueprint(saml_auth.login_bp)
-        app.register_blueprint(admin.admin_bp)
-        app.register_blueprint(auth.auth_bp)
-        app.register_blueprint(connection.connection_bp)
-        app.register_blueprint(project.project_bp)
-        app.register_blueprint(task.task_bp)
-        app.register_blueprint(task_controls.task_controls_bp)
-        app.register_blueprint(task_edit.task_edit_bp)
-        app.register_blueprint(task_files.task_files_bp)
-        app.register_blueprint(dashboard.dashboard_bp)
-        app.register_blueprint(table.table_bp)
-        app.register_blueprint(executors.executors_bp)
-        app.register_blueprint(filters.filters_bp)
-        app.register_blueprint(cli.cli_bp)
+        assets = _register_blueprints(app)
 
         if app.config["DEBUG"]:
-            from flask_debugtoolbar import DebugToolbarExtension
-
-            toolbar = DebugToolbarExtension()
+            toolbar_module = import_module("flask_debugtoolbar")
+            toolbar = toolbar_module.DebugToolbarExtension()
             toolbar.init_app(app)
             assets.cache = False  # type: ignore[attr-defined]
             assets.manifest = False  # type: ignore[attr-defined]

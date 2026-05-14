@@ -202,7 +202,7 @@ def database_pass(my_string: str) -> str:
         elif "password" in my_string:
             my_pass = my_string.split("password=")[1]
         else:
-            my_pass = my_string.split("@")[0].split(":")[1]
+            my_pass = my_string.split("@", 1)[0].split(":", 1)[1]
 
         return my_string.replace(
             my_pass,

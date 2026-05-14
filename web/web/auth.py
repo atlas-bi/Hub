@@ -151,7 +151,7 @@ def login() -> Union[str, Response]:
         saml = SAML(app)
         saml_client = saml.saml_client_for()
         # pylint: disable=W0612
-        reqid, info = saml_client.prepare_for_authenticate()
+        _reqid, info = saml_client.prepare_for_authenticate()
 
         redirect_url = ""
         # Select the IdP URL to send the AuthN request to
