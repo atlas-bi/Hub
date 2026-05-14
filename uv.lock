@@ -44,7 +44,7 @@ wheels = [
 
 [[package]]
 name = "atlas-hub"
-version = "2.12.14"
+version = "2.12.15"
 source = { editable = "." }
 dependencies = [
     { name = "azure-devops" },
@@ -201,7 +201,7 @@ dev = [
     { name = "tox-uv", specifier = ">=1.0.0,<2.0.0" },
     { name = "types-flask", specifier = ">=1.1.6,<2.0.0" },
     { name = "types-jinja2", specifier = ">=2.11.9,<3.0.0" },
-    { name = "types-paramiko", specifier = ">=3.5.0.20250801,<3.6.0" },
+    { name = "types-paramiko", specifier = ">=4.0.0.20260508,<4.1.0" },
     { name = "types-python-dateutil", specifier = ">=2.8.19.4,<3.0.0" },
     { name = "types-redis", specifier = ">=4.3.21.6,<5.0.0" },
     { name = "types-requests", specifier = ">=2.28.11.5,<3.0.0" },
@@ -2943,14 +2943,14 @@ wheels = [
 
 [[package]]
 name = "types-paramiko"
-version = "3.5.0.20250801"
+version = "4.0.0.20260508"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d5/c4/4df427c835e9c795662241410732ab936c6f58be798ec25ce7015771c448/types_paramiko-3.5.0.20250801.tar.gz", hash = "sha256:e79ff84eaf44f2a5ad811743edef5d9c0cd6632a264a526f00405b87db1ec99b", size = 28838, upload-time = "2025-08-01T03:48:52.777Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/05/e4/4ab4df17433a3c576ee3f0c11b74038b5ac19b618cae4eda0a461510e8f6/types_paramiko-4.0.0.20260508.tar.gz", hash = "sha256:3a00f0847fc4097ec99cfa53dca566169a50baefc93e2cace624642edec32bc1", size = 29167, upload-time = "2026-05-08T04:51:11.562Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bd/5b/0f0bb1e45f7547d081ae9d490a88c6f6031d0f2c97459236e0a2a8b27207/types_paramiko-3.5.0.20250801-py3-none-any.whl", hash = "sha256:3e02a0fcf2b7e7b213e0cd569f7223ff9af417052a4d149d84172ebaa6fd742e", size = 39705, upload-time = "2025-08-01T03:48:51.855Z" },
+    { url = "https://files.pythonhosted.org/packages/ba/7d/f3661f4b69ca8b104e871151b419ee8495945895a9a6bc8bbff40c142b25/types_paramiko-4.0.0.20260508-py3-none-any.whl", hash = "sha256:a4389857b497b8eef8159cbf21dbd76c471c8d388acb2bca376c5ff023daa306", size = 38784, upload-time = "2026-05-08T04:51:10.357Z" },
 ]
 
 [[package]]
