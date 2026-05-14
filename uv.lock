@@ -201,7 +201,7 @@ dev = [
     { name = "tox-uv", specifier = ">=1.0.0,<2.0.0" },
     { name = "types-flask", specifier = ">=1.1.6,<2.0.0" },
     { name = "types-jinja2", specifier = ">=2.11.9,<3.0.0" },
-    { name = "types-paramiko", specifier = ">=2.12.0.1,<3.0.0" },
+    { name = "types-paramiko", specifier = ">=3.5.0.20250801,<3.6.0" },
     { name = "types-python-dateutil", specifier = ">=2.8.19.4,<3.0.0" },
     { name = "types-redis", specifier = ">=4.3.21.6,<5.0.0" },
     { name = "types-requests", specifier = ">=2.28.11.5,<3.0.0" },
@@ -2942,14 +2942,14 @@ wheels = [
 
 [[package]]
 name = "types-paramiko"
-version = "2.12.0.3"
+version = "3.5.0.20250801"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b3/00/f6ae97307498562fecc2cc4d033f8845a3d10596db0f7dde9e6655813d3e/types-paramiko-2.12.0.3.tar.gz", hash = "sha256:3a79232382bcc7ed140f53d865feaec35188fd2ee105efdbf325200736e01aa2", size = 21127, upload-time = "2023-01-18T09:18:58.114Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d5/c4/4df427c835e9c795662241410732ab936c6f58be798ec25ce7015771c448/types_paramiko-3.5.0.20250801.tar.gz", hash = "sha256:e79ff84eaf44f2a5ad811743edef5d9c0cd6632a264a526f00405b87db1ec99b", size = 28838, upload-time = "2025-08-01T03:48:52.777Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c7/f4/e90ce2857a004c1942f2935b2c807147c8cd74ec9e6c9eb9252c75115b83/types_paramiko-2.12.0.3-py3-none-any.whl", hash = "sha256:a8b224e8a93cc0ffb60f67516890e49977ea0d3f5811c605238e71d9c49a152d", size = 32187, upload-time = "2023-01-18T09:18:56.506Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/5b/0f0bb1e45f7547d081ae9d490a88c6f6031d0f2c97459236e0a2a8b27207/types_paramiko-3.5.0.20250801-py3-none-any.whl", hash = "sha256:3e02a0fcf2b7e7b213e0cd569f7223ff9af417052a4d149d84172ebaa6fd742e", size = 39705, upload-time = "2025-08-01T03:48:51.855Z" },
 ]
 
 [[package]]
