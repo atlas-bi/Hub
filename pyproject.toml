@@ -62,7 +62,7 @@ dependencies = [
   "Flask-Script>=2.0.6,<3.0.0",
   "Jinja2>=3.0.1,<4.0.0",
   "SQLAlchemy>=2.0.20,<3.0.0",
-  "SQLAlchemy-Utils>=0.41.0,<0.42.0",
+  "SQLAlchemy-Utils>=0.42.1,<0.43.0",
   "azure-devops>=7.1.0b3,<8.0.0",
   "bs4>=0.0.2,<0.0.3",
   "cffi>=2.0.0,<3.0.0",
@@ -116,7 +116,7 @@ maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
 requires-python = ">=3.10,<4.0"
-version = "2.12.14"
+version = "2.12.15"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
