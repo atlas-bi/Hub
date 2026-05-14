@@ -81,5 +81,5 @@
     "test:lint": "uv run tox -e lint",
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\""
   },
-  "version": "2.12.5-alpha.3"
+  "version": "2.12.5"
 }
