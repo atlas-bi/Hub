@@ -52,7 +52,7 @@
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
   "name": "atlas_automation_hub",
-  "packageManager": "pnpm@10.33.4",
+  "packageManager": "pnpm@11.1.1",
   "private": true,
   "repository": {
     "type": "git",
@@ -81,5 +81,5 @@
     "test:lint": "uv run tox -e lint",
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\""
   },
-  "version": "2.12.9"
+  "version": "2.12.10"
 }
