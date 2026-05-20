@@ -25,10 +25,11 @@ admin_bp = Blueprint("admin_bp", __name__)
 
 
 def get_installed_version(pyproject_path: Path | None = None) -> str:
-    """Read the app version from pyproject.toml.
+    """
+    Read the app version from pyproject.toml.
 
-    Supports the current PEP 621 `[project].version` layout and the older
-    Poetry layout as a fallback.
+    Supports the current PEP 621 `[project].version` layout and the older Poetry
+    layout as a fallback.
     """
     config = tomllib.loads(
         (pyproject_path or Path.cwd() / "pyproject.toml").read_text(encoding="utf8")
