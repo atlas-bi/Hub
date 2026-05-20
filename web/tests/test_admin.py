@@ -15,9 +15,9 @@ run with::
 from flask import url_for
 from pytest import fixture
 
-from web.web import admin as admin_module
 from web.extensions import db
 from web.model import Task
+from web.web import admin as admin_module
 
 from .conftest import check_url, create_demo_task
 
