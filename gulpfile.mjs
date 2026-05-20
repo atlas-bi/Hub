@@ -4,6 +4,8 @@ import * as dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 const sass = gulpSass(dartSass);
 
+process.env.BROWSERSLIST_IGNORE_OLD_DATA = 'true';
+
 import replace from 'gulp-replace';
 import fontawesomeSubset from 'fontawesome-subset';
 import {deleteSync} from 'del';
@@ -31,7 +33,12 @@ gulp.task('fontawesome', function(done) {
 
 gulp.task('sass', function() {
   return gulp.src("web/static/assets/**/*.scss")
-    .pipe(sass().on('error', sass.logError))
+    .pipe(
+      sass({
+        quietDeps: true,
+        silenceDeprecations: ['legacy-js-api', 'import']
+      }).on('error', sass.logError)
+    )
     .pipe(
       purgecss({
         content: ['web/static/lib/**/*.js', 'web/static/js/**/*.js', 'web/templates/**/*.html.j2', 'runner/templates/**/*.html.j2', 'scheduler/templates/**/*.html.j2'],

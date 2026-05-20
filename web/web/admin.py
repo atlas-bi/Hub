@@ -24,13 +24,28 @@ from web.web import submit_executor
 admin_bp = Blueprint("admin_bp", __name__)
 
 
+def get_installed_version(pyproject_path: Path | None = None) -> str:
+    """Read the app version from pyproject.toml.
+
+    Supports the current PEP 621 `[project].version` layout and the older
+    Poetry layout as a fallback.
+    """
+    config = tomllib.loads(
+        (pyproject_path or Path.cwd() / "pyproject.toml").read_text(encoding="utf8")
+    )
+
+    project_version = config.get("project", {}).get("version")
+    if project_version:
+        return project_version
+
+    return config["tool"]["poetry"]["version"]
+
+
 @admin_bp.route("/admin/version")
 @login_required
 def version() -> str:
     """Check installed version."""
-    installed_version = tomllib.loads(
-        Path(Path.cwd() / "pyproject.toml").read_text(encoding="utf8")
-    )["tool"]["poetry"]["version"]
+    installed_version = get_installed_version()
     upgrade_version = None
     try:
         response = requests.get(
