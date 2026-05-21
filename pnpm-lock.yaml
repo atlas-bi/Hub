@@ -49,7 +49,7 @@ importers:
         version: 7.1.0
       fontawesome-subset:
         specifier: 4.4.0
-        version: 4.4.0(@fortawesome/fontawesome-free@7.2.0)
+        version: 4.4.0(@fortawesome/fontawesome-free@6.5.1)
       gulp:
         specifier: 4.0.2
         version: 4.0.2
@@ -76,8 +76,8 @@ importers:
         version: 3.17.4
     devDependencies:
       '@fortawesome/fontawesome-free':
-        specifier: 7.2.0
-        version: 7.2.0
+        specifier: 6.5.1
+        version: 6.5.1
       '@semantic-release/changelog':
         specifier: 6.0.3
         version: 6.0.3(semantic-release@23.0.0(typescript@4.7.4))
@@ -825,8 +825,8 @@ packages:
   '@fontsource/rasa@5.0.18':
     resolution: {integrity: sha512-hYKxVZGbGQRv5k+8vZd/BN2+gFRu2a4ebCDqIxkB0ubbPKQ1BmakQYcmz59ju+AUD8+Q649gi4wzQFp4iJczYw==}
 
-  '@fortawesome/fontawesome-free@7.2.0':
-    resolution: {integrity: sha512-3DguDv/oUE+7vjMeTSOjCSG+KeawgVQOHrKRnvUuqYh1mfArrh7s+s8hXW3e4RerBA1+Wh+hBqf8sJNpqNrBWg==}
+  '@fortawesome/fontawesome-free@6.5.1':
+    resolution: {integrity: sha512-CNy5vSwN3fsUStPRLX7fUYojyuzoEMSXPl7zSLJ8TgtRfjv24LOnOWKT2zYwaHZCJGkdyRnTmstR0P+Ah503Gw==}
     engines: {node: '>=6'}
 
   '@hotwired/turbo@8.0.23':
@@ -1072,26 +1072,31 @@ packages:
     resolution: {integrity: sha512-Z3O60yxPtuCYobrtzjo0wlmvDdx2qZfeAWTyfOjEDqd08kthDKexLpV97KfAeUXPosENKd8uyJMRDfFMxcYkDQ==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.9.6':
     resolution: {integrity: sha512-gpiG0qQJNdYEVad+1iAsGAbgAnZ8j07FapmnIAQgODKcOTjLEWM9sRb+MbQyVsYCnA0Im6M6QIq6ax7liws6eQ==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-riscv64-gnu@4.9.6':
     resolution: {integrity: sha512-+uCOcvVmFUYvVDr27aiyun9WgZk0tXe7ThuzoUTAukZJOwS5MrGbmSlNOhx1j80GdpqbOty05XqSl5w4dQvcOA==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.9.6':
     resolution: {integrity: sha512-HUNqM32dGzfBKuaDUBqFB7tP6VMN74eLZ33Q9Y1TBqRDn+qDonkAUyKWwF9BR9unV7QUzffLnz9GrnKvMqC/fw==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.9.6':
     resolution: {integrity: sha512-ch7M+9Tr5R4FK40FHQk8VnML0Szi2KRujUgHXd/HjuH9ifH72GUmw6lStZBo3c3GB82vHa0ZoUfjfcM7JiiMrQ==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-win32-arm64-msvc@4.9.6':
     resolution: {integrity: sha512-VD6qnR99dhmTQ1mJhIzXsRcTBvTjbfbGGwKAHcu+52cVl15AC/kplkhxzW/uT0Xl62Y/meBKDZvoJSJN+vTeGA==}
@@ -5897,7 +5902,7 @@ snapshots:
 
   '@fontsource/rasa@5.0.18': {}
 
-  '@fortawesome/fontawesome-free@7.2.0': {}
+  '@fortawesome/fontawesome-free@6.5.1': {}
 
   '@hotwired/turbo@8.0.23': {}
 
@@ -7798,14 +7803,14 @@ snapshots:
 
   follow-redirects@1.15.2: {}
 
-  fontawesome-subset@4.4.0(@fortawesome/fontawesome-free@7.2.0):
+  fontawesome-subset@4.4.0(@fortawesome/fontawesome-free@6.5.1):
     dependencies:
       lodash: 4.17.21
       mkdirp: 2.1.6
       subset-font: 2.1.0
       yaml: 2.2.1
     optionalDependencies:
-      '@fortawesome/fontawesome-free': 7.2.0
+      '@fortawesome/fontawesome-free': 6.5.1
 
   fontverter@2.0.0:
     dependencies:
