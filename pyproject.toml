@@ -8,7 +8,7 @@ dev = [
   "coverage>=7.0.0,<8.0.0",
   "djlint>=1.19.17,<2.0.0",
   "flask-debugtoolbar>=0.16.0,<0.17.0",
-  "isort>=7.0.0,<7.1.0",
+  "isort>=8.0.1,<8.1.0",
   "mypy==0.991",
   "pre-commit>=3.0.0,<4.0.0",
   "pytest>=9.0.3,<9.1.0",
@@ -116,7 +116,7 @@ maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
 requires-python = ">=3.10,<4.0"
-version = "2.12.14"
+version = "2.12.15"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
