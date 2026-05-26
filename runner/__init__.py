@@ -37,6 +37,7 @@ Database model should be cloned from `web` before running app.
 
 import logging
 import os
+from importlib import import_module
 
 from flask import Flask
 
@@ -45,53 +46,37 @@ from runner.extensions import db, executor, redis_client
 logging.basicConfig(level=logging.WARNING)
 
 
+def _load_config(env: str) -> object:
+    config_name = {
+        "development": "DevConfig",
+        "demo": "DemoConfig",
+        "test": "TestConfig",
+    }.get(env, "Config")
+
+    for module_name in ("config_cust", "config"):
+        try:
+            module = import_module(module_name)
+            return getattr(module, config_name)()
+        except (AttributeError, ImportError):
+            continue
+
+    raise ImportError(f"Unable to load configuration for env {env!r}.")
+
+
+def _register_blueprints(app: Flask) -> None:
+    filters_module = import_module("runner.web.filters")
+    web_module = import_module("runner.web.web")
+
+    app.register_blueprint(web_module.web_bp)
+    app.register_blueprint(filters_module.filters_bp)
+
+
 def create_app() -> Flask:
     """Create task runner app."""
     # pylint: disable=W0621
     app = Flask(__name__)
     app.config["ENV"] = os.environ.get("FLASK_ENV", "production")
-
-    if app.config["ENV"] == "development":
-        try:
-            from config_cust import DevConfig as DevConfigCust
-
-            app.config.from_object(DevConfigCust())
-        except ImportError:
-            from config import DevConfig
-
-            app.config.from_object(DevConfig())
-
-    elif app.config["ENV"] == "demo":
-        try:
-            from config_cust import DemoConfig as DemoConfigCust
-
-            app.config.from_object(DemoConfigCust())
-        except ImportError:
-            from config import DemoConfig
-
-            app.config.from_object(DemoConfig())
-
-    elif app.config["ENV"] == "test":
-        try:
-            from config_cust import (
-                TestConfig as TestConfigCust,  # type: ignore[attr-defined]
-            )
-
-            app.config.from_object(TestConfigCust())
-        except ImportError:
-            from config import TestConfig
-
-            app.config.from_object(TestConfig())
-
-    else:
-        try:
-            from config_cust import Config as ConfigCust
-
-            app.config.from_object(ConfigCust())
-        except ImportError:
-            from config import Config
-
-            app.config.from_object(Config())
+    app.config.from_object(_load_config(app.config["ENV"]))
 
     db.init_app(app)
 
@@ -100,12 +85,7 @@ def create_app() -> Flask:
     redis_client.init_app(app)
 
     with app.app_context():
-        # pylint: disable=C0415
-
-        from runner.web import filters, web
-
-        app.register_blueprint(web.web_bp)
-        app.register_blueprint(filters.filters_bp)
+        _register_blueprints(app)
 
         return app
 
