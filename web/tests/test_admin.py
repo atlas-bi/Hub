@@ -17,6 +17,7 @@ from pytest import fixture
 
 from web.extensions import db
 from web.model import Task
+from web.web import admin as admin_module
 
 from .conftest import check_url, create_demo_task
 
@@ -29,6 +30,13 @@ def test_online(client_fixture: fixture) -> None:
     # test with message
     page = check_url(client_fixture, "/admin?message=nice message", True)
     assert "nice message" in page
+
+
+def test_get_installed_version_reads_project_version(tmp_path) -> None:
+    pyproject = tmp_path / "pyproject.toml"
+    pyproject.write_text('[project]\nversion = "9.9.9"\n', encoding="utf8")
+
+    assert admin_module.get_installed_version(pyproject) == "9.9.9"
 
 
 def test_pause(client_fixture: fixture) -> None:
