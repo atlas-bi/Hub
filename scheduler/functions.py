@@ -53,6 +53,7 @@ def scheduler_task_runner(task_id: int) -> None:
     :param task_id: id of task to run
     """
     try:
+        task_id = int(task_id)
         with atlas_scheduler.app.app_context():
             # mark the task status as error in the
             # unlikely event that the runner is not
@@ -67,7 +68,8 @@ def scheduler_task_runner(task_id: int) -> None:
             db.session.commit()
 
             response = get(
-                atlas_scheduler.app.config["RUNNER_HOST"] + "/" + str(task_id),
+                f"{atlas_scheduler.app.config['RUNNER_HOST']}/run",
+                params={"task_id": task_id},
                 timeout=60,
             )
             _raise_for_runner_error(response)

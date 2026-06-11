@@ -256,7 +256,12 @@ def test_scheduler_task_runner_logs_runner_error_response(
         def json(self):  # noqa: ANN201
             return {"error": "Runner failed to queue task."}
 
-    monkeypatch.setattr("scheduler.functions.get", lambda *args, **kwargs: FakeResponse())
+    def fake_get(url, **kwargs):  # noqa: ANN001, ANN202
+        assert url.endswith("/run")
+        assert kwargs["params"] == {"task_id": t_id}
+        return FakeResponse()
+
+    monkeypatch.setattr("scheduler.functions.get", fake_get)
 
     with pytest.raises(RuntimeError, match="Runner returned HTTP 500"):
         scheduler_task_runner(t_id)
