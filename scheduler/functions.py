@@ -6,7 +6,25 @@ import time
 from requests import get
 
 from scheduler.extensions import atlas_scheduler, db
-from scheduler.model import Task
+from scheduler.model import Task, TaskLog
+
+
+def _raise_for_runner_error(response: object) -> None:
+    """Raise when the runner API reports that it did not queue the task."""
+    status_code = getattr(response, "status_code", None)
+    text = getattr(response, "text", "")
+    ok = getattr(response, "ok", True)
+
+    if not ok:
+        raise RuntimeError(f"Runner returned HTTP {status_code}: {text}")
+
+    try:
+        body = response.json()
+    except ValueError:
+        body = {}
+
+    if isinstance(body, dict) and body.get("error"):
+        raise RuntimeError(f"Runner returned error: {body['error']}")
 
 
 def scheduler_delete_task(task_id: int) -> bool:
@@ -48,11 +66,28 @@ def scheduler_task_runner(task_id: int) -> None:
             task.status_id = 2
             db.session.commit()
 
-            get(atlas_scheduler.app.config["RUNNER_HOST"] + "/" + task_id, timeout=60)
+            response = get(
+                atlas_scheduler.app.config["RUNNER_HOST"] + "/" + str(task_id),
+                timeout=60,
+            )
+            _raise_for_runner_error(response)
     # pylint: disable=broad-except
     except BaseException as e:
-        print("failed to run job.")  # noqa: T201
+        print(f"failed to run job {task_id}.")  # noqa: T201
         print(str(e))  # noqa: T201
+        with atlas_scheduler.app.app_context():
+            task = Task.query.filter_by(id=task_id).first()
+            if task:
+                task.status_id = 2
+                log = TaskLog(
+                    task_id=task_id,
+                    job_id=task.last_run_job_id or "",
+                    status_id=6,
+                    error=1,
+                    message=f"Failed to send task to runner.\n{e}",
+                )
+                db.session.add(log)
+                db.session.commit()
         raise e
 
 

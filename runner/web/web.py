@@ -1,6 +1,7 @@
 """Runner API routes."""
 
 import datetime
+import logging
 import re
 import sys
 from pathlib import Path
@@ -12,7 +13,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
 from werkzeug.wrappers import Response
 
-from runner import executor
+from runner import db, executor
 from runner.model import (
     ConnectionDatabase,
     ConnectionFtp,
@@ -21,6 +22,7 @@ from runner.model import (
     ConnectionSsh,
     Task,
     TaskFile,
+    TaskLog,
 )
 from runner.scripts.em_code import SourceCode
 from runner.scripts.em_date import DateParsing
@@ -47,6 +49,19 @@ env = Environment(
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
+
+
+def _log_runner_future_exception(task_id: int, future: object) -> None:
+    """Log uncaught runner exceptions with the task id."""
+    try:
+        exception = future.exception()
+    # pylint: disable=broad-except
+    except BaseException:
+        logging.exception("Runner future failed while checking task %s.", task_id)
+        return
+
+    if exception:
+        logging.exception("Runner task %s failed after queueing.", task_id, exc_info=exception)
 
 
 @web_bp.route("/api")
@@ -250,10 +265,37 @@ def send_email(run_id: int, file_id: int) -> dict:
 @web_bp.route("/api/<task_id>")
 def run(task_id: int) -> Response:
     """Run specified task."""
-    if not Task.query.filter_by(id=task_id).first():
+    task = Task.query.filter_by(id=task_id).first()
+    if not task:
         return jsonify({"error": f"Task {task_id} not found."})
 
-    executor.submit(Runner, task_id)
+    logging.warning("Runner received run request from scheduler for task %s.", task_id)
+    log = TaskLog(
+        task_id=task.id,
+        status_id=8,
+        message="Runner received run request from scheduler.",
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    try:
+        future = executor.submit(Runner, task_id)
+        future.add_done_callback(
+            lambda submitted: _log_runner_future_exception(task_id, submitted)
+        )
+    # pylint: disable=broad-except
+    except BaseException as e:
+        task.status_id = 2
+        log = TaskLog(
+            task_id=task.id,
+            status_id=8,
+            error=1,
+            message=f"Runner failed to queue task.\n{e}",
+        )
+        db.session.add(log)
+        db.session.commit()
+        logging.exception("Runner failed to queue task %s.", task_id)
+        return jsonify({"error": "Runner failed to queue task."}), 500
 
     return jsonify({"message": "runner completed."})
 
