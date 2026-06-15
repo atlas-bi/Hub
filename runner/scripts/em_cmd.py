@@ -26,7 +26,7 @@ class Cmd:
     ) -> None:
         """Set system path and variables."""
         self.task = task
-        self.cmd = cmd
+        self.command = cmd
         self.env = os.environ.copy()
         self.env["PATH"] = (
             "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
@@ -46,7 +46,7 @@ class Cmd:
     def shell(self) -> str:
         """Run input command as a shell command."""
         try:
-            cmd_arg = self._build_cmd(self.cmd)
+            cmd_arg = self._build_cmd(self.command)
             out_bytes = subprocess.check_output(
                 cmd_arg,
                 stderr=subprocess.STDOUT,
@@ -123,7 +123,7 @@ class Cmd:
     def run(self) -> str:
         """Run input command as a subprocess command."""
         try:
-            cmd_arg = self._build_cmd(self.cmd)
+            cmd_arg = self._build_cmd(self.command)
             result = subprocess.run(
                 cmd_arg,
                 shell=False,  # noqa: S603  # nosec B603

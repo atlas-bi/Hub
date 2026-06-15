@@ -16,7 +16,7 @@
     }],
 
     ["@semantic-release/exec", {
-      "prepareCmd" : "echo ${nextRelease.version} > .version; poetry version ${nextRelease.version}"
+      "prepareCmd" : "echo ${nextRelease.version} > .version; uv version ${nextRelease.version}"
     }],
     ["@semantic-release/git", {
       "assets": ["package.json", ".version", "pyproject.toml"]

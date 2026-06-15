@@ -1,17 +1,19 @@
 """Runner API routes."""
 
 import datetime
+import logging
 import re
 import sys
 from pathlib import Path
 
 from flask import Blueprint
 from flask import current_app as app
-from flask import jsonify
+from flask import jsonify, request
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
+from werkzeug.wrappers import Response
 
-from runner import executor
+from runner import db, executor
 from runner.model import (
     ConnectionDatabase,
     ConnectionFtp,
@@ -20,6 +22,7 @@ from runner.model import (
     ConnectionSsh,
     Task,
     TaskFile,
+    TaskLog,
 )
 from runner.scripts.em_code import SourceCode
 from runner.scripts.em_date import DateParsing
@@ -46,6 +49,18 @@ env = Environment(
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
+
+
+def _log_runner_future_exception(task_id: int, future: object) -> None:
+    """Log uncaught runner exceptions with the task id."""
+    try:
+        exception = future.exception()
+    except Exception:
+        logging.exception("Runner future failed while checking task %s.", task_id)
+        return
+
+    if exception:
+        logging.exception("Runner task %s failed after queueing.", task_id, exc_info=exception)
 
 
 @web_bp.route("/api")
@@ -246,10 +261,58 @@ def send_email(run_id: int, file_id: int) -> dict:
         return jsonify({"error": str(e)})
 
 
+@web_bp.route("/api/run")
+def run_from_query() -> Response:
+    """Run specified task from query parameters."""
+    task_id = request.args.get("task_id", "")
+    return _run_task(task_id)
+
+
 @web_bp.route("/api/<task_id>")
-def run(task_id: int) -> dict:
+def run(task_id: str) -> Response:
     """Run specified task."""
-    executor.submit(Runner, task_id)
+    return _run_task(task_id)
+
+
+def _run_task(task_id: str) -> Response:
+    """Run specified task."""
+    try:
+        task_id_int = int(task_id)
+    except ValueError:
+        return jsonify({"error": f"Invalid task id {task_id}."})
+
+    task = Task.query.filter_by(id=task_id_int).first()
+    if not task:
+        return jsonify({"error": f"Task {task_id_int} not found."})
+
+    logging.warning("Runner received run request from scheduler for task %s.", task_id_int)
+    log = TaskLog(
+        task_id=task.id,
+        status_id=8,
+        message="Runner received run request from scheduler.",
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    try:
+        future = executor.submit(Runner, task_id_int)
+        future.add_done_callback(
+            lambda submitted: _log_runner_future_exception(task_id_int, submitted)
+        )
+    except Exception as e:
+        task.status_id = 2
+        log = TaskLog(
+            task_id=task.id,
+            status_id=8,
+            error=1,
+            message=f"Runner failed to queue task.\n{e}",
+        )
+        db.session.add(log)
+        db.session.commit()
+        logging.exception("Runner failed to queue task %s.", task_id_int)
+        response = jsonify({"error": "Runner failed to queue task."})
+        response.status_code = 500
+        return response
 
     return jsonify({"message": "runner completed."})
 

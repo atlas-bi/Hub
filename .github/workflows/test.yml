@@ -47,10 +47,10 @@ jobs:
     - name: ⎔ Setup node
       uses: actions/setup-node@v6
       with:
-        node-version: 18
+        node-version: 24
 
     - name: 📦 Setup pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v6
 
     - name: 📥 Download deps
       run: pnpm install --frozen-lockfile
@@ -86,7 +86,7 @@ jobs:
         REDIS_PORT: 6379
 
     - name: 📤 Upload Coverage
-      uses: codecov/codecov-action@v6
+      uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml

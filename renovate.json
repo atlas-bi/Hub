@@ -6,7 +6,6 @@
   "commitMessagePrefix": "chore(deps)",
   "extends": [
     "config:base",
-    "group:allNonMajor",
     ":separateMultipleMajorReleases",
     ":ignoreUnstable",
     ":enableVulnerabilityAlertsWithLabel(security)",
@@ -28,7 +27,6 @@
       "matchUpdateTypes": [
         "pin",
         "digest",
-        "minor",
         "patch"
       ]
     },
@@ -36,6 +34,40 @@
       "automerge": true,
       "matchDepTypes": [
         "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "automerge": false,
+      "groupName": "npm non-major",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "automerge": false,
+      "groupName": "python non-major",
+      "matchManagers": [
+        "pip_requirements",
+        "poetry"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "automerge": true,
+      "groupName": "github actions",
+      "matchManagers": [
+        "github-actions"
       ]
     },
     {

@@ -469,7 +469,7 @@ def table_jobs_orphans() -> Response:
 
     page -= 1
 
-    me = [{"head": '["Action", "Name", "Id", "Next Run Time", "Args"]'}]
+    me = [{"head": '["Name", "Id", "Next Run Time", "Args"]'}]
 
     table = []
 
@@ -480,7 +480,6 @@ def table_jobs_orphans() -> Response:
             if int(job["id"]) not in active_tasks:
                 table.append(
                     {
-                        "Action": "<a  href='/task/" + job["id"] + "/delete'>Delete</a>",
                         "Name": job["name"],
                         "Id": job["id"],
                         "Next Run": job["next_run_time"],
@@ -827,7 +826,7 @@ def project_all_tasks(project_id: int) -> Response:
                     if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                     else (task["Next Run"] if task["Next Run"] else "")
                 ),
-                "Run Rank": (task["Run Rank"] if "Run Rank" in task else None),
+                "Run Rank": task.get("Run Rank"),
             }
         )
 

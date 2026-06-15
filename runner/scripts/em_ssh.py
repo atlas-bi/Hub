@@ -35,19 +35,30 @@ def connection_json(connection: ConnectionSsh) -> Dict:
 
 def connect(connection: ConnectionSsh) -> paramiko.SSHClient:
     """Connect to SSH server."""
-    session = paramiko.SSHClient()
-    session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    session.connect(
-        hostname=str(connection.address),
-        port=(connection.port or 22),
-        username=connection.username,
-        password=em_decrypt(connection.password, app.config["PASS_KEY"]),
-        timeout=5000,
-        allow_agent=False,
-        look_for_keys=False,
-    )
+    last_error = None
 
-    return session
+    for _ in range(3):
+        session = paramiko.SSHClient()
+        session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        try:
+            session.connect(
+                hostname=str(connection.address),
+                port=(connection.port or 22),
+                username=connection.username,
+                password=em_decrypt(connection.password, app.config["PASS_KEY"]),
+                timeout=5,
+                banner_timeout=10,
+                auth_timeout=10,
+                allow_agent=False,
+                look_for_keys=False,
+            )
+            return session
+        except (EOFError, OSError, paramiko.SSHException) as error:
+            session.close()
+            last_error = error
+            time.sleep(1)
+
+    raise ValueError(f"Connection failed.\n{last_error}")
 
 
 class Ssh:

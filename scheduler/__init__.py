@@ -44,6 +44,7 @@ Database model should be cloned from `web` before running app.
 import contextlib
 import logging
 import os
+from importlib import import_module
 
 from apscheduler.schedulers import SchedulerAlreadyRunningError
 from flask import Flask, jsonify, make_response
@@ -52,59 +53,67 @@ from werkzeug import Response
 from scheduler.extensions import atlas_scheduler, db
 
 
+def _load_config(env: str) -> object:
+    config_name = {
+        "development": "DevConfig",
+        "demo": "DemoConfig",
+        "test": "TestConfig",
+    }.get(env, "Config")
+
+    for module_name in ("config_cust", "config"):
+        try:
+            module = import_module(module_name)
+            return getattr(module, config_name)()
+        except (AttributeError, ImportError):
+            continue
+
+    raise ImportError(f"Unable to load configuration for env {env!r}.")
+
+
+def _register_scheduler_components(app: Flask) -> None:
+    apscheduler_events = import_module("apscheduler.events")
+    web_module = import_module("scheduler.web")
+    scheduler_events = import_module("scheduler.events")
+
+    app.register_blueprint(web_module.web_bp)
+
+    atlas_scheduler.add_listener(
+        scheduler_events.job_missed,
+        apscheduler_events.EVENT_JOB_MISSED,
+    )
+    atlas_scheduler.add_listener(
+        scheduler_events.job_error,
+        apscheduler_events.EVENT_JOB_ERROR,
+    )
+    atlas_scheduler.add_listener(
+        scheduler_events.job_executed,
+        apscheduler_events.EVENT_JOB_EXECUTED,
+    )
+    atlas_scheduler.add_listener(
+        scheduler_events.job_added,
+        apscheduler_events.EVENT_JOB_ADDED,
+    )
+    atlas_scheduler.add_listener(
+        scheduler_events.job_removed,
+        apscheduler_events.EVENT_JOB_REMOVED,
+    )
+    atlas_scheduler.add_listener(
+        scheduler_events.job_submitted,
+        apscheduler_events.EVENT_JOB_SUBMITTED,
+    )
+
+
 def create_app() -> Flask:
     """Create task runner app."""
     # pylint: disable=W0621
     app = Flask(__name__)
 
     app.config["ENV"] = os.environ.get("FLASK_ENV", "production")
-
-    if app.config["ENV"] == "development":
-        try:
-            from config_cust import DevConfig as DevConfigCust
-
-            app.config.from_object(DevConfigCust())
-        except ImportError:
-            from config import DevConfig
-
-            app.config.from_object(DevConfig())
-
-    elif app.config["ENV"] == "demo":
-        try:
-            from config_cust import DemoConfig as DemoConfigCust
-
-            app.config.from_object(DemoConfigCust())
-        except ImportError:
-            from config import DemoConfig
-
-            app.config.from_object(DemoConfig())
-
-    elif app.config["ENV"] == "test":
-        try:
-            from config_cust import (
-                TestConfig as TestConfigCust,  # type: ignore[attr-defined]
-            )
-
-            app.config.from_object(TestConfigCust())
-        except ImportError:
-            from config import TestConfig
-
-            app.config.from_object(TestConfig())
-
-    else:
-        try:
-            from config_cust import Config as ConfigCust
-
-            app.config.from_object(ConfigCust())
-        except ImportError:
-            from config import Config
-
-            app.config.from_object(Config())
+    app.config.from_object(_load_config(app.config["ENV"]))
 
     db.init_app(app)
 
-    # pylint: disable=W0611
-    from scheduler import maintenance  # noqa: F401
+    import_module("scheduler.maintenance")
 
     with contextlib.suppress(SchedulerAlreadyRunningError):
         # pytest imports twice, this will catch on the second import.
@@ -119,39 +128,12 @@ def create_app() -> Flask:
             # second import.
             atlas_scheduler.start()
 
-        # pylint: disable=C0415
-        from apscheduler.events import (
-            EVENT_JOB_ADDED,
-            EVENT_JOB_ERROR,
-            EVENT_JOB_EXECUTED,
-            EVENT_JOB_MISSED,
-            EVENT_JOB_REMOVED,
-            EVENT_JOB_SUBMITTED,
-        )
-
-        from scheduler import web
-        from scheduler.events import (
-            job_added,
-            job_error,
-            job_executed,
-            job_missed,
-            job_removed,
-            job_submitted,
-        )
-
-        app.register_blueprint(web.web_bp)
+        _register_scheduler_components(app)
 
         if app.config["ENV"] == "test":
             logging.getLogger("apscheduler").setLevel(logging.INFO)
         else:
             logging.getLogger("apscheduler").setLevel(logging.ERROR)
-
-        atlas_scheduler.add_listener(job_missed, EVENT_JOB_MISSED)
-        atlas_scheduler.add_listener(job_error, EVENT_JOB_ERROR)
-        atlas_scheduler.add_listener(job_executed, EVENT_JOB_EXECUTED)
-        atlas_scheduler.add_listener(job_added, EVENT_JOB_ADDED)
-        atlas_scheduler.add_listener(job_removed, EVENT_JOB_REMOVED)
-        atlas_scheduler.add_listener(job_submitted, EVENT_JOB_SUBMITTED)
 
         @app.errorhandler(404)
         @app.errorhandler(500)

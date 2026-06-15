@@ -96,6 +96,8 @@ class Runner:
         self.run_id = my_hash.hexdigest()[:10]
 
         task = Task.query.filter_by(id=task_id).first()
+        if not task:
+            raise ValueError(f"Task {task_id} not found.")
 
         self.source_files: List[IO[str]]
         self.output_files: List[str] = []
