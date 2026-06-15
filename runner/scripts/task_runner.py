@@ -863,6 +863,7 @@ class Runner:
 
             output: List[List[str]] = []
             empty = 0
+            num_lines = 0
             attachments: List[str] = []
 
             if self.task.email_completion_file == 1 and len(self.output_files) > 0:
@@ -870,6 +871,8 @@ class Runner:
                     if self.task.email_completion_file_embed == 1:
                         with open(output_file, newline="") as csvfile:
                             output.extend(list(csv.reader(csvfile)))
+                        with open(output_file, "r") as f:
+                            num_lines = len(f.readlines())
 
                     # check attachement file size if the task
                     # should not send blank files
@@ -877,9 +880,16 @@ class Runner:
                         self.task.email_completion_dont_send_empty_file == 1
                         and output_file
                         # if query and data is blank, or other types and file is 0
-                        and os.path.getsize(output_file) == 0
+                        # don't attach file if it is just the header.
+                        and (
+                            os.path.getsize(output_file) == 0
+                            or (self.task.source_query_include_header == 1 and num_lines <= 1)
+                        )
                     ):
                         empty = 1
+                    else:
+                        # There may be multiple output files. If one isn't empty, still include it.
+                        empty = 0
 
                     attachments.append(output_file)
 

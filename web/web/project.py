@@ -3,6 +3,8 @@
 import datetime
 from typing import Optional, Union
 
+from cron_descriptor import ExpressionDescriptor
+from cron_validator import CronValidator
 from crypto import em_encrypt
 from flask import Blueprint
 from flask import current_app as app
@@ -21,12 +23,34 @@ from .executors import disable_project
 
 project_bp = Blueprint("project_bp", __name__)
 
+_NEW_PROJECT_TEMPLATE = "pages/project/new.html.j2"
+
 
 def form_to_date(date_string: Optional[str]) -> Optional[datetime.datetime]:
     """Convert optional date string to date."""
     if date_string:
         return datetime.datetime.strptime(date_string, "%Y-%m-%d %H:%M")
     return None
+
+
+def _cron_form_values() -> dict:
+    return {
+        "cron": request.form.get("project_cron", 0, type=int),
+        "cron_year": request.form.get("project_cron_year", None, type=str),  # NOSONAR
+        "cron_month": request.form.get("project_cron_mnth", None, type=str),  # NOSONAR
+        "cron_week": request.form.get("project_cron_week", None, type=str),  # NOSONAR
+        "cron_day": request.form.get("project_cron_day", None, type=str),  # NOSONAR
+        "cron_week_day": request.form.get("project_cron_wday", None, type=str),  # NOSONAR
+        "cron_hour": request.form.get("project_cron_hour", None, type=str),  # NOSONAR
+        "cron_min": request.form.get("project_cron_min", None, type=str),  # NOSONAR
+        "cron_sec": request.form.get("project_cron_sec", None, type=str),  # NOSONAR
+    }
+
+
+def _validate_cron_form() -> dict:
+    cron_values = _cron_form_values()
+    CronValidator(**cron_values).validate()
+    return cron_values
 
 
 @project_bp.route("/project")
@@ -94,6 +118,19 @@ def one_project(project_id: int) -> Union[str, Response]:
             .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[attr-defined, union-attr]
             .first()
         )
+        try:
+            cron_desc = ExpressionDescriptor(
+                cron_year=me.cron_year,  # NOSONAR
+                cron_month=me.cron_month,  # NOSONAR
+                cron_week=me.cron_week,  # NOSONAR
+                cron_day=me.cron_day,  # NOSONAR
+                cron_week_day=me.cron_week_day,  # NOSONAR
+                cron_hour=me.cron_hour,  # NOSONAR
+                cron_min=me.cron_min,  # NOSONAR
+                cron_sec=me.cron_sec,  # NOSONAR
+            ).get_full_description()
+        except ValueError as e:
+            cron_desc = str(e)
 
         return render_template(
             "pages/project/one.html.j2",
@@ -101,6 +138,7 @@ def one_project(project_id: int) -> Union[str, Response]:
             has_secrets=any(p.sensitive == 1 for p in me.params),
             title=me.name,
             task=first_task,
+            cron_desc=cron_desc,
         )
 
     flash("The project does not exist.")
@@ -114,7 +152,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
     me = Project.query.filter_by(id=project_id).first()
 
     if me:
-        return render_template("pages/project/new.html.j2", p=me, title="Editing " + me.name)
+        return render_template(_NEW_PROJECT_TEMPLATE, p=me, title="Editing " + me.name)
 
     flash("The project does not exist.")
     return redirect(url_for("project_bp.all_projects"))
@@ -122,7 +160,7 @@ def edit_project_form(project_id: int) -> Union[str, Response]:
 
 @project_bp.route("/project/<project_id>/edit", methods=["POST"])
 @login_required
-def edit_project(project_id: int) -> Response:
+def edit_project(project_id: int) -> Union[Response, str]:
     """Save project edits."""
     cache.clear()
 
@@ -132,6 +170,15 @@ def edit_project(project_id: int) -> Response:
     me = Project.query.filter_by(id=project.id)
 
     form = request.form
+    try:
+        cron_values = _validate_cron_form()
+    except ValueError as e:
+        return render_template(
+            _NEW_PROJECT_TEMPLATE,
+            p=me.first(),
+            title="Editing " + me.first().name,
+            error=str(e),
+        )
 
     # pylint: disable=R1735
     me.update(
@@ -145,15 +192,7 @@ def edit_project(project_id: int) -> Response:
             ),
             updater_id=current_user.id,
             sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
-            cron=form.get("project_cron", 0, type=int),
-            cron_year=form.get("project_cron_year", None, type=int),
-            cron_month=form.get("project_cron_mnth", None, type=int),
-            cron_week=form.get("project_cron_week", None, type=int),
-            cron_day=form.get("project_cron_day", None, type=int),
-            cron_week_day=form.get("project_cron_wday", None, type=int),
-            cron_hour=form.get("project_cron_hour", None, type=int),
-            cron_min=form.get("project_cron_min", None, type=int),
-            cron_sec=form.get("project_cron_sec", None, type=int),
+            **cron_values,
             cron_start_date=form_to_date(form.get("project_cron_sdate", None, type=str)),
             cron_end_date=form_to_date(form.get("project_cron_edate", None, type=str)),
             intv=form.get("project_intv", 0, type=int),
@@ -204,7 +243,7 @@ def edit_project(project_id: int) -> Response:
 def new_project_form() -> str:
     """Create a new project page."""
     return render_template(
-        "pages/project/new.html.j2",
+        _NEW_PROJECT_TEMPLATE,
         p=Project.query.filter_by(id=0).first(),
         title="New Project",
     )
@@ -212,10 +251,19 @@ def new_project_form() -> str:
 
 @project_bp.route("/project/new", methods=["POST"])
 @login_required
-def new_project() -> Response:
+def new_project() -> Union[Response, str]:
     """Save a new project."""
     cache.clear()
     form = request.form
+    try:
+        cron_values = _validate_cron_form()
+    except ValueError as e:
+        return render_template(
+            _NEW_PROJECT_TEMPLATE,
+            p=Project.query.filter_by(id=0).first(),
+            title="New Project",
+            error=str(e),
+        )
 
     # create project
     me = Project(
@@ -225,15 +273,7 @@ def new_project() -> Response:
         creator_id=current_user.id,
         updater_id=current_user.id,
         sequence_tasks=form.get("run_tasks_in_sequence", 0, type=int),
-        cron=form.get("project_cron", 0, type=int),
-        cron_year=form.get("project_cron_year", None, type=int),
-        cron_month=form.get("project_cron_mnth", None, type=int),
-        cron_week=form.get("project_cron_week", None, type=int),
-        cron_day=form.get("project_cron_day", None, type=int),
-        cron_week_day=form.get("project_cron_wday", None, type=int),
-        cron_hour=form.get("project_cron_hour", None, type=int),
-        cron_min=form.get("project_cron_min", None, type=int),
-        cron_sec=form.get("project_cron_sec", None, type=int),
+        **cron_values,
         cron_start_date=form_to_date(form.get("project_cron_sdate", None, type=str)),
         cron_end_date=form_to_date(form.get("project_cron_edate", None, type=str)),
         intv=form.get("project_intv", 0, type=int),
