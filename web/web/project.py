@@ -6,9 +6,8 @@ from typing import Optional, Union
 from cron_descriptor import ExpressionDescriptor
 from cron_validator import CronValidator
 from crypto import em_encrypt
-from flask import Blueprint
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import text
 from sqlalchemy.sql import functions as func

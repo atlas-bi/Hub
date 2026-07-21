@@ -5,9 +5,8 @@ import re
 from typing import Union
 
 import requests
-from flask import Blueprint
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from RelativeToNow import relative_to_now
 from sqlalchemy.sql import functions as func

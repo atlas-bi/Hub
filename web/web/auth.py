@@ -2,9 +2,8 @@
 
 from typing import Union
 
-from flask import Blueprint, abort
+from flask import Blueprint, abort, flash, redirect, render_template, request, session
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, session
 from flask_login import current_user, login_user, logout_user
 from is_safe_url import is_safe_url
 from werkzeug import Response
