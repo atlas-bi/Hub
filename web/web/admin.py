@@ -11,9 +11,8 @@ try:
 except ImportError:
     import tomli as tomllib  # type: ignore
 
-from flask import Blueprint
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from werkzeug import Response
 

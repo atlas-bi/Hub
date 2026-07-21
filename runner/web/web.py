@@ -6,9 +6,8 @@ import re
 import sys
 from pathlib import Path
 
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
 from flask import current_app as app
-from flask import jsonify, request
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
 from werkzeug.wrappers import Response

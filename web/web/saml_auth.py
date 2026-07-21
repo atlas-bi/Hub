@@ -1,8 +1,17 @@
 """SAML Login/Logout web views."""
 
-from flask import Blueprint, Flask, abort
+from flask import (
+    Blueprint,
+    Flask,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    request,
+    session,
+    url_for,
+)
 from flask import current_app as app
-from flask import flash, make_response, redirect, request, session, url_for
 from is_safe_url import is_safe_url
 from saml2 import entity
 from saml2.client import Saml2Client

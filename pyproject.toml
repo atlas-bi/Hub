@@ -4,11 +4,9 @@ requires = ["hatchling"]
 
 [dependency-groups]
 dev = [
-  "black>=24.0.0,<25.0.0",
   "coverage>=7.0.0,<8.0.0",
   "djlint>=1.19.17,<2.0.0",
   "flask-debugtoolbar>=0.16.0,<0.17.0",
-  "isort>=7.0.0,<7.1.0",
   "mypy==0.991",
   "pre-commit>=3.0.0,<4.0.0",
   "pytest>=9.0.3,<9.1.0",
@@ -124,32 +122,6 @@ Repository = "https://github.com/atlas-bi/Hub"
 
 [tool]
 
-[tool.black]
-exclude = '''
-    /(
-        \.git
-      | \.hg
-      | \.mypy_cache
-      | \.tox
-      | \.venv
-      | _build
-      | buck-out
-      | build
-      | dist
-
-      # The following are specific to Black, you probably don't want those.
-      | blib2to3
-      | tests/data
-
-      # em2
-      | migrations
-      | migrations_dev
-      | temp
-      | node_modules
-    )/
-    '''
-line-length = 99
-
 [tool.djlint]
 blank_line_after_tag = "load,extends,include,endblock"
 format_attribute_template_tags = true
@@ -171,11 +143,6 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["web", "scheduler", "runner"]
-
-[tool.isort]
-profile = "black"
-sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
-skip_glob = ["runner/temp/*"]
 
 [tool.mypy]
 disable_error_code = "attr-defined, name-defined"
@@ -203,15 +170,17 @@ filterwarnings = "always"
 testpaths = "tests"
 
 [tool.ruff]
+exclude = ["migrations", "migrations_dev", "temp", "node_modules", "tests/data"]
 extend-exclude = ['test*', 'ldap_auth*']
+line-length = 99
 
 [tool.ruff.lint]
 ignore = ['RUF015', 'B034', 'PLR1714', 'S602', 'S605', 'D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108']
-select = ['F', 'E', 'W', 'N', 'D', 'S', 'B', 'C4', 'T20', 'Q', 'SIM', 'ERA', 'PL', 'RUF']
+select = ['F', 'E', 'W', 'N', 'D', 'S', 'B', 'C4', 'T20', 'Q', 'SIM', 'ERA', 'PL', 'RUF', 'I']
 
 [tool.ruff.lint.per-file-ignores]
-"runner/scripts/em_python.py" = ['SIM114']
 "runner/scripts/em_cmd.py" = ['S603']
+"runner/scripts/em_python.py" = ['SIM114']
 "runner/scripts/em_ssh.py" = ['S507']
 
 [tool.setuptools_scm]
