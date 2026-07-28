@@ -20,6 +20,7 @@ from azure.devops.connection import Connection
 from flask import current_app as app
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
+from sqlalchemy.exc import OperationalError, PendingRollbackError
 
 from runner import db, redis_client
 from runner.model import Task, TaskFile, TaskLog
@@ -95,7 +96,12 @@ class Runner:
 
         self.run_id = my_hash.hexdigest()[:10]
 
-        task = Task.query.filter_by(id=task_id).first()
+        try:
+            task = Task.query.filter_by(id=task_id).first()
+        except (OperationalError, PendingRollbackError):
+            db.session.rollback()
+            task = Task.query.filter_by(id=task_id).first()
+
         if not task:
             raise ValueError(f"Task {task_id} not found.")
 

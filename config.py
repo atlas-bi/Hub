@@ -93,6 +93,8 @@ class Config:
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_recycle": 1800,  # recycle connections older than 30 mins
+        "pool_pre_ping": True,  # test connections before using to prevent errors
         "max_overflow": 100,  # how many spare connections we can use?
         "pool_size": 5,  # how many queries will run symultaniously?
     }
