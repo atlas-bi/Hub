@@ -11,6 +11,11 @@ import regex as re
 from flask import current_app as app
 from flask import json
 
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib  # type: ignore[no-redef]
+
 from runner.model import Task
 from runner.scripts import em_ftp, em_sftp, em_smb, em_ssh
 from runner.scripts.em_cmd import Cmd
@@ -145,37 +150,52 @@ class PyProcesser:
                 ).shell()
 
             elif pyproject_toml.is_file():
-                # install and setup poetry
-                cmd = (
-                    f'cd "{self.job_path}" &&'
-                    + "virtualenv poetry_env && "
-                    + "poetry_env/bin/pip install --disable-pip-version-check --quiet poetry && "
-                    + "poetry_env/bin/poetry config --local virtualenvs.create false && "
-                    + "poetry_env/bin/poetry lock"
-                )
+                if self.__use_uv_for_pyproject(pyproject_toml):
+                    cmd = (
+                        f'cd "{self.job_path}" && '
+                        + f'UV_PROJECT_ENVIRONMENT="{self.env_path}" '
+                        + "uv sync --no-dev --no-install-project"
+                    )
+                    Cmd(
+                        task=self.task,
+                        run_id=self.run_id,
+                        cmd=cmd,
+                        success_msg="Imports successfully installed with uv",
+                        error_msg="Failed to install imports with uv.",
+                    ).shell()
 
-                Cmd(
-                    task=self.task,
-                    run_id=self.run_id,
-                    cmd=cmd,
-                    success_msg="Poetry successfully installed.",
-                    error_msg="Failed to install poetry.",
-                ).shell()
+                else:
+                    # install and setup poetry
+                    cmd = (
+                        f'cd "{self.job_path}" &&'
+                        + "virtualenv poetry_env && "
+                        + "poetry_env/bin/pip install --disable-pip-version-check --quiet poetry && "
+                        + "poetry_env/bin/poetry config --local virtualenvs.create false && "
+                        + "poetry_env/bin/poetry lock"
+                    )
 
-                # install deps with poetry
-                cmd = (
-                    f'cd "{self.job_path}" && '
-                    + f'. "{self.env_name}/bin/activate" && '
-                    + "poetry_env/bin/poetry install && "
-                    + "deactivate"
-                )
-                Cmd(
-                    task=self.task,
-                    run_id=self.run_id,
-                    cmd=cmd,
-                    success_msg="Imports successfully installed",
-                    error_msg="Failed to install imports.",
-                ).shell()
+                    Cmd(
+                        task=self.task,
+                        run_id=self.run_id,
+                        cmd=cmd,
+                        success_msg="Poetry successfully installed.",
+                        error_msg="Failed to install poetry.",
+                    ).shell()
+
+                    # install deps with poetry
+                    cmd = (
+                        f'cd "{self.job_path}" && '
+                        + f'. "{self.env_name}/bin/activate" && '
+                        + "poetry_env/bin/poetry install && "
+                        + "deactivate"
+                    )
+                    Cmd(
+                        task=self.task,
+                        run_id=self.run_id,
+                        cmd=cmd,
+                        success_msg="Imports successfully installed",
+                        error_msg="Failed to install imports.",
+                    ).shell()
 
             else:
                 # find all scripts in dir, but not in venv
@@ -265,6 +285,16 @@ class PyProcesser:
                 1,
             )
             raise
+
+    @staticmethod
+    def __use_uv_for_pyproject(pyproject_toml: Path) -> bool:
+        """Use uv for modern pyproject metadata and keep Poetry-only files on Poetry."""
+        try:
+            project_config = tomllib.loads(pyproject_toml.read_text(encoding="utf8"))
+        except tomllib.TOMLDecodeError:
+            return False
+
+        return "project" in project_config or (pyproject_toml.parent / "uv.lock").is_file()
 
     def __run_script(self) -> None:
         try:

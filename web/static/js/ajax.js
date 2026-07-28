@@ -1,9 +1,5 @@
 var ajaxContent = function () {
-  function load(el, dest) {
-    if (typeof dest == 'undefined') {
-      dest = el;
-    }
-
+  function load(el) {
     var q = new XMLHttpRequest();
     q.open('get', el.getAttribute('data-src'), true);
     q.send();

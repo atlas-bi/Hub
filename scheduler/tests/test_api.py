@@ -243,6 +243,37 @@ def test_scheduler_task_runner_removes_orphaned_job(client_fixture: fixture) -> 
     assert page.status_code == 200
 
 
+def test_scheduler_task_runner_logs_runner_error_response(
+    client_fixture: fixture, monkeypatch: fixture
+) -> None:
+    _, t_id = create_demo_task(db.session)
+
+    class FakeResponse:
+        ok = False
+        status_code = 500
+        text = "executor full"
+
+        def json(self):  # noqa: ANN201
+            return {"error": "Runner failed to queue task."}
+
+    def fake_get(url, **kwargs):  # noqa: ANN001, ANN202
+        assert url.endswith("/run")
+        assert kwargs["params"] == {"task_id": t_id}
+        return FakeResponse()
+
+    monkeypatch.setattr("scheduler.functions.get", fake_get)
+
+    with pytest.raises(RuntimeError, match="Runner returned HTTP 500"):
+        scheduler_task_runner(t_id)
+
+    assert (
+        TaskLog.query.filter_by(task_id=t_id, status_id=6, error=1)
+        .filter(TaskLog.message.like("%Failed to send task to runner.%executor full%"))
+        .first()
+        is not None
+    )
+
+
 def test_run_task(client_fixture: fixture) -> None:
     p_id, t_id = create_demo_task(db.session)
     page = client_fixture.get(f"/api/run/{t_id}")
