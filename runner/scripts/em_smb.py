@@ -191,7 +191,11 @@ class Smb:
         director = urllib.request.build_opener(SMBHandler)
 
         password = em_decrypt(self.password, app.config["PASS_KEY"])
-        file_path = str(Path(self.connection.path or "").joinpath(file_name)) if self.connection else file_name
+        file_path = (
+            str(Path(self.connection.path or "").joinpath(file_name))
+            if self.connection
+            else file_name
+        )
 
         open_file_for_read = director.open(
             f"smb://{self.username}:{password}@{self.server_name},{self.server_ip}/{self.share_name}/{file_path}"
