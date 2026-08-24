@@ -189,6 +189,16 @@
                     <span>Run All</span>
                 </a>
             </p>
+            <p class="control">
+                <a class="button"
+                   title="Refresh Tasks"
+                   href="{{ url_for('project_bp.one_project', project_id=p.id) }}">
+                    <span class="icon">
+                        <i class="fas fa-rotate"></i>
+                    </span>
+                    <span>Refresh</span>
+                </a>
+            </p>
         </div>
         <div class="em-ajaxTable no-tools no-box"
              data-theme="Exec"
