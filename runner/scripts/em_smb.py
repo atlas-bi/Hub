@@ -8,7 +8,7 @@ import sys
 import tempfile
 import time
 import urllib
-from io import TextIOWrapper
+from io import StringIO, TextIOWrapper
 from pathlib import Path
 from typing import IO, Any, Dict, Generator, List, Optional, Tuple
 
@@ -215,13 +215,16 @@ class Smb:
             for data in load_data(open_file_for_read):
                 if self.task.source_smb_ignore_delimiter != 1 and self.task.source_smb_delimiter:
                     my_delimiter = self.task.source_smb_delimiter or ","
+                    text = data.decode("utf-8", "replace") if isinstance(data, bytes) else data
 
                     csv_reader = csv.reader(
-                        data.splitlines(),
+                        text.splitlines(),
                         delimiter=my_delimiter,
                     )
-                    writer = csv.writer(data_file)
+                    converted = StringIO()
+                    writer = csv.writer(converted)
                     writer.writerows(csv_reader)
+                    data_file.write(converted.getvalue().encode("utf-8"))
 
                 else:
                     data_file.write(data)

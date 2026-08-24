@@ -6,8 +6,8 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.22.20",
-    "@fontsource/inter": "5.2.8",
-    "@fontsource/rasa": "5.2.9",
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/rasa": "5.3.0",
     "@hotwired/turbo": "^8.0.0",
     "@rollup/plugin-babel": "^7.0.0",
     "@rollup/plugin-commonjs": "^29.0.0",
@@ -54,7 +54,7 @@
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
   "name": "atlas_automation_hub",
-  "packageManager": "pnpm@10.34.3",
+  "packageManager": "pnpm@10.34.5",
   "private": true,
   "repository": {
     "type": "git",
@@ -83,5 +83,5 @@
     "test:lint": "uv run tox -e lint",
     "test:prettier": "prettier --check --config .prettierrc \"web/**/*.{ts,css,less,scss,js,json,md,yaml,html}\""
   },
-  "version": "2.12.13"
+  "version": "2.12.14"
 }
