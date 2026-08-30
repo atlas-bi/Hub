@@ -31,7 +31,7 @@
   "description": "A task scheduling tool.",
   "devDependencies": {
     "@biomejs/biome": "^2.5.9",
-    "@fortawesome/fontawesome-free": "6.7.2",
+    "@fortawesome/fontawesome-free": "7.3.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "6.0.3",
@@ -79,5 +79,5 @@
     "test:biome": "biome check web",
     "test:lint": "uv run tox -e lint"
   },
-  "version": "2.12.14"
+  "version": "2.12.15"
 }
