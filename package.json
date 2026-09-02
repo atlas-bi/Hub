@@ -38,7 +38,7 @@
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "^12.0.0",
     "@semantic-release/npm": "^13.0.0",
-    "@semantic-release/release-notes-generator": "^13.0.0",
+    "@semantic-release/release-notes-generator": "^14.0.0",
     "browser-sync": "^3.0.0",
     "cz-conventional-changelog": "3.3.0",
     "gulp-concat": "2.6.1",
@@ -79,5 +79,5 @@
     "test:biome": "biome check web",
     "test:lint": "uv run tox -e lint"
   },
-  "version": "2.12.14"
+  "version": "2.12.15"
 }
