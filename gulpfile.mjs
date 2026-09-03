@@ -36,7 +36,14 @@ gulp.task('sass', function() {
     .pipe(
       sass({
         quietDeps: true,
-        silenceDeprecations: ['legacy-js-api', 'import']
+        // Deprecations originate in bulma / bulma-checkradio; silence until those packages catch up.
+        silenceDeprecations: [
+          'legacy-js-api',
+          'import',
+          'global-builtin',
+          'color-functions',
+          'if-function',
+        ],
       }).on('error', sass.logError)
     )
     .pipe(
@@ -53,7 +60,10 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('web/static/css/'))
 });
 
-gulp.task('build', gulp.parallel('font:inter','font:rasa', gulp.series('fontawesome','sass')));
+gulp.task('build', gulp.series(
+  gulp.parallel('font:inter', 'font:rasa', 'fontawesome'),
+  'sass'
+));
 
 gulp.task('watch', gulp.series('build', function (cb) {
     gulp.watch('web/static/assets/**/*.scss', gulp.series('sass'));
