@@ -12,7 +12,7 @@ dev = [
   "pytest>=9.1.1,<9.2.0",
   "pytest-cov>=7.1.0,<7.2.0",
   "radon>=6.0.0,<7.0.0",
-  "ruff>=0.15.12,<0.16.0",
+  "ruff>=0.16.5,<0.17.0",
   "toml>=0.10.2,<0.11.0",
   "tox>=4.0.8,<5.0.0",
   "tox-uv>=1.0.0,<2.0.0",
@@ -113,7 +113,7 @@ maintainers = [{name = "Christopher Pickering", email = "cpickering@rhc.net"}]
 name = "atlas-hub"
 readme = "readme.md"
 requires-python = ">=3.10,<4.0"
-version = "2.12.18"
+version = "2.12.19"
 
 [project.urls]
 Documentation = "https://www.atlas.bi/docs/hub/"
@@ -175,7 +175,7 @@ extend-exclude = ['test*', 'ldap_auth*']
 line-length = 99
 
 [tool.ruff.lint]
-ignore = ['RUF015', 'B034', 'PLR1714', 'S602', 'S605', 'D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108']
+ignore = ['RUF015', 'B034', 'PLR1714', 'S602', 'S605', 'D213', 'S324', 'D203', 'S301', 'N818', 'PLW0120', 'PLR0915', 'S110', 'S101', 'C417', 'PLR0913', 'PLR0917', 'D212', 'RUF100', 'B020', 'S106', 'PLC1901', 'PLR0911', 'F401', "E501", 'SIM118', 'PLR2004', 'PLW2901', 'B905', 'E402', 'PLR0912', 'B904', 'ERA001', 'PLR5501', 'D401', 'SIM108']
 select = ['F', 'E', 'W', 'N', 'D', 'S', 'B', 'C4', 'T20', 'Q', 'SIM', 'ERA', 'PL', 'RUF', 'I']
 
 [tool.ruff.lint.per-file-ignores]
