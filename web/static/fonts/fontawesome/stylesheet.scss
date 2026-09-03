@@ -6,96 +6,96 @@
 @import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_core';
 @import '../../../../node_modules/@fortawesome/fontawesome-free/scss/_sizing';
 
-$fa-font-path: '/static/fonts/fontawesome/webfonts';
+$font-path: '/static/fonts/fontawesome/webfonts';
 @font-face {
-  font-family: 'Font Awesome 6 Brands';
+  font-family: 'Font Awesome 7 Brands';
   font-style: normal;
   font-weight: 400;
-  font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-brands-400.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-brands-400.ttf') format('truetype');
+  font-display: $font-display;
+  src: url('#{$font-path}/fa-brands-400.woff2') format('woff2'),
+    url('#{$font-path}/fa-brands-400.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Font Awesome 6 Free';
+  font-family: 'Font Awesome 7 Free';
   font-style: normal;
   font-weight: 900;
-  font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype');
+  font-display: $font-display;
+  src: url('#{$font-path}/fa-solid-900.woff2') format('woff2'),
+    url('#{$font-path}/fa-solid-900.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Font Awesome 6 Free';
+  font-family: 'Font Awesome 7 Free';
   font-style: normal;
   font-weight: 400;
-  font-display: $fa-font-display;
-  src: url('#{$fa-font-path}/fa-regular-400.woff2') format('woff2'),
-    url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype');
+  font-display: $font-display;
+  src: url('#{$font-path}/fa-regular-400.woff2') format('woff2'),
+    url('#{$font-path}/fa-regular-400.ttf') format('truetype');
 }
 
 .far,
-.#{$fa-css-prefix}-regular {
-  font-family: 'Font Awesome 6 Free';
+.#{$css-prefix}-regular {
+  font-family: 'Font Awesome 7 Free';
   font-weight: 400;
 }
 
 .fas,
-.#{$fa-css-prefix}-solid {
-  font-family: 'Font Awesome 6 Free';
+.#{$css-prefix}-solid {
+  font-family: 'Font Awesome 7 Free';
   font-weight: 900;
 }
 
 .fab,
-.#{$fa-css-prefix}-brands {
-  font-family: 'Font Awesome 6 Brands';
+.#{$css-prefix}-brands {
+  font-family: 'Font Awesome 7 Brands';
   font-weight: 400;
 }
 
-.#{$fa-css-prefix}-2_3x {
+.#{$css-prefix}-2_3x {
   font-size: 2.3em;
 }
 
 
 /* build icon list */
 $icons: (
-  magnifying-glass: $fa-var-magnifying-glass,
-  pen-to-square: $fa-var-pen-to-square,
-  trash: $fa-var-trash,
-  delete-left: $fa-var-delete-left,
-  sort: $fa-var-sort,
-  terminal: $fa-var-terminal,
-  list: $fa-var-list,
-  ban: $fa-var-ban,
-  toggle-on: $fa-var-toggle-on,
-  toggle-off: $fa-var-toggle-off,
-  circle-play: $fa-var-circle-play,
-  plus: $fa-var-plus,
-  rotate: $fa-var-rotate,
-  copy: $fa-var-copy,
-  download: $fa-var-download,
-  check: $fa-var-check,
-  circle-info: $fa-var-circle-info,
-  file-arrow-down: $fa-var-file-arrow-down,
-  angle-right: $fa-var-angle-right,
-  circle-check: $fa-var-circle-check,
-  circle-xmark: $fa-var-circle-xmark,
-  circle-notch: $fa-var-circle-notch,
-  circle-stop: $fa-var-circle-stop,
-  circle-pause: $fa-var-circle-pause,
-  circle-question: $fa-var-circle-question,
-  calendar: $fa-var-calendar,
-  arrow-up-right-from-square: $fa-var-arrow-up-right-from-square,
-  eye-slash: $fa-var-eye-slash,
-  eye: $fa-var-eye,
-  users: $fa-var-users,
-  right-to-bracket: $fa-var-right-to-bracket,
-  angle-down: $fa-var-angle-down,
-  triangle-exclamation: $fa-var-triangle-exclamation,
+  magnifying-glass: $var-magnifying-glass,
+  pen-to-square: $var-pen-to-square,
+  trash: $var-trash,
+  delete-left: $var-delete-left,
+  sort: $var-sort,
+  terminal: $var-terminal,
+  list: $var-list,
+  ban: $var-ban,
+  toggle-on: $var-toggle-on,
+  toggle-off: $var-toggle-off,
+  circle-play: $var-circle-play,
+  plus: $var-plus,
+  rotate: $var-rotate,
+  copy: $var-copy,
+  download: $var-download,
+  check: $var-check,
+  circle-info: $var-circle-info,
+  file-arrow-down: $var-file-arrow-down,
+  angle-right: $var-angle-right,
+  circle-check: $var-circle-check,
+  circle-xmark: $var-circle-xmark,
+  circle-notch: $var-circle-notch,
+  circle-stop: $var-circle-stop,
+  circle-pause: $var-circle-pause,
+  circle-question: $var-circle-question,
+  calendar: $var-calendar,
+  arrow-up-right-from-square: $var-arrow-up-right-from-square,
+  eye-slash: $var-eye-slash,
+  eye: $var-eye,
+  users: $var-users,
+  right-to-bracket: $var-right-to-bracket,
+  angle-down: $var-angle-down,
+  triangle-exclamation: $var-triangle-exclamation,
 );
 
 @each $key, $value in $icons {
-  .#{$fa-css-prefix}-#{$key}:before {
+  .#{$css-prefix}-#{$key}:before {
     content: fa-content($value);
   }
 }
