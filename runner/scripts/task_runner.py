@@ -12,7 +12,7 @@ import tempfile
 import time
 import urllib.parse
 from pathlib import Path
-from typing import IO, List, Optional
+from typing import IO, Any, List, Optional
 
 import azure.devops.credentials as cd
 import requests
@@ -105,7 +105,7 @@ class Runner:
         if not task:
             raise ValueError(f"Task {task_id} not found.")
 
-        self.source_files: List[IO[str]]
+        self.source_files: List[IO[Any]]
         self.output_files: List[str] = []
 
         print("starting task " + str(task.id))  # noqa: T201
@@ -549,10 +549,13 @@ class Runner:
                         error_msg="Failed to clone repo: %s" % (self.task.processing_url,),
                     ).shell()
 
-                    processing_script_name = str(self.temp_path) + (
-                        self.task.processing_command
-                        if self.task.processing_command is not None
-                        else ""
+                    processing_script_name = Path(
+                        str(self.temp_path)
+                        + (
+                            self.task.processing_command
+                            if self.task.processing_command is not None
+                            else ""
+                        )
                     )
                 # pylint: disable=broad-except
                 except BaseException:
