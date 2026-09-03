@@ -10,4 +10,4 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
-from database import get_or_create, seed  # isort:skip
+from database import force_drop_database, get_or_create, seed  # isort:skip

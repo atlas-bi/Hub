@@ -5,12 +5,12 @@ import sys
 from pathlib import Path
 
 import pytest
-from sqlalchemy_utils import create_database, database_exists, drop_database
+from sqlalchemy_utils import create_database, database_exists
 
 from scheduler import create_app as scheduler_create_app
 from scheduler.model import Project, Task
 
-from . import get_or_create, seed
+from . import force_drop_database, get_or_create, seed
 
 os.environ["FLASK_ENV"] = "test"
 os.environ["FLASK_APP"] = "scheduler"
@@ -39,7 +39,7 @@ def client_fixture() -> Generator:
         # from web.seed import seed
 
         if database_exists(db.engine.url):
-            drop_database(db.engine.url)
+            force_drop_database(db.engine.url, db.engine)
 
         create_database(db.engine.url)
 
@@ -63,7 +63,7 @@ def client_fixture() -> Generator:
     with app.app_context():
         db.session.remove()
         db.drop_all()
-        drop_database(db.engine.url)
+        force_drop_database(db.engine.url, db.engine)
 
 
 @pytest.fixture(scope="module")
@@ -79,7 +79,7 @@ def api_fixture() -> Generator:
         # from web.seed import seed
 
         if database_exists(db.engine.url):
-            drop_database(db.engine.url)
+            force_drop_database(db.engine.url, db.engine)
 
         create_database(db.engine.url)
 
@@ -103,7 +103,7 @@ def api_fixture() -> Generator:
     with app.app_context():
         db.session.remove()
         db.drop_all()
-        drop_database(db.engine.url)
+        force_drop_database(db.engine.url, db.engine)
 
 
 # pylint: disable=W0613

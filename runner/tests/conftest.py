@@ -3,12 +3,12 @@
 import os
 
 import pytest
-from sqlalchemy_utils import create_database, database_exists, drop_database
+from sqlalchemy_utils import create_database, database_exists
 
 from runner import create_app as runner_create_app
 from runner.model import Project, Task
 
-from . import get_or_create, seed
+from . import force_drop_database, get_or_create, seed
 
 os.environ["FLASK_ENV"] = "test"
 os.environ["FLASK_APP"] = "runner"
@@ -32,7 +32,7 @@ def client_fixture() -> Generator:
         from runner.model import User
 
         if database_exists(db.engine.url):
-            drop_database(db.engine.url)
+            force_drop_database(db.engine.url, db.engine)
 
         create_database(db.engine.url)
 
