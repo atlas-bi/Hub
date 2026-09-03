@@ -5,7 +5,7 @@ import datetime
 import sys
 from itertools import chain
 from pathlib import Path
-from typing import IO, List, Optional, Union
+from typing import IO, Any, List, Optional, Union
 
 import regex as re
 from flask import current_app as app
@@ -40,7 +40,7 @@ class PyProcesser:
         run_id: str,
         directory: Path,
         script: str,
-        source_files: List[IO[str]],
+        source_files: List[IO[Any]],
         params: ParamLoader,
     ) -> None:
         """Set up class parameters."""
