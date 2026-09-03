@@ -51,7 +51,7 @@
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
   "name": "atlas_automation_hub",
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@11.25.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -79,5 +79,5 @@
     "test:biome": "biome check web",
     "test:lint": "uv run tox -e lint"
   },
-  "version": "2.12.15"
+  "version": "2.12.16"
 }
