@@ -49,7 +49,7 @@ def db_seed() -> None:
     """Add command to seed the database.
 
     This is run on each deploy to keep db settings updated.
-    poetry run flask --app=web cli seed
+    uv run flask --app=web cli seed
     """
     database_module = import_module("database")
 
