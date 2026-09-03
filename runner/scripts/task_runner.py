@@ -133,9 +133,9 @@ class Runner:
             raise RunnerException(self.task, self.run_id, 18, message)
 
         # create temp folder for output
-        self.temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        self.temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        self.temp_path = (
+            self.temp_path
             / sanitize_filename(self.task.project.name)
             / sanitize_filename(self.task.name)
             / self.run_id

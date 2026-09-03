@@ -102,6 +102,9 @@ class Config:
     SCHEDULER_HOST = "http://127.0.0.1:5001/api"
 
     RUNNER_HOST = "http://127.0.0.1:5002/api"
+    RUNNER_TEMP_PATH = os.environ.get(
+        "RUNNER_TEMP_PATH", str(Path(__file__).resolve().parent / "runner" / "temp")
+    )
 
     WEB_HOST = "locahost"
 

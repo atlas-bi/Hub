@@ -79,9 +79,9 @@ def send_ftp(task_id: int, run_id: int, file_id: int) -> dict:
         task = Task.query.filter_by(id=task_id).first()
         my_file = TaskFile.query.filter_by(id=file_id).first()
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -123,9 +123,9 @@ def send_sftp(run_id: int, file_id: int) -> dict:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         task = my_file.task
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -170,9 +170,9 @@ def send_smb(run_id: int, file_id: int) -> dict:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         task = my_file.task
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -217,9 +217,9 @@ def send_email(run_id: int, file_id: int) -> dict:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         task = my_file.task
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -376,9 +376,9 @@ def get_task_file_download(file_id: int) -> dict:
     my_file = TaskFile.query.filter_by(id=file_id).first()
     task = my_file.task
 
-    temp_path = Path(
-        Path(__file__).parent.parent
-        / "temp"
+    temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+    temp_path = (
+        temp_path
         / sanitize_filename(task.project.name)
         / sanitize_filename(task.name)
         / my_file.job_id

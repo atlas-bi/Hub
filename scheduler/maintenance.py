@@ -106,7 +106,7 @@ def temp_clean() -> None:
     """Job to clean up dangling temp files."""
     try:
         with atlas_scheduler.app.app_context():
-            temp_path = Path(__file__).parents[1].joinpath("runner", "temp")
+            temp_path = Path(app.config["RUNNER_TEMP_PATH"])
             if not temp_path.exists():
                 return
 
