@@ -80,5 +80,5 @@
     "test:biome": "biome check web",
     "test:lint": "uv run tox -e lint"
   },
-  "version": "2.12.16"
+  "version": "2.13.0-alpha.1"
 }
