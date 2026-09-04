@@ -16,9 +16,8 @@ import json
 
 import requests
 import urllib3
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
 from flask import current_app as app
-from flask import jsonify, request
 from flask_login import current_user, login_required
 from RelativeToNow import relative_to_now
 from sqlalchemy import and_, text
@@ -826,7 +825,7 @@ def project_all_tasks(project_id: int) -> Response:
                     if task["Next Run"] and isinstance(task["Next Run"], datetime.datetime)
                     else (task["Next Run"] if task["Next Run"] else "")
                 ),
-                "Run Rank": task.get("Run Rank"),
+                "Run Rank": task.get("Run Rank") or "",
             }
         )
 

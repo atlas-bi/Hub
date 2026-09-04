@@ -7,12 +7,18 @@ from pathlib import Path
 from flask import Blueprint
 from flask import current_app as app
 from flask.cli import with_appcontext
-from sqlalchemy_utils import create_database, database_exists, drop_database
+from sqlalchemy_utils import create_database, database_exists
 
 from web import model
 from web.extensions import db
 
 cli_bp = Blueprint("cli", __name__)
+
+_SCRIPTS_PATH = str(Path(__file__).parents[1] / "scripts")
+if _SCRIPTS_PATH not in sys.path:
+    sys.path.append(_SCRIPTS_PATH)
+
+from database import force_drop_database  # noqa: E402
 
 
 @cli_bp.cli.command("create_db")
@@ -32,7 +38,7 @@ def create_db() -> None:
 def reset_db() -> None:
     """Add command to clear the database."""
     if database_exists(db.engine.url):
-        drop_database(db.engine.url)
+        force_drop_database(db.engine.url, db.engine)
 
     create_database(db.engine.url)
 
@@ -43,9 +49,8 @@ def db_seed() -> None:
     """Add command to seed the database.
 
     This is run on each deploy to keep db settings updated.
-    poetry run flask --app=web cli seed
+    uv run flask --app=web cli seed
     """
-    sys.path.append(str(Path(__file__).parents[1]) + "/scripts")
     database_module = import_module("database")
 
     database_module.seed(db.session, model)

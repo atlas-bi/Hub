@@ -2,11 +2,11 @@
 
 from typing import Union
 
-from flask import Blueprint, abort
+from flask import Blueprint, abort, flash, redirect, render_template, request, session
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, session
 from flask_login import current_user, login_user, logout_user
 from is_safe_url import is_safe_url
+from sqlalchemy.exc import OperationalError, PendingRollbackError
 from werkzeug import Response
 
 from web import db, executor
@@ -21,7 +21,11 @@ auth_bp = Blueprint("auth_bp", __name__)
 @app.login_manager.user_loader
 def load_user(user_id: int) -> User:
     """Get user."""
-    return User.query.filter_by(id=user_id).first()
+    try:
+        return User.query.filter_by(id=user_id).first()
+    except (OperationalError, PendingRollbackError):
+        db.session.rollback()
+        return User.query.filter_by(id=user_id).first()
 
 
 @auth_bp.route("/not_authorized")
@@ -182,5 +186,10 @@ def logout() -> str:
 def log_login(name: str, type_id: int) -> None:
     """Log all login/logout attempts."""
     me = Login(username=name, type_id=type_id)
-    db.session.add(me)
-    db.session.commit()
+    try:
+        db.session.add(me)
+        db.session.commit()
+    except (OperationalError, PendingRollbackError):
+        db.session.rollback()
+        db.session.add(me)
+        db.session.commit()

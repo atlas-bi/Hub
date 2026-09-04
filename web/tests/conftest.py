@@ -5,13 +5,13 @@ from typing import Generator, Tuple
 import pytest
 from dateutil.tz import tzlocal
 from flask import url_for
-from sqlalchemy_utils import create_database, database_exists, drop_database
+from sqlalchemy_utils import create_database, database_exists
 
 from web import create_app as web_create_app
 from web import model
 from web.model import Project, Task
 
-from . import get_or_create, seed
+from . import force_drop_database, get_or_create, seed
 
 os.environ["FLASK_ENV"] = "test"
 os.environ["FLASK_APP"] = "web"
@@ -28,7 +28,7 @@ def client_fixture() -> Generator:
         from web.model import User
 
         if database_exists(db.engine.url):
-            drop_database(db.engine.url)
+            force_drop_database(db.engine.url, db.engine)
 
         create_database(db.engine.url)
 
@@ -65,7 +65,7 @@ def client_fixture() -> Generator:
     with app.app_context():
         db.session.remove()
         db.drop_all()
-        drop_database(db.engine.url)
+        force_drop_database(db.engine.url, db.engine)
 
 
 def check_url(client, url: str, flash: bool = False) -> str:  # type: ignore[no-untyped-def]

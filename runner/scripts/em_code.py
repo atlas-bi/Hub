@@ -286,9 +286,7 @@ class SourceCode:
         if ".git" in str(url):
             return ""
         try:
-            page = requests.get(
-                str(url), verify=app.config["HTTP_VERIFY_SSL"], timeout=60
-            )  # noqa: S501
+            page = requests.get(str(url), verify=app.config["HTTP_VERIFY_SSL"], timeout=60)  # noqa: S501
             self.query = page.text
             self.db_type = (
                 "mssql"

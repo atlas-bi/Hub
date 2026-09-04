@@ -10,9 +10,8 @@ from typing import Any, List
 
 import requests
 import urllib3
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask import current_app as app
-from flask import jsonify
 from flask_login import current_user, login_required
 from sqlalchemy import and_, or_
 
@@ -179,7 +178,8 @@ def sub_enable_task(task_id: int) -> None:
                 Task.id == task_id,
             )
         ).order_by(
-            Task.order.asc(), Task.name.asc()  # type: ignore[union-attr]
+            Task.order.asc(),  # type: ignore[union-attr]
+            Task.name.asc(),  # type: ignore[union-attr]
         ).first() is not None and (
             Task.query.filter(
                 or_(  # type: ignore[type-var]
@@ -189,9 +189,7 @@ def sub_enable_task(task_id: int) -> None:
             )
             .order_by(Task.order.asc(), Task.name.asc())  # type: ignore[union-attr]
             .first()
-        ).id == int(
-            task_id
-        ):
+        ).id == int(task_id):
             send_task_to_scheduler(task_id)
         else:
             # make sure it is not in the scheduler.
@@ -252,7 +250,8 @@ def run_project(project_list: List[int]) -> str:
     project = Project.query.filter_by(id=project_id).first()
 
     tasks = Task.query.filter_by(project_id=project_id, enabled=1).order_by(
-        Task.order.asc(), Task.name.asc()  # type: ignore[union-attr]
+        Task.order.asc(),  # type: ignore[union-attr]
+        Task.name.asc(),  # type: ignore[union-attr]
     )
 
     if project.sequence_tasks == 1:

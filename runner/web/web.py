@@ -1,18 +1,18 @@
 """Runner API routes."""
 
 import datetime
+import logging
 import re
 import sys
 from pathlib import Path
 
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
 from flask import current_app as app
-from flask import jsonify
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
 from werkzeug.wrappers import Response
 
-from runner import executor
+from runner import db, executor
 from runner.model import (
     ConnectionDatabase,
     ConnectionFtp,
@@ -21,6 +21,7 @@ from runner.model import (
     ConnectionSsh,
     Task,
     TaskFile,
+    TaskLog,
 )
 from runner.scripts.em_code import SourceCode
 from runner.scripts.em_date import DateParsing
@@ -49,6 +50,18 @@ sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_decrypt
 
 
+def _log_runner_future_exception(task_id: int, future: object) -> None:
+    """Log uncaught runner exceptions with the task id."""
+    try:
+        exception = future.exception()
+    except Exception:
+        logging.exception("Runner future failed while checking task %s.", task_id)
+        return
+
+    if exception:
+        logging.exception("Runner task %s failed after queueing.", task_id, exc_info=exception)
+
+
 @web_bp.route("/api")
 def alive() -> dict:
     """Check API status."""
@@ -66,9 +79,9 @@ def send_ftp(task_id: int, run_id: int, file_id: int) -> dict:
         task = Task.query.filter_by(id=task_id).first()
         my_file = TaskFile.query.filter_by(id=file_id).first()
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -110,9 +123,9 @@ def send_sftp(run_id: int, file_id: int) -> dict:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         task = my_file.task
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -157,9 +170,9 @@ def send_smb(run_id: int, file_id: int) -> dict:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         task = my_file.task
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -204,9 +217,9 @@ def send_email(run_id: int, file_id: int) -> dict:
         my_file = TaskFile.query.filter_by(id=file_id).first()
         task = my_file.task
 
-        temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        temp_path = (
+            temp_path
             / sanitize_filename(task.project.name)
             / sanitize_filename(task.name)
             / my_file.job_id
@@ -247,13 +260,58 @@ def send_email(run_id: int, file_id: int) -> dict:
         return jsonify({"error": str(e)})
 
 
-@web_bp.route("/api/<task_id>")
-def run(task_id: int) -> Response:
-    """Run specified task."""
-    if not Task.query.filter_by(id=task_id).first():
-        return jsonify({"error": f"Task {task_id} not found."})
+@web_bp.route("/api/run")
+def run_from_query() -> Response:
+    """Run specified task from query parameters."""
+    task_id = request.args.get("task_id", "")
+    return _run_task(task_id)
 
-    executor.submit(Runner, task_id)
+
+@web_bp.route("/api/<task_id>")
+def run(task_id: str) -> Response:
+    """Run specified task."""
+    return _run_task(task_id)
+
+
+def _run_task(task_id: str) -> Response:
+    """Run specified task."""
+    try:
+        task_id_int = int(task_id)
+    except ValueError:
+        return jsonify({"error": f"Invalid task id {task_id}."})
+
+    task = Task.query.filter_by(id=task_id_int).first()
+    if not task:
+        return jsonify({"error": f"Task {task_id_int} not found."})
+
+    logging.warning("Runner received run request from scheduler for task %s.", task_id_int)
+    log = TaskLog(
+        task_id=task.id,
+        status_id=8,
+        message="Runner received run request from scheduler.",
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    try:
+        future = executor.submit(Runner, task_id_int)
+        future.add_done_callback(
+            lambda submitted: _log_runner_future_exception(task_id_int, submitted)
+        )
+    except Exception as e:
+        task.status_id = 2
+        log = TaskLog(
+            task_id=task.id,
+            status_id=8,
+            error=1,
+            message=f"Runner failed to queue task.\n{e}",
+        )
+        db.session.add(log)
+        db.session.commit()
+        logging.exception("Runner failed to queue task %s.", task_id_int)
+        response = jsonify({"error": "Runner failed to queue task."})
+        response.status_code = 500
+        return response
 
     return jsonify({"message": "runner completed."})
 
@@ -318,9 +376,9 @@ def get_task_file_download(file_id: int) -> dict:
     my_file = TaskFile.query.filter_by(id=file_id).first()
     task = my_file.task
 
-    temp_path = Path(
-        Path(__file__).parent.parent
-        / "temp"
+    temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+    temp_path = (
+        temp_path
         / sanitize_filename(task.project.name)
         / sanitize_filename(task.name)
         / my_file.job_id

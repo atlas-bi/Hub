@@ -8,8 +8,8 @@ Database migrations are run through a manager script.
 .. code-block:: console
 
     warning, this will use db from prod config.
-    poetry run flask --app=web db migrate
-    poetry run flask --app=web db upgrade
+    uv run flask --app=web db migrate
+    uv run flask --app=web db upgrade
 
 Sometimes there is a conflict between flask-migrations (Alembic migrations)
 and the Postgresql db - Postgres will add some indexes that flask-migrations
@@ -123,14 +123,14 @@ class Project(db.Model):
     description: Optional[str] = None
     owner_id: Optional[int] = None
     cron: Optional[int] = None
-    cron_year: Optional[int] = None
-    cron_month: Optional[int] = None
-    cron_week: Optional[int] = None
-    cron_day: Optional[int] = None
-    cron_week_day: Optional[int] = None
-    cron_hour: Optional[int] = None
-    cron_min: Optional[int] = None
-    cron_sec: Optional[int] = None
+    cron_year: Optional[str] = None  # NOSONAR
+    cron_month: Optional[str] = None  # NOSONAR
+    cron_week: Optional[str] = None  # NOSONAR
+    cron_day: Optional[str] = None  # NOSONAR
+    cron_week_day: Optional[str] = None  # NOSONAR
+    cron_hour: Optional[str] = None  # NOSONAR
+    cron_min: Optional[str] = None  # NOSONAR
+    cron_sec: Optional[str] = None  # NOSONAR
     cron_start_date: Optional[datetime.datetime] = None
     cron_end_date: Optional[datetime.datetime] = None
 
@@ -158,14 +158,14 @@ class Project(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True, index=True)
 
     cron = db.Column(db.Integer, nullable=True)
-    cron_year = db.Column(db.Integer, nullable=True)
-    cron_month = db.Column(db.Integer, nullable=True)
-    cron_week = db.Column(db.Integer, nullable=True)
-    cron_day = db.Column(db.Integer, nullable=True)
-    cron_week_day = db.Column(db.Integer, nullable=True)
-    cron_hour = db.Column(db.Integer, nullable=True)
-    cron_min = db.Column(db.Integer, nullable=True)
-    cron_sec = db.Column(db.Integer, nullable=True)
+    cron_year = db.Column(db.String(120), nullable=True)  # NOSONAR
+    cron_month = db.Column(db.String(120), nullable=True)  # NOSONAR
+    cron_week = db.Column(db.String(120), nullable=True)  # NOSONAR
+    cron_day = db.Column(db.String(120), nullable=True)  # NOSONAR
+    cron_week_day = db.Column(db.String(120), nullable=True)  # NOSONAR
+    cron_hour = db.Column(db.String(120), nullable=True)  # NOSONAR
+    cron_min = db.Column(db.String(120), nullable=True)  # NOSONAR
+    cron_sec = db.Column(db.String(120), nullable=True)  # NOSONAR
     cron_start_date = db.Column(db.DateTime, nullable=True)
     cron_end_date = db.Column(db.DateTime, nullable=True)
 
