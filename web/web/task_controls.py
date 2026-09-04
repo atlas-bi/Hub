@@ -1,9 +1,8 @@
 """Task web views."""
 
 import requests
-from flask import Blueprint
+from flask import Blueprint, flash, jsonify, redirect, url_for
 from flask import current_app as app
-from flask import flash, jsonify, redirect, url_for
 from flask_login import current_user, login_required
 from RelativeToNow import relative_to_now
 from werkzeug.wrappers import Response

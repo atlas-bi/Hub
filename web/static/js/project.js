@@ -35,8 +35,7 @@
   }
   var projectGlobalParams = d.querySelector('textarea[name="globalParams"]');
   if (projectGlobalParams) {
-    // eslint-disable-next-line no-undef,no-unused-vars
-    var myprojectGlobalParams = CodeMirror.fromTextArea(projectGlobalParams, {
+    CodeMirror.fromTextArea(projectGlobalParams, {
       theme: 'ttcn',
       mode: 'sql',
       autoRefresh: true,
@@ -51,8 +50,7 @@
   }
   var projectTaskParams = d.querySelector('textarea[name="taskParams"]');
   if (projectTaskParams) {
-    // eslint-disable-next-line no-undef,no-unused-vars
-    var myprojectTaskParams = CodeMirror.fromTextArea(projectTaskParams, {
+    CodeMirror.fromTextArea(projectTaskParams, {
       theme: 'ttcn',
       mode: 'sql',
       autoRefresh: true,
@@ -725,7 +723,7 @@
       weekNumbers: true,
       time_24hr: true,
     });
-  } catch (e) {
+  } catch {
     // nothing
   }
 })();

@@ -7,9 +7,8 @@ from dataclasses import dataclass
 from typing import Generator, Optional
 
 import requests
-from flask import Blueprint
+from flask import Blueprint, jsonify, redirect, send_file, url_for
 from flask import current_app as app
-from flask import jsonify, redirect, send_file, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 

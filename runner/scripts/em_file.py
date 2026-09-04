@@ -6,7 +6,7 @@ import os
 import sys
 import zipfile
 from pathlib import Path
-from typing import IO, Optional, Tuple, Union
+from typing import IO, Literal, Optional, Tuple, Union, cast
 
 import gnupg
 from crypto import em_decrypt
@@ -76,7 +76,7 @@ class File:
         )
         self.params = params
 
-    def __quote_level(self) -> int:
+    def __quote_level(self) -> Literal[0, 1, 2, 3]:
         """Return quote level based on task values.
 
         :returns: quote level as an integer.
@@ -96,7 +96,7 @@ class File:
             4: 2,  # "csv.QUOTE_NONNUMERIC",
         }
 
-        return quote_levels[task_level]
+        return cast(Literal[0, 1, 2, 3], quote_levels[task_level])
 
     def __quotechar(self) -> str:
         if self.__quote_level() == 3:  # quote none

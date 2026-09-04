@@ -112,6 +112,9 @@ def test_one_project(client_fixture: fixture) -> None:
 
     assert page.request.path == url_for("project_bp.one_project", project_id=p_id)
 
+    assert 'title="Refresh Tasks"'.encode() in page.data
+    assert url_for("project_bp.one_project", project_id=p_id).encode() in page.data
+
 
 def test_edit_project_form(client_fixture: fixture) -> None:
     # test with invalid project
@@ -146,7 +149,7 @@ def test_create_cron_project(client_fixture: fixture) -> None:
         "project_name": "test cron project",
         "project_desc": "my cron project description",
         "project_cron": "1",
-        "project_cron_year": "1",
+        "project_cron_year": "2030",
         "project_cron_mnth": "1",
         "project_cron_week": "1",
         "project_cron_day": "1",
@@ -198,7 +201,7 @@ def test_edit_project(client_fixture: fixture) -> None:
         "project_name": "test cron project",
         "project_desc": "my cron project description",
         "project_cron": "1",
-        "project_cron_year": "1",
+        "project_cron_year": "2030",
         "project_cron_mnth": "1",
         "project_cron_week": "1",
         "project_cron_day": "1",

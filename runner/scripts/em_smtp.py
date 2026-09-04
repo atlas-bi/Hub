@@ -75,7 +75,7 @@ class Smtp:
                     mail_server.ehlo()
                     mail_server.login(
                         app.config["SMTP_USERNAME"],
-                        app.config.get("SMTP_PASSWORD", None),
+                        app.config.get("SMTP_PASSWORD") or "",
                     )
 
                 mail_server.sendmail(app.config["SMTP_SENDER_EMAIL"], phone, self.msg.as_string())
@@ -144,7 +144,7 @@ class Smtp:
                 mail_server.ehlo()
                 mail_server.login(
                     app.config["SMTP_USERNAME"],
-                    app.config.get("SMTP_PASSWORD", None),
+                    app.config.get("SMTP_PASSWORD") or "",
                 )
             mail_server.sendmail(
                 app.config["SMTP_SENDER_EMAIL"], self.mailto, self.msg.as_string()

@@ -12,7 +12,7 @@ import tempfile
 import time
 import urllib.parse
 from pathlib import Path
-from typing import IO, List, Optional
+from typing import IO, Any, List, Optional
 
 import azure.devops.credentials as cd
 import requests
@@ -20,6 +20,7 @@ from azure.devops.connection import Connection
 from flask import current_app as app
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathvalidate import sanitize_filename
+from sqlalchemy.exc import OperationalError, PendingRollbackError
 
 from runner import db, redis_client
 from runner.model import Task, TaskFile, TaskLog
@@ -95,11 +96,16 @@ class Runner:
 
         self.run_id = my_hash.hexdigest()[:10]
 
-        task = Task.query.filter_by(id=task_id).first()
+        try:
+            task = Task.query.filter_by(id=task_id).first()
+        except (OperationalError, PendingRollbackError):
+            db.session.rollback()
+            task = Task.query.filter_by(id=task_id).first()
+
         if not task:
             raise ValueError(f"Task {task_id} not found.")
 
-        self.source_files: List[IO[str]]
+        self.source_files: List[IO[Any]]
         self.output_files: List[str] = []
 
         print("starting task " + str(task.id))  # noqa: T201
@@ -127,9 +133,9 @@ class Runner:
             raise RunnerException(self.task, self.run_id, 18, message)
 
         # create temp folder for output
-        self.temp_path = Path(
-            Path(__file__).parent.parent
-            / "temp"
+        self.temp_path = Path(app.config["RUNNER_TEMP_PATH"])
+        self.temp_path = (
+            self.temp_path
             / sanitize_filename(self.task.project.name)
             / sanitize_filename(self.task.name)
             / self.run_id
@@ -543,10 +549,13 @@ class Runner:
                         error_msg="Failed to clone repo: %s" % (self.task.processing_url,),
                     ).shell()
 
-                    processing_script_name = str(self.temp_path) + (
-                        self.task.processing_command
-                        if self.task.processing_command is not None
-                        else ""
+                    processing_script_name = Path(
+                        str(self.temp_path)
+                        + (
+                            self.task.processing_command
+                            if self.task.processing_command is not None
+                            else ""
+                        )
                     )
                 # pylint: disable=broad-except
                 except BaseException:
@@ -863,6 +872,7 @@ class Runner:
 
             output: List[List[str]] = []
             empty = 0
+            num_lines = 0
             attachments: List[str] = []
 
             if self.task.email_completion_file == 1 and len(self.output_files) > 0:
@@ -870,6 +880,8 @@ class Runner:
                     if self.task.email_completion_file_embed == 1:
                         with open(output_file, newline="") as csvfile:
                             output.extend(list(csv.reader(csvfile)))
+                        with open(output_file, "r") as f:
+                            num_lines = len(f.readlines())
 
                     # check attachement file size if the task
                     # should not send blank files
@@ -877,9 +889,16 @@ class Runner:
                         self.task.email_completion_dont_send_empty_file == 1
                         and output_file
                         # if query and data is blank, or other types and file is 0
-                        and os.path.getsize(output_file) == 0
+                        # don't attach file if it is just the header.
+                        and (
+                            os.path.getsize(output_file) == 0
+                            or (self.task.source_query_include_header == 1 and num_lines <= 1)
+                        )
                     ):
                         empty = 1
+                    else:
+                        # There may be multiple output files. If one isn't empty, still include it.
+                        empty = 0
 
                     attachments.append(output_file)
 

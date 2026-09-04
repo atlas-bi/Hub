@@ -1,6 +1,55 @@
-from typing import Any
+from typing import Any, Optional
 
+import sqlalchemy as sa
+from sqlalchemy.engine.url import make_url
 from sqlalchemy.orm import Session as SqlSession
+from sqlalchemy_utils import drop_database
+
+
+def force_drop_database(url: Any, engine: Optional[Any] = None) -> None:
+    """Drop a database, terminating Postgres sessions first.
+
+    sqlalchemy-utils >= 0.42 removed the ``pg_terminate_backend`` step that used
+    to run before ``DROP DATABASE``. Flask-SQLAlchemy (and other) connection pools
+    still hold sessions to the target DB during test teardown, which then fails
+    with ``ObjectInUse``. See https://github.com/kvesteri/sqlalchemy-utils/issues/791
+    """
+    if engine is not None:
+        engine.dispose()
+
+    url_obj = make_url(url)
+    if url_obj.get_dialect().name != "postgresql":
+        drop_database(url)
+        return
+
+    database = url_obj.database
+    dialect_driver = url_obj.get_dialect().driver
+    admin_url = url_obj.set(database="postgres")
+
+    if dialect_driver in {"asyncpg", "pg8000", "psycopg", "psycopg2", "psycopg2cffi"}:
+        admin_engine = sa.create_engine(admin_url, isolation_level="AUTOCOMMIT")
+    else:
+        admin_engine = sa.create_engine(admin_url)
+
+    try:
+        with admin_engine.begin() as conn:
+            version = conn.dialect.server_version_info
+            pid_column = "pid" if version >= (9, 2) else "procpid"
+            conn.execute(
+                sa.text(
+                    f"""
+                    SELECT pg_terminate_backend(pg_stat_activity.{pid_column})
+                    FROM pg_stat_activity
+                    WHERE pg_stat_activity.datname = :database
+                      AND {pid_column} <> pg_backend_pid()
+                    """
+                ),
+                {"database": database},
+            )
+            quoted = conn.dialect.identifier_preparer.quote(database)
+            conn.execute(sa.text(f"DROP DATABASE {quoted}"))
+    finally:
+        admin_engine.dispose()
 
 
 def get_or_create(session: SqlSession, model: Any, **kwargs: Any) -> Any:

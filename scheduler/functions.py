@@ -6,7 +6,25 @@ import time
 from requests import get
 
 from scheduler.extensions import atlas_scheduler, db
-from scheduler.model import Task
+from scheduler.model import Task, TaskLog
+
+
+def _raise_for_runner_error(response: object) -> None:
+    """Raise when the runner API reports that it did not queue the task."""
+    status_code = getattr(response, "status_code", None)
+    text = getattr(response, "text", "")
+    ok = getattr(response, "ok", True)
+
+    if not ok:
+        raise RuntimeError(f"Runner returned HTTP {status_code}: {text}")
+
+    try:
+        body = response.json()
+    except ValueError:
+        body = {}
+
+    if isinstance(body, dict) and body.get("error"):
+        raise RuntimeError(f"Runner returned error: {body['error']}")
 
 
 def scheduler_delete_task(task_id: int) -> bool:
@@ -35,6 +53,7 @@ def scheduler_task_runner(task_id: int) -> None:
     :param task_id: id of task to run
     """
     try:
+        task_id = int(task_id)
         with atlas_scheduler.app.app_context():
             # mark the task status as error in the
             # unlikely event that the runner is not
@@ -48,11 +67,29 @@ def scheduler_task_runner(task_id: int) -> None:
             task.status_id = 2
             db.session.commit()
 
-            get(atlas_scheduler.app.config["RUNNER_HOST"] + "/" + task_id, timeout=60)
+            response = get(
+                f"{atlas_scheduler.app.config['RUNNER_HOST']}/run",
+                params={"task_id": task_id},
+                timeout=60,
+            )
+            _raise_for_runner_error(response)
     # pylint: disable=broad-except
     except BaseException as e:
-        print("failed to run job.")  # noqa: T201
+        print(f"failed to run job {task_id}.")  # noqa: T201
         print(str(e))  # noqa: T201
+        with atlas_scheduler.app.app_context():
+            task = Task.query.filter_by(id=task_id).first()
+            if task:
+                task.status_id = 2
+                log = TaskLog(
+                    task_id=task_id,
+                    job_id=task.last_run_job_id or "",
+                    status_id=6,
+                    error=1,
+                    message=f"Failed to send task to runner.\n{e}",
+                )
+                db.session.add(log)
+                db.session.commit()
         raise e
 
 
@@ -129,14 +166,14 @@ def scheduler_add_task(task_id: int) -> bool:
         atlas_scheduler.add_job(
             func=scheduler_task_runner,
             trigger="cron",
-            second=project.cron_sec,
-            minute=project.cron_min,
-            hour=project.cron_hour,
-            year=project.cron_year,
-            month=project.cron_month,
-            week=project.cron_week,
-            day=project.cron_day,
-            day_of_week=project.cron_week_day,
+            second=project.cron_sec or None,
+            minute=project.cron_min or None,
+            hour=project.cron_hour or None,
+            year=project.cron_year or None,
+            month=project.cron_month or None,
+            week=project.cron_week or None,
+            day=project.cron_day or None,
+            day_of_week=project.cron_week_day or None,
             start_date=project.cron_start_date,
             end_date=project.cron_end_date,
             args=[str(task_id)],

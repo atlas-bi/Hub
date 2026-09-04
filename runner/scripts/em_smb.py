@@ -8,7 +8,7 @@ import sys
 import tempfile
 import time
 import urllib
-from io import TextIOWrapper
+from io import StringIO, TextIOWrapper
 from pathlib import Path
 from typing import IO, Any, Dict, Generator, List, Optional, Tuple
 
@@ -185,15 +185,20 @@ class Smb:
             new_path = str(Path(directory).joinpath(dirname))
             yield from self._walk(new_path)
 
-    def __load_file(self, file_name: str, index: int, length: int) -> IO[str]:
+    def __load_file(self, file_name: str, index: int, length: int) -> IO[Any]:
         RunnerLog(self.task, self.run_id, 10, f"({index} of {length}) downloading {file_name}")
 
         director = urllib.request.build_opener(SMBHandler)
 
         password = em_decrypt(self.password, app.config["PASS_KEY"])
+        file_path = (
+            str(Path(self.connection.path or "").joinpath(file_name))
+            if self.connection
+            else file_name
+        )
 
         open_file_for_read = director.open(
-            f"smb://{self.username}:{password}@{self.server_name},{self.server_ip}/{self.share_name}/{file_name}"
+            f"smb://{self.username}:{password}@{self.server_name},{self.server_ip}/{self.share_name}/{file_path}"
         )
 
         def load_data(file_obj: TextIOWrapper) -> Generator:
@@ -210,13 +215,16 @@ class Smb:
             for data in load_data(open_file_for_read):
                 if self.task.source_smb_ignore_delimiter != 1 and self.task.source_smb_delimiter:
                     my_delimiter = self.task.source_smb_delimiter or ","
+                    text = data.decode("utf-8", "replace") if isinstance(data, bytes) else data
 
                     csv_reader = csv.reader(
-                        data.splitlines(),
+                        text.splitlines(),
                         delimiter=my_delimiter,
                     )
-                    writer = csv.writer(data_file)
+                    converted = StringIO()
+                    writer = csv.writer(converted)
                     writer.writerows(csv_reader)
+                    data_file.write(converted.getvalue().encode("utf-8"))
 
                 else:
                     data_file.write(data)
@@ -233,7 +241,7 @@ class Smb:
 
         return data_file
 
-    def read(self, file_name: str) -> List[IO[str]]:
+    def read(self, file_name: str) -> List[IO[Any]]:
         """Read file contents of network file path.
 
         Data is loaded into a temp file.

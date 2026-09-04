@@ -7,9 +7,8 @@ from typing import Any, Iterable, Union, cast
 
 import requests
 from crypto import em_encrypt
-from flask import Blueprint
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
@@ -62,7 +61,7 @@ def _apply_task_cleanup(cleanups: list[tuple[Any, dict[str, Any]]]) -> set[int]:
     task_ids: set[int] = set()
 
     for query, updates in cleanups:
-        current_task_ids = {task_id for task_id, in query.with_entities(Task.id).all()}
+        current_task_ids = {task_id for (task_id,) in query.with_entities(Task.id).all()}
         if not current_task_ids:
             continue
 
