@@ -1,9 +1,19 @@
 // Run with node --test test_table_sort.cjs. Exercise the real table script.
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const vm = require('node:vm');
-const { test } = require('node:test');
-const source = fs.readFileSync('web/static/lib/table/table.js', 'utf8');
+const { afterEach, test } = require('node:test');
+const browserGlobals = ['document', 'window', 'sessionStorage', 'XMLHttpRequest'];
+const originalGlobals = Object.getOwnPropertyDescriptors(globalThis);
+
+afterEach(() => {
+  for (const name of browserGlobals) {
+    if (originalGlobals[name]) {
+      Object.defineProperty(globalThis, name, originalGlobals[name]);
+    } else {
+      delete globalThis[name];
+    }
+  }
+  delete require.cache[require.resolve('./web/static/lib/table/table.js')];
+});
 
 function page(storage, path = '/tasks', endpoint = '/table/tasks') {
   const requests = [];
@@ -24,15 +34,22 @@ function page(storage, path = '/tasks', endpoint = '/table/tasks') {
       'input.switch': { parentElement: { removeAttribute() {}, querySelector: () => ({ addEventListener() {} }) } } })[selector] || null,
     querySelectorAll: (selector) => selector.includes(' th') ? [header] : [],
   };
-  vm.runInNewContext(source, {
+  const browser = {
     document: { getElementsByClassName: () => [el] },
     window: { location: { pathname: path, href: `https://hub.test${path}` }, clearTimeout() {} },
-    sessionStorage: storage, URL,
+    sessionStorage: storage,
     XMLHttpRequest: function () {
       this.open = (_, url) => { this.url = url; };
       this.send = () => { requests.push(this); };
     },
-  });
+  };
+  for (const name of browserGlobals) {
+    Object.defineProperty(globalThis, name, {
+      configurable: true, writable: true, value: browser[name],
+    });
+  }
+  delete require.cache[require.resolve('./web/static/lib/table/table.js')];
+  require('./web/static/lib/table/table.js');
   function load() {
     body.rows = ['2', '1'].map((value) => ({ getElementsByTagName: () => [{ textContent: value }] }));
     header.asc = undefined;
