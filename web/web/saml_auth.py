@@ -21,6 +21,7 @@ from saml2.sigver import SignatureError
 from werkzeug import Response
 
 from web import db
+from web.extensions import csrf
 from web.model import User
 
 login_bp = Blueprint("login_bp", __name__)
@@ -47,6 +48,7 @@ class SAML:
 
 
 @login_bp.route("/saml2/acs/", methods=["POST"])
+@csrf.exempt
 def idp_initiated() -> Response:
     """Get response from IDP."""
     try:

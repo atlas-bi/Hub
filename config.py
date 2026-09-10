@@ -92,11 +92,13 @@ class Config:
     ).replace("postgres://", "postgresql://")
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Keep the pool small: each gunicorn worker multiplies these limits.
+    # Sites can raise them in config_cust.py if needed.
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_recycle": 1800,  # recycle connections older than 30 mins
         "pool_pre_ping": True,  # test connections before using to prevent errors
-        "max_overflow": 100,  # how many spare connections we can use?
-        "pool_size": 5,  # how many queries will run symultaniously?
+        "pool_size": 2,
+        "max_overflow": 5,
     }
 
     SCHEDULER_HOST = "http://127.0.0.1:5001/api"
