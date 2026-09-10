@@ -32,7 +32,7 @@ repos:
   - id: check-yaml
   - id: end-of-file-fixer
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.16.5
+  rev: v0.16.6
   hooks:
   - id: ruff-check
     files: ^(scheduler|web|runner)/.*\.py$
@@ -51,6 +51,6 @@ repos:
     args: [--autofix, --indent, '2']
     additional_dependencies: [setuptools<81]
 - repo: https://github.com/Riverside-Healthcare/djLint
-  rev: v1.44.2
+  rev: v1.46.1
   hooks:
   - id: djlint-jinja

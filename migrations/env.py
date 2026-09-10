@@ -4,6 +4,8 @@ import logging
 from logging.config import fileConfig
 
 from alembic import context
+from sqlalchemy import create_engine
+from sqlalchemy.pool import NullPool
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -72,9 +74,8 @@ def run_migrations_offline():
 def run_migrations_online():
     """Run migrations in 'online' mode.
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
+    Use NullPool so upgrades hold a single connection and do not
+    compete with the app's pooled gunicorn workers.
     """
 
     # this callback is used to prevent an auto-migration from being generated
@@ -87,7 +88,7 @@ def run_migrations_online():
                 directives[:] = []
                 logger.info("No changes in schema detected.")
 
-    connectable = get_engine()
+    connectable = create_engine(get_engine().url, poolclass=NullPool)
 
     with connectable.connect() as connection:
         context.configure(
@@ -99,6 +100,8 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
+
+    connectable.dispose()
 
 
 if context.is_offline_mode():
