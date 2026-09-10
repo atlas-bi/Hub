@@ -12,6 +12,10 @@ import {deleteSync} from 'del';
 import purgecss from 'gulp-purgecss';
 import cssnano from 'gulp-cssnano';
 
+// Soft-fail only while `gulp watch` is running so a typo doesn't kill the watcher.
+// One-shot `gulp build` / `pnpm install` must fail so CI cannot go green on broken CSS.
+let isWatching = false;
+
 gulp.task('font:inter', function() {
   return gulp.src('node_modules/@fontsource/inter/**/*').pipe(replace(/\.\/files\//g, '/static/fonts/inter/files/')).pipe(gulp.dest('web/static/fonts/inter'))
 });
@@ -32,20 +36,23 @@ gulp.task('fontawesome', function(done) {
 });
 
 gulp.task('sass', function() {
+  const compiler = sass({
+    quietDeps: true,
+    // Deprecations originate in bulma / bulma-checkradio; silence until those packages catch up.
+    silenceDeprecations: [
+      'legacy-js-api',
+      'import',
+      'global-builtin',
+      'color-functions',
+      'if-function',
+    ],
+  });
+  if (isWatching) {
+    compiler.on('error', sass.logError);
+  }
+
   return gulp.src("web/static/assets/**/*.scss")
-    .pipe(
-      sass({
-        quietDeps: true,
-        // Deprecations originate in bulma / bulma-checkradio; silence until those packages catch up.
-        silenceDeprecations: [
-          'legacy-js-api',
-          'import',
-          'global-builtin',
-          'color-functions',
-          'if-function',
-        ],
-      }).on('error', sass.logError)
-    )
+    .pipe(compiler)
     .pipe(
       purgecss({
         content: ['web/static/lib/**/*.js', 'web/static/js/**/*.js', 'web/templates/**/*.html.j2', 'runner/templates/**/*.html.j2', 'scheduler/templates/**/*.html.j2'],
@@ -66,6 +73,7 @@ gulp.task('build', gulp.series(
 ));
 
 gulp.task('watch', gulp.series('build', function (cb) {
+    isWatching = true;
     gulp.watch('web/static/assets/**/*.scss', gulp.series('sass'));
     gulp.watch('web/fonts/fontawesome/**/*.scss', gulp.series('fontawesome','sass'));
     gulp.watch('web/**/*.html*', gulp.series('fontawesome', 'sass'));
