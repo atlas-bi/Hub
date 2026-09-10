@@ -2,6 +2,7 @@
 
 import html
 import sys
+from io import StringIO
 from pathlib import Path
 from typing import Any, Iterable, Union, cast
 
@@ -10,6 +11,7 @@ from crypto import em_encrypt
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask import current_app as app
 from flask_login import current_user, login_required
+from paramiko import RSAKey
 from werkzeug.wrappers import Response
 
 from web import db
@@ -32,6 +34,21 @@ sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 connection_bp = Blueprint("connection_bp", __name__)
 
 ONE_CONNECTION = "connection_bp.one_connection"
+
+
+@connection_bp.route("/connection/ssh-key", methods=["POST"])
+@login_required
+def generate_ssh_key() -> Response:
+    """Generate a key pair without persisting private key material."""
+    key = RSAKey.generate(3072)
+    private_key = StringIO()
+    key.write_private_key(private_key, password=request.form.get("key_password") or None)
+    response = app.json.response(
+        private_key=private_key.getvalue(),
+        public_key=f"{key.get_name()} {key.get_base64()}",
+    )
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 def _in_filter(column: Any, ids: Iterable[int]) -> Any:

@@ -135,6 +135,44 @@
         </div>
         <style>.CodeMirror {height: 100px;}</style>
         <textarea class="connection_string" name="ssh_key">{% if sftp and sftp.key -%}{{ sftp.key|decrypt }}{%- endif -%}</textarea>
+        <button class="button mt-3" type="button" id="generate-ssh-key">Generate SSH key pair</button>
+        <p id="ssh-key-status" role="status"></p>
+        <div id="ssh-public-key-field" class="field mt-3" hidden>
+            <label class="label" for="ssh-public-key">Public key</label>
+            <textarea id="ssh-public-key" class="textarea" readonly></textarea>
+            <p class="help">Copy this public key to the server's authorized_keys file, then save this connection.</p>
+        </div>
+        <script>
+            document.getElementById('generate-ssh-key').addEventListener('click', async function () {
+                const form = this.closest('form');
+                const textarea = form.elements.ssh_key;
+                const editor = textarea.nextElementSibling?.CodeMirror;
+                if ((editor ? editor.getValue() : textarea.value) && !window.confirm('Replace the current SSH key?')) return;
+                const status = document.getElementById('ssh-key-status');
+                this.disabled = true;
+                status.textContent = 'Generating key pair…';
+                try {
+                    const response = await fetch('{{ url_for("connection_bp.generate_ssh_key") }}', {
+                        method: 'POST',
+                        body: new URLSearchParams({
+                            csrf_token: form.elements.csrf_token.value,
+                            key_password: form.elements.key_password.value,
+                        }),
+                    });
+                    if (!response.ok) throw new Error('Key generation failed. Please try again.');
+                    const keys = await response.json();
+                    textarea.value = keys.private_key;
+                    if (editor) editor.setValue(keys.private_key);
+                    document.getElementById('ssh-public-key').value = keys.public_key;
+                    document.getElementById('ssh-public-key-field').hidden = false;
+                    status.textContent = 'Key pair generated. Save the connection to keep it.';
+                } catch (error) {
+                    status.textContent = 'Key generation failed. Please try again.';
+                } finally {
+                    this.disabled = false;
+                }
+            });
+        </script>
         <button class="button is-info is-fullwidth my-5" type="submit">
             {% if sftp %}
                 Save
