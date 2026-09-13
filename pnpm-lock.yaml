@@ -36,8 +36,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.3(rollup@4.63.1)
       bulma:
-        specifier: 0.9.4
-        version: 0.9.4
+        specifier: 1.0.4
+        version: 1.0.4
       bulma-checkradio:
         specifier: 2.1.3
         version: 2.1.3
@@ -1590,6 +1590,9 @@ packages:
 
   bulma@0.9.4:
     resolution: {integrity: sha512-86FlT5+1GrsgKbPLRRY7cGDg8fsJiP/jzTqXXVqiUZZ2aZT8uemEOHlU1CDU+TxklPEZ11HZNNWclRBBecP4CQ==}
+
+  bulma@1.0.4:
+    resolution: {integrity: sha512-Ffb6YGXDiZYX3cqvSbHWqQ8+LkX6tVoTcZuVB3lm93sbAVXlO0D6QlOTMnV6g18gILpAXqkG2z9hf9z4hCjz2g==}
 
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
@@ -6436,6 +6439,8 @@ snapshots:
   bulma-tooltip@3.0.2: {}
 
   bulma@0.9.4: {}
+
+  bulma@1.0.4: {}
 
   bytes@3.1.2: {}
 
