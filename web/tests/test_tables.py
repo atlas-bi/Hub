@@ -132,12 +132,12 @@ def test_table_tasks_files(client_fixture: fixture) -> None:
 
 def test_table_tasks_files_only_includes_last_six_months(client_fixture: fixture) -> None:
     """File history excludes download links older than 180 days."""
-    task = Task.query.first()
+    _, task_id = create_demo_task(db.session)
     db.session.add_all(
         [
-            TaskFile(task_id=task.id, name="recent.csv", created=datetime.now()),
+            TaskFile(task_id=task_id, name="recent.csv", created=datetime.now()),
             TaskFile(
-                task_id=task.id,
+                task_id=task_id,
                 name="expired.csv",
                 created=datetime.now() - timedelta(days=181),
             ),
@@ -145,7 +145,7 @@ def test_table_tasks_files_only_includes_last_six_months(client_fixture: fixture
     )
     db.session.commit()
 
-    data = client_fixture.get(f"/table/task/{task.id}/files").get_json()
+    data = client_fixture.get(f"/table/task/{task_id}/files").get_json()
 
     assert {item.get("File Name") for item in data} == {None, "recent.csv"}
     assert data[1] == {"total": "1"}
