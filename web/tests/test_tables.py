@@ -13,11 +13,12 @@ run with::
 """
 
 import json
+from datetime import datetime, timedelta
 
 from pytest import fixture
 
 from web import db
-from web.model import Task
+from web.model import Task, TaskFile
 
 from .conftest import create_demo_task
 
@@ -124,8 +125,27 @@ def test_table_tasks_error_log(client_fixture: fixture) -> None:
 
 
 def test_table_tasks_files(client_fixture: fixture) -> None:
-    from web.model import Task
-
     task = Task.query.first()
     if task:
         assert client_fixture.get("/table/task/" + str(task.id) + "/files").status_code == 200
+
+
+def test_table_tasks_files_only_includes_last_six_months(client_fixture: fixture) -> None:
+    """File history excludes download links older than 180 days."""
+    task = Task.query.first()
+    db.session.add_all(
+        [
+            TaskFile(task_id=task.id, name="recent.csv", created=datetime.now()),
+            TaskFile(
+                task_id=task.id,
+                name="expired.csv",
+                created=datetime.now() - timedelta(days=181),
+            ),
+        ]
+    )
+    db.session.commit()
+
+    data = client_fixture.get(f"/table/task/{task.id}/files").get_json()
+
+    assert {item.get("File Name") for item in data} == {None, "recent.csv"}
+    assert data[1] == {"total": "1"}
