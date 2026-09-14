@@ -192,9 +192,7 @@ class File:
                             )
                         )
                         for row in reader:
-                            new_row = [
-                                (x.strip('"').strip("'") if isinstance(x, str) else x) for x in row
-                            ]
+                            new_row = row
 
                             if (
                                 self.task.destination_file_type_id == 1
@@ -206,7 +204,10 @@ class File:
                             ):
                                 new_row.append(self.task.destination_file_line_terminator)
 
-                            wrtr.writerow(new_row)
+                            if self.__quote_level() == csv.QUOTE_NONE and new_row == [""]:
+                                myfile.write(wrtr.dialect.lineterminator)
+                            else:
+                                wrtr.writerow(new_row)
 
                     # if xlxs (3)
                     elif self.task.destination_file_type_id == 3:
@@ -217,10 +218,10 @@ class File:
                             quotechar=self.__quotechar(),
                         )
                         for row in reader:
-                            new_row = [
-                                (x.strip('"').strip("'") if isinstance(x, str) else x) for x in row
-                            ]
-                            wrtr.writerow(new_row)
+                            if self.__quote_level() == csv.QUOTE_NONE and row == [""]:
+                                myfile.write(wrtr.dialect.lineterminator)
+                            else:
+                                wrtr.writerow(row)
 
                     else:
                         for line in data_file:
