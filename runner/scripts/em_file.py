@@ -98,9 +98,9 @@ class File:
 
         return cast(Literal[0, 1, 2, 3], quote_levels[task_level])
 
-    def __quotechar(self) -> str:
+    def __quotechar(self) -> Optional[str]:
         if self.__quote_level() == 3:  # quote none
-            return ""
+            return None
 
         return '"'
 
