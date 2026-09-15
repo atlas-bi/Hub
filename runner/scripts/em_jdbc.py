@@ -11,6 +11,7 @@ import jaydebeapi
 
 from runner import db
 from runner.model import Task, TaskLog
+from runner.scripts.em_connect_retry import with_connect_retry
 
 # set the limit for a csv cell value to something massive.
 # this is needed when users are building xml in a sql query
@@ -31,7 +32,8 @@ while True:
 
 def connect(connection: str) -> Tuple[Any, Any]:
     """Connect to jdbc server."""
-    try:
+
+    def attempt() -> Tuple[Any, Any]:
         conn_split = dict(x.split("=") for x in connection.split(","))
         conn = jaydebeapi.connect(
             ##couldn't get **conn_split to work. Call out parameters works.
@@ -43,8 +45,10 @@ def connect(connection: str) -> Tuple[Any, Any]:
         cur = conn.cursor()
         return conn, cur
 
+    try:
+        return with_connect_retry(attempt, retry_on=(jaydebeapi.Error,))
     except jaydebeapi.Error as e:
-        raise ValueError(f"Failed to connect to database.\n{e}")
+        raise ValueError(f"Failed to connect to database.\n{e}") from e
 
 
 class Jdbc:
