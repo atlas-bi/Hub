@@ -23,8 +23,10 @@ from runner.scripts.em_sqlserver import SqlServer
 from .conftest import create_demo_task
 
 
-def test_connection_failure(client_fixture: fixture) -> None:
-    p_id, t_id = create_demo_task()
+def test_connection_failure(client_fixture: fixture, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("runner.scripts.em_connect_retry.time.sleep", lambda _seconds: None)
+
+    _p_id, t_id = create_demo_task()
 
     # make a db connection
     conn = Connection(name="demo")
@@ -48,9 +50,10 @@ def test_connection_failure(client_fixture: fixture) -> None:
     temp_dir.mkdir(parents=True, exist_ok=True)
 
     with pytest.raises(ValueError) as e:
-        pg = SqlServer(task, None, str(task.source_database_conn.connection_string), 90, temp_dir)
-        assert "Failed to connection to database." in e
-        assert "Neither DSN nor SERVER keyword supplied" in e
+        SqlServer(task, None, str(task.source_database_conn.connection_string), 90, temp_dir)
+
+    assert "Failed to connect to database." in str(e.value)
+    assert "Neither DSN nor SERVER keyword supplied" in str(e.value)
 
 
 # def test_valid_connection(client_fixture: fixture) -> None:

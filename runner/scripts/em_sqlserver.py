@@ -11,6 +11,7 @@ import pyodbc
 
 from runner import db
 from runner.model import Task, TaskLog
+from runner.scripts.em_connect_retry import with_connect_retry
 
 # set the limit for a csv cell value to something massive.
 # this is needed when users are building xml in a sql query
@@ -31,7 +32,8 @@ while True:
 
 def connect(connection: str, timeout: int) -> Tuple[Any, Any]:
     """Connect to sql server."""
-    try:
+
+    def attempt() -> Tuple[Any, Any]:
         conn = pyodbc.connect(
             "Driver={ODBC Driver 18 for SQL Server};" + connection, timeout=timeout * 60
         )
@@ -39,8 +41,11 @@ def connect(connection: str, timeout: int) -> Tuple[Any, Any]:
         conn.timeout = timeout * 60
         cur = conn.cursor()
         return conn, cur
+
+    try:
+        return with_connect_retry(attempt, retry_on=(pyodbc.Error,))
     except pyodbc.Error as e:
-        raise ValueError(f"Failed to connection to database.\n{e}")
+        raise ValueError(f"Failed to connect to database.\n{e}") from e
 
 
 class SqlServer:
