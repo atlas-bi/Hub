@@ -20,7 +20,7 @@
     "bulma-tooltip": "3.0.2",
     "del": "8.0.1",
     "fontawesome-subset": "4.6.0",
-    "gulp": "4.0.2",
+    "gulp": "5.0.1",
     "gulp-autoprefixer": "9.0.0",
     "gulp-replace": "1.1.4",
     "gulp-sass": "5.1.0",
@@ -80,5 +80,5 @@
     "test:biome": "biome check web",
     "test:lint": "uv run tox -e lint"
   },
-  "version": "2.12.18"
+  "version": "2.12.19"
 }
