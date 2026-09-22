@@ -24,9 +24,12 @@ class RecordingCmd:
         self.command = cmd
 
     def shell(self) -> str:
-        """Record the command and return empty command output."""
+        """Record the command and return empty module-list output."""
         self.commands.append(self.command)
-        return ""
+        return (
+            "Please wait a moment while I gather a list of all available modules..."
+            "\nEnter any module name to get more help."
+        )
 
 
 def make_processor(job_path: Path) -> em_python.PyProcesser:
@@ -86,3 +89,14 @@ requests = "^2.0"
     assert "poetry_env/bin/poetry lock" in RecordingCmd.commands[0]
     assert f'. "{Path("job-1_env")}/bin/activate"' in RecordingCmd.commands[1]
     assert "poetry_env/bin/poetry install" in RecordingCmd.commands[1]
+
+
+def test_comma_separated_imports_are_installed_individually(tmp_path, monkeypatch) -> None:
+    """Comma-separated imports should become separate package arguments."""
+    (tmp_path / "script.py").write_text("import smtplib, ssl\n", encoding="utf8")
+    RecordingCmd.commands = []
+    monkeypatch.setattr(em_python, "Cmd", RecordingCmd)
+
+    make_processor(tmp_path)._PyProcesser__pip_install()
+
+    assert set(RecordingCmd.commands[-1].rsplit(" ", 2)[-2:]) == {"smtplib", "ssl"}

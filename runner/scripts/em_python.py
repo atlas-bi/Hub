@@ -125,7 +125,7 @@ class PyProcesser:
         ^\s*?from\K\s+[^\.].+?(?=import)
         """
         try:
-            imports = []
+            imports: List[str] = []
 
             # use requirements.txt
             requirements_text = list(Path(self.job_path).rglob("requirements.txt"))
@@ -204,11 +204,18 @@ class PyProcesser:
                 )
 
                 for this_file in paths:
-                    with open(this_file, "r") as my_file:
-                        for line in my_file:
-                            imports.extend(re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line))
-                            imports.extend(re.findall(r"^\s*?from\K\s+[^\.].+?(?=import)", line))
-                            imports.extend(re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line))
+                    tree = ast.parse(this_file.read_text(encoding="utf8"))
+                    imports.extend(
+                        alias.name
+                        for node in ast.walk(tree)
+                        if isinstance(node, ast.Import)
+                        for alias in node.names
+                    )
+                    imports.extend(
+                        node.module
+                        for node in ast.walk(tree)
+                        if isinstance(node, ast.ImportFrom) and node.module
+                    )
 
                 package_map = {
                     "dateutil": "python-dateutil",
