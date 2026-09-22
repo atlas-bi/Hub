@@ -1,5 +1,6 @@
 .pnpm-store
 .lighthouseci/
+.worktrees/
 packages/atlas-hub_*.*
 packages/assert.sh
 packages/atlas-hub-[0-9]*.[0-9]*.[0-9]*
