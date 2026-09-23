@@ -1,6 +1,7 @@
 """Test Python script dependency installation."""
 
 from pathlib import Path
+import subprocess
 from types import SimpleNamespace
 from typing import ClassVar, List
 
@@ -100,3 +101,41 @@ def test_comma_separated_imports_are_installed_individually(tmp_path, monkeypatc
     make_processor(tmp_path)._PyProcesser__pip_install()
 
     assert set(RecordingCmd.commands[-1].rsplit(" ", 2)[-2:]) == {"smtplib", "ssl"}
+
+
+def test_failed_import_install_uses_unique_pypi_candidate(tmp_path, monkeypatch) -> None:
+    """Retry a failed import install with a unique PyPI search result."""
+    (tmp_path / "script.py").write_text("import PIL\n", encoding="utf8")
+    commands = []
+
+    class SearchCmd(RecordingCmd):
+        def shell(self) -> str:
+            commands.append(self.command)
+            if "help('modules')" in self.command:
+                return (
+                    "Please wait a moment while I gather a list of all available modules..."
+                    "\nEnter any module name to get more help."
+                )
+            if self.command.endswith(" PIL"):
+                raise subprocess.CalledProcessError(1, self.command)
+            return ""
+
+    monkeypatch.setattr(em_python, "Cmd", SearchCmd)
+    monkeypatch.setattr(em_python, "RunnerLog", lambda *args: None)
+    monkeypatch.setattr(
+        em_python,
+        "requests",
+        SimpleNamespace(
+            get=lambda *args, **kwargs: SimpleNamespace(
+                status_code=200,
+                text='<a href="/project/Pillow/">Pillow</a>',
+            )
+        ),
+        raising=False,
+    )
+
+    processor = make_processor(tmp_path)
+    processor.task.id = 1
+    processor._PyProcesser__pip_install()
+
+    assert commands[-1].endswith(" Pillow")
