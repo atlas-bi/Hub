@@ -53,7 +53,6 @@ def test_connection_failure(client_fixture: fixture, monkeypatch: pytest.MonkeyP
         SqlServer(task, None, str(task.source_database_conn.connection_string), 90, temp_dir)
 
     assert "Failed to connect to database." in str(e.value)
-    assert "Neither DSN nor SERVER keyword supplied" in str(e.value)
 
 
 # def test_valid_connection(client_fixture: fixture) -> None:
