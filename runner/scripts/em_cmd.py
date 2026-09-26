@@ -9,7 +9,7 @@ from typing import List, Optional, Union
 from runner.model import Task
 from runner.scripts.em_messages import RunnerLog
 
-_SHELL_META = re.compile(r"[|&;<>$`\\!]")
+_SHELL_META = re.compile(r"[|&;<>$`\\!*?\[\]~()#]")
 
 
 class Cmd:
