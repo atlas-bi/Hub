@@ -1,9 +1,11 @@
 """Test Python script dependency installation."""
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 from types import SimpleNamespace
 from typing import ClassVar, List
+
+import pytest
 
 from runner.scripts import em_python
 
@@ -139,3 +141,102 @@ def test_failed_import_install_uses_unique_pypi_candidate(tmp_path, monkeypatch)
     processor._PyProcesser__pip_install()
 
     assert commands[-1].endswith(" Pillow")
+
+
+@pytest.mark.parametrize("candidate", ["Pillow;id", "--index-url=evil", "Pillow bad"])
+def test_pypi_search_rejects_unsafe_project_names(tmp_path, monkeypatch, candidate) -> None:
+    """Reject search results that cannot be safely used as pip project names."""
+    monkeypatch.setattr(
+        em_python,
+        "requests",
+        SimpleNamespace(
+            RequestException=OSError,
+            get=lambda *args, **kwargs: SimpleNamespace(
+                status_code=200,
+                text=f'<a href="/project/{candidate}/">project</a>',
+            ),
+        ),
+        raising=False,
+    )
+
+    result = make_processor(tmp_path)._PyProcesser__pypi_search("PIL")
+
+    assert result is None
+
+
+@pytest.mark.parametrize(
+    ("status_code", "text"),
+    [(503, '<a href="/project/Pillow/">Pillow</a>'), (200, "no project links")],
+)
+def test_pypi_search_returns_no_candidate_for_unavailable_or_empty_results(
+    tmp_path, monkeypatch, status_code, text
+) -> None:
+    """Unavailable searches and empty results do not produce install names."""
+    monkeypatch.setattr(
+        em_python,
+        "requests",
+        SimpleNamespace(
+            RequestException=OSError,
+            get=lambda *args, **kwargs: SimpleNamespace(status_code=status_code, text=text),
+        ),
+        raising=False,
+    )
+
+    assert make_processor(tmp_path)._PyProcesser__pypi_search("PIL") is None
+
+
+def test_pypi_search_returns_no_candidate_when_request_fails(tmp_path, monkeypatch) -> None:
+    """Network failures fail closed without returning an install candidate."""
+
+    def fail_request(*args, **kwargs):
+        raise OSError("offline")
+
+    monkeypatch.setattr(
+        em_python,
+        "requests",
+        SimpleNamespace(RequestException=OSError, get=fail_request),
+        raising=False,
+    )
+
+    assert make_processor(tmp_path)._PyProcesser__pypi_search("PIL") is None
+
+
+def test_ambiguous_pypi_results_preserve_original_install_failure(tmp_path, monkeypatch) -> None:
+    """Ambiguous search results do not trigger a speculative second install."""
+    (tmp_path / "script.py").write_text("import PIL\n", encoding="utf8")
+    commands = []
+
+    class AmbiguousSearchCmd(RecordingCmd):
+        def shell(self) -> str:
+            commands.append(self.command)
+            if "help('modules')" in self.command:
+                return (
+                    "Please wait a moment while I gather a list of all available modules..."
+                    "\nEnter any module name to get more help."
+                )
+            raise subprocess.CalledProcessError(1, self.command)
+
+    monkeypatch.setattr(em_python, "Cmd", AmbiguousSearchCmd)
+    monkeypatch.setattr(em_python, "RunnerLog", lambda *args: None)
+    monkeypatch.setattr(
+        em_python,
+        "requests",
+        SimpleNamespace(
+            RequestException=OSError,
+            get=lambda *args, **kwargs: SimpleNamespace(
+                status_code=200,
+                text=(
+                    '<a href="/project/Pillow/">Pillow</a>'
+                    '<a href="/project/PIL-Tools/">PIL Tools</a>'
+                ),
+            ),
+        ),
+        raising=False,
+    )
+    processor = make_processor(tmp_path)
+    processor.task.id = 1
+
+    with pytest.raises(subprocess.CalledProcessError):
+        processor._PyProcesser__pip_install()
+
+    assert len([command for command in commands if "/bin/pip" in command]) == 1

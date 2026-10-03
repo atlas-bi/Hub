@@ -338,7 +338,11 @@ class PyProcesser:
             return None
 
         candidates = list(dict.fromkeys(re.findall(r'href="/project/([^/"]+)/"', response.text)))
-        return candidates[0] if len(candidates) == 1 else None
+        if len(candidates) != 1 or not re.fullmatch(
+            r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?", candidates[0]
+        ):
+            return None
+        return candidates[0]
 
     def __run_script(self) -> None:
         try:
