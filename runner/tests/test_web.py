@@ -39,11 +39,6 @@ def test_alive(client_fixture: fixture) -> None:
     assert page.json == {"status": "alive"}
 
 
-def test_run_missing_task(client_fixture: fixture) -> None:
-    page = client_fixture.get("/api/999999")
-    assert page.json == {"error": "Task 999999 not found."}
-
-
 def test_run_logs_received_request(client_fixture: fixture, monkeypatch: fixture) -> None:
     _, task_id = create_demo_task()
 

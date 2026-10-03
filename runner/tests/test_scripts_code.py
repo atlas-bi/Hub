@@ -11,6 +11,9 @@ run with::
 
 """
 
+from types import SimpleNamespace
+from unittest.mock import Mock
+
 from pytest import fixture
 
 from runner.extensions import db
@@ -34,3 +37,18 @@ def test_source(client_fixture: fixture) -> None:
 
     # try to get souce code
     assert source_code.source() == "test"
+
+
+def test_mssql_cleanup_removes_use_and_go_batches() -> None:
+    """SQL Server source cleanup keeps statements the runner can execute."""
+    task = SimpleNamespace(source_type_id=1, source_database_conn=None)
+    params = Mock()
+    params.insert_query_params.side_effect = lambda query: query
+    source_code = SourceCode(task, None, params)
+    source_code.db_type = "mssql"
+
+    cleaned = source_code.cleanup("USE master;\nGO\nSELECT 1;")
+
+    assert "USE master" not in cleaned
+    assert "GO" not in cleaned
+    assert "SELECT 1;" in cleaned
