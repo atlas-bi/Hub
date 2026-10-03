@@ -3,7 +3,9 @@
 import argparse
 import csv
 import json
+import math
 import os
+import re
 import subprocess
 import sys
 import time
@@ -14,6 +16,7 @@ MODEL = "jev-1.13.0"
 HTTP_TIMEOUT = 30
 MAX_ATTEMPTS = 3
 MAX_BACKOFF = 30
+_REF_COMPONENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 HEADER = [
     "sha",
     "date",
@@ -60,6 +63,60 @@ def request_payload(commits):
     return {"state": {"commits": commits}, "model": MODEL, "questions": questions}
 
 
+def _retry_delay(exc, attempt):
+    """Return a bounded retry delay from Retry-After or exponential fallback."""
+    try:
+        delay = float((exc.headers or {}).get("Retry-After", 2**attempt))
+    except (TypeError, ValueError):
+        delay = 2**attempt
+    if not math.isfinite(delay) or delay < 0:
+        delay = 2**attempt
+    return min(delay, MAX_BACKOFF)
+
+
+def _retry_http_error(exc, attempt, sleeper):
+    if exc.code not in (429, 529):
+        raise RuntimeError(
+            f"TypeSafe classification failed: HTTP {exc.code} {exc.reason}"
+        ) from exc
+    if attempt == MAX_ATTEMPTS - 1:
+        raise RuntimeError(
+            f"TypeSafe classification failed: HTTP {exc.code} after {MAX_ATTEMPTS} attempts"
+        ) from exc
+    sleeper(_retry_delay(exc, attempt))
+
+
+def _request_result(api_request, opener, sleeper):
+    """Post the classification request with bounded retry for rate limiting."""
+    for attempt in range(MAX_ATTEMPTS):
+        try:
+            with opener(api_request, timeout=HTTP_TIMEOUT) as response:  # noqa: S310
+                return json.loads(response.read())
+        except error.HTTPError as exc:
+            _retry_http_error(exc, attempt, sleeper)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            raise RuntimeError(f"TypeSafe classification failed: {exc}") from exc
+    raise RuntimeError("TypeSafe classification failed after retries")
+
+
+def _predictions(result, count, confidence_threshold):
+    try:
+        model = result["model"]
+        return [
+            (
+                result["answers"][f"commit_{index}"]["choice"],
+                result["answers"][f"commit_{index}"]["confidence"],
+                model,
+                "yes"
+                if result["answers"][f"commit_{index}"]["confidence"] < confidence_threshold
+                else "no",
+            )
+            for index in range(count)
+        ]
+    except (KeyError, TypeError) as exc:
+        raise RuntimeError(f"TypeSafe classification failed: {exc}") from exc
+
+
 def classify_batch(commits, confidence_threshold=0.70, urlopen=None, sleep=None):
     """Return Jev category, confidence, model, and review flag for each commit."""
     key = os.environ.get("TYPESAFE_API_KEY")
@@ -72,51 +129,11 @@ def classify_batch(commits, confidence_threshold=0.70, urlopen=None, sleep=None)
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
         method="POST",
     )
-    opener = urlopen or request.urlopen
-    sleeper = sleep or time.sleep
-    for attempt in range(MAX_ATTEMPTS):
-        try:
-            with opener(api_request, timeout=HTTP_TIMEOUT) as response:  # noqa: S310
-                result = json.loads(response.read())
-            break
-        except error.HTTPError as exc:
-            if exc.code not in (429, 529):
-                raise RuntimeError(
-                    f"TypeSafe classification failed: HTTP {exc.code} {exc.reason}"
-                ) from exc
-            if attempt == MAX_ATTEMPTS - 1:
-                raise RuntimeError(
-                    f"TypeSafe classification failed: HTTP {exc.code} after "
-                    f"{MAX_ATTEMPTS} attempts"
-                ) from exc
-            try:
-                delay = float((exc.headers or {}).get("Retry-After", 2**attempt))
-                if not delay >= 0:
-                    raise ValueError
-            except (TypeError, ValueError):
-                delay = 2**attempt
-            sleeper(min(delay, MAX_BACKOFF))
-        except (OSError, ValueError, KeyError, TypeError) as exc:
-            raise RuntimeError(f"TypeSafe classification failed: {exc}") from exc
-
-    try:
-        model = result["model"]
-        return [
-            (
-                result["answers"][f"commit_{index}"]["choice"],
-                result["answers"][f"commit_{index}"]["confidence"],
-                model,
-                "yes"
-                if result["answers"][f"commit_{index}"]["confidence"] < confidence_threshold
-                else "no",
-            )
-            for index in range(len(commits))
-        ]
-    except (KeyError, TypeError) as exc:
-        raise RuntimeError(f"TypeSafe classification failed: {exc}") from exc
+    result = _request_result(api_request, urlopen or request.urlopen, sleep or time.sleep)
+    return _predictions(result, len(commits), confidence_threshold)
 
 
-def git(*args):
+def git(*args, input_text=None):
     """Run Git and return standard output."""
     command = ["git", *args]
     try:
@@ -125,22 +142,41 @@ def git(*args):
             check=True,
             text=True,
             capture_output=True,
+            input=input_text,
         ).stdout
     except subprocess.CalledProcessError as exc:
         detail = (exc.stderr or "").strip() or f"exit status {exc.returncode}"
         raise RuntimeError(f"{' '.join(exc.cmd)} failed: {detail}") from exc
 
 
+def _is_plain_ref(ref):
+    components = ref.split("/")
+    return bool(components) and all(
+        _REF_COMPONENT.fullmatch(component) and not component.lower().endswith(".lock")
+        for component in components
+    )
+
+
+def validate_revision_range(revision_range):
+    """Allow only a simple base-ref..head-ref range, not Git revision expressions."""
+    parts = revision_range.split("..")
+    if len(parts) != 2 or not all(_is_plain_ref(ref) for ref in parts):
+        raise RuntimeError("revision range must contain two plain refs separated by '..'")
+    return revision_range
+
+
 def commits(revision_range):
     """Read commit metadata and changed paths from Git."""
     found = []
+    revision_range = validate_revision_range(revision_range)
     log = git(
         "log",
         "--no-merges",
         "--format=%H%x09%ad%x09%s",
         "--date=short",
+        "--stdin",
         "--end-of-options",
-        revision_range,
+        input_text=f"{revision_range}\n",
     )
     for line in log.splitlines():
         sha, date, subject = line.split("\t", 2)
@@ -205,7 +241,12 @@ def write_csv(output, audit_rows):
 def main(argv=None):
     """Run the release audit command."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("revision_range", nargs="?", default="v2.12.3..origin/dev")
+    parser.add_argument(
+        "revision_range",
+        nargs="?",
+        default="v2.12.3..origin/dev",
+        help="two plain Git refs separated by '..' (for example, v2.12.3..origin/dev)",
+    )
     parser.add_argument("--confidence-threshold", type=float, default=0.70)
     parser.add_argument("--batch-size", type=int, default=10)
     args = parser.parse_args(argv)

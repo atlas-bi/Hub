@@ -13,13 +13,14 @@ run with::
 
 from unittest.mock import Mock
 
+import pytest
 from flask import url_for
+from flask.testing import FlaskClient
 from flask.wrappers import Response
 from flask_login import current_user
-from pytest import fixture, mark
 
 
-def test_index(client_fixture: fixture) -> None:
+def test_index(client_fixture: FlaskClient) -> None:
     """Verify that redirection to login page works.
 
     Parameters:
@@ -32,7 +33,7 @@ def test_index(client_fixture: fixture) -> None:
         assert "/login" in res.get_data(as_text=True)
 
 
-def login(client_fixture: fixture, username: str, password: str) -> Response:
+def login(client_fixture: FlaskClient, username: str, password: str) -> Response:
     # 302 becuase tests autologin.
     assert client_fixture.get("/login").status_code == 302
 
@@ -43,11 +44,11 @@ def login(client_fixture: fixture, username: str, password: str) -> Response:
     )
 
 
-def logout(client_fixture: fixture) -> Response:
+def logout(client_fixture: FlaskClient) -> Response:
     return client_fixture.get("/logout", follow_redirects=True)
 
 
-def test_login_logout(client_fixture: fixture) -> None:
+def test_login_logout(client_fixture: FlaskClient) -> None:
     """Make sure login and logout works."""
 
     logout(client_fixture)
@@ -74,12 +75,12 @@ def test_login_logout(client_fixture: fixture) -> None:
     # assert b"Invalid login, please try again!" in page.data
 
 
-def test_not_authorized(client_fixture: fixture) -> None:
+def test_not_authorized(client_fixture: FlaskClient) -> None:
     page = client_fixture.get("/not_authorized", follow_redirects=True)
     assert page.status_code == 200
 
 
-def test_next(client_fixture: fixture) -> None:
+def test_next(client_fixture: FlaskClient) -> None:
     username = "mr-cool"
     password = ""
 
@@ -104,7 +105,7 @@ def test_next(client_fixture: fixture) -> None:
     assert page.status_code == 400
 
 
-@mark.parametrize(
+@pytest.mark.parametrize(
     ("required_groups", "expected_endpoint", "csrf_enabled"),
     [
         ([], "/", False),

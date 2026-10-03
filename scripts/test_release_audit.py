@@ -7,6 +7,7 @@ import io
 import json
 import subprocess
 import urllib.error
+from unittest.mock import Mock
 
 import pytest
 import release_audit
@@ -148,13 +149,19 @@ def test_rows_to_csv_batches_git_commits_through_jev(monkeypatch):
             "--no-merges",
             "--format=%H%x09%ad%x09%s",
             "--date=short",
+            "--stdin",
             "--end-of-options",
-            "range",
         ): ("abc\t2026-01-01\tfix auth\ndef\t2026-01-02\tdocs update\n"),
         ("show", "--format=", "--name-only", "abc"): "web/auth.py\n",
         ("show", "--format=", "--name-only", "def"): "docs/use.md\n",
     }
-    monkeypatch.setattr(release_audit, "git", lambda *args: git_results[args])
+    git_inputs = []
+
+    def fake_git(*args, input_text=None):
+        git_inputs.append(input_text)
+        return git_results[args]
+
+    monkeypatch.setattr(release_audit, "git", fake_git)
     calls = []
 
     def urlopen(api_request, timeout=None):
@@ -174,9 +181,10 @@ def test_rows_to_csv_batches_git_commits_through_jev(monkeypatch):
 
     monkeypatch.setattr(release_audit.request, "urlopen", urlopen)
     output = io.StringIO()
-    release_audit.write_csv(output, release_audit.rows("range", batch_size=1))
+    release_audit.write_csv(output, release_audit.rows("base..head", batch_size=1))
 
     assert calls == ["abc", "def"]
+    assert git_inputs == ["base..head\n", None, None]
     assert list(csv.reader(io.StringIO(output.getvalue()))) == [
         release_audit.HEADER,
         [
@@ -208,22 +216,36 @@ def test_rows_to_csv_batches_git_commits_through_jev(monkeypatch):
     ]
 
 
-def test_main_reports_invalid_git_range_without_traceback(monkeypatch, capsys):
+def test_main_reports_git_error_without_traceback(monkeypatch, capsys):
     def fail(*_args, **_kwargs):
         raise subprocess.CalledProcessError(
-            128, ["git", "log", "bad-range"], stderr="fatal: bad revision"
+            128,
+            ["git", "log", "--no-merges", "--stdin", "--end-of-options"],
+            stderr="fatal: bad revision",
         )
 
     monkeypatch.setattr(release_audit.subprocess, "run", fail)
 
     with pytest.raises(SystemExit) as exit_info:
-        release_audit.main(["bad-range"])
+        release_audit.main(["missing..origin/dev"])
 
     assert exit_info.value.code == 1
     error = capsys.readouterr().err
-    assert "git log bad-range" in error
+    assert "git log --no-merges --stdin --end-of-options" in error
     assert "fatal: bad revision" in error
     assert "Traceback" not in error
+
+
+def test_main_rejects_malformed_revision_range_without_running_git(monkeypatch, capsys):
+    run = Mock()
+    monkeypatch.setattr(release_audit.subprocess, "run", run)
+
+    with pytest.raises(SystemExit) as exit_info:
+        release_audit.main(["bad-range"])
+
+    assert exit_info.value.code == 1
+    assert "revision range must contain two plain refs" in capsys.readouterr().err
+    run.assert_not_called()
 
 
 def test_main_writes_nothing_when_a_later_batch_fails(monkeypatch, capsys):
@@ -286,6 +308,35 @@ def test_classify_retries_429_and_honors_retry_after(monkeypatch):
     assert sleeps == [0.25]
 
 
+@pytest.mark.parametrize("retry_after", ["-1", "nan", "inf", "invalid"])
+def test_classify_uses_backoff_for_invalid_retry_after(monkeypatch, retry_after):
+    monkeypatch.setenv("TYPESAFE_API_KEY", "secret")
+    calls = 0
+    sleeps = []
+
+    def urlopen(_request, timeout=None):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise http_error(429, retry_after)
+        return Response(
+            {
+                "model": "jev-1.13.0",
+                "answers": {
+                    "commit_0": {
+                        "type": "choice",
+                        "choice": "behavior",
+                        "confidence": 0.8,
+                    }
+                },
+            }
+        )
+
+    release_audit.classify_batch(COMMITS[:1], urlopen=urlopen, sleep=sleeps.append)
+
+    assert sleeps == [1]
+
+
 def test_classify_uses_bounded_backoff_then_fails_usefully(monkeypatch):
     monkeypatch.setenv("TYPESAFE_API_KEY", "secret")
     sleeps = []
@@ -318,24 +369,39 @@ def test_classify_does_not_retry_authentication_errors(monkeypatch):
     assert calls == 1
 
 
-def test_dash_prefixed_revision_is_a_git_operand(monkeypatch):
-    seen = []
+@pytest.mark.parametrize("ref", ["v2.12.3", "origin/dev", "refs/heads/release-1", "a" * 40])
+def test_validate_revision_range_accepts_plain_refs(ref):
+    assert release_audit.validate_revision_range(f"{ref}..{ref}") == f"{ref}..{ref}"
 
-    def run(command, **_kwargs):
-        seen.append(command)
-        return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
 
+@pytest.mark.parametrize(
+    "revision_range",
+    [
+        "--upload-pack=touch /tmp/pwned..HEAD",
+        "v2.12.3..origin/dev;touch /tmp/pwned",
+        "HEAD~1..origin/dev",
+        "base...head",
+        "base..--exec=sh",
+        "base..origin//dev",
+    ],
+)
+def test_commits_rejects_unsafe_revision_range_before_git(monkeypatch, revision_range):
+    run = Mock()
     monkeypatch.setattr(release_audit.subprocess, "run", run)
 
-    assert release_audit.commits("--not-an-option") == []
-    assert seen == [
-        [
-            "git",
-            "log",
-            "--no-merges",
-            "--format=%H%x09%ad%x09%s",
-            "--date=short",
-            "--end-of-options",
-            "--not-an-option",
-        ]
-    ]
+    with pytest.raises(RuntimeError, match="revision range must contain two plain refs"):
+        release_audit.commits(revision_range)
+
+    run.assert_not_called()
+
+
+def test_commits_passes_validated_revision_range_through_stdin(monkeypatch):
+    run = Mock(return_value=subprocess.CompletedProcess([], 0, stdout="", stderr=""))
+    monkeypatch.setattr(release_audit.subprocess, "run", run)
+
+    assert release_audit.commits("v2.12.3..origin/dev") == []
+
+    command = run.call_args.args[0]
+    assert "--stdin" in command
+    assert "v2.12.3..origin/dev" not in command
+    assert run.call_args.kwargs["input"] == "v2.12.3..origin/dev\n"
