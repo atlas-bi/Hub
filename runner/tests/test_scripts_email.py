@@ -1,32 +1,43 @@
 """Regression tests for runner email messages."""
 
+from types import SimpleNamespace
 from unittest.mock import Mock
 
-import pytest
+from flask import Flask
 
-from runner.extensions import db
-from runner.model import Task
 from runner.scripts import em_messages
 from runner.scripts.em_messages import RunnerException
 
-from .conftest import create_demo_task
 
-
-def test_error_email_links_use_configured_web_host(client_fixture, monkeypatch) -> None:
+def test_error_email_links_use_configured_web_host(monkeypatch) -> None:
     """Error-email links point to this Hub instance."""
-    _, task_id = create_demo_task()
-    task = Task.query.filter_by(id=task_id).one()
-    task.email_error = 1
-    task.email_error_recipients = "ops@example.test"
-    db.session.commit()
+    task = SimpleNamespace(
+        id=12,
+        project_id=34,
+        project=SimpleNamespace(id=34, name="Example Project"),
+        name="Example Task",
+        last_run_job_id=None,
+        email_error=1,
+        email_error_recipients="ops@example.test",
+        email_error_subject=None,
+        email_error_message=None,
+        email_completion_message=None,
+        email_completion_log=0,
+    )
 
+    task_log = Mock()
+    task_log.query.filter_by.return_value.order_by.return_value.all.return_value = []
+    monkeypatch.setattr(em_messages, "TaskLog", task_log)
+    monkeypatch.setattr(em_messages, "RunnerLog", Mock())
+    monkeypatch.setattr(em_messages.db, "session", Mock())
     send_email = Mock()
     monkeypatch.setattr(em_messages, "Smtp", send_email)
-    host = client_fixture.application.config["WEB_HOST"].rstrip("/")
 
-    with pytest.raises(RunnerException):
+    app = Flask(__name__)
+    app.config.update(WEB_HOST="https://hub.example.test", ORG_NAME="Example Org")
+    with app.app_context():
         RunnerException(task, None, 18, "test failure")
 
     message = send_email.call_args.kwargs["message"]
-    assert f'href="{host}/project/{task.project_id}"' in message
-    assert f'href="{host}/task/{task.id}"' in message
+    assert 'href="https://hub.example.test/project/34"' in message
+    assert 'href="https://hub.example.test/task/12"' in message
