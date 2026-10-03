@@ -11,6 +11,7 @@ import psycopg2
 
 from runner import db
 from runner.model import Task, TaskLog
+from runner.scripts.em_connect_retry import with_connect_retry
 
 # set the limit for a csv cell value to something massive.
 # this is needed when users are building xml in a sql query
@@ -31,7 +32,8 @@ while True:
 
 def connect(connection: str, timeout: int) -> Tuple[Any, Any]:
     """Connect to postgres server."""
-    try:
+
+    def attempt() -> Tuple[Any, Any]:
         conn = psycopg2.connect(
             connection,
             connect_timeout=timeout * 60,
@@ -40,8 +42,10 @@ def connect(connection: str, timeout: int) -> Tuple[Any, Any]:
         cur = conn.cursor()
         return conn, cur
 
+    try:
+        return with_connect_retry(attempt, retry_on=(psycopg2.Error,))
     except psycopg2.Error as e:
-        raise ValueError(f"Failed to connect to database.\n{e}")
+        raise ValueError(f"Failed to connect to database.\n{e}") from e
 
 
 class Postgres:
