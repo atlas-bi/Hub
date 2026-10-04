@@ -300,6 +300,7 @@ def test_connection_forms_include_csrf_tokens(client_fixture: fixture) -> None:
                 "processing_sftp_file": None,
                 "processing_type_id": None,
                 "destination_sftp_id": None,
+                "destination_sftp": 0,
                 "destination_sftp_overwrite": None,
                 "destination_sftp_dont_send_empty_file": None,
             },
