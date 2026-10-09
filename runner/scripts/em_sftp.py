@@ -68,8 +68,7 @@ def connect(connection: ConnectionSftp) -> Tuple[Transport, SFTPClient]:
         for _ in range(3):
             try:
                 transport = paramiko.Transport(
-                    (str(connection.address), int(connection.port or 22)),
-                    disabled_algorithms={"pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]},
+                    (str(connection.address), int(connection.port or 22))
                 )
                 transport.banner_timeout = 10
                 transport.auth_timeout = 10
