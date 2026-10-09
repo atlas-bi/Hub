@@ -76,9 +76,10 @@
     "prod:web": "FLASK_ENV=production FLASK_DEBUG=0 FLASK_APP=web uv run flask run",
     "publish": "cd publish && fab publish && cd ..",
     "start": "pnpm build && (pnpm run gulp:watch &) && (pnpm run dev:browser &) && (pnpm run dev:runner &) && (pnpm run dev:scheduler &) && pnpm run dev:web",
-    "test": "pnpm run test:biome && pnpm run test:lint",
+    "test": "pnpm run test:biome && pnpm run test:node && pnpm run test:lint",
     "test:biome": "biome check web",
-    "test:lint": "uv run tox -e lint"
+    "test:lint": "uv run tox -e lint",
+    "test:node": "node --test test_table_sort.cjs"
   },
   "version": "2.12.20"
 }
