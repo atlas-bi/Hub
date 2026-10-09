@@ -3,18 +3,23 @@
 import csv
 from types import SimpleNamespace
 
+import pytest
+
 from runner.scripts import em_file
 
 
-def test_quote_none_preserves_literal_quotes_and_empty_rows(tmp_path, monkeypatch) -> None:
-    """Quote-free output keeps data quotes and supports empty records."""
+@pytest.mark.parametrize("destination_file_type_id", [1, 3])
+def test_quote_none_preserves_literal_quotes_and_empty_rows(
+    tmp_path, monkeypatch, destination_file_type_id
+) -> None:
+    """Quote-free CSV and Excel output keep data quotes and empty records."""
     source = tmp_path / "source.csv"
     with source.open("w", newline="") as stream:
         csv.writer(stream).writerows([['"', '"asdf"', "''"], [""]])
 
     task = SimpleNamespace(
         destination_file_name="output",
-        destination_file_type_id=1,
+        destination_file_type_id=destination_file_type_id,
         destination_ignore_delimiter=0,
         destination_file_delimiter=",",
         destination_quote_level_id=1,

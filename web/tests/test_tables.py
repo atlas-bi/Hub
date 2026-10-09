@@ -14,6 +14,7 @@ run with::
 
 import json
 from datetime import datetime, timedelta
+from unittest.mock import Mock
 
 from pytest import fixture
 
@@ -80,8 +81,19 @@ def test_table_connection_tasks(client_fixture: fixture) -> None:
     assert client_fixture.get("/table/connection/1/tasks").status_code == 200
 
 
-def test_table_job_orphans(client_fixture: fixture) -> None:
-    assert client_fixture.get("/table/jobs/orphans").status_code == 200
+def test_table_job_orphans(client_fixture: fixture, monkeypatch) -> None:
+    scheduler_response = Mock(
+        text=json.dumps([{"id": "9999", "name": "orphan", "next_run_time": None}])
+    )
+    monkeypatch.setattr("web.web.table.requests.get", Mock(return_value=scheduler_response))
+
+    response = client_fixture.get("/table/jobs/orphans")
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert json.loads(payload[0]["head"]) == ["Name", "Id", "Next Run Time", "Args"]
+    assert "Action" not in payload[2]
+    assert "/delete" not in response.get_data(as_text=True)
 
 
 def test_table_tasks_active(client_fixture: fixture) -> None:

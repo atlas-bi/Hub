@@ -11,6 +11,7 @@ run with::
 
 """
 
+from pathlib import Path
 from unittest.mock import Mock
 
 from bs4 import BeautifulSoup
@@ -228,7 +229,8 @@ def test_delete_database_disables_referencing_tasks(client_fixture: fixture, mon
     task.enabled = 1
     db.session.commit()
 
-    monkeypatch.setattr("web.web.connection.requests.get", Mock())
+    scheduler_get = Mock()
+    monkeypatch.setattr("web.web.connection.requests.get", scheduler_get)
 
     client_fixture.get(
         f"/connection/{database.connection_id}/database/{database.id}/delete",
@@ -240,6 +242,32 @@ def test_delete_database_disables_referencing_tasks(client_fixture: fixture, mon
     assert task.source_database_id is None
     assert task.source_type_id is None
     assert task.enabled == 0
+    scheduler_get.assert_called_once_with(
+        f"{client_fixture.application.config['SCHEDULER_HOST']}/delete/{task_id}", timeout=10
+    )
+
+
+def test_connection_forms_include_csrf_tokens(client_fixture: fixture) -> None:
+    """Connection forms expose tokens and CSRF rejects a tokenless POST."""
+    client_fixture.application.config["WTF_CSRF_ENABLED"] = True
+    response = client_fixture.get("/connection/new")
+    soup = BeautifulSoup(response.data, features="lxml")
+    assert soup.find("input", attrs={"name": "csrf_token", "value": True})
+    assert (
+        client_fixture.post("/connection/new", data={"name": "Missing token"}).status_code == 400
+    )
+
+    templates = Path(__file__).parents[1] / "templates" / "pages" / "connection"
+    for name in (
+        "new.html.j2",
+        "database_edit.html.j2",
+        "sftp_edit.html.j2",
+        "ftp_edit.html.j2",
+        "smb_edit.html.j2",
+        "ssh_edit.html.j2",
+        "gpg_edit.html.j2",
+    ):
+        assert 'name="csrf_token"' in (templates / name).read_text()
 
 
 def test_new_sftp(client_fixture: fixture) -> None:
