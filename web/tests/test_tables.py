@@ -120,6 +120,15 @@ def test_table_project_tasks(client_fixture: fixture) -> None:
     assert client_fixture.get("/table/project/1/task").status_code == 200
 
 
+def test_sequenced_project_uses_blank_rank_for_unranked_task(client_fixture: fixture) -> None:
+    """Unranked tasks render an empty table value instead of JSON null."""
+    project_id, _ = create_demo_task(db.session, sequence=1)
+
+    data = client_fixture.get(f"/table/project/{project_id}/task").get_json()
+
+    assert data[-1]["Run Rank"] == ""
+
+
 def test_table_project_tasklog(client_fixture: fixture) -> None:
     assert client_fixture.get("/table/project/1/tasklog").status_code == 200
 
