@@ -14,11 +14,21 @@ run with::
 from pathlib import Path
 from unittest.mock import Mock
 
+import pytest
 from bs4 import BeautifulSoup
 from pytest import fixture
 
 from web import db
-from web.model import ConnectionDatabase, Task
+from web.model import (
+    Connection,
+    ConnectionDatabase,
+    ConnectionFtp,
+    ConnectionGpg,
+    ConnectionSftp,
+    ConnectionSmb,
+    ConnectionSsh,
+    Task,
+)
 
 from .conftest import create_demo_task
 
@@ -188,6 +198,7 @@ def test_new_database(client_fixture: fixture) -> None:
 
 
 def test_delete_database_disables_referencing_tasks(client_fixture: fixture, monkeypatch) -> None:
+    """Deleting a database disables its task and requests scheduler removal."""
     mimetype = "application/x-www-form-urlencoded"
     headers = {"Content-Type": mimetype, "Accept": mimetype}
     response = client_fixture.post(
@@ -268,6 +279,146 @@ def test_connection_forms_include_csrf_tokens(client_fixture: fixture) -> None:
         "gpg_edit.html.j2",
     ):
         assert 'name="csrf_token"' in (templates / name).read_text()
+
+
+@pytest.mark.parametrize(
+    ("connector_model", "endpoint", "cleared_fields"),
+    [
+        (
+            ConnectionSftp,
+            "sftp",
+            {
+                "source_sftp_id": None,
+                "source_sftp_file": None,
+                "source_sftp_delimiter": None,
+                "source_sftp_ignore_delimiter": None,
+                "source_type_id": None,
+                "query_sftp_id": None,
+                "query_sftp_file": None,
+                "source_query_type_id": None,
+                "processing_sftp_id": None,
+                "processing_sftp_file": None,
+                "processing_type_id": None,
+                "destination_sftp_id": None,
+                "destination_sftp": 0,
+                "destination_sftp_overwrite": None,
+                "destination_sftp_dont_send_empty_file": None,
+            },
+        ),
+        (
+            ConnectionSsh,
+            "ssh",
+            {"source_ssh_id": None, "source_type_id": None},
+        ),
+        (
+            ConnectionSmb,
+            "smb",
+            {
+                "source_smb_id": None,
+                "source_smb_file": None,
+                "source_smb_delimiter": None,
+                "source_smb_ignore_delimiter": None,
+                "source_type_id": None,
+                "query_smb_id": None,
+                "query_smb_file": None,
+                "source_query_type_id": None,
+                "processing_smb_id": None,
+                "processing_smb_file": None,
+                "processing_type_id": None,
+                "destination_smb_id": None,
+                "destination_smb": 0,
+                "destination_smb_overwrite": None,
+                "destination_smb_dont_send_empty_file": None,
+            },
+        ),
+        (
+            ConnectionFtp,
+            "ftp",
+            {
+                "source_ftp_id": None,
+                "source_ftp_file": None,
+                "source_ftp_delimiter": None,
+                "source_ftp_ignore_delimiter": None,
+                "source_type_id": None,
+                "query_ftp_id": None,
+                "query_ftp_file": None,
+                "source_query_type_id": None,
+                "processing_ftp_id": None,
+                "processing_ftp_file": None,
+                "processing_type_id": None,
+                "destination_ftp_id": None,
+                "destination_ftp": 0,
+                "destination_ftp_overwrite": None,
+                "destination_ftp_dont_send_empty_file": None,
+            },
+        ),
+        (
+            ConnectionGpg,
+            "gpg",
+            {"file_gpg_id": None, "file_gpg": 0},
+        ),
+    ],
+)
+def test_delete_connection_cleans_referencing_tasks(
+    client_fixture: fixture, monkeypatch, connector_model, endpoint, cleared_fields
+) -> None:
+    """Deleting each connector clears its task roles and unschedules the task."""
+    connection = Connection(
+        name="Test Connection",
+        description="description",
+        address="outer space",
+        primary_contact="joe",
+        primary_contact_email="joe@example.net",
+        primary_contact_phone="411",
+    )
+    db.session.add(connection)
+    db.session.commit()
+
+    connector = connector_model(connection_id=connection.id, name="Test Connector")
+    db.session.add(connector)
+    db.session.commit()
+
+    _, task_id = create_demo_task(db.session)
+    task = Task.query.filter_by(id=task_id).first()
+    task.enabled = 1
+    for field, cleared_value in cleared_fields.items():
+        if cleared_value == 0:
+            value = 1
+        elif field.endswith("_id") and not field.endswith("_type_id"):
+            value = connector.id
+        elif (
+            field.endswith("_id")
+            or "ignore_delimiter" in field
+            or field.endswith(("overwrite", "dont_send_empty_file"))
+            or field == "file_gpg"
+        ):
+            value = 1
+        elif field.endswith("_file"):
+            value = "previous.csv"
+        elif field.endswith("_delimiter"):
+            value = "|"
+        else:
+            raise AssertionError(f"No seed value defined for {field}.")
+        setattr(task, field, value)
+    db.session.commit()
+
+    scheduler_delete = Mock()
+    monkeypatch.setattr("web.web.connection.requests.get", scheduler_delete)
+    response = client_fixture.get(
+        f"/connection/{connection.id}/{endpoint}/{connector.id}/delete",
+        follow_redirects=True,
+    )
+
+    assert response.status_code == 200
+    db.session.expire_all()
+    task = Task.query.filter_by(id=task_id).first()
+    assert task.enabled == 0
+    for field, cleared_value in cleared_fields.items():
+        assert getattr(task, field) == cleared_value
+    scheduler_delete.assert_called_once_with(
+        f"{client_fixture.application.config['SCHEDULER_HOST']}/delete/{task_id}",
+        timeout=10,
+    )
 
 
 def test_new_sftp(client_fixture: fixture) -> None:
