@@ -80,7 +80,6 @@ def test_add_task(client_fixture: fixture) -> None:
     page = client_fixture.get(f"/api/add/{t_id}")
     assert page.json == {"message": "Scheduler: task job added!"}
     assert page.status_code == 200
-
     # check that status is now enabled
     t = Task.query.get(t_id)
     assert t.enabled == 1
@@ -495,3 +494,22 @@ def test_400(client_fixture: fixture) -> None:
 def test_get_user_id(client_fixture: fixture) -> None:
     u = get_or_create(db.session, User, email="nothing")
     assert u.get_id() >= "1"
+
+
+def test_add_task_preserves_cron_expressions(client_fixture: fixture) -> None:
+    """APScheduler receives string expressions without numeric coercion."""
+    p_id, t_id = create_demo_task(db.session)
+    project = Project.query.get(p_id)
+    project.cron_year = "2030-2035"
+    project.cron_week_day = "mon-fri"
+    project.cron_hour = "8-18/2"
+    project.cron_min = "*/15"
+    project.cron_sec = "5,35"
+    db.session.commit()
+
+    response = client_fixture.get(f"/api/add/{t_id}")
+
+    assert response.status_code == 200
+    trigger = str(atlas_scheduler.get_job(f"{p_id}-{t_id}-cron").trigger)
+    for expression in ("2030-2035", "mon-fri", "8-18/2", "*/15", "5,35"):
+        assert expression in trigger

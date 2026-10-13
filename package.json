@@ -20,7 +20,7 @@
     "bulma-tooltip": "3.0.2",
     "del": "8.0.1",
     "fontawesome-subset": "4.6.0",
-    "gulp": "4.0.2",
+    "gulp": "5.0.1",
     "gulp-autoprefixer": "9.0.0",
     "gulp-replace": "1.1.4",
     "gulp-sass": "5.1.0",
@@ -52,7 +52,7 @@
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
   "name": "atlas_automation_hub",
-  "packageManager": "pnpm@11.26.0",
+  "packageManager": "pnpm@11.28.5",
   "private": true,
   "repository": {
     "type": "git",
@@ -76,9 +76,10 @@
     "prod:web": "FLASK_ENV=production FLASK_DEBUG=0 FLASK_APP=web uv run flask run",
     "publish": "cd publish && fab publish && cd ..",
     "start": "pnpm build && (pnpm run gulp:watch &) && (pnpm run dev:browser &) && (pnpm run dev:runner &) && (pnpm run dev:scheduler &) && pnpm run dev:web",
-    "test": "pnpm run test:biome && pnpm run test:lint",
+    "test": "pnpm run test:biome && pnpm run test:node && pnpm run test:lint",
     "test:biome": "biome check web",
-    "test:lint": "uv run tox -e lint"
+    "test:lint": "uv run tox -e lint",
+    "test:node": "node --test test_table_sort.cjs"
   },
-  "version": "2.14.0-alpha.1"
+  "version": "2.12.21"
 }

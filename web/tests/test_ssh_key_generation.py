@@ -1,4 +1,4 @@
-"""Run with .venv/bin/python -m unittest test_ssh_key_generation."""
+"""Test the SSH key generation HTTP boundary and key material."""
 
 import ast
 import unittest
@@ -8,7 +8,7 @@ from pathlib import Path
 from flask import Blueprint, Flask, current_app, request
 from flask_login import LoginManager, UserMixin, login_required
 from flask_wtf.csrf import CSRFProtect, generate_csrf
-from paramiko import RSAKey
+from paramiko import PasswordRequiredException, RSAKey
 
 
 class SshKeyGenerationTest(unittest.TestCase):
@@ -17,7 +17,7 @@ class SshKeyGenerationTest(unittest.TestCase):
     def test_authenticated_csrf_protected_key_generation(self):
         """Require login and CSRF, and return a usable matching key pair."""
         # Load the actual route without starting Hub's database and Redis services.
-        source = ast.parse(Path("web/web/connection.py").read_text())
+        source = ast.parse((Path(__file__).parents[1] / "web/connection.py").read_text())
         route = next(
             node
             for node in source.body
@@ -59,6 +59,9 @@ class SshKeyGenerationTest(unittest.TestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.headers["Cache-Control"], "no-store")
+            if password:
+                with self.assertRaises(PasswordRequiredException):
+                    RSAKey.from_private_key(StringIO(response.json["private_key"]))
             key = RSAKey.from_private_key(
                 StringIO(response.json["private_key"]), password=password or None
             )

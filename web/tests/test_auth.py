@@ -11,13 +11,16 @@ run with::
 
 """
 
+from unittest.mock import Mock
+
+import pytest
 from flask import url_for
+from flask.testing import FlaskClient
 from flask.wrappers import Response
 from flask_login import current_user
-from pytest import fixture
 
 
-def test_index(client_fixture: fixture) -> None:
+def test_index(client_fixture: FlaskClient) -> None:
     """Verify that redirection to login page works.
 
     Parameters:
@@ -30,7 +33,7 @@ def test_index(client_fixture: fixture) -> None:
         assert "/login" in res.get_data(as_text=True)
 
 
-def login(client_fixture: fixture, username: str, password: str) -> Response:
+def login(client_fixture: FlaskClient, username: str, password: str) -> Response:
     # 302 becuase tests autologin.
     assert client_fixture.get("/login").status_code == 302
 
@@ -41,11 +44,11 @@ def login(client_fixture: fixture, username: str, password: str) -> Response:
     )
 
 
-def logout(client_fixture: fixture) -> Response:
+def logout(client_fixture: FlaskClient) -> Response:
     return client_fixture.get("/logout", follow_redirects=True)
 
 
-def test_login_logout(client_fixture: fixture) -> None:
+def test_login_logout(client_fixture: FlaskClient) -> None:
     """Make sure login and logout works."""
 
     logout(client_fixture)
@@ -72,12 +75,12 @@ def test_login_logout(client_fixture: fixture) -> None:
     # assert b"Invalid login, please try again!" in page.data
 
 
-def test_not_authorized(client_fixture: fixture) -> None:
+def test_not_authorized(client_fixture: FlaskClient) -> None:
     page = client_fixture.get("/not_authorized", follow_redirects=True)
     assert page.status_code == 200
 
 
-def test_next(client_fixture: fixture) -> None:
+def test_next(client_fixture: FlaskClient) -> None:
     username = "mr-cool"
     password = ""
 
@@ -100,3 +103,47 @@ def test_next(client_fixture: fixture) -> None:
         "/login?next=https://google.com/", data={"user": username, "password": password}
     )
     assert page.status_code == 400
+
+
+@pytest.mark.parametrize(
+    ("required_groups", "expected_endpoint", "csrf_enabled"),
+    [
+        ([], "/", False),
+        (["hospital-admin"], "/not_authorized", False),
+        ([], "/", True),
+    ],
+)
+def test_saml_missing_groups(
+    client_fixture, monkeypatch, required_groups, expected_endpoint, csrf_enabled
+):
+    """Missing group claims are allowed only when no group is required."""
+    identity = {
+        "account_name": ["saml-user"],
+        "email": ["saml@example.com"],
+        "first_name": ["Saml"],
+        "last_name": ["User"],
+    }
+    authn_response = Mock()
+    authn_response.get_identity.return_value = identity
+    saml_client = Mock()
+    saml_client.parse_authn_request_response.return_value = authn_response
+    monkeypatch.setattr("web.web.saml_auth.SAML.saml_client_for", lambda self: saml_client)
+
+    client_fixture.application.config.update(
+        SAML_ATTR_MAP={
+            "groups": "groups",
+            "account_name": "account_name",
+            "email": "email",
+            "first_name": "first_name",
+            "last_name": "last_name",
+        },
+        REQUIRED_GROUPS=required_groups,
+        LOGIN_REDIRECT_URL="/",
+        NOT_AUTHORIZED_URL="auth_bp.not_authorized",
+        WTF_CSRF_ENABLED=csrf_enabled,
+    )
+
+    response = client_fixture.post("/saml2/acs/", data={"SAMLResponse": "signed"})
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith(expected_endpoint)
