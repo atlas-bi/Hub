@@ -1117,6 +1117,9 @@ def one_task_files(task_id: int) -> Response:
         db.session.query()
         .select_from(TaskFile)
         .filter(TaskFile.task_id == task_id)
+        .filter(
+            TaskFile.created >= datetime.datetime.now() - datetime.timedelta(days=180)  # type: ignore[operator]
+        )
         .add_columns(*cols.values())
         .order_by(text(str(cols[split_sort[0]]) + " " + split_sort[1]))
     )

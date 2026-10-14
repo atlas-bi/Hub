@@ -14,12 +14,14 @@ run with::
 import sys
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from pytest import fixture
 
 from runner.extensions import db
 from runner.model import Connection, ConnectionSftp, Task
+from runner.scripts import em_sftp
 from runner.scripts.em_messages import RunnerException
 from runner.scripts.em_sftp import Sftp
 
@@ -27,6 +29,35 @@ from .conftest import create_demo_task
 
 sys.path.append(str(Path(__file__).parents[2]) + "/scripts")
 from crypto import em_encrypt
+
+
+def test_connect_keeps_modern_rsa_algorithms_enabled(monkeypatch) -> None:
+    """Allow Paramiko to negotiate a modern signature for generated RSA keys."""
+    transport_options = {}
+
+    class TestTransport:
+        def __init__(self, address, disabled_algorithms=None) -> None:
+            transport_options["disabled_algorithms"] = disabled_algorithms
+
+        def connect(self, **kwargs) -> None:
+            pass
+
+    monkeypatch.setattr(em_sftp.paramiko, "Transport", TestTransport)
+    monkeypatch.setattr(em_sftp, "connection_key", lambda connection: object())
+    monkeypatch.setattr(em_sftp.SFTPClient, "from_transport", lambda transport: object())
+
+    em_sftp.connect(
+        SimpleNamespace(
+            address="sftp.example.net",
+            port=22,
+            username="demo",
+            password=None,
+            key="generated RSA key",
+            key_password=None,
+        )
+    )
+
+    assert transport_options["disabled_algorithms"] is None
 
 
 def test_connection_failure(client_fixture: fixture) -> None:

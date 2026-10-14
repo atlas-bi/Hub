@@ -2,8 +2,36 @@
 
 from io import BytesIO
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from runner.scripts import em_smb
+
+
+def test_backup_save_includes_configured_subfolder(tmp_path, monkeypatch) -> None:
+    """Default SMB backups retain the configured subfolder hierarchy."""
+    (tmp_path / "report.csv").write_text("patient_id,status\n", encoding="utf8")
+    connection = Mock()
+    connection.storeFile.return_value = 18
+    monkeypatch.setattr(em_smb, "RunnerLog", lambda *args: None)
+    monkeypatch.setattr(em_smb, "RunnerException", RuntimeError)
+
+    smb = em_smb.Smb.__new__(em_smb.Smb)
+    smb.task = SimpleNamespace(
+        project=SimpleNamespace(name="Hospital Reports"),
+        name="Patient Export",
+        last_run_job_id="run-1",
+    )
+    smb.run_id = "run-1"
+    smb.dir = tmp_path
+    smb.connection = None
+    smb.conn = connection
+    smb.share_name = "backups"
+    smb.subfolder = "hospital-data"
+
+    destination = smb.save(overwrite=1, file_name="report.csv")
+
+    assert destination == "hospital-data/Hospital Reports/Patient Export/run-1/report.csv"
+    assert connection.storeFile.call_args.args[:2] == ("backups", destination)
 
 
 def test_load_file_includes_connection_path(tmp_path, monkeypatch) -> None:

@@ -13,11 +13,13 @@ run with::
 """
 
 import json
+from datetime import datetime, timedelta
+from unittest.mock import Mock
 
 from pytest import fixture
 
 from web import db
-from web.model import Task
+from web.model import Task, TaskFile
 
 from .conftest import create_demo_task
 
@@ -79,8 +81,19 @@ def test_table_connection_tasks(client_fixture: fixture) -> None:
     assert client_fixture.get("/table/connection/1/tasks").status_code == 200
 
 
-def test_table_job_orphans(client_fixture: fixture) -> None:
-    assert client_fixture.get("/table/jobs/orphans").status_code == 200
+def test_table_job_orphans(client_fixture: fixture, monkeypatch) -> None:
+    scheduler_response = Mock(
+        text=json.dumps([{"id": "9999", "name": "orphan", "next_run_time": None}])
+    )
+    monkeypatch.setattr("web.web.table.requests.get", Mock(return_value=scheduler_response))
+
+    response = client_fixture.get("/table/jobs/orphans")
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert json.loads(payload[0]["head"]) == ["Name", "Id", "Next Run Time", "Args"]
+    assert "Action" not in payload[2]
+    assert "/delete" not in response.get_data(as_text=True)
 
 
 def test_table_tasks_active(client_fixture: fixture) -> None:
@@ -107,6 +120,15 @@ def test_table_project_tasks(client_fixture: fixture) -> None:
     assert client_fixture.get("/table/project/1/task").status_code == 200
 
 
+def test_sequenced_project_uses_blank_rank_for_unranked_task(client_fixture: fixture) -> None:
+    """Unranked tasks render an empty table value instead of JSON null."""
+    project_id, _ = create_demo_task(db.session, sequence=1)
+
+    data = client_fixture.get(f"/table/project/{project_id}/task").get_json()
+
+    assert data[-1]["Run Rank"] == ""
+
+
 def test_table_project_tasklog(client_fixture: fixture) -> None:
     assert client_fixture.get("/table/project/1/tasklog").status_code == 200
 
@@ -124,8 +146,27 @@ def test_table_tasks_error_log(client_fixture: fixture) -> None:
 
 
 def test_table_tasks_files(client_fixture: fixture) -> None:
-    from web.model import Task
-
     task = Task.query.first()
     if task:
         assert client_fixture.get("/table/task/" + str(task.id) + "/files").status_code == 200
+
+
+def test_table_tasks_files_only_includes_last_six_months(client_fixture: fixture) -> None:
+    """File history excludes download links older than 180 days."""
+    _, task_id = create_demo_task(db.session)
+    db.session.add_all(
+        [
+            TaskFile(task_id=task_id, name="recent.csv", created=datetime.now()),
+            TaskFile(
+                task_id=task_id,
+                name="expired.csv",
+                created=datetime.now() - timedelta(days=181),
+            ),
+        ]
+    )
+    db.session.commit()
+
+    data = client_fixture.get(f"/table/task/{task_id}/files").get_json()
+
+    assert {item.get("File Name") for item in data} == {None, "recent.csv"}
+    assert data[1] == {"total": "1"}

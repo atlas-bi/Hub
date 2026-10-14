@@ -2,12 +2,14 @@
 
 import ast
 import datetime
+import subprocess
 import sys
 from itertools import chain
 from pathlib import Path
 from typing import IO, Any, List, Optional, Union
 
 import regex as re
+import requests
 from flask import current_app as app
 from flask import json
 
@@ -125,7 +127,7 @@ class PyProcesser:
         ^\s*?from\K\s+[^\.].+?(?=import)
         """
         try:
-            imports = []
+            imports: List[str] = []
 
             # use requirements.txt
             requirements_text = list(Path(self.job_path).rglob("requirements.txt"))
@@ -204,11 +206,18 @@ class PyProcesser:
                 )
 
                 for this_file in paths:
-                    with open(this_file, "r") as my_file:
-                        for line in my_file:
-                            imports.extend(re.findall(r"^\s*?import\K\s+[^\.][^\s]+?\s+?$", line))
-                            imports.extend(re.findall(r"^\s*?from\K\s+[^\.].+?(?=import)", line))
-                            imports.extend(re.findall(r"^\s*?import\K\s+[^\.][^\s]+?(?=\s)", line))
+                    tree = ast.parse(this_file.read_text(encoding="utf8"))
+                    imports.extend(
+                        alias.name
+                        for node in ast.walk(tree)
+                        if isinstance(node, ast.Import)
+                        for alias in node.names
+                    )
+                    imports.extend(
+                        node.module
+                        for node in ast.walk(tree)
+                        if isinstance(node, ast.ImportFrom) and node.module
+                    )
 
                 package_map = {
                     "dateutil": "python-dateutil",
@@ -264,17 +273,33 @@ class PyProcesser:
                         f'"{self.env_path}/bin/pip" install --disable-pip-version-check --quiet '
                         + " ".join([str(x) for x in imports])
                     )
-                    Cmd(
-                        task=self.task,
-                        run_id=self.run_id,
-                        cmd=cmd,
-                        success_msg="Imports successfully installed: "
-                        + ", ".join([str(x) for x in imports])
-                        + " with command: "
-                        + "\n"
-                        + cmd,
-                        error_msg="Failed to install imports with command: " + "\n" + cmd,
-                    ).shell()
+                    try:
+                        Cmd(
+                            task=self.task,
+                            run_id=self.run_id,
+                            cmd=cmd,
+                            success_msg="Imports successfully installed: "
+                            + ", ".join([str(x) for x in imports])
+                            + " with command: "
+                            + "\n"
+                            + cmd,
+                            error_msg="Failed to install imports with command: " + "\n" + cmd,
+                        ).shell()
+                    except subprocess.CalledProcessError:
+                        resolved_imports = [self.__pypi_search(name) for name in imports]
+                        if any(name is None for name in resolved_imports):
+                            raise
+                        cmd = (
+                            f'"{self.env_path}/bin/pip" install --disable-pip-version-check --quiet '
+                            + " ".join(str(name) for name in resolved_imports)
+                        )
+                        Cmd(
+                            task=self.task,
+                            run_id=self.run_id,
+                            cmd=cmd,
+                            success_msg="Imports successfully installed from PyPI search.",
+                            error_msg="Failed to install imports found by PyPI search.",
+                        ).shell()
 
         except BaseException as e:
             RunnerLog(
@@ -295,6 +320,29 @@ class PyProcesser:
             return False
 
         return "project" in project_config or (pyproject_toml.parent / "uv.lock").is_file()
+
+    @staticmethod
+    def __pypi_search(import_name: str) -> Optional[str]:
+        """Return a unique PyPI project result for an unresolved import."""
+        try:
+            response = requests.get(
+                "https://pypi.org/search/",
+                params={"q": import_name},
+                headers={"User-Agent": "Atlas-Hub dependency resolver"},
+                timeout=5,
+            )
+        except requests.RequestException:
+            return None
+
+        if response.status_code != 200:
+            return None
+
+        candidates = list(dict.fromkeys(re.findall(r'href="/project/([^/"]+)/"', response.text)))
+        if len(candidates) != 1 or not re.fullmatch(
+            r"[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?", candidates[0]
+        ):
+            return None
+        return candidates[0]
 
     def __run_script(self) -> None:
         try:

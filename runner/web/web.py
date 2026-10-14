@@ -282,7 +282,9 @@ def _run_task(task_id: str) -> Response:
 
     task = Task.query.filter_by(id=task_id_int).first()
     if not task:
-        return jsonify({"error": f"Task {task_id_int} not found."})
+        response = jsonify({"error": f"Task {task_id_int} not found."})
+        response.status_code = 404
+        return response
 
     logging.warning("Runner received run request from scheduler for task %s.", task_id_int)
     log = TaskLog(

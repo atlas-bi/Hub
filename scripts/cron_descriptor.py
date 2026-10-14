@@ -115,16 +115,22 @@ class ExpressionDescriptor:
         hour_expression: str, minute_expression: str, second_expression: str = ""
     ) -> str:
         """Return a formatted time description."""
-        hour = int(hour_expression)
+        try:
+            hour = int(hour_expression)
+            minute = str(int(minute_expression)).zfill(2)
+            second = f":{str(int(second_expression)).zfill(2)}" if second_expression else ""
+        except ValueError:
+            fields = [hour_expression, minute_expression]
+            if second_expression:
+                fields.append(second_expression)
+            return ":".join(fields)
+
         period = "PM" if hour >= 12 else "AM"
 
         if hour > 12:
             hour -= 12
         elif hour == 0:
             hour = 12
-
-        minute = str(int(minute_expression)).zfill(2)
-        second = f":{str(int(second_expression)).zfill(2)}" if second_expression else ""
 
         return f"{str(hour).zfill(2)}:{minute}{second} {period}"
 
