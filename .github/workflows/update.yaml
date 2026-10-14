@@ -5,45 +5,77 @@ on:
     - dev
     - alpha
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  alpha:
+  promote:
     runs-on: ubuntu-latest
-    if: github.ref_name == 'dev'
     steps:
-    - name: 💾 Checkout
+    - name: 💾 Checkout target
       uses: actions/checkout@v6
       with:
-        ref: alpha
+        fetch-depth: 0
+        ref: ${{ github.ref_name == 'dev' && 'alpha' || 'main' }}
 
-    - name: 🛑 Reset promotion branch
+    - name: 🔀 Merge and keep the target release version
+      id: merge
       run: |
-        git fetch origin ${{github.ref_name}}:${{github.ref_name}}
-        git reset --hard ${{github.ref_name}}
+        set -euo pipefail
+        source="${{ github.ref_name }}"
+        target="${{ github.ref_name == 'dev' && 'alpha' || 'main' }}"
+        branch="sync/${source}-to-${target}"
 
-    - name: 🆕 Create Pull Request
-      uses: peter-evans/create-pull-request@b993918c8536b6d44706130734d5456879762b27
-      with:
-        labels: automated pr
-        branch: ${{github.ref_name}}
-        title: chore(sync) Syncing changes from ${{github.ref_name}} to alpha
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git fetch origin "$source"
 
-  main:
-    runs-on: ubuntu-latest
-    if: github.ref_name == 'alpha'
-    steps:
-    - name: 💾 Checkout
-      uses: actions/checkout@v6
-      with:
-        ref: main
+        if git merge-base --is-ancestor "origin/${source}" HEAD; then
+          echo "already=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
 
-    - name: 🛑 Reset promotion branch
+        if ! git merge --no-edit "origin/${source}"; then
+          conflicts="$(git diff --name-only --diff-filter=U)"
+          echo "Conflicts:"
+          echo "$conflicts"
+          extra="$(printf '%s\n' "$conflicts" | grep -v -E '^(\.version|package.json|pyproject.toml)$' || true)"
+          if [ -n "$extra" ]; then
+            echo "Conflicts outside release version files need a manual merge."
+            exit 1
+          fi
+          python3 scripts/keep_release_version.py .version package.json pyproject.toml
+          git add .version package.json pyproject.toml
+          git commit --no-edit
+        fi
+
+        git checkout -B "$branch"
+        git fetch origin "$branch" || true
+        if git ls-remote --exit-code origin "refs/heads/${branch}" >/dev/null 2>&1; then
+          git push --force-with-lease origin "HEAD:${branch}"
+        else
+          git push origin "HEAD:${branch}"
+        fi
+        echo "branch=${branch}" >> "$GITHUB_OUTPUT"
+        echo "target=${target}" >> "$GITHUB_OUTPUT"
+        echo "source=${source}" >> "$GITHUB_OUTPUT"
+
+    - name: 🆕 Create pull request
+      if: steps.merge.outputs.branch != ''
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
-        git fetch origin ${{github.ref_name}}:${{github.ref_name}}
-        git reset --hard ${{github.ref_name}}
+        source="${{ steps.merge.outputs.source }}"
+        target="${{ steps.merge.outputs.target }}"
+        branch="${{ steps.merge.outputs.branch }}"
+        title="chore(sync) Syncing changes from ${source} to ${target}"
+        body="Promotes \`${source}\` into \`${target}\`.
 
-    - name: 🆕 Create Pull Request
-      uses: peter-evans/create-pull-request@b993918c8536b6d44706130734d5456879762b27
-      with:
-        labels: automated pr
-        branch: ${{github.ref_name}}
-        title: chore(sync) Syncing changes from ${{github.ref_name}} to main
+        Release version files stay on the \`${target}\` version when they conflict. Semantic-release tags the new version after this merges."
+        existing="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --base "$target" --state open --json number --jq '.[0].number // empty')"
+        if [ -n "$existing" ]; then
+          gh pr edit "$existing" --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
+        else
+          gh pr create --repo "$GITHUB_REPOSITORY" --base "$target" --head "$branch" --title "$title" --body "$body" --label "automated pr"
+        fi
