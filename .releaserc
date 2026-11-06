@@ -6,7 +6,8 @@
     "next",
     "next-major",
     {"name": "beta", "prerelease": true},
-    {"name": "alpha", "prerelease": true}],
+    {"name": "alpha", "prerelease": true},
+    {"name": "dev", "prerelease": true}],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -16,7 +17,7 @@
     }],
 
     ["@semantic-release/exec", {
-      "prepareCmd" : "echo ${nextRelease.version} > .version; uv version ${nextRelease.version}"
+      "prepareCmd": "echo ${nextRelease.version} > .version; uv version ${nextRelease.version}; if [ '${branch.type}' = 'prerelease' ]; then git checkout -- package.json .version pyproject.toml; fi"
     }],
     ["@semantic-release/git", {
       "assets": ["package.json", ".version", "pyproject.toml"]
