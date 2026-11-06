@@ -18,6 +18,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 from flask.wrappers import Response
 from flask_login import current_user
+from saml2.sigver import SignatureError
 
 
 def test_index(client_fixture: FlaskClient) -> None:
@@ -147,3 +148,48 @@ def test_saml_missing_groups(
 
     assert response.status_code == 302
     assert response.headers["Location"].endswith(expected_endpoint)
+
+
+def test_saml_signature_error_redirects_to_not_authorized(client_fixture, monkeypatch) -> None:
+    """A rejected IdP signature is shown on the not-authorized page."""
+    saml_client = Mock()
+    saml_client.parse_authn_request_response.side_effect = SignatureError(
+        "Failed to verify signature"
+    )
+    saml_client.metadata.certs.side_effect = KeyError("issuer")
+    monkeypatch.setattr("web.web.saml_auth.SAML.saml_client_for", lambda self: saml_client)
+    client_fixture.application.config.update(
+        NOT_AUTHORIZED_URL="auth_bp.not_authorized",
+        WTF_CSRF_ENABLED=False,
+    )
+
+    response = client_fixture.post(
+        "/saml2/acs/", data={"SAMLResponse": "signed"}, follow_redirects=True
+    )
+
+    assert response.status_code == 200
+    assert b"Failed to verify signature" in response.data
+    assert b"Please login to access this page." not in response.data
+
+
+def test_saml_response_preserves_literal_plus(client_fixture, monkeypatch) -> None:
+    """A bare plus in the posted body is part of the signed payload."""
+    saml_client = Mock()
+    saml_client.parse_authn_request_response.side_effect = SignatureError(
+        "Failed to verify signature"
+    )
+    monkeypatch.setattr("web.web.saml_auth.SAML.saml_client_for", lambda self: saml_client)
+    client_fixture.application.config.update(
+        NOT_AUTHORIZED_URL="auth_bp.not_authorized",
+        WTF_CSRF_ENABLED=False,
+    )
+
+    response = client_fixture.post(
+        "/saml2/acs/",
+        data=b"SAMLResponse=ab+c",
+        content_type="application/x-www-form-urlencoded",
+    )
+
+    assert response.status_code == 302
+    posted = saml_client.parse_authn_request_response.call_args.args[0]
+    assert posted == "ab+c"

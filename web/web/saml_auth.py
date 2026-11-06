@@ -1,5 +1,12 @@
 """SAML Login/Logout web views."""
 
+import base64
+import hashlib
+import logging
+import re
+from urllib.parse import unquote
+
+from defusedxml import ElementTree
 from flask import (
     Blueprint,
     Flask,
@@ -26,9 +33,89 @@ from web.model import User
 
 login_bp = Blueprint("login_bp", __name__)
 
-import logging
-
 from flask_login import login_user
+
+_ISSUER_TAG = "{urn:oasis:names:tc:SAML:2.0:assertion}Issuer"
+_CERT_TAG = "{http://www.w3.org/2000/09/xmldsig#}X509Certificate"
+
+
+def _posted_saml_response() -> str:
+    """Read SAMLResponse without treating a literal '+' as a space.
+
+    Flask's form decoder follows form-urlencoded rules. A reverse proxy that
+    forwards a bare '+' would change the signed bytes and fail verification.
+    """
+    # Read the body before request.form, which consumes the stream.
+    match = re.search(r"(?:^|&)SAMLResponse=([^&]*)", request.get_data(as_text=True))
+    form_value = request.form.get("SAMLResponse", "")
+    if not match:
+        return form_value
+
+    raw_value = unquote(match.group(1))
+    if raw_value != form_value:
+        logging.error(
+            "SAMLResponse decoding changed the payload (raw length %s, form length %s)",
+            len(raw_value),
+            len(form_value),
+        )
+    return raw_value or form_value
+
+
+def _fingerprint_b64(cert_text: str) -> str:
+    """Return the SHA-256 fingerprint of a base64-encoded X509 certificate."""
+    body = cert_text.replace("-----BEGIN CERTIFICATE-----", "")
+    body = body.replace("-----END CERTIFICATE-----", "")
+    return hashlib.sha256(base64.b64decode("".join(body.split()))).hexdigest()
+
+
+def _signature_failure_detail(posted: str, saml_client: Saml2Client | None) -> str:
+    """Compare the assertion certificate with the certificates loaded from metadata."""
+    try:
+        root = ElementTree.fromstring(base64.b64decode(posted))
+    except Exception as exc:
+        return f"SAMLResponse is not decodable XML ({exc.__class__.__name__})"
+
+    issuers = []
+    for node in root.iter(_ISSUER_TAG):
+        issuer = (node.text or "").strip()
+        if issuer and issuer not in issuers:
+            issuers.append(issuer)
+
+    response_certs = []
+    for node in root.iter(_CERT_TAG):
+        if not node.text:
+            continue
+        try:
+            digest = _fingerprint_b64(node.text)
+        except Exception:
+            digest = "unreadable"
+        if digest not in response_certs:
+            response_certs.append(digest)
+
+    metadata_certs = []
+    metadata_error = ""
+    if saml_client is not None:
+        for issuer in issuers:
+            try:
+                found = saml_client.metadata.certs(issuer, "any", "signing")
+            except Exception as exc:
+                metadata_error = f"{issuer}: {exc.__class__.__name__}"
+                continue
+            for _name, cert in found:
+                try:
+                    digest = _fingerprint_b64(cert)
+                except Exception:
+                    digest = "unreadable"
+                if digest not in metadata_certs:
+                    metadata_certs.append(digest)
+
+    overlap = sorted(set(response_certs) & set(metadata_certs))
+    return (
+        "SAML signature debug "
+        f"issuers={issuers} response_certs={response_certs} "
+        f"metadata_certs={metadata_certs} overlap={overlap} "
+        f"metadata_error={metadata_error or 'none'}"
+    )
 
 
 class SAML:
@@ -51,11 +138,13 @@ class SAML:
 @csrf.exempt
 def idp_initiated() -> Response:
     """Get response from IDP."""
+    saml_client = None
+    posted_response = _posted_saml_response()
     try:
         saml = SAML(app)
         saml_client = saml.saml_client_for()
         authn_response = saml_client.parse_authn_request_response(
-            request.form["SAMLResponse"], entity.BINDING_HTTP_POST
+            posted_response, entity.BINDING_HTTP_POST
         )
 
         identity = authn_response.get_identity()
@@ -119,11 +208,14 @@ def idp_initiated() -> Response:
 
             session.pop("_flashes", None)
             return redirect(next_url)
-        return redirect(app.congif["LOGIN_VIEW"])
+        return redirect(url_for(app.config["LOGIN_VIEW"]))
 
     except SignatureError as e:
+        logging.exception("SAML signature verification failed")
+        logging.error("%s", _signature_failure_detail(posted_response, saml_client))
+        session.pop("_flashes", None)
         flash(str(e))
-        return redirect(app.congif["SAML_ATTR_MAP"])
+        return redirect(url_for(app.config["NOT_AUTHORIZED_URL"]))
 
 
 @login_bp.route("/saml2/metadata/")
