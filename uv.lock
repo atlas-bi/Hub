@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.10, <4.0"
 resolution-markers = [
     "python_full_version >= '3.15'",
@@ -222,7 +222,7 @@ requires-dist = [
     { name = "psutil", specifier = ">=7.2.2,<7.3.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.11,<3.0.0" },
     { name = "pyodbc", specifier = ">=5.3.0,<6.0.0" },
-    { name = "pysaml2", specifier = ">=7.0.1,<8.0.0" },
+    { name = "pysaml2", specifier = ">=7.4.2,<8.0.0" },
     { name = "pysmb", specifier = ">=1.2.7,<2.0.0" },
     { name = "python-dateutil", specifier = ">=2.8.2,<3.0.0" },
     { name = "python-gnupg", specifier = ">=0.5.0,<0.6.0" },
@@ -1070,7 +1070,7 @@ name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", version = "4.16.0", source = { registry = "https://pypi.org/simple" } },
+    { name = "typing-extensions", version = "4.16.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/50/79/66800aadf48771f6b62f7eb014e352e5d06856655206165d775e675a02c9/exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219", size = 30371, upload-time = "2025-11-21T23:01:54.787Z" }
 wheels = [
