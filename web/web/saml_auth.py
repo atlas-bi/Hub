@@ -168,9 +168,23 @@ def idp_initiated() -> Response:
         logging.warning(identity)
 
         if identity:
-            account_name = identity.get(app.config["SAML_ATTR_MAP"]["account_name"])[0].lower()
+            attr_map = app.config["SAML_ATTR_MAP"]
+            account_vals = identity.get(attr_map["account_name"]) or []
+            email_vals = identity.get(attr_map["email"]) or []
+            first_name_vals = identity.get(attr_map["first_name"]) or []
+            last_name_vals = identity.get(attr_map["last_name"]) or []
 
-            email = identity.get(app.config["SAML_ATTR_MAP"]["email"])[0].lower()
+            if not account_vals or not email_vals or not first_name_vals or not last_name_vals:
+                logging.error("SAML identity missing mapped attributes: %r", identity)
+                session.pop("_flashes", None)
+                flash(
+                    "SAML response missing required attributes. Got keys: %s"
+                    % sorted(identity.keys())
+                )
+                return redirect(url_for(app.config["NOT_AUTHORIZED_URL"]))
+
+            account_name = account_vals[0].lower()
+            email = email_vals[0].lower()
 
             user = User.query.filter(
                 (User.account_name == account_name) | (User.email == email)
@@ -184,12 +198,9 @@ def idp_initiated() -> Response:
             user.account_name = account_name
             user.email = email
 
-            user.full_name = "%s %s" % (
-                identity.get(app.config["SAML_ATTR_MAP"]["first_name"])[0],
-                identity.get(app.config["SAML_ATTR_MAP"]["last_name"])[0],
-            )
+            user.full_name = "%s %s" % (first_name_vals[0], last_name_vals[0])
 
-            user.first_name = identity.get(app.config["SAML_ATTR_MAP"]["first_name"])[0]
+            user.first_name = first_name_vals[0]
 
             db.session.add(user)
             db.session.commit()
