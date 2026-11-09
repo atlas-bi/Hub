@@ -4,7 +4,7 @@ import os
 import re
 import shlex
 import subprocess
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from runner.model import Task
 from runner.scripts.em_messages import RunnerLog
@@ -23,6 +23,7 @@ class Cmd:
         cmd: str,
         success_msg: str,
         error_msg: str,
+        extra_env: Optional[Dict[str, str]] = None,
     ) -> None:
         """Set system path and variables."""
         self.task = task
@@ -32,6 +33,8 @@ class Cmd:
             "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
             + self.env.get("PATH", "")
         )
+        if extra_env:
+            self.env.update(extra_env)
         self.success_msg = success_msg
         self.error_msg = error_msg
         self.run_id = run_id
@@ -45,6 +48,7 @@ class Cmd:
 
     def shell(self) -> str:
         """Run input command as a shell command."""
+        out = ""
         try:
             cmd_arg = self._build_cmd(self.command)
             out_bytes = subprocess.check_output(
@@ -122,6 +126,7 @@ class Cmd:
 
     def run(self) -> str:
         """Run input command as a subprocess command."""
+        out = ""
         try:
             cmd_arg = self._build_cmd(self.command)
             result = subprocess.run(

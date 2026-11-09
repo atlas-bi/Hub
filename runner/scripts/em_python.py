@@ -347,7 +347,6 @@ class PyProcesser:
     def __run_script(self) -> None:
         try:
             # pass the source connection info into the script
-            env = ""
             connection = {}
             if self.task.source_type_id == 1:  # sql
                 external_db = self.task.source_database_conn
@@ -407,8 +406,6 @@ class PyProcesser:
                 "sequence_tasks": clean_string(self.task.project.sequence_tasks),
             }
 
-            env += f"PROJECT='{json.dumps(project_data)}' "
-
             task_data = {
                 "id": clean_string(self.task.id),
                 "name": clean_string(self.task.name),
@@ -461,22 +458,23 @@ class PyProcesser:
                 "est_duration": clean_string(self.task.est_duration),
             }
 
-            env = f"TASK='{json.dumps(task_data)}' "
+            # Pass script context via subprocess env. Prefixing VAR=value onto the
+            # command string breaks under shell=False (argv[0] becomes the JSON blob).
+            script_env = {
+                "PROJECT": json.dumps(project_data),
+                "TASK": json.dumps(task_data),
+            }
+            if connection:
+                script_env["CONNECTION"] = json.dumps(connection)
 
-            # if data files exist, pass them as a param.
-            env += f"CONNECTION='{json.dumps(connection)}' " if connection else ""
+            for key, value in self.params.read().items():
+                env_key = re.sub(r"[^a-zA-Z_]", "", key)
+                if env_key:
+                    script_env[env_key] = str(value)
 
-            # create environment from params
-            env += ("").join(
-                [
-                    f'{re.sub(r"[^a-zA-Z_]", "", key)}="{value}" '
-                    for key, value in self.params.read().items()
-                ]
+            cmd = (f'"{self.env_path}/bin/python" "{self.job_path}/{self.script}" ') + " ".join(
+                [f'"{x.name}"' for x in self.source_files]
             )
-
-            cmd = (
-                f'{env}"{self.env_path}/bin/python" "{self.job_path}/{self.script}" '
-            ) + " ".join([f'"{x.name}"' for x in self.source_files])
 
             self.output = Cmd(
                 task=self.task,
@@ -484,6 +482,7 @@ class PyProcesser:
                 cmd=cmd,
                 success_msg="Script successfully run.",
                 error_msg="Failed run script: " + "\n" + cmd,
+                extra_env=script_env,
             ).shell()
 
         except BaseException as e:
