@@ -56,7 +56,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "github:atlas-bi/atlas-automation-hub"
+    "url": "github:atlas-bi/Hub"
   },
   "scripts": {
     "build": "BROWSERSLIST_IGNORE_OLD_DATA=true pnpm exec gulp build && cp web/model.py runner/ && cp web/model.py scheduler/",
