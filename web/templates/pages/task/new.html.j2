@@ -34,6 +34,7 @@
     <form class="mb-5"
           action="{%- if t -%} /task/{{ t.id }}/edit {%- else -%} /project/{{ p.id }}/task/new {%- endif -%}"
           method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="box">
             <div class="field">
                 <label class="label">Name</label>
