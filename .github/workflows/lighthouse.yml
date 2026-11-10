@@ -1,5 +1,8 @@
 name: 🔦 Lighthouse
-on: [push]
+on:
+  push:
+    branches: [main, alpha, dev]
+  workflow_dispatch:
 
 jobs:
   lhci:
@@ -28,34 +31,41 @@ jobs:
     steps:
     - name: 💾 Checkout
       uses: actions/checkout@v6
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
 
     - name: 🧹 Cleanup apt list
       uses: christopherpickering/no-azure-action@v1.1.0
+
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v6
 
     - name: ⎔ Setup node
       uses: actions/setup-node@v6
       with:
         node-version: 24
-
-    - name: 📦 Setup pnpm
-      uses: pnpm/action-setup@v6
+        cache: pnpm
 
     - name: 📥 Download deps
       run: pnpm install --frozen-lockfile
 
-    - name: 🐍 Setup python ${{ matrix.python-version }}
+    - name: 🐍 Setup python
       uses: actions/setup-python@v6
       with:
         python-version: '3.14'
 
     - name: 🪐 Setup uv
       uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e
+      with:
+        enable-cache: true
 
     - name: 📥 Install
       run: |
-        sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl1 pkg-config build-essential libssl-dev libffi-dev curl git wget libldap2-dev python3-dev python3-pip python3-setuptools unixodbc unixodbc-dev libpq-dev nginx sqlite3 libsqlite3-0 libsasl2-dev libxml2-dev libxmlsec1-dev libxmlsec1-dev redis-server ufw gnupg
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          build-essential pkg-config python3-dev \
+          libssl-dev libffi-dev \
+          libxml2-dev libxmlsec1-dev libxmlsec1-openssl1 \
+          libldap2-dev libsasl2-dev \
+          unixodbc unixodbc-dev libpq-dev
         uv sync --frozen --group dev
 
     - name: 💽 Start test services
