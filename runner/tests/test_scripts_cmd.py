@@ -85,3 +85,47 @@ def test_run_shell_syntax_uses_explicit_shell_with_shell_false(monkeypatch) -> N
     assert result == "stdoutstderr"
     assert run.call_args.args[0] == ["/bin/sh", "-c", command]
     assert run.call_args.kwargs["shell"] is False
+
+
+def test_shell_passes_extra_env_to_subprocess(monkeypatch) -> None:
+    """Task context is passed through the subprocess env, not argv."""
+    check_output = Mock(return_value=b"ok")
+    monkeypatch.setattr(em_cmd.subprocess, "check_output", check_output)
+    monkeypatch.setattr(em_cmd, "RunnerLog", Mock())
+
+    result = em_cmd.Cmd(
+        None,
+        None,
+        '"/venv/bin/python" "/job/script.py"',
+        "ok",
+        "error",
+        extra_env={"TASK": '{"id": "1"}', "PROJECT": '{"id": "2"}'},
+    ).shell()
+
+    assert result == "ok"
+    assert check_output.call_args.args[0] == ["/venv/bin/python", "/job/script.py"]
+    assert check_output.call_args.kwargs["env"]["TASK"] == '{"id": "1"}'
+    assert check_output.call_args.kwargs["env"]["PROJECT"] == '{"id": "2"}'
+
+
+def test_shell_logs_pre_output_failures_without_unbound_out(monkeypatch) -> None:
+    """Failures before stdout is assigned still log and re-raise the original error."""
+    monkeypatch.setattr(
+        em_cmd.subprocess,
+        "check_output",
+        Mock(side_effect=OSError(36, "File name too long")),
+    )
+    runner_log = Mock()
+    monkeypatch.setattr(em_cmd, "RunnerLog", runner_log)
+
+    try:
+        em_cmd.Cmd(None, None, "echo hi", "ok", "error").shell()
+    except OSError as exc:
+        assert exc.errno == 36
+    else:
+        raise AssertionError("expected OSError")
+
+    assert runner_log.called
+    logged = runner_log.call_args.args[3]
+    assert "Command failed." in logged
+    assert "File name too long" in logged
