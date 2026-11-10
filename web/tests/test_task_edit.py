@@ -12,6 +12,9 @@ run with::
 
 """
 
+from pathlib import Path
+
+from bs4 import BeautifulSoup
 from flask import request, url_for
 from pytest import fixture
 
@@ -191,3 +194,29 @@ def test_edit_task(client_fixture: fixture) -> None:
     )
 
     assert response.status_code == 200
+
+
+def test_task_and_project_forms_include_csrf_tokens(client_fixture: fixture) -> None:
+    """Task/project edit forms expose CSRF tokens and reject tokenless POSTs."""
+    client_fixture.application.config["WTF_CSRF_ENABLED"] = True
+    p_id, t_id = create_demo_task(db.session)
+
+    task_page = client_fixture.get(url_for("task_edit_bp.task_edit_get", task_id=t_id))
+    task_soup = BeautifulSoup(task_page.data, features="lxml")
+    assert task_soup.find("input", attrs={"name": "csrf_token", "value": True})
+    assert (
+        client_fixture.post(f"/task/{t_id}/edit", data={"name": "Missing token"}).status_code
+        == 400
+    )
+
+    project_page = client_fixture.get(f"/project/{p_id}/edit")
+    project_soup = BeautifulSoup(project_page.data, features="lxml")
+    assert project_soup.find("input", attrs={"name": "csrf_token", "value": True})
+    assert (
+        client_fixture.post(f"/project/{p_id}/edit", data={"project_name": "Missing"}).status_code
+        == 400
+    )
+
+    templates = Path(__file__).parents[1] / "templates" / "pages"
+    for relative in ("task/new.html.j2", "project/new.html.j2", "login.html.j2"):
+        assert 'name="csrf_token"' in (templates / relative).read_text()
