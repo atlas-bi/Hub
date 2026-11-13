@@ -17,7 +17,9 @@
 
 .title,
 .subtitle {
-  font-family: $family-secondary;
+  // $family-secondary is one quoted string, so Sass would emit it as a single invalid family name.
+  font-family: "Rasa", "Georgia", "Times New Roman", serif;
+  font-weight: 600;
 }
 
 /* purgecss start ignore */
@@ -295,5 +297,10 @@ article.message a {
 
 .em-ajaxContent.is-inline div {
   display: inline-block;
+}
+
+// Plain buttons never set this, so padding: calc(0.5em - var(--bulma-button-border-width)) is invalid and collapses to 0.
+.button {
+  --bulma-button-border-width: 1px;
 }
 /* purgecss end ignore */
