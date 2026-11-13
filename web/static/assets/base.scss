@@ -298,4 +298,9 @@ article.message a {
 .em-ajaxContent.is-inline div {
   display: inline-block;
 }
+
+// Plain buttons never set this, so padding: calc(0.5em - var(--bulma-button-border-width)) is invalid and collapses to 0.
+.button {
+  --bulma-button-border-width: 1px;
+}
 /* purgecss end ignore */
