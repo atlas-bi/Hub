@@ -11,10 +11,18 @@ import fontawesomeSubset from 'fontawesome-subset';
 import {deleteSync} from 'del';
 import purgecss from 'gulp-purgecss';
 import cssnano from 'gulp-cssnano';
+import {readFileSync} from 'node:fs';
+import {Transform} from 'node:stream';
 
 // Soft-fail only while `gulp watch` is running so a typo doesn't kill the watcher.
 // One-shot `gulp build` / `pnpm install` must fail so CI cannot go green on broken CSS.
 let isWatching = false;
+
+const BULMA_EXTENSION_CSS = [
+  'node_modules/bulma-checkradio/dist/css/bulma-checkradio.min.css',
+  'node_modules/bulma-switch/dist/css/bulma-switch.min.css',
+  'node_modules/bulma-tooltip/dist/css/bulma-tooltip.min.css',
+];
 
 gulp.task('font:inter', function() {
   return gulp.src('node_modules/@fontsource/inter/**/*').pipe(replace(/\.\/files\//g, '/static/fonts/inter/files/')).pipe(gulp.dest('web/static/fonts/inter'))
@@ -35,9 +43,24 @@ gulp.task('fontawesome', function(done) {
     done();
 });
 
+function prependBulmaExtensions() {
+  const extensionCss = BULMA_EXTENSION_CSS.map((file) => readFileSync(file, 'utf8')).join('\n');
+  return new Transform({
+    objectMode: true,
+    transform(file, _enc, cb) {
+      if (file.isBuffer()) {
+        file.contents = Buffer.from(`${extensionCss}\n${file.contents.toString()}`);
+      }
+      cb(null, file);
+    },
+  });
+}
+
 gulp.task('sass', function() {
   const compiler = sass({
     quietDeps: true,
+    // gulp-sass legacy API expects includePaths (maps to Dart Sass loadPaths).
+    includePaths: ['node_modules'],
     // Deprecations originate in bulma / bulma-checkradio; silence until those packages catch up.
     silenceDeprecations: [
       'legacy-js-api',
@@ -53,6 +76,7 @@ gulp.task('sass', function() {
 
   return gulp.src("web/static/assets/**/*.scss")
     .pipe(compiler)
+    .pipe(prependBulmaExtensions())
     .pipe(
       purgecss({
         content: ['web/static/lib/**/*.js', 'web/static/js/**/*.js', 'web/templates/**/*.html.j2', 'runner/templates/**/*.html.j2', 'scheduler/templates/**/*.html.j2'],
