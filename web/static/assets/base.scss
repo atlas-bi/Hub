@@ -17,7 +17,9 @@
 
 .title,
 .subtitle {
-  font-family: $family-secondary;
+  // $family-secondary is one quoted string, so Sass would emit it as a single invalid family name.
+  font-family: "Rasa", "Georgia", "Times New Roman", serif;
+  font-weight: 600;
 }
 
 /* purgecss start ignore */
