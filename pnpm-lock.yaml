@@ -68,6 +68,9 @@ importers:
       sass:
         specifier: ^1.67.0
         version: 1.108.2
+      uglify-js:
+        specifier: ^3.17.4
+        version: 3.19.3
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.5.9
@@ -8463,8 +8466,7 @@ snapshots:
 
   ua-parser-js@1.0.41: {}
 
-  uglify-js@3.19.3:
-    optional: true
+  uglify-js@3.19.3: {}
 
   unc-path-regex@0.1.2: {}
 
