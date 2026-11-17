@@ -3,6 +3,7 @@
 # ruff: noqa: D103
 
 import importlib
+import re
 from contextlib import nullcontext
 from unittest.mock import MagicMock
 
@@ -183,3 +184,38 @@ def test_invalid_cron_expression_does_not_create_project(client_fixture) -> None
     assert response.status_code == 200
     assert "Invalid cron schedule" in response.get_data(as_text=True)
     assert Project.query.count() == before
+
+
+def test_unset_cron_fields_render_blank_not_none_string(client_fixture) -> None:
+    """Null cron columns must not render as the literal string 'None' in inputs."""
+    project = Project(
+        name="Blank cron fields",
+        description="",
+        owner_id=1,
+        creator_id=1,
+        updater_id=1,
+        cron=1,
+    )
+    db.session.add(project)
+    db.session.commit()
+
+    response = client_fixture.get(url_for("project_bp.edit_project_form", project_id=project.id))
+    assert response.status_code == 200
+    html = response.get_data(as_text=True)
+
+    for field in (
+        "project_cron_year",
+        "project_cron_mnth",
+        "project_cron_week",
+        "project_cron_day",
+        "project_cron_wday",
+        "project_cron_hour",
+        "project_cron_min",
+        "project_cron_sec",
+    ):
+        match = re.search(rf'<input[^>]*name="{field}"[^>]*>', html)
+        assert match is not None, f"missing input for {field}"
+        tag = match.group(0)
+        assert 'value="None"' not in tag
+        value = re.search(r'value="([^"]*)"', tag)
+        assert value is None or value.group(1) == ""
