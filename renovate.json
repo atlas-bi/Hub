@@ -6,7 +6,6 @@
   "commitMessagePrefix": "chore(deps)",
   "extends": [
     "config:base",
-    ":separateMultipleMajorReleases",
     ":ignoreUnstable",
     ":enableVulnerabilityAlertsWithLabel(security)",
     ":rebaseStalePrs",
@@ -21,6 +20,7 @@
     "maintenance",
     "renovate"
   ],
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
       "automerge": true,
@@ -41,10 +41,13 @@
       ]
     },
     {
-      "automerge": false,
+      "automerge": true,
       "groupName": "npm non-major",
       "matchManagers": [
         "npm"
+      ],
+      "matchPackageNames": [
+        "!/^@biomejs\\//"
       ],
       "matchUpdateTypes": [
         "minor",
@@ -52,15 +55,22 @@
       ]
     },
     {
-      "automerge": false,
+      "automerge": true,
       "groupName": "python non-major",
       "matchManagers": [
-        "pip_requirements",
-        "poetry"
+        "pep621",
+        "uv"
       ],
       "matchUpdateTypes": [
         "minor",
         "patch"
+      ]
+    },
+    {
+      "automerge": true,
+      "groupName": "pre-commit hooks",
+      "matchManagers": [
+        "pre-commit"
       ]
     },
     {
@@ -77,10 +87,28 @@
     },
     {
       "automerge": true,
+      "groupName": "linters",
+      "matchPackageNames": [
+        "@biomejs/biome",
+        "/^@biomejs\\//"
+      ]
+    },
+    {
+      "automerge": true,
       "extends": "packages:test",
       "groupName": "test packages"
+    },
+    {
+      "groupName": "cryptography majors",
+      "matchPackageNames": [
+        "cryptography"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ]
     }
   ],
+  "prConcurrentLimit": 5,
   "pre-commit": {
     "enabled": true
   },
