@@ -201,7 +201,7 @@ def task_new(project_id: int) -> Union[str, Response]:
     return redirect(url_for("task_bp.one_task", task_id=me.id))
 
 
-@task_edit_bp.route("/task/<task_id>/edit", methods=["GET"])
+@task_edit_bp.route("/task/<int:task_id>/edit", methods=["GET"])
 @login_required
 def task_edit_get(task_id: int) -> Union[Response, str]:
     """Task edit page."""
@@ -341,7 +341,31 @@ def task_edit_get(task_id: int) -> Union[Response, str]:
     return redirect(url_for("task_bp.all_tasks"))
 
 
-@task_edit_bp.route("/task/<task_id>/edit", methods=["POST"])
+def _clear_schedule_after_project_move(
+    task_id: int, old_project: Project | None, new_project: Project | None
+) -> None:
+    """Clear scheduler jobs for a task that moved projects and log the move.
+
+    Scheduler jobs are keyed by project id, so jobs registered under the old project are
+    removed here. Enabled tasks are re-added under the new project by submit_executor.
+    """
+    try:
+        requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60)
+    except requests.RequestException:
+        flash("Task moved, but its old schedule could not be cleared (scheduler offline).")
+    log = TaskLog(
+        task_id=task_id,
+        status_id=7,
+        message=(
+            f"{current_user.full_name or 'none'}: Task moved from "
+            f"{old_project or 'none'} to {new_project}."
+        ),
+    )
+    db.session.add(log)
+    db.session.commit()
+
+
+@task_edit_bp.route("/task/<int:task_id>/edit", methods=["POST"])
 @login_required
 def task_edit_post(task_id: int) -> Response:
     """Save task edits."""
@@ -459,22 +483,7 @@ def task_edit_post(task_id: int) -> Response:
     db.session.commit()
 
     if project_moved:
-        # scheduler jobs are keyed by project id, so clear jobs registered under the old project.
-        # enabled tasks are re-added under the new project by submit_executor below.
-        try:
-            requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60)
-        except requests.RequestException:
-            flash("Task moved, but its old schedule could not be cleared (scheduler offline).")
-        log = TaskLog(
-            task_id=task_id,
-            status_id=7,
-            message=(
-                f"{current_user.full_name or 'none'}: Task moved from "
-                f"{old_project or 'none'} to {new_project}."
-            ),
-        )
-        db.session.add(log)
-        db.session.commit()
+        _clear_schedule_after_project_move(task_id, old_project, new_project)
 
     # update params 1. remove old params
     TaskParam.query.filter_by(task_id=task_id).delete()
