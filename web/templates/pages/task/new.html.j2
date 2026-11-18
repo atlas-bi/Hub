@@ -46,6 +46,19 @@
                            value="{{ t.name }}" />
                 </div>
             </div>
+            {% if t and projects %}
+                <div class="field">
+                    <label class="label">Project</label>
+                    <div class="control">
+                        <select class="input" name="task-project">
+                            {% for proj in projects %}
+                                <option value="{{ proj.id }}"
+                                        {% if proj.id == t.project_id %}selected="selected"{% endif %}>{{ proj.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% endif %}
             <div class="field">
                 <label class="label">Max Retry Attempts</label>
                 <div class="control">

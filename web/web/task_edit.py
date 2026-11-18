@@ -2,6 +2,7 @@
 
 from typing import Union
 
+import requests
 from crypto import em_encrypt
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask import current_app as app
@@ -310,6 +311,7 @@ def task_edit_get(task_id: int) -> Union[Response, str]:
             "pages/task/new.html.j2",
             t=me,
             title="Editing " + me.name,
+            projects=Project.query.order_by(Project.name).all(),
             source_type=source_type,
             processing_type=processing_type,
             source_query_type=source_query_type,
@@ -348,6 +350,16 @@ def task_edit_post(task_id: int) -> Response:
     form = request.form
 
     task = get_or_create(db.session, Task, id=task_id)
+    old_project = task.project
+
+    # the edit form posts the project id. if it is missing (e.g. older clients), keep the current project.
+    new_project_id = form.get("task-project", None, type=int)
+    new_project = Project.query.filter_by(id=new_project_id).first() if new_project_id else None
+    if new_project_id and not new_project:
+        flash("Project does not exist.")
+        return redirect(url_for("task_edit_bp.task_edit_get", task_id=task_id))
+    project_id = new_project.id if new_project else task.project_id
+    project_moved = project_id != task.project_id
 
     me = Task.query.filter_by(id=task.id)
 
@@ -355,6 +367,7 @@ def task_edit_post(task_id: int) -> Response:
     me.update(
         dict(  # noqa: C408
             name=form.get("name", "undefined").strip(),
+            project_id=project_id,
             updater_id=current_user.id,
             max_retries=form.get("task-retry", 0, type=int),
             order=form.get("task-rank", 0, type=int),
@@ -444,6 +457,24 @@ def task_edit_post(task_id: int) -> Response:
     )
 
     db.session.commit()
+
+    if project_moved:
+        # scheduler jobs are keyed by project id, so clear jobs registered under the old project.
+        # enabled tasks are re-added under the new project by submit_executor below.
+        try:
+            requests.get(app.config["SCHEDULER_HOST"] + "/delete/" + str(task_id), timeout=60)
+        except requests.RequestException:
+            flash("Task moved, but its old schedule could not be cleared (scheduler offline).")
+        log = TaskLog(
+            task_id=task_id,
+            status_id=7,
+            message=(
+                f"{current_user.full_name or 'none'}: Task moved from "
+                f"{old_project or 'none'} to {new_project}."
+            ),
+        )
+        db.session.add(log)
+        db.session.commit()
 
     # update params 1. remove old params
     TaskParam.query.filter_by(task_id=task_id).delete()
