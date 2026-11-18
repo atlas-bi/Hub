@@ -44,6 +44,9 @@ importers:
       bulma-tooltip:
         specifier: 3.0.2
         version: 3.0.2
+      codemirror:
+        specifier: 5.65.21
+        version: 5.65.21
       del:
         specifier: 8.0.1
         version: 8.0.1
@@ -1737,6 +1740,9 @@ packages:
   coa@1.0.4:
     resolution: {integrity: sha512-KAGck/eNAmCL0dcT3BiuYwLbExK6lduR8DxM3C1TyDzaXhZHyZ8ooX5I5+na2e3dPFuibfxrGdorr0/Lr7RYCQ==}
     engines: {node: '>= 0.8.0'}
+
+  codemirror@5.65.21:
+    resolution: {integrity: sha512-6teYk0bA0nR3QP0ihGMoxuKzpl5W80FpnHpBJpgy66NK3cZv5b/d/HY8PnRvfSsCG1MTfr92u2WUl+wT0E40mQ==}
 
   color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -6040,6 +6046,8 @@ snapshots:
   coa@1.0.4:
     dependencies:
       q: 1.5.1
+
+  codemirror@5.65.21: {}
 
   color-convert@1.9.3:
     dependencies:

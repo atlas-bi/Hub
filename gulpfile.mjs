@@ -50,10 +50,19 @@ const PRISM_CSS = [
   'node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css',
 ];
 
+// codemirror 5 base + scrollbar styles from npm. the local ttcn theme is imported by base.scss
+// after these, so it still overrides them.
+const CODEMIRROR_CSS = [
+  'node_modules/codemirror/lib/codemirror.css',
+  'node_modules/codemirror/addon/scroll/simplescrollbars.css',
+];
+
 function prependExtensionCss() {
   const bulmaCss = BULMA_EXTENSION_CSS.map((file) => readFileSync(file, 'utf8')).join('\n');
-  const prismCss = PRISM_CSS.map((file) => readFileSync(file, 'utf8')).join('\n');
-  const extensionCss = `${bulmaCss}\n/* purgecss start ignore */\n${prismCss}\n/* purgecss end ignore */`;
+  const ignoredCss = [...PRISM_CSS, ...CODEMIRROR_CSS]
+    .map((file) => readFileSync(file, 'utf8'))
+    .join('\n');
+  const extensionCss = `${bulmaCss}\n/* purgecss start ignore */\n${ignoredCss}\n/* purgecss end ignore */`;
   return new Transform({
     objectMode: true,
     transform(file, _enc, cb) {
