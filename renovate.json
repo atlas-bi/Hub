@@ -58,8 +58,7 @@
       "automerge": true,
       "groupName": "python non-major",
       "matchManagers": [
-        "pep621",
-        "uv"
+        "pep621"
       ],
       "matchUpdateTypes": [
         "minor",
