@@ -43,8 +43,26 @@ gulp.task('fontawesome', function(done) {
     done();
 });
 
-function prependBulmaExtensions() {
-  const extensionCss = BULMA_EXTENSION_CSS.map((file) => readFileSync(file, 'utf8')).join('\n');
+// prism theme + line numbers styles from npm. wrapped in purgecss ignore markers so the
+// theme selectors are not stripped (they match classes added at runtime by prism).
+const PRISM_CSS = [
+  'node_modules/prismjs/themes/prism.css',
+  'node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css',
+];
+
+// codemirror 5 base + scrollbar styles from npm. the local ttcn theme is imported by base.scss
+// after these, so it still overrides them.
+const CODEMIRROR_CSS = [
+  'node_modules/codemirror/lib/codemirror.css',
+  'node_modules/codemirror/addon/scroll/simplescrollbars.css',
+];
+
+function prependExtensionCss() {
+  const bulmaCss = BULMA_EXTENSION_CSS.map((file) => readFileSync(file, 'utf8')).join('\n');
+  const ignoredCss = [...PRISM_CSS, ...CODEMIRROR_CSS]
+    .map((file) => readFileSync(file, 'utf8'))
+    .join('\n');
+  const extensionCss = `${bulmaCss}\n/* purgecss start ignore */\n${ignoredCss}\n/* purgecss end ignore */`;
   return new Transform({
     objectMode: true,
     transform(file, _enc, cb) {
@@ -76,7 +94,7 @@ gulp.task('sass', function() {
 
   return gulp.src("web/static/assets/**/*.scss")
     .pipe(compiler)
-    .pipe(prependBulmaExtensions())
+    .pipe(prependExtensionCss())
     .pipe(
       purgecss({
         content: ['web/static/lib/**/*.js', 'web/static/js/**/*.js', 'web/templates/**/*.html.j2', 'runner/templates/**/*.html.j2', 'scheduler/templates/**/*.html.j2'],

@@ -21,13 +21,12 @@ css = Bundle(
 web_assets.register("css", css)
 
 js = Bundle(
-    "./lib/codemirror/codemirror.js",
-    "./lib/codemirror/gfm.js",
-    "./lib/codemirror/overlay.js",
-    "./lib/codemirror/sql.js",
-    "./lib/codemirror/python.js",
-    "./lib/codemirror/matchbrackets.js",
-    "./lib/codemirror/simplescrollbars.js",
+    # codemirror 5 comes from npm (see package.json). only the modes and addons we use are included.
+    "../../node_modules/codemirror/lib/codemirror.js",
+    "../../node_modules/codemirror/mode/sql/sql.js",
+    "../../node_modules/codemirror/mode/python/python.js",
+    "../../node_modules/codemirror/addon/edit/matchbrackets.js",
+    "../../node_modules/codemirror/addon/scroll/simplescrollbars.js",
     filters=("uglifyjs"),
     output="js/codemirror.min.js",
 )
@@ -37,8 +36,17 @@ js = Bundle(
     # "./lib/flatpickr/flatpickr.js",
     "./js/base.js",
     "./js/ajax.js",
-    "./lib/prism/prism.js",
-    "./lib/prism/prism_line_numbers.js",
+    # prismjs comes from npm (see package.json). only the languages we highlight are included.
+    "../../node_modules/prismjs/components/prism-core.js",
+    "../../node_modules/prismjs/components/prism-markup.js",
+    "../../node_modules/prismjs/components/prism-css.js",
+    "../../node_modules/prismjs/components/prism-clike.js",
+    "../../node_modules/prismjs/components/prism-javascript.js",
+    "../../node_modules/prismjs/components/prism-ini.js",
+    "../../node_modules/prismjs/components/prism-python.js",
+    "../../node_modules/prismjs/components/prism-sql.js",
+    "../../node_modules/prismjs/components/prism-toml.js",
+    "../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js",
     "./js/task.js",
     "./js/password.js",
     "./js/project.js",
