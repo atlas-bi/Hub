@@ -73,6 +73,16 @@
       ]
     },
     {
+      "allowedVersions": "<3.15",
+      "description": "Hold workflow Python on 3.14: pysaml2 caps xmlschema<3, which caps elementpath<5, and that fails on Unicode 17 (CPython 3.15). Remove once pysaml2 supports newer xmlschema.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "python"
+      ]
+    },
+    {
       "automerge": true,
       "groupName": "github actions",
       "matchManagers": [
