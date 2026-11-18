@@ -16,7 +16,8 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 from flask import request, url_for
-from pytest import fixture
+from pytest import fixture, raises
+from werkzeug.exceptions import NotFound
 
 from web.extensions import db
 from web.model import Task, TaskLog
@@ -298,7 +299,7 @@ def test_enabled_task_reschedules_on_save(client_fixture: fixture, monkeypatch) 
         follow_redirects=True,
     )
 
-    assert ("enable_task", (str(t_id),)) in calls
+    assert ("enable_task", (t_id,)) in calls
     assert not any(name == "disable_task" for name, _ in calls)
 
 
@@ -336,5 +337,16 @@ def test_moved_enabled_task_clears_old_jobs_then_reschedules(
     )
 
     delete_idx = next(i for i, e in enumerate(events) if e[1].endswith(f"/delete/{t_id}"))
-    enable_idx = next(i for i, e in enumerate(events) if e == ("enable_task", (str(t_id),)))
+    enable_idx = next(i for i, e in enumerate(events) if e == ("enable_task", (t_id,)))
     assert delete_idx < enable_idx
+
+
+def test_edit_route_only_matches_integer_task_ids(client_fixture: fixture) -> None:
+    """Task edit routes only match integer ids, so raw path values never reach outbound calls."""
+    adapter = client_fixture.application.url_map.bind("localhost")
+    for method in ("GET", "POST"):
+        _, args = adapter.match("/task/12/edit", method=method)
+        assert args == {"task_id": 12}
+        assert isinstance(args["task_id"], int)
+        with raises(NotFound):
+            adapter.match("/task/abc/edit", method=method)
