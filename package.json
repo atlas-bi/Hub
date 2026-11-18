@@ -78,5 +78,5 @@
     "test:lint": "uv run tox -e lint",
     "test:node": "node --test test_table_sort.cjs"
   },
-  "version": "2.14.5"
+  "version": "2.15.0"
 }
