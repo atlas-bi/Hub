@@ -278,3 +278,63 @@ def test_edit_task_move_to_missing_project(client_fixture: fixture) -> None:
     task = Task.query.filter_by(id=t_id).first()
     assert task.project_id == p_id
     assert task.name != "Should not save"
+
+
+def test_enabled_task_reschedules_on_save(client_fixture: fixture, monkeypatch) -> None:
+    """Saving an enabled task re-submits enable_task so its scheduler job is rebuilt."""
+    calls = []
+    monkeypatch.setattr(
+        "web.web.task_edit.submit_executor",
+        lambda name, *args: calls.append((name, args)),
+    )
+    _, t_id = create_demo_task(db.session)
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    client_fixture.post(
+        "/task/" + str(t_id) + "/edit",
+        data={"name": "Still enabled", "task-ooff": "1"},
+        headers=headers,
+        follow_redirects=True,
+    )
+
+    assert ("enable_task", (str(t_id),)) in calls
+    assert not any(name == "disable_task" for name, _ in calls)
+
+
+def test_moved_enabled_task_clears_old_jobs_then_reschedules(
+    client_fixture: fixture, monkeypatch
+) -> None:
+    """A moved enabled task drops its old-project job before re-adding under the new project."""
+    events = []
+
+    class _Resp:
+        """Minimal stand-in for a requests response."""
+
+        status_code = 200
+
+    def fake_get(url: str, timeout: int = 0) -> _Resp:
+        """Record scheduler calls in order."""
+        events.append(("http", url))
+        return _Resp()
+
+    monkeypatch.setattr("web.web.task_edit.requests.get", fake_get)
+    monkeypatch.setattr(
+        "web.web.task_edit.submit_executor",
+        lambda name, *args: events.append((name, args)),
+    )
+    _, t_id = create_demo_task(db.session)
+    new_p_id, _ = create_demo_task(db.session)
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    client_fixture.post(
+        "/task/" + str(t_id) + "/edit",
+        data={"name": "Moved", "task-project": new_p_id, "task-ooff": "1"},
+        headers=headers,
+        follow_redirects=True,
+    )
+
+    delete_idx = next(i for i, e in enumerate(events) if e[1].endswith(f"/delete/{t_id}"))
+    enable_idx = next(i for i, e in enumerate(events) if e == ("enable_task", (str(t_id),)))
+    assert delete_idx < enable_idx
