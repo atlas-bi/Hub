@@ -21,13 +21,12 @@ css = Bundle(
 web_assets.register("css", css)
 
 js = Bundle(
-    "./lib/codemirror/codemirror.js",
-    "./lib/codemirror/gfm.js",
-    "./lib/codemirror/overlay.js",
-    "./lib/codemirror/sql.js",
-    "./lib/codemirror/python.js",
-    "./lib/codemirror/matchbrackets.js",
-    "./lib/codemirror/simplescrollbars.js",
+    # codemirror 5 comes from npm (see package.json). only the modes and addons we use are included.
+    "../../node_modules/codemirror/lib/codemirror.js",
+    "../../node_modules/codemirror/mode/sql/sql.js",
+    "../../node_modules/codemirror/mode/python/python.js",
+    "../../node_modules/codemirror/addon/edit/matchbrackets.js",
+    "../../node_modules/codemirror/addon/scroll/simplescrollbars.js",
     filters=("uglifyjs"),
     output="js/codemirror.min.js",
 )
