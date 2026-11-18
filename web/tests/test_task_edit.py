@@ -16,9 +16,11 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 from flask import request, url_for
-from pytest import fixture
+from pytest import fixture, raises
+from werkzeug.exceptions import NotFound
 
 from web.extensions import db
+from web.model import Task, TaskLog
 
 from .conftest import create_demo_task
 
@@ -220,3 +222,131 @@ def test_task_and_project_forms_include_csrf_tokens(client_fixture: fixture) -> 
     templates = Path(__file__).parents[1] / "templates" / "pages"
     for relative in ("task/new.html.j2", "project/new.html.j2", "login.html.j2"):
         assert 'name="csrf_token"' in (templates / relative).read_text()
+
+
+def test_edit_page_lists_projects_with_current_selected(client_fixture: fixture) -> None:
+    """Edit page offers every project, with the task's current project selected."""
+    p_id, t_id = create_demo_task(db.session)
+    create_demo_task(db.session)
+
+    page = client_fixture.get(url_for("task_edit_bp.task_edit_get", task_id=t_id))
+    soup = BeautifulSoup(page.data, features="lxml")
+    select = soup.find("select", attrs={"name": "task-project"})
+    assert select is not None
+    assert len(select.find_all("option")) >= 2
+    assert select.find("option", selected=True)["value"] == str(p_id)
+
+
+def test_edit_task_move_project(client_fixture: fixture) -> None:
+    """Posting a different task-project moves the task and logs the move."""
+    _, t_id = create_demo_task(db.session)
+    new_p_id, _ = create_demo_task(db.session)
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    response = client_fixture.post(
+        "/task/" + str(t_id) + "/edit",
+        data={"name": "Moved task", "task-project": new_p_id, "enabled": 0},
+        headers=headers,
+        follow_redirects=True,
+    )
+    assert response.status_code == 200
+
+    db.session.expire_all()
+    task = Task.query.filter_by(id=t_id).first()
+    assert task.project_id == new_p_id
+    assert task.name == "Moved task"
+    assert TaskLog.query.filter(
+        TaskLog.task_id == t_id, TaskLog.message.contains("Task moved from")
+    ).first()
+
+
+def test_edit_task_move_to_missing_project(client_fixture: fixture) -> None:
+    """Moving to a project that does not exist is rejected without saving."""
+    p_id, t_id = create_demo_task(db.session)
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    response = client_fixture.post(
+        "/task/" + str(t_id) + "/edit",
+        data={"name": "Should not save", "task-project": 99999, "enabled": 0},
+        headers=headers,
+        follow_redirects=True,
+    )
+    assert "Project does not exist" in response.get_data(as_text=True)
+
+    db.session.expire_all()
+    task = Task.query.filter_by(id=t_id).first()
+    assert task.project_id == p_id
+    assert task.name != "Should not save"
+
+
+def test_enabled_task_reschedules_on_save(client_fixture: fixture, monkeypatch) -> None:
+    """Saving an enabled task re-submits enable_task so its scheduler job is rebuilt."""
+    calls = []
+    monkeypatch.setattr(
+        "web.web.task_edit.submit_executor",
+        lambda name, *args: calls.append((name, args)),
+    )
+    _, t_id = create_demo_task(db.session)
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    client_fixture.post(
+        "/task/" + str(t_id) + "/edit",
+        data={"name": "Still enabled", "task-ooff": "1"},
+        headers=headers,
+        follow_redirects=True,
+    )
+
+    assert ("enable_task", (t_id,)) in calls
+    assert not any(name == "disable_task" for name, _ in calls)
+
+
+def test_moved_enabled_task_clears_old_jobs_then_reschedules(
+    client_fixture: fixture, monkeypatch
+) -> None:
+    """A moved enabled task drops its old-project job before re-adding under the new project."""
+    events = []
+
+    class _Resp:
+        """Minimal stand-in for a requests response."""
+
+        status_code = 200
+
+    def fake_get(url: str, timeout: int = 0) -> _Resp:
+        """Record scheduler calls in order."""
+        events.append(("http", url))
+        return _Resp()
+
+    monkeypatch.setattr("web.web.task_edit.requests.get", fake_get)
+    monkeypatch.setattr(
+        "web.web.task_edit.submit_executor",
+        lambda name, *args: events.append((name, args)),
+    )
+    _, t_id = create_demo_task(db.session)
+    new_p_id, _ = create_demo_task(db.session)
+
+    mimetype = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": mimetype, "Accept": mimetype}
+    client_fixture.post(
+        "/task/" + str(t_id) + "/edit",
+        data={"name": "Moved", "task-project": new_p_id, "task-ooff": "1"},
+        headers=headers,
+        follow_redirects=True,
+    )
+
+    delete_idx = next(i for i, e in enumerate(events) if e[1].endswith(f"/delete/{t_id}"))
+    enable_idx = next(i for i, e in enumerate(events) if e == ("enable_task", (t_id,)))
+    assert delete_idx < enable_idx
+
+
+def test_edit_route_only_matches_integer_task_ids(client_fixture: fixture) -> None:
+    """Task edit routes only match integer ids, so raw path values never reach outbound calls."""
+    adapter = client_fixture.application.url_map.bind("localhost")
+    for method in ("GET", "POST"):
+        _, args = adapter.match("/task/12/edit", method=method)
+        assert args == {"task_id": 12}
+        assert isinstance(args["task_id"], int)
+        with raises(NotFound):
+            adapter.match("/task/abc/edit", method=method)

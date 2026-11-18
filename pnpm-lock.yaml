@@ -44,6 +44,9 @@ importers:
       bulma-tooltip:
         specifier: 3.0.2
         version: 3.0.2
+      codemirror:
+        specifier: 5.65.21
+        version: 5.65.21
       del:
         specifier: 8.0.1
         version: 8.0.1
@@ -62,6 +65,9 @@ importers:
       gulp-sass:
         specifier: 5.1.0
         version: 5.1.0
+      prismjs:
+        specifier: 1.30.0
+        version: 1.30.0
       rollup:
         specifier: ^4.0.0
         version: 4.68.2
@@ -1734,6 +1740,9 @@ packages:
   coa@1.0.4:
     resolution: {integrity: sha512-KAGck/eNAmCL0dcT3BiuYwLbExK6lduR8DxM3C1TyDzaXhZHyZ8ooX5I5+na2e3dPFuibfxrGdorr0/Lr7RYCQ==}
     engines: {node: '>= 0.8.0'}
+
+  codemirror@5.65.21:
+    resolution: {integrity: sha512-6teYk0bA0nR3QP0ihGMoxuKzpl5W80FpnHpBJpgy66NK3cZv5b/d/HY8PnRvfSsCG1MTfr92u2WUl+wT0E40mQ==}
 
   color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -3434,6 +3443,10 @@ packages:
   pretty-ms@9.3.0:
     resolution: {integrity: sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==}
     engines: {node: '>=18'}
+
+  prismjs@1.30.0:
+    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
+    engines: {node: '>=6'}
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -6034,6 +6047,8 @@ snapshots:
     dependencies:
       q: 1.5.1
 
+  codemirror@5.65.21: {}
+
   color-convert@1.9.3:
     dependencies:
       color-name: 1.1.3
@@ -7758,6 +7773,8 @@ snapshots:
   pretty-ms@9.3.0:
     dependencies:
       parse-ms: 4.0.0
+
+  prismjs@1.30.0: {}
 
   process-nextick-args@2.0.1: {}
 
