@@ -49,7 +49,7 @@
   "homepage": "https://atlas-hub.atlas.bi",
   "license": "AGPL-3.0-or-later",
   "name": "atlas_automation_hub",
-  "packageManager": "pnpm@11.28.11",
+  "packageManager": "pnpm@11.28.13",
   "private": true,
   "repository": {
     "type": "git",
@@ -78,5 +78,5 @@
     "test:lint": "uv run tox -e lint",
     "test:node": "node --test test_table_sort.cjs"
   },
-  "version": "2.14.5"
+  "version": "2.14.6"
 }
