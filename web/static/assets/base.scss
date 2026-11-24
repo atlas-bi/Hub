@@ -298,5 +298,85 @@ article.message a {
 // Plain buttons never set this, so padding: calc(0.5em - var(--bulma-button-border-width)) is invalid and collapses to 0.
 .button {
   --bulma-button-border-width: 1px;
+  --bulma-button-border-style: solid;
+  --bulma-button-padding-horizontal: calc(1em + 1px);
+  --bulma-button-weight: 400;
+  --bulma-button-outer-shadow-a: 0;
+}
+
+a.button.is-info {
+  background-color: var(--bulma-info);
+  border-color: transparent;
+  color: #fff;
+}
+
+a.navbar-item.button {
+  box-sizing: border-box;
+  height: 40px;
+  padding: 8px 12px;
+  line-height: 24px;
+}
+
+// Bulma 1 leaves a link-colored border on .tabs and a 2px border on .navbar.
+.tabs,
+.navbar {
+  border: 0;
+}
+
+.navbar-item,
+.navbar-link,
+.level {
+  gap: 0;
+}
+
+.button .icon:first-child:not(:last-child) {
+  margin-inline-start: calc(-0.5em - 1px);
+  margin-inline-end: 0.25em;
+}
+
+.table td,
+.table th {
+  border-style: solid;
+  border-color: #dbdbdb;
+  border-width: 0 0 1px;
+  vertical-align: top;
+}
+
+.table thead td,
+.table thead th {
+  border-width: 0 0 2px;
+  color: #363636;
+}
+
+.table tbody tr:last-child td,
+.table tbody tr:last-child th {
+  border-bottom-width: 0;
+}
+
+// Bulma 1 light palette, pinned so a dark OS theme cannot restyle the app.
+// Measured from the Bulma 0.9 CSS: link #485fc7, info #3e8ed0, warning #ffe08a, border #dbdbdb.
+html[data-theme="light"] {
+  --bulma-scheme-brightness: light;
+  --bulma-scheme-h: 0;
+  --bulma-scheme-s: 0%;
+  --bulma-scheme-main-l: 100%;
+  --bulma-background-l: 96%;
+  --bulma-border-l: 86%;
+  --bulma-text-l: 29%;
+  --bulma-text: #4a4a4a;
+  --bulma-text-strong-l: 21%;
+  --bulma-text-strong: #363636;
+  --bulma-link-h: 229deg;
+  --bulma-link-s: 53%;
+  --bulma-link-l: 53%;
+  --bulma-link-on-scheme-l: 53%;
+  --bulma-info-h: 207deg;
+  --bulma-info-s: 61%;
+  --bulma-info-l: 53%;
+  --bulma-warning-h: 44deg;
+  --bulma-warning-s: 100%;
+  --bulma-warning-l: 77%;
+  --bulma-warning-invert-l: 29%;
+  --bulma-button-padding-horizontal: calc(1em + 1px);
 }
 /* purgecss end ignore */
